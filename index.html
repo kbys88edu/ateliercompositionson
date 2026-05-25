@@ -1,446 +1,632 @@
+```html
 <!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Composition, Sound Design et Création Musicale</title>
-  <meta name="description" content="Cours en ligne de composition, sound design et création musicale. Écriture, forme, timbre, outils numériques et accompagnement artistique personnalisé.">
-  <meta name="robots" content="index, follow">
+
+  <meta name="description" content="Cours particuliers de composition, sound design et création musicale en ligne.">
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
     }
 
-    html {
-      scroll-behavior: smooth;
+    html{
+      scroll-behavior:smooth;
     }
 
-    body {
-      background: #fff;
-      color: #000;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 13px;
-      line-height: 1.45;
-      font-weight: 400;
-      -webkit-font-smoothing: antialiased;
+    body{
+      background:#fff;
+      color:#000;
+      font-family:Arial, Helvetica, sans-serif;
+      font-size:13px;
+      line-height:1.45;
+      font-weight:400;
+      -webkit-font-smoothing:antialiased;
     }
 
-    a {
-      color: #000;
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 2px;
+    a{
+      color:#000;
+      text-decoration:underline;
+      text-decoration-thickness:1px;
+      text-underline-offset:2px;
     }
 
-    a:hover {
-      text-decoration: none;
+    a:hover{
+      text-decoration:none;
     }
 
-    .page {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 22px 18px 46px;
+    .page{
+      max-width:980px;
+      margin:0 auto;
+      padding:22px 18px 46px;
     }
 
-    header {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 36px;
-      min-height: 52vh;
-      padding-bottom: 44px;
-      border-bottom: 1px solid #000;
+    header{
+      display:grid;
+      grid-template-columns:1fr 1.4fr;
+      gap:36px;
+      min-height:52vh;
+      padding-bottom:44px;
+      border-bottom:1px solid #000;
     }
 
-    .identity {
-      position: sticky;
-      top: 22px;
-      align-self: start;
+    .identity{
+      position:sticky;
+      top:22px;
+      align-self:start;
     }
 
-    .identity h1 {
-      font-size: 13px;
-      line-height: 1.25;
-      font-weight: 400;
-      margin-bottom: 14px;
+    .identity h1{
+      font-size:13px;
+      line-height:1.25;
+      font-weight:400;
+      margin-bottom:14px;
     }
 
-    .identity p,
-    .meta {
-      color: #000;
-      max-width: 230px;
+    .identity p{
+      max-width:240px;
     }
 
-    nav {
-      margin-top: 28px;
+    nav{
+      margin-top:28px;
     }
 
-    nav a {
-      display: block;
-      width: fit-content;
-      margin-bottom: 3px;
+    nav a{
+      display:block;
+      width:fit-content;
+      margin-bottom:3px;
     }
 
-    .intro {
-      align-self: end;
-      max-width: 610px;
+    .intro{
+      align-self:end;
+      max-width:610px;
     }
 
-    .intro .label {
-      margin-bottom: 18px;
+    .intro-title{
+      font-size:clamp(26px,4vw,44px);
+      line-height:1.02;
+      letter-spacing:-0.02em;
+      margin-bottom:22px;
+      font-weight:400;
     }
 
-    .intro-title {
-      font-size: clamp(25px, 4vw, 42px);
-      line-height: 1.02;
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      margin-bottom: 22px;
+    .intro p{
+      margin-bottom:12px;
+      max-width:560px;
     }
 
-    .intro p {
-      max-width: 560px;
-      margin-bottom: 13px;
+    .separator{
+      margin:24px 0;
     }
 
-    .separator {
-      margin: 24px 0;
+    .separator::before{
+      content:'* * *';
     }
 
-    .separator::before {
-      content: '* * *';
+    section{
+      display:grid;
+      grid-template-columns:1fr 1.4fr;
+      gap:36px;
+      padding:32px 0;
+      border-bottom:1px solid #000;
     }
 
-    section {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 36px;
-      padding: 32px 0;
-      border-bottom: 1px solid #000;
+    .section-label{
+      text-transform:uppercase;
+      letter-spacing:.02em;
     }
 
-    .section-label {
-      text-transform: uppercase;
-      letter-spacing: .02em;
+    .content{
+      max-width:610px;
     }
 
-    .content {
-      max-width: 610px;
+    h2{
+      font-size:13px;
+      line-height:1.35;
+      font-weight:400;
+      text-transform:uppercase;
+      margin-bottom:16px;
     }
 
-    h2 {
-      font-size: 13px;
-      line-height: 1.35;
-      font-weight: 400;
-      text-transform: uppercase;
-      margin-bottom: 16px;
+    h3{
+      font-size:13px;
+      line-height:1.35;
+      font-weight:400;
+      margin-bottom:4px;
     }
 
-    h3 {
-      font-size: 13px;
-      line-height: 1.35;
-      font-weight: 400;
-      margin-bottom: 4px;
+    p + p{
+      margin-top:12px;
     }
 
-    p + p {
-      margin-top: 12px;
+    ul{
+      list-style:none;
     }
 
-    ul {
-      list-style: none;
+    .list{
+      border-top:1px solid #000;
+      margin-top:18px;
     }
 
-    .list {
-      border-top: 1px solid #000;
-      margin-top: 18px;
+    .list li{
+      display:grid;
+      grid-template-columns:150px 1fr;
+      gap:24px;
+      border-bottom:1px solid #000;
+      padding:8px 0;
     }
 
-    .list li {
-      display: grid;
-      grid-template-columns: 150px 1fr;
-      gap: 24px;
-      border-bottom: 1px solid #000;
-      padding: 8px 0;
+    .program{
+      border-top:1px solid #000;
     }
 
-    .program {
-      border-top: 1px solid #000;
+    .program li{
+      display:grid;
+      grid-template-columns:42px 1fr;
+      gap:22px;
+      border-bottom:1px solid #000;
+      padding:12px 0;
     }
 
-    .program li {
-      display: grid;
-      grid-template-columns: 42px 1fr;
-      gap: 22px;
-      border-bottom: 1px solid #000;
-      padding: 12px 0;
+    .num{
+      font-variant-numeric:tabular-nums;
     }
 
-    .num {
-      font-variant-numeric: tabular-nums;
+    .formats{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:34px;
+      border-top:1px solid #000;
+      padding-top:14px;
     }
 
-    .formats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 34px;
-      border-top: 1px solid #000;
-      padding-top: 14px;
+    .format{
+      min-height:260px;
     }
 
-    .format {
-      min-height: 260px;
+    .price{
+      margin:11px 0 12px;
     }
 
-    .price {
-      margin: 11px 0 12px;
+    .format ul{
+      border-top:1px solid #000;
+      margin:16px 0 18px;
     }
 
-    .format ul {
-      border-top: 1px solid #000;
-      margin: 16px 0 18px;
+    .format li{
+      border-bottom:1px solid #000;
+      padding:5px 0;
     }
 
-    .format li {
-      border-bottom: 1px solid #000;
-      padding: 5px 0;
+    details{
+      border-top:1px solid #000;
+      padding:9px 0;
     }
 
-    details {
-      border-top: 1px solid #000;
-      padding: 9px 0;
+    details:last-child{
+      border-bottom:1px solid #000;
     }
 
-    details:last-child {
-      border-bottom: 1px solid #000;
+    summary{
+      cursor:pointer;
+      list-style:none;
     }
 
-    summary {
-      cursor: pointer;
-      list-style: none;
+    summary::-webkit-details-marker{
+      display:none;
     }
 
-    summary::-webkit-details-marker {
-      display: none;
+    summary::before{
+      content:'+ ';
     }
 
-    summary::before {
-      content: '+ ';
+    details[open] summary::before{
+      content:'– ';
     }
 
-    details[open] summary::before {
-      content: '– ';
+    details p{
+      margin-top:8px;
+      max-width:520px;
     }
 
-    details p {
-      margin-top: 8px;
-      max-width: 520px;
+    footer{
+      display:grid;
+      grid-template-columns:1fr 1.4fr;
+      gap:36px;
+      padding-top:24px;
     }
 
-    footer {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 36px;
-      padding-top: 24px;
+    .small{
+      font-size:12px;
     }
 
-    .small {
-      font-size: 12px;
-    }
+    @media(max-width:720px){
 
-    @media (max-width: 720px) {
-      .page {
-        padding: 18px 14px 38px;
+      .page{
+        padding:18px 14px 38px;
       }
 
       header,
       section,
-      footer {
-        grid-template-columns: 1fr;
-        gap: 22px;
+      footer{
+        grid-template-columns:1fr;
+        gap:22px;
       }
 
-      header {
-        min-height: auto;
-        padding-bottom: 34px;
+      header{
+        min-height:auto;
+        padding-bottom:34px;
       }
 
-      .identity {
-        position: static;
+      .identity{
+        position:static;
       }
 
-      nav {
-        margin-top: 20px;
+      nav{
+        margin-top:20px;
       }
 
-      .intro {
-        align-self: start;
+      .intro{
+        align-self:start;
       }
 
       .formats,
-      .list li {
-        grid-template-columns: 1fr;
-        gap: 12px;
+      .list li{
+        grid-template-columns:1fr;
+        gap:12px;
       }
 
-      .program li {
-        grid-template-columns: 32px 1fr;
-        gap: 14px;
+      .program li{
+        grid-template-columns:32px 1fr;
+        gap:14px;
       }
     }
+
   </style>
 </head>
 
 <body>
-  <div class="page">
-    <header id="top">
-      <div class="identity">
-        <h1>Composition<br>Sound Design<br>Création Musicale</h1>
-        <p>cours en ligne<br>français / english / 日本語</p>
 
-        <nav>
-          <a href="#approche">approche</a>
-          <a href="#programme">programme</a>
-          <a href="#formats">formats</a>
-          <a href="#questions">questions</a>
-          <a href="#contact">contact</a>
-        </nav>
-      </div>
+<div class="page">
 
-      <div class="intro">
-        <div class="label">* * *</div>
-        <div class="intro-title">Composition, sound design et création musicale.</div>
-        <p>Un accompagnement pour développer une pratique musicale personnelle : écriture, forme, timbre, écoute, outils numériques et direction artistique.</p>
-        <p>Les nouvelles technologies, y compris l’IA, peuvent être abordées avec recul critique lorsqu’elles servent réellement le projet.</p>
-        <div class="separator"></div>
-        <p>Pour compositeurs, producteurs, artistes sonores, étudiants et créateurs qui souhaitent structurer leurs idées et affiner leur langage musical.</p>
-      </div>
-    </header>
+<header id="top">
 
-    <section id="approche">
-      <div class="section-label">approche</div>
-      <div class="content">
-        <h2>Travailler le son comme une pensée musicale</h2>
-        <p>Le cours ne suit pas une méthode unique. Il part de votre niveau, de vos références, de vos outils et du type de musique que vous souhaitez construire.</p>
-        <p>L’objectif est de clarifier vos matériaux, de renforcer vos décisions et de donner une forme plus précise à votre univers sonore.</p>
+  <div class="identity">
 
-        <ul class="list">
-          <li><span>écriture</span><span>forme, harmonie, rythme, développement, notation, structure.</span></li>
-          <li><span>timbre</span><span>textures, synthèse, montage, espace, traitements, couches sonores.</span></li>
-          <li><span>outils</span><span>DAW, Max/MSP, samples, IA, partitions, workflows hybrides.</span></li>
-          <li><span>projet</span><span>pièce, album, portfolio, performance, installation ou recherche personnelle.</span></li>
-        </ul>
-      </div>
-    </section>
+    <h1>
+      Composition<br>
+      Sound Design<br>
+      Création Musicale
+    </h1>
 
-    <section id="programme">
-      <div class="section-label">programme</div>
-      <div class="content">
-        <h2>Un parcours souple, selon votre pratique</h2>
-        <ul class="program">
-          <li>
-            <span class="num">01</span>
-            <div>
-              <h3>Composition</h3>
-              <p>Développer une idée musicale, organiser la forme, travailler les transitions, la densité, la tension, la continuité et la rupture.</p>
-            </div>
-          </li>
-          <li>
-            <span class="num">02</span>
-            <div>
-              <h3>Sound design</h3>
-              <p>Créer des matières sonores, construire des textures, utiliser la synthèse, les samples, le montage et l’espace comme éléments de composition.</p>
-            </div>
-          </li>
-          <li>
-            <span class="num">03</span>
-            <div>
-              <h3>Outils numériques & IA</h3>
-              <p>Comprendre les outils contemporains sans leur déléguer toute la création : prompts, génération d’idées, analyse, transformation et écoute critique.</p>
-            </div>
-          </li>
-          <li>
-            <span class="num">04</span>
-            <div>
-              <h3>Projet personnel</h3>
-              <p>Travailler directement sur vos pièces, sons, maquettes, partitions ou dossiers artistiques avec un retour précis et personnalisé.</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </section>
+    <p>
+      cours en ligne<br>
+      français
+    </p>
 
-    <section id="formats">
-      <div class="section-label">formats</div>
-      <div class="content">
-        <h2>Deux manières de commencer</h2>
-        <div class="formats">
-          <article class="format">
-            <h3>Mini-cours</h3>
-            <p class="price">10€</p>
-            <p>Introduction de 2–3 heures pour poser des bases de travail : composition, son, outils numériques et méthode personnelle.</p>
-            <ul>
-              <li>vidéos courtes</li>
-              <li>exemples et exercices</li>
-              <li>accessible sans niveau avancé</li>
-              <li>préparation avant un cours individuel</li>
-            </ul>
-            <a href="mailto:info@sachiekobayashi.com?subject=Mini-cours%20Composition%20Sound%20Design">demander l’accès</a>
-          </article>
+    <nav>
+      <a href="#approche">approche</a>
+      <a href="#programme">programme</a>
+      <a href="#formats">formats</a>
+      <a href="#questions">questions</a>
+      <a href="#contact">contact</a>
+    </nav>
 
-          <article class="format">
-            <h3>Cours individuel</h3>
-            <p class="price">45€ / h</p>
-            <p>Accompagnement en ligne centré sur votre projet, votre niveau et vos outils.</p>
-            <ul>
-              <li>composition et retour sur projet</li>
-              <li>sound design, DAW, Max/MSP</li>
-              <li>écriture, portfolio, direction artistique</li>
-              <li>français, anglais ou japonais</li>
-            </ul>
-            <a href="mailto:info@sachiekobayashi.com?subject=Cours%20Composition%20Sound%20Design">demander un cours</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="questions">
-      <div class="section-label">questions</div>
-      <div class="content">
-        <details>
-          <summary>Faut-il déjà savoir composer ?</summary>
-          <p>Non. Le cours peut partir d’un niveau débutant, mais il convient aussi à des personnes déjà engagées dans une pratique musicale ou artistique.</p>
-        </details>
-        <details>
-          <summary>Est-ce un cours sur l’IA ?</summary>
-          <p>Non. Le centre reste la composition et le sound design. L’IA peut être abordée comme outil, sujet ou contrainte, selon votre projet.</p>
-        </details>
-        <details>
-          <summary>Quels styles sont possibles ?</summary>
-          <p>Composition classique ou contemporaine, électronique, ambient, musique à l’image, sound art, expérimental, installation ou projet hybride.</p>
-        </details>
-        <details>
-          <summary>Quels outils sont nécessaires ?</summary>
-          <p>Un ordinateur suffit. Vous pouvez travailler avec un DAW, une partition, Max/MSP, des samples, un instrument ou simplement des esquisses.</p>
-        </details>
-      </div>
-    </section>
-
-    <section id="contact">
-      <div class="section-label">contact</div>
-      <div class="content">
-        <h2>Envoyez simplement votre projet</h2>
-        <p>Indiquez votre niveau, vos outils, et ce que vous souhaitez travailler : composition, sound design, portfolio, pièce en cours, recherche sonore ou mini-cours.</p>
-        <p><a href="mailto:info@sachiekobayashi.com?subject=Demande%20de%20cours%20-%20Composition%20Sound%20Design">info@sachiekobayashi.com</a></p>
-      </div>
-    </section>
-
-    <footer>
-      <div>© 2026</div>
-      <div>Composition, Sound Design et Création Musicale · Cours en ligne</div>
-    </footer>
   </div>
+
+  <div class="intro">
+
+    <div class="intro-title">
+      Composition, sound design et création musicale.
+    </div>
+
+    <p>
+      Cours particuliers de composition et de sound design en ligne.
+    </p>
+
+    <p>
+      Pour débutants, étudiants en musique, compositeurs, producteurs et artistes sonores.
+    </p>
+
+    <p>
+      Les cours sont adaptés à votre niveau, à vos outils et à votre projet musical.
+    </p>
+
+    <div class="separator"></div>
+
+    <p>
+      Un accompagnement pour développer une pratique musicale personnelle : écriture, forme, timbre, écoute, outils numériques et direction artistique.
+    </p>
+
+    <p>
+      Les nouvelles technologies, y compris l’IA, peuvent être abordées avec recul critique lorsqu’elles servent réellement le projet.
+    </p>
+
+  </div>
+
+</header>
+
+<section id="approche">
+
+  <div class="section-label">
+    approche
+  </div>
+
+  <div class="content">
+
+    <h2>
+      Travailler le son comme une pensée musicale
+    </h2>
+
+    <p>
+      Le cours ne suit pas une méthode unique. Il part de votre niveau, de vos références, de vos outils et du type de musique que vous souhaitez construire.
+    </p>
+
+    <p>
+      L’objectif est de clarifier vos matériaux, de renforcer vos décisions et de donner une forme plus précise à votre univers sonore.
+    </p>
+
+    <ul class="list">
+
+      <li>
+        <span>composition</span>
+        <span>forme, harmonie, rythme, orchestration, développement et structure.</span>
+      </li>
+
+      <li>
+        <span>sound design</span>
+        <span>textures, synthèse, montage, espace, traitements et couches sonores.</span>
+      </li>
+
+      <li>
+        <span>musique électronique</span>
+        <span>DAW, workflows hybrides, sampling, composition numérique et performance.</span>
+      </li>
+
+      <li>
+        <span>outils avancés</span>
+        <span>Max/MSP, systèmes génératifs, IA et outils expérimentaux selon le projet.</span>
+      </li>
+
+      <li>
+        <span>accompagnement</span>
+        <span>portfolio, entrée en école, projet personnel, album ou pièce en cours.</span>
+      </li>
+
+    </ul>
+
+  </div>
+
+</section>
+
+<section id="programme">
+
+  <div class="section-label">
+    programme
+  </div>
+
+  <div class="content">
+
+    <h2>
+      Un parcours souple, selon votre pratique
+    </h2>
+
+    <ul class="program">
+
+      <li>
+        <span class="num">01</span>
+        <div>
+          <h3>Composition</h3>
+          <p>
+            Développer une idée musicale, organiser la forme, travailler les transitions, la densité, la tension, la continuité et la rupture.
+          </p>
+        </div>
+      </li>
+
+      <li>
+        <span class="num">02</span>
+        <div>
+          <h3>Sound design</h3>
+          <p>
+            Créer des matières sonores, construire des textures, utiliser la synthèse, les samples, le montage et l’espace comme éléments de composition.
+          </p>
+        </div>
+      </li>
+
+      <li>
+        <span class="num">03</span>
+        <div>
+          <h3>Outils numériques & IA</h3>
+          <p>
+            Comprendre les outils contemporains sans leur déléguer toute la création : prompts, génération d’idées, analyse, transformation et écoute critique.
+          </p>
+        </div>
+      </li>
+
+      <li>
+        <span class="num">04</span>
+        <div>
+          <h3>Projet personnel</h3>
+          <p>
+            Travailler directement sur vos pièces, sons, maquettes, partitions ou dossiers artistiques avec un retour précis et personnalisé.
+          </p>
+        </div>
+      </li>
+
+    </ul>
+
+  </div>
+
+</section>
+
+<section id="formats">
+
+  <div class="section-label">
+    formats
+  </div>
+
+  <div class="content">
+
+    <h2>
+      Deux manières de commencer
+    </h2>
+
+    <p>
+      Cours en visioconférence (Zoom). Séances de 60 minutes.
+      Rythme ponctuel ou régulier selon votre projet.
+    </p>
+
+    <div class="formats">
+
+      <article class="format">
+
+        <h3>
+          Mini-cours
+        </h3>
+
+        <p class="price">
+          10€
+        </p>
+
+        <p>
+          Introduction de 2–3 heures pour poser des bases de travail : composition, son, outils numériques et méthode personnelle.
+        </p>
+
+        <ul>
+          <li>vidéos courtes</li>
+          <li>exemples et exercices</li>
+          <li>accessible sans niveau avancé</li>
+          <li>préparation avant un cours individuel</li>
+        </ul>
+
+        <a href="mailto:info@sachiekobayashi.com?subject=Mini-cours%20Composition%20Sound%20Design">
+          demander l’accès
+        </a>
+
+      </article>
+
+      <article class="format">
+
+        <h3>
+          Cours individuel
+        </h3>
+
+        <p class="price">
+          45€ / h
+        </p>
+
+        <p>
+          Accompagnement en ligne centré sur votre projet, votre niveau et vos outils.
+        </p>
+
+        <ul>
+          <li>composition et retour sur projet</li>
+          <li>sound design, DAW, Max/MSP</li>
+          <li>écriture, portfolio, direction artistique</li>
+          <li>français</li>
+        </ul>
+
+        <a href="mailto:info@sachiekobayashi.com?subject=Cours%20Composition%20Sound%20Design">
+          demander un cours
+        </a>
+
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section id="questions">
+
+  <div class="section-label">
+    questions
+  </div>
+
+  <div class="content">
+
+    <details>
+      <summary>Faut-il déjà savoir composer ?</summary>
+      <p>
+        Non. Le cours peut partir d’un niveau débutant, mais il convient aussi à des personnes déjà engagées dans une pratique musicale ou artistique.
+      </p>
+    </details>
+
+    <details>
+      <summary>Est-ce un cours sur l’IA ?</summary>
+      <p>
+        Non. Le centre reste la composition et le sound design. L’IA peut être abordée comme outil, sujet ou contrainte, selon votre projet.
+      </p>
+    </details>
+
+    <details>
+      <summary>Quels styles sont possibles ?</summary>
+      <p>
+        Composition classique ou contemporaine, électronique, ambient, musique à l’image, sound art, expérimental, installation ou projet hybride.
+      </p>
+    </details>
+
+    <details>
+      <summary>Quels outils sont nécessaires ?</summary>
+      <p>
+        Un ordinateur suffit. Vous pouvez travailler avec un DAW, une partition, Max/MSP, des samples, un instrument ou simplement des esquisses.
+      </p>
+    </details>
+
+  </div>
+
+</section>
+
+<section id="contact">
+
+  <div class="section-label">
+    contact
+  </div>
+
+  <div class="content">
+
+    <h2>
+      Envoyez simplement votre projet
+    </h2>
+
+    <p>
+      Indiquez votre niveau, vos outils, et ce que vous souhaitez travailler : composition, sound design, portfolio, pièce en cours, recherche sonore ou mini-cours.
+    </p>
+
+    <p>
+      <a href="mailto:info@sachiekobayashi.com?subject=Demande%20de%20cours%20-%20Composition%20Sound%20Design">
+        info@sachiekobayashi.com
+      </a>
+    </p>
+
+    <p class="small">
+      Cours assurés par une compositrice diplômée de la Haute École de Musique de Genève.
+    </p>
+
+  </div>
+
+</section>
+
+<footer>
+
+  <div>
+    © 2026
+  </div>
+
+  <div>
+    Composition, Sound Design et Création Musicale · Cours en ligne
+  </div>
+
+</footer>
+
+</div>
+
 </body>
 </html>
+```
