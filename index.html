@@ -60,14 +60,58 @@
       padding-bottom: 22px;
     }
 
-    .hero-image img {
-      display: block;
+    .hero-slideshow {
+      position: relative;
       width: 100%;
-      height: auto;
+      aspect-ratio: 16 / 9;
       background: #000;
+      overflow: hidden;
+    }
+
+    .hero-slideshow img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: heroFade 18s infinite;
+    }
+
+    .hero-slideshow img:nth-child(1) { animation-delay: 0s; }
+    .hero-slideshow img:nth-child(2) { animation-delay: 6s; }
+    .hero-slideshow img:nth-child(3) { animation-delay: 12s; }
+
+    @keyframes heroFade {
+      0% { opacity: 0; }
+      8% { opacity: 1; }
+      30% { opacity: 1; }
+      38% { opacity: 0; }
+      100% { opacity: 0; }
     }
 
     .hero-image figcaption {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .direction-layout {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .direction-photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: grayscale(100%);
+      border: 1px solid #000;
+    }
+
+    .direction-photo figcaption {
       margin-top: 8px;
       font-size: 12px;
       line-height: 1.4;
@@ -244,6 +288,30 @@
       border: 1px solid #000;
       padding: 14px 14px 16px;
       min-height: 120px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .discipline-icon {
+      width: 42px;
+      height: 20px;
+      margin-bottom: 14px;
+    }
+
+    .discipline-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .discipline-icon path,
+    .discipline-icon line,
+    .discipline-icon circle,
+    .discipline-icon rect {
+      stroke: #000;
+      stroke-width: 1;
+      fill: none;
+      vector-effect: non-scaling-stroke;
     }
 
     .discipline-item h3 {
@@ -256,6 +324,75 @@
     .discipline-item p {
       font-size: 14px;
       line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .discipline-item a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: auto;
+      padding: 9px 12px;
+      border: 1px solid #000;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      text-transform: lowercase;
+      transition: background .18s ease, color .18s ease, opacity .18s ease;
+    }
+
+    .discipline-item a:hover {
+      opacity: .82;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+      border-top: 1px solid #000;
+      padding-top: 18px;
+    }
+
+    .contact-form label {
+      display: grid;
+      gap: 5px;
+      font-size: 13px;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+      font: inherit;
+      font-size: 14px;
+      padding: 9px 10px;
+      border-radius: 0;
+    }
+
+    .contact-form textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .contact-form button {
+      width: fit-content;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+      font: inherit;
+      font-size: 14px;
+      padding: 9px 14px;
+      cursor: pointer;
+    }
+
+    .contact-form button:hover {
+      background: #000;
+      color: #fff;
     }
 
     .disciplines-card .list {
@@ -371,7 +508,8 @@
 
       header,
       section,
-      footer {
+      footer,
+      .direction-layout {
         grid-template-columns: 1fr;
         gap: 22px;
       }
@@ -427,6 +565,7 @@
 
         <nav>
           <a href="#approche">approche</a>
+          <a href="#direction">direction</a>
           <a href="#programme">programme</a>
           <a href="#formats">formats</a>
           <a href="#questions">questions</a>
@@ -446,7 +585,11 @@
     </header>
 
     <figure class="hero-image">
-      <img src="images/home.jpeg" alt="Composition, sound design et création musicale">
+      <div class="hero-slideshow">
+        <img src="images/home.jpeg" alt="Composition, sound design et création musicale">
+        <img src="images/home-2.jpeg" alt="Atelier de composition et recherche sonore">
+        <img src="images/home-3.jpeg" alt="Cours de composition, sound design et musique électronique">
+      </div>
       <figcaption>composition / sound design / création musicale</figcaption>
     </figure>
 
@@ -466,6 +609,36 @@
       </div>
     </section>
 
+    <section id="direction">
+      <div class="section-label">direction</div>
+      <div class="content">
+        <div class="direction-layout">
+          <div>
+            <h2>Un atelier dirigé par une artiste</h2>
+            <p>Atelier Composition Son est conçu comme un espace de formation exigeant, à la croisée de la composition contemporaine, de la musique électronique et de la recherche sonore.</p>
+            <p>La direction pédagogique est assurée par Sachie Kobayashi, compositrice et artiste sonore formée en composition et pédagogie musicale à la Haute École de Musique de Genève.</p>
+            <p>L’enseignement privilégie une approche précise, personnelle et critique : développer l’écoute, structurer les idées, comprendre les outils, et construire une pratique musicale autonome.</p>
+            <p>Le travail artistique a été présenté dans différents contextes liés à la création contemporaine, à la performance et aux pratiques hybrides entre son, image et technologie.</p>
+          </div>
+
+          <figure class="direction-photo">
+            <img src="images/profile.png" alt="Sachie Kobayashi au piano">
+            <figcaption>Sachie Kobayashi<br>composition / recherche sonore</figcaption>
+          </figure>
+        </div>
+
+        <ul class="list">
+          <li><span>direction</span><span>Sachie Kobayashi — compositrice, artiste sonore, créatrice.</span></li>
+          <li><span>orientation</span><span>composition contemporaine, musique électronique, sound design, recherche sonore.</span></li>
+          <li><span>pédagogie</span><span>accompagnement individuel, écoute critique, projets personnels et développement artistique.</span></li>
+          <li><span>formation</span><span>Haute École de Musique de Genève — composition et pédagogie musicale.</span></li>
+          <li><span>recherche</span><span>travaux et recherches autour de la création sonore, des technologies musicales et des pratiques hybrides, notamment dans un contexte lié à l’IRCAM.</span></li>
+          <li><span>activité</span><span>concert, installation, création audiovisuelle, performance et projets interdisciplinaires.</span></li>
+          <li><span>distinctions</span><span>sélections, collaborations et présentations dans des contextes internationaux liés à la création contemporaine.</span></li>
+        </ul>
+      </div>
+    </section>
+
     <section id="cours">
       <div class="section-label">cours</div>
       <div class="content">
@@ -474,43 +647,110 @@
 
           <div class="disciplines-grid">
             <article class="discipline-item">
+              <div class="discipline-icon" aria-hidden="true">
+                <svg viewBox="0 0 42 20">
+                  <line x1="2" y1="15" x2="2" y2="5"></line>
+                  <line x1="12" y1="17" x2="12" y2="3"></line>
+                  <line x1="22" y1="13" x2="22" y2="7"></line>
+                  <path d="M30 4 C32 4,32 16,35 16"></path>
+                </svg>
+              </div>
               <h3>composition</h3>
               <p>écriture musicale, forme et développement.</p>
+              <a href="#contact" data-subject="composition">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
+              <div class="discipline-icon" aria-hidden="true">
+                <svg viewBox="0 0 42 20">
+                  <line x1="2" y1="5" x2="40" y2="5"></line>
+                  <line x1="2" y1="10" x2="40" y2="10"></line>
+                  <line x1="10" y1="2" x2="10" y2="18"></line>
+                  <line x1="22" y1="2" x2="22" y2="18"></line>
+                  <line x1="34" y1="2" x2="34" y2="18"></line>
+                </svg>
+              </div>
               <h3>analyse</h3>
               <p>écoute, structure, harmonie et langage musical.</p>
+              <a href="#contact" data-subject="analyse">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
+              <div class="discipline-icon" aria-hidden="true">
+                <svg viewBox="0 0 42 20">
+                  <path d="M18 4 L18 14"></path>
+                  <circle cx="15" cy="14" r="3"></circle>
+                </svg>
+              </div>
               <h3>solfège</h3>
               <p>lecture, rythme, écoute et formation musicale.</p>
+              <a href="#contact" data-subject="solfège">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
+              <div class="discipline-icon" aria-hidden="true">
+                <svg viewBox="0 0 42 20">
+                  <line x1="2" y1="4" x2="40" y2="4"></line>
+                  <line x1="2" y1="8" x2="40" y2="8"></line>
+                  <line x1="2" y1="12" x2="40" y2="12"></line>
+                  <line x1="2" y1="16" x2="40" y2="16"></line>
+                </svg>
+              </div>
               <h3>orchestration</h3>
               <p>instruments, timbre et écriture orchestrale.</p>
+              <a href="#contact" data-subject="orchestration">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
+              <div class="discipline-icon" aria-hidden="true">
+                <svg viewBox="0 0 42 20">
+                  <path d="M1 10 C5 10,5 4,10 4 S15 16,20 16 S25 4,30 4 S35 16,41 16"></path>
+                </svg>
+              </div>
               <h3>synthétiseurs</h3>
               <p>synthèse sonore et création de textures.</p>
+              <a href="#contact" data-subject="synthétiseurs">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
+              <div class="discipline-icon" aria-hidden="true">
+                <svg viewBox="0 0 42 20">
+                  <circle cx="21" cy="10" r="6"></circle>
+                  <circle cx="21" cy="10" r="2"></circle>
+                </svg>
+              </div>
               <h3>sound design</h3>
               <p>montage, espace, traitements et matière sonore.</p>
+              <a href="#contact" data-subject="sound design">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
+              <div class="discipline-icon" aria-hidden="true">
+                <svg viewBox="0 0 42 20">
+                  <rect x="4" y="4" width="4" height="4"></rect>
+                  <rect x="18" y="4" width="4" height="4"></rect>
+                  <rect x="32" y="4" width="4" height="4"></rect>
+                  <rect x="4" y="12" width="4" height="4"></rect>
+                  <rect x="18" y="12" width="4" height="4"></rect>
+                  <rect x="32" y="12" width="4" height="4"></rect>
+                </svg>
+              </div>
               <h3>musique électronique</h3>
               <p>composition numérique, hybridation et performance.</p>
+              <a href="#contact" data-subject="musique électronique">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
+              <div class="discipline-icon" aria-hidden="true">
+                <svg viewBox="0 0 42 20">
+                  <rect x="5" y="5" width="10" height="10"></rect>
+                  <rect x="27" y="5" width="10" height="10"></rect>
+                  <line x1="15" y1="10" x2="27" y2="10"></line>
+                </svg>
+              </div>
               <h3>composition assistée par ordinateur</h3>
               <p>Ableton Live, workflows et production.</p>
+              <a href="#contact" data-subject="composition assistée par ordinateur">demander ce cours</a>
             </article>
           </div>
         </div>
@@ -615,7 +855,42 @@
       <div class="content">
         <h2>Envoyez simplement votre projet</h2>
         <p>Indiquez votre niveau, vos outils, et ce que vous souhaitez travailler : composition, sound design, portfolio, pièce en cours, recherche sonore ou mini-cours.</p>
-        <p><a href="mailto:info@sachiekobayashi.com?subject=Demande%20de%20cours%20-%20Composition%20Sound%20Design">info@sachiekobayashi.com</a></p>
+        <form class="contact-form" action="https://formspree.io/f/mvzywvop" method="POST">
+          <label>
+            Nom
+            <input type="text" name="nom" autocomplete="name" required>
+          </label>
+
+          <label>
+            Email
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+
+          <label>
+            Cours souhaité
+            <select id="courseSelect" name="cours" required>
+              <option value="">sélectionner un cours</option>
+              <option value="composition">composition</option>
+              <option value="analyse">analyse</option>
+              <option value="solfège">solfège</option>
+              <option value="orchestration">orchestration</option>
+              <option value="synthétiseurs">synthétiseurs</option>
+              <option value="sound design">sound design</option>
+              <option value="musique électronique">musique électronique</option>
+              <option value="composition assistée par ordinateur">composition assistée par ordinateur</option>
+              <option value="mini-cours">mini-cours</option>
+            </select>
+          </label>
+
+          <label>
+            Message
+            <textarea id="messageField" name="message" placeholder="Votre niveau, vos outils, et ce que vous souhaitez travailler." required></textarea>
+          </label>
+
+          <button type="submit">envoyer</button>
+        </form>
+
+        <p class="small">Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com">info@sachiekobayashi.com</a>.</p>
       </div>
     </section>
 
@@ -624,5 +899,30 @@
       <div>Composition, Sound Design et Création Musicale · Cours en ligne</div>
     </footer>
   </div>
+<script>
+  const courseLinks = document.querySelectorAll('[data-subject]');
+  const courseSelect = document.getElementById('courseSelect');
+  const messageField = document.getElementById('messageField');
+
+  courseLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const subject = link.getAttribute('data-subject');
+      if (courseSelect) courseSelect.value = subject;
+      if (messageField && !messageField.value.trim()) {
+        messageField.value = `Bonjour,
+
+Je souhaite recevoir des informations concernant le cours : ${subject}.
+
+Mon niveau : 
+Mes outils : 
+Mon projet : 
+`;
+      }
+      setTimeout(() => {
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+      }, 0);
+    });
+  });
+</script>
 </body>
 </html>
