@@ -536,12 +536,19 @@
       line-height: 1.55;
     }
 
-    .contact-form {
+    .contact-layout {
       display: grid;
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, .95fr);
+      gap: 22px;
       margin-top: 18px;
       border-top: 1px solid #000;
       padding-top: 18px;
+      align-items: start;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 12px;
     }
 
     .contact-form label {
@@ -733,14 +740,14 @@
     }
 
     .calendly-wrapper {
-      margin-top: 22px;
-      border-top: 1px solid #000;
-      padding-top: 18px;
+      margin-top: 0;
+      border-top: none;
+      padding-top: 0;
     }
 
     .calendly-inline-widget {
       min-width: 320px;
-      height: 700px;
+      height: 640px;
       border: 1px solid #000;
     }
 
@@ -800,7 +807,8 @@
       }
 
       .formats,
-      .list li {
+      .list li,
+      .contact-layout {
         grid-template-columns: 1fr;
         gap: 12px;
       }
@@ -846,7 +854,7 @@
       <div class="intro">
         <div class="label">* * *</div>
         <div class="intro-title">Composition, sound design et création musicale.</div>
-        <p>Un accompagnement pour développer une pratique musicale personnelle : écriture, forme, timbre, écoute, outils numériques et direction artistique.</p>
+        <p>Un accompagnement pour développer une pratique musicale personnelle&nbsp;: écriture, forme, timbre, écoute, outils numériques et direction artistique.</p>
         <p>Les nouvelles technologies, y compris l’IA, peuvent être abordées comme outils de création, de recherche ou de performance lorsqu’elles servent réellement le projet artistique.</p>
         <div class="separator"></div>
         <p>Pour compositeurs, producteurs, artistes sonores, étudiants et créateurs qui souhaitent structurer leurs idées et affiner leur langage musical.</p>
@@ -1271,51 +1279,53 @@
       <div class="content">
         <h2>Envoyez simplement votre projet</h2>
         <p>Indiquez votre niveau, vos outils, et ce que vous souhaitez travailler : composition, sound design, portfolio, pièce en cours, recherche sonore ou mini-cours. Les cours individuels ont lieu en ligne via Zoom.</p>
-        <form class="contact-form" action="https://formspree.io/f/mvzywvop" method="POST">
-          <label>
-            Nom
-            <input type="text" name="nom" autocomplete="name" required>
-          </label>
+        <div class="contact-layout">
+          <div>
+            <form class="contact-form" action="https://formspree.io/f/mvzywvop" method="POST">
+              <label>
+                Nom
+                <input type="text" name="nom" autocomplete="name" required>
+              </label>
 
-          <label>
-            Email
-            <input type="email" name="email" autocomplete="email" required>
-          </label>
+              <label>
+                Email
+                <input type="email" name="email" autocomplete="email" required>
+              </label>
 
-          <label>
-            Cours souhaité
-            <select id="courseSelect" name="cours" required>
-              <option value="">sélectionner un cours</option>
-              <option value="composition">composition</option>
-              <option value="analyse">analyse</option>
-              <option value="solfège">solfège</option>
-              <option value="orchestration">orchestration</option>
-              <option value="synthétiseurs">synthétiseurs</option>
-              <option value="sound design">sound design</option>
-              <option value="musique électronique">musique électronique</option>
-              <option value="composition assistée par ordinateur">composition assistée par ordinateur</option>
-              <option value="mini-cours">mini-cours</option>
-            </select>
-          </label>
+              <label>
+                Cours souhaité
+                <select id="courseSelect" name="cours" required>
+                  <option value="">sélectionner un cours</option>
+                  <option value="composition">composition</option>
+                  <option value="analyse">analyse</option>
+                  <option value="solfège">solfège</option>
+                  <option value="orchestration">orchestration</option>
+                  <option value="synthétiseurs">synthétiseurs</option>
+                  <option value="sound design">sound design</option>
+                  <option value="musique électronique">musique électronique</option>
+                  <option value="composition assistée par ordinateur">composition assistée par ordinateur</option>
+                  <option value="mini-cours">mini-cours</option>
+                </select>
+              </label>
 
-          <label>
-            Message
-            <textarea id="messageField" name="message" placeholder="Votre niveau, vos outils, et ce que vous souhaitez travailler." required></textarea>
-          </label>
+              <label>
+                Message
+                <textarea id="messageField" name="message" placeholder="Votre niveau, vos outils, et ce que vous souhaitez travailler." required></textarea>
+              </label>
 
-          <button type="submit">envoyer</button>
-        </form>
+              <button type="submit">envoyer</button>
+            </form>
 
-        <p class="small">Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com">info@sachiekobayashi.com</a>.</p>
+            <p class="small">Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com">info@sachiekobayashi.com</a>.</p>
+          </div>
 
-        
+          <div class="calendly-wrapper">
+            <p class="small">Le premier échange de 30 minutes est gratuit. Après la réservation, un lien Zoom est envoyé automatiquement par email.</p>
 
-        <div class="calendly-wrapper">
-          <p class="small">Le premier échange de 30 minutes est gratuit. Après la réservation, un lien Zoom est envoyé automatiquement par email.</p>
-
-          <div class="calendly-inline-widget"
-            data-url="https://calendly.com/sound-sachiekobayashi/new-meeting"
-            style="min-width:320px;height:700px;">
+            <div class="calendly-inline-widget"
+              data-url="https://calendly.com/sound-sachiekobayashi/new-meeting"
+              style="min-width:320px;height:640px;">
+            </div>
           </div>
         </div>
       </div>
