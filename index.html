@@ -352,6 +352,34 @@
       opacity: .82;
     }
 
+    .discipline-actions {
+      display: grid;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .discipline-actions a {
+      margin-top: 0;
+    }
+
+    .discipline-actions a.secondary {
+      background: #fff;
+      color: #000;
+    }
+
+    .discipline-actions a.secondary:hover {
+      background: #000;
+      color: #fff;
+      opacity: 1;
+    }
+
+    .disciplines-note {
+      margin-top: 10px;
+      max-width: 560px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
     .contact-form {
       display: grid;
       gap: 12px;
@@ -672,6 +700,7 @@
       <div class="content">
         <div class="disciplines-card">
           <h2>Disciplines</h2>
+          <p class="disciplines-note">Certaines classes proposent une vidéo de démonstration d’environ dix minutes, pensée comme une première séance accessible aux débutants. Les cours individuels ont lieu en ligne via Zoom. Les vidéos de démonstration sont hébergées sur YouTube et pourront évoluer ensuite vers des mini-cours plus développés.</p>
 
           <div class="disciplines-grid">
             <article class="discipline-item">
@@ -685,7 +714,10 @@
               </div>
               <h3>composition</h3>
               <p>écriture musicale, forme et développement.</p>
-              <a href="#contact" data-subject="composition">demander ce cours</a>
+              <div class="discipline-actions">
+                <a class="secondary" href="https://www.youtube.com/watch?v=YOUR_COMPOSITION_DEMO_ID" target="_blank" rel="noopener">voir la démo</a>
+                <a href="#contact" data-subject="composition">demander ce cours</a>
+              </div>
             </article>
 
             <article class="discipline-item">
@@ -700,7 +732,10 @@
               </div>
               <h3>analyse</h3>
               <p>écoute, structure, harmonie et langage musical.</p>
-              <a href="#contact" data-subject="analyse">demander ce cours</a>
+              <div class="discipline-actions">
+                <a class="secondary" href="https://www.youtube.com/watch?v=YOUR_ANALYSE_DEMO_ID" target="_blank" rel="noopener">voir la démo</a>
+                <a href="#contact" data-subject="analyse">demander ce cours</a>
+              </div>
             </article>
 
             <article class="discipline-item">
@@ -843,11 +878,12 @@
           <article class="format">
             <h3>Cours individuel</h3>
             <p class="price">70€ / h</p>
-            <p>Accompagnement en ligne centré sur votre projet, votre niveau et vos outils.</p>
+            <p>Accompagnement en ligne via Zoom, centré sur votre projet, votre niveau et vos outils.</p>
             <ul>
               <li>composition et retour sur projet</li>
               <li>sound design, DAW, Max/MSP</li>
               <li>écriture, portfolio, direction artistique</li>
+              <li>cours en ligne via Zoom</li>
               <li>français, anglais ou japonais</li>
             </ul>
             <a href="#contact" class="general-contact-link">demander un cours</a>
@@ -882,7 +918,7 @@
       <div class="section-label">contact</div>
       <div class="content">
         <h2>Envoyez simplement votre projet</h2>
-        <p>Indiquez votre niveau, vos outils, et ce que vous souhaitez travailler : composition, sound design, portfolio, pièce en cours, recherche sonore ou mini-cours.</p>
+        <p>Indiquez votre niveau, vos outils, et ce que vous souhaitez travailler : composition, sound design, portfolio, pièce en cours, recherche sonore ou mini-cours. Les cours individuels ont lieu en ligne via Zoom.</p>
         <form class="contact-form" action="https://formspree.io/f/mvzywvop" method="POST">
           <label>
             Nom
@@ -921,7 +957,7 @@
         <p class="small">Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com">info@sachiekobayashi.com</a>.</p>
 
         <div class="calendly-wrapper">
-          <p class="small">Réserver directement un premier échange en ligne.</p>
+          <p class="small">Le premier échange de 30 minutes est gratuit. Après la réservation, un lien Zoom est envoyé automatiquement par email.</p>
 
           <div class="calendly-inline-widget"
             data-url="https://calendly.com/sound-sachiekobayashi/new-meeting"
