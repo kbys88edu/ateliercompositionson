@@ -501,6 +501,18 @@
       line-height: 1.5;
     }
 
+    .calendly-wrapper {
+      margin-top: 22px;
+      border-top: 1px solid #000;
+      padding-top: 18px;
+    }
+
+    .calendly-inline-widget {
+      min-width: 320px;
+      height: 700px;
+      border: 1px solid #000;
+    }
+
     @media (max-width: 720px) {
       .page {
         padding: 18px 14px 38px;
@@ -822,7 +834,7 @@
               <li>écriture, portfolio, direction artistique</li>
               <li>français, anglais ou japonais</li>
             </ul>
-            <a href="mailto:info@sachiekobayashi.com?subject=Cours%20Composition%20Sound%20Design">demander un cours</a>
+            <a href="#contact" class="general-contact-link">demander un cours</a>
           </article>
         </div>
       </div>
@@ -891,6 +903,15 @@
         </form>
 
         <p class="small">Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com">info@sachiekobayashi.com</a>.</p>
+
+        <div class="calendly-wrapper">
+          <p class="small">Réserver directement un premier échange en ligne.</p>
+
+          <div class="calendly-inline-widget"
+            data-url="https://calendly.com/sound-sachiekobayashi/new-meeting"
+            style="min-width:320px;height:700px;">
+          </div>
+        </div>
       </div>
     </section>
 
@@ -901,6 +922,7 @@
   </div>
 <script>
   const courseLinks = document.querySelectorAll('[data-subject]');
+  const generalLinks = document.querySelectorAll('.general-contact-link');
   const courseSelect = document.getElementById('courseSelect');
   const messageField = document.getElementById('messageField');
 
@@ -922,7 +944,28 @@ Mon projet :
         document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
       }, 0);
     });
+    });
+
+  generalLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (courseSelect) courseSelect.value = '';
+      if (messageField && !messageField.value.trim()) {
+        messageField.value = `Bonjour,
+
+Je souhaite recevoir des informations concernant les cours.
+
+Mon niveau : 
+Mes outils : 
+Mon projet : 
+`;
+      }
+
+      setTimeout(() => {
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+      }, 0);
+    });
   });
 </script>
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </body>
 </html>
