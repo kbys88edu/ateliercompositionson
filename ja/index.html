@@ -338,6 +338,7 @@
       <a href="#lessons">Lessons</a>
       <a href="#price">Price</a>
       <a href="#contact">Contact</a>
+      <a href="#policies">Policies</a>
       <a href="/fr/">FR</a>
     </nav>
   </header>
@@ -351,7 +352,7 @@
           Atelier Composition Son は、作曲・電子音響・サウンドアート・AIと音楽を横断しながら、ひとりひとりの創作を育てるための場所です。技術を学ぶだけでなく、音を聴き、考え、作品として組み立てることを重視します。
         </p>
         <div class="button-row">
-          <a class="btn primary" href="#contact">相談する</a>
+          <a class="btn primary" href="#contact">無料面談を申し込む</a>
           <a class="btn" href="#modules">内容を見る</a>
         </div>
       </div>
@@ -486,7 +487,7 @@
         </div>
         <div class="text-block">
           <p>
-            内容は初回相談で確認し、目的に合わせて設計します。一般的な基礎レッスンと、作品制作・ポートフォリオ・専門的なメンタリングでは扱う範囲が異なるため、料金を分けています。
+            初回30分のオンライン面談は無料です。内容は初回相談で確認し、目的に合わせて設計します。一般的な基礎レッスンと、作品制作・ポートフォリオ・専門的なメンタリングでは扱う範囲が異なるため、料金を分けています。
           </p>
 
           <div class="price-table">
@@ -525,6 +526,64 @@
           <p class="note">
             外部スクール経由のレッスンとは、受付方法・内容設計・サポート範囲が異なります。こちらのアトリエでは、個人の創作内容に合わせた直接相談・制作設計・継続的なフィードバックを中心に行います。
           </p>
+
+          <p class="note">
+            お申し込み前に、下記のレッスン規約・キャンセルポリシーをご確認ください。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="policies">
+      <div class="section-grid">
+        <div>
+          <div class="section-kicker">Policies</div>
+          <h2>レッスン規約</h2>
+        </div>
+        <div class="text-block">
+          <div class="faq">
+            <details open>
+              <summary>受講について</summary>
+              <p>
+                レッスンはオンラインで行います。内容は受講者の目的や制作状況に応じて個別に設計されます。録音・録画・資料共有を行う場合があります。
+              </p>
+            </details>
+
+            <details>
+              <summary>初回面談について</summary>
+              <p>
+                初回30分のオンライン面談は無料です。現在の状況、興味分野、制作内容、目標などを確認し、適切な受講形式を提案します。
+              </p>
+            </details>
+
+            <details>
+              <summary>お支払いについて</summary>
+              <p>
+                レッスン料金は事前支払い制です。お支払い方法やスケジュールは、初回相談後にご案内します。
+              </p>
+            </details>
+
+            <details>
+              <summary>キャンセル・日程変更</summary>
+              <p>
+                日程変更・キャンセルは、できるだけ早めにご連絡ください。当日キャンセルや無断欠席の場合、原則として返金は行っておりません。
+              </p>
+            </details>
+
+            <details>
+              <summary>制作物・著作権について</summary>
+              <p>
+                レッスン内で制作された作品やアイデアの著作権は、原則として受講者本人に帰属します。ただし、参考作品・技術資料・共有教材の再配布はご遠慮ください。
+              </p>
+            </details>
+
+            <details>
+              <summary>ハラスメント・迷惑行為について</summary>
+              <p>
+                継続的な迷惑行為、ハラスメント、不適切なコミュニケーションが見られる場合、受講をお断りすることがあります。
+              </p>
+            </details>
+          </div>
         </div>
       </div>
     </section>
@@ -568,10 +627,53 @@
           <p>
             受講を希望される方は、現在の経験、興味のある内容、作りたいもの、使用しているソフトなどを簡単に書いてご連絡ください。
           </p>
-          <div class="button-row">
-            <a class="btn primary" href="mailto:Info@sachiekobayashi.com?subject=Atelier%20Composition%20Son%20%E5%8F%97%E8%AC%9B%E7%9B%B8%E8%AB%87">メールで相談する</a>
-            <a class="btn" href="https://www.sachiekobayashi.com/" target="_blank" rel="noopener">Artist Website</a>
-          </div>
+          <form action="https://formspree.io/f/mbdbpqrj" method="POST" style="margin-top:40px; display:grid; gap:18px; max-width:720px;">
+            <div>
+              <label for="name" style="display:block; margin-bottom:8px; font-size:14px;">お名前</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                style="width:100%; padding:14px 16px; border:1px solid var(--line); background:var(--card); font-size:15px; font-family:inherit;"
+              />
+            </div>
+
+            <div>
+              <label for="email" style="display:block; margin-bottom:8px; font-size:14px;">メールアドレス</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                style="width:100%; padding:14px 16px; border:1px solid var(--line); background:var(--card); font-size:15px; font-family:inherit;"
+              />
+            </div>
+
+            <div>
+              <label for="message" style="display:block; margin-bottom:8px; font-size:14px;">相談内容</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="8"
+                required
+                placeholder="現在の経験、興味のある内容、使用しているソフト、作りたい作品などをご記入ください。"
+                style="width:100%; padding:14px 16px; border:1px solid var(--line); background:var(--card); font-size:15px; font-family:inherit; resize:vertical;"
+              ></textarea>
+            </div>
+
+            <div class="button-row">
+              <button
+                type="submit"
+                class="btn primary"
+                style="cursor:pointer; background:var(--accent); color:var(--bg);"
+              >
+                送信する
+              </button>
+
+              <a class="btn" href="https://www.sachiekobayashi.com/" target="_blank" rel="noopener">Artist Website</a>
+            </div>
+          </form>
         </div>
       </div>
     </section>
