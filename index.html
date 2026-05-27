@@ -18,175 +18,361 @@
   <style>
     :root {
       --bg: #f7f5ef;
-      --text: #111111;
-      --muted: #6d6a63;
-      --line: #d8d3c7;
+      --text: #111;
+      --muted: #6f6a60;
+      --line: #111;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background:
-        linear-gradient(
-          rgba(247,245,239,0.72),
-          rgba(247,245,239,0.92)
-        ),
-        url('images/header-soft.jpg');
-
-      background-size: cover;
-      background-position: center;
-
-      font-family:
-        "Helvetica Neue",
-        Arial,
-        "Hiragino Sans",
-        "Yu Gothic",
-        sans-serif;
-
+      background: var(--bg);
       color: var(--text);
+      font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
-    .container {
-      width: min(680px, 92vw);
-
-      padding: 64px 40px;
-
-      border: 1px solid var(--line);
-
-      background: rgba(255,253,248,0.82);
-
-      backdrop-filter: blur(12px);
-
-      text-align: center;
+    .cursor-glitch {
+      position: fixed;
+      width: 180px;
+      height: 180px;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(0,0,0,0.12) 0px,
+          rgba(0,0,0,0.12) 1px,
+          transparent 1px,
+          transparent 5px
+        );
+      mix-blend-mode: multiply;
+      filter: contrast(2);
     }
 
-    .logo {
-      width: 86px;
-      height: 86px;
+    .cursor-glitch.active {
+      opacity: 0.24;
+      animation: glitchPulse 0.18s steps(2) infinite;
+    }
 
-      object-fit: contain;
+    @keyframes glitchPulse {
+      0% {
+        clip-path: inset(0 0 80% 0);
+        transform: translate(-50%, -50%) skewX(0deg);
+      }
+      33% {
+        clip-path: inset(35% 0 35% 0);
+        transform: translate(-49%, -51%) skewX(8deg);
+      }
+      66% {
+        clip-path: inset(75% 0 0 0);
+        transform: translate(-52%, -49%) skewX(-8deg);
+      }
+      100% {
+        clip-path: inset(0 0 80% 0);
+        transform: translate(-50%, -50%) skewX(0deg);
+      }
+    }
 
-      margin-bottom: 28px;
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      grid-template-rows: auto 1fr auto;
+      padding: 34px 42px;
+      gap: 40px;
+    }
+
+    .brand {
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+    }
+
+    .brand img {
+      width: 72px;
+      height: auto;
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    .brand-name {
+      font-family: "Times New Roman", serif;
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .meta {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+      align-self: end;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    main {
+      grid-column: 2 / 3;
+      grid-row: 1 / 3;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      border-left: 1px solid var(--line);
+      padding-left: 48px;
+    }
+
+    .title {
+      align-self: end;
+      padding-bottom: 54px;
     }
 
     h1 {
-      margin: 0 0 18px;
-
-      font-size: clamp(32px, 5vw, 64px);
-
+      margin: 0;
+      max-width: 980px;
+      font-family: "Times New Roman", serif;
+      font-style: italic;
+      font-size: clamp(58px, 10vw, 148px);
+      line-height: .88;
       font-weight: 400;
-
-      line-height: 1.05;
-
-      letter-spacing: -0.05em;
+      letter-spacing: -.075em;
     }
 
-    p {
-      margin: 0 auto;
-
-      max-width: 560px;
-
-      color: var(--muted);
-
-      line-height: 1.9;
-
+    .subtitle {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 880px;
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
       font-size: 15px;
+      line-height: 1.7;
     }
+
+    .subtitle p { margin: 0; }
+
+    .subtitle .fr { color: var(--muted); }
 
     .languages {
-      margin-top: 48px;
-
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
 
-    .languages a {
-      display: inline-block;
-
-      min-width: 140px;
-
-      padding: 14px 22px;
-
-      border: 1px solid var(--text);
-
+    .language {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 20px;
+      min-height: 170px;
+      padding: 26px 0;
       color: var(--text);
-
       text-decoration: none;
-
-      transition:
-        background 0.2s ease,
-        color 0.2s ease;
+      transition: opacity .2s ease, padding-left .2s ease;
     }
 
-    .languages a:hover {
-      background: var(--text);
-      color: var(--bg);
+    .language + .language {
+      border-left: 1px solid var(--line);
+      padding-left: 32px;
     }
 
-    .small {
-      margin-top: 40px;
+    .language:hover {
+      opacity: .55;
+      padding-left: 12px;
+    }
 
-      font-size: 12px;
+    .language + .language:hover {
+      padding-left: 44px;
+    }
 
-      letter-spacing: 0.14em;
-
+    .code {
+      font-size: 13px;
+      letter-spacing: .16em;
       text-transform: uppercase;
-
       color: var(--muted);
     }
 
-    @media (max-width: 640px) {
-      .container {
-        padding: 52px 24px;
+    .language-title {
+      font-size: clamp(28px, 4vw, 54px);
+      line-height: 1;
+      letter-spacing: -.045em;
+      margin-bottom: 16px;
+    }
+
+    .language-desc {
+      max-width: 360px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    footer {
+      grid-column: 1 / 3;
+      grid-row: 3 / 4;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 40px;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        display: block;
+        padding: 24px 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 64px;
+      }
+
+      .brand img {
+        width: 48px;
+        margin-bottom: 0;
+      }
+
+      .brand-name {
+        font-size: 18px;
+      }
+
+      .meta { display: none; }
+
+      main {
+        border-left: none;
+        padding-left: 0;
+      }
+
+      .title { padding-bottom: 40px; }
+
+      h1 {
+        font-size: clamp(48px, 17vw, 82px);
+      }
+
+      .subtitle {
+        grid-template-columns: 1fr;
+        gap: 12px;
       }
 
       .languages {
-        flex-direction: column;
+        grid-template-columns: 1fr;
       }
 
-      .languages a {
-        width: 100%;
+      .language {
+        grid-template-columns: 60px 1fr;
+        min-height: 140px;
+      }
+
+      .language + .language {
+        border-left: none;
+        border-top: 1px solid var(--line);
+        padding-left: 0;
+      }
+
+      .language:hover,
+      .language + .language:hover {
+        padding-left: 0;
+      }
+
+      footer {
+        display: block;
+        margin-top: 40px;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="container">
+  <div class="cursor-glitch" aria-hidden="true"></div>
 
-    <img
-      class="logo"
-      src="images/acs-logo.png"
-      alt="Atelier Composition Son"
-    />
-
-    <h1>Atelier Composition Son</h1>
-
-    <p>
-      音・作曲・電子音響のためのオンラインアトリエ<br>
-      Atelier en ligne dédié à la composition, à la musique électroacoustique et à la recherche sonore
-    </p>
-
-    <div class="languages">
-      <a href="ja/">日本語</a>
-      <a href="fr/">Français</a>
+  <div class="page">
+    <div class="brand">
+      <img src="images/acs-logo.png" alt="Atelier Composition Son">
+      <div class="brand-name">
+        Atelier<br>
+        Composition<br>
+        Son
+      </div>
     </div>
 
-    <div class="small">
-      Composition / Sound / Research
+    <div class="meta">
+      Online atelier<br>
+      composition<br>
+      electroacoustic music<br>
+      sonic research
     </div>
 
-  </main>
+    <main>
+      <div class="title">
+        <h1>Atelier<br>Composition<br>Son</h1>
+
+        <div class="subtitle">
+          <p>
+            音・作曲・電子音響のためのオンラインアトリエ
+          </p>
+          <p class="fr">
+            Atelier en ligne dédié à la composition, à la musique électroacoustique et à la recherche sonore
+          </p>
+        </div>
+      </div>
+
+      <div class="languages">
+        <a class="language" href="ja/">
+          <div class="code">JA</div>
+          <div>
+            <div class="language-title">日本語</div>
+            <div class="language-desc">
+              音と創作のためのオンラインアトリエ。作曲、電子音響、AI、サウンドアートを横断します。
+            </div>
+          </div>
+        </a>
+
+        <a class="language" href="fr/">
+          <div class="code">FR</div>
+          <div>
+            <div class="language-title">Français</div>
+            <div class="language-desc">
+              Composition, sound design, musique électroacoustique et accompagnement artistique en ligne.
+            </div>
+          </div>
+        </a>
+      </div>
+    </main>
+
+    <footer>
+      <div>ACS</div>
+      <div>Composition / Sound / Research</div>
+    </footer>
+  </div>
+
+  <script>
+    const glitch = document.querySelector('.cursor-glitch');
+    let glitchTimer;
+
+    window.addEventListener('mousemove', (event) => {
+      glitch.style.left = event.clientX + 'px';
+      glitch.style.top = event.clientY + 'px';
+
+      glitch.classList.add('active');
+
+      clearTimeout(glitchTimer);
+
+      glitchTimer = setTimeout(() => {
+        glitch.classList.remove('active');
+      }, 120);
+    });
+  </script>
 </body>
 </html>
+```
