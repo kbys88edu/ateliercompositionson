@@ -1,4 +1,648 @@
-<section id="instructor" class="teacher">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Atelier Composition Son｜音と創作のためのオンラインアトリエ</title>
+  <meta name="description" content="Atelier Composition Sonは、作曲・DTM・音楽理論・電子音響・サウンドデザイン・AIと音楽を横断しながら、ひとりひとりの創作を育てるためのオンラインアトリエです。初心者から受験、専門的な作品制作、ポートフォリオ相談まで対応します。" />
+
+  <link rel="canonical" href="https://ateliercompositionson.com/ja/" />
+  <link rel="alternate" hreflang="ja" href="https://ateliercompositionson.com/ja/" />
+  <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/" />
+  <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/" />
+
+  <style>
+    :root {
+      --bg: #f7f5ef;
+      --text: #111111;
+      --muted: #6d6a63;
+      --line: #d8d3c7;
+      --accent: #111111;
+      --card: #fffdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.85;
+      letter-spacing: 0.03em;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 5vw;
+      background: rgba(247, 245, 239, 0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .logo img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+
+    nav {
+      display: flex;
+      gap: 22px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 56px;
+      align-items: end;
+      padding: 12vh 5vw 9vh;
+      background-image:
+        linear-gradient(
+          rgba(247, 245, 239, 0.70),
+          rgba(247, 245, 239, 0.94)
+        ),
+        url('../images/header-soft.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: clamp(44px, 7vw, 104px);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      font-weight: 400;
+      margin: 0 0 34px;
+    }
+
+    .lead {
+      max-width: 720px;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.9;
+    }
+
+    .hero-panel {
+      border: 1px solid var(--line);
+      background: var(--card);
+      padding: 34px;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 1px solid var(--accent);
+      padding: 12px 18px;
+      font-size: 14px;
+      line-height: 1;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn:hover {
+      opacity: 0.72;
+    }
+
+    .image-sequence {
+      padding: 0 5vw 72px;
+      border-top: 1px solid var(--line);
+    }
+
+    .image-slideshow {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .image-slideshow img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      filter: grayscale(100%);
+      animation: imageFade 12s infinite;
+    }
+
+    .image-slideshow img:nth-child(1) { animation-delay: 0s; }
+    .image-slideshow img:nth-child(2) { animation-delay: 4s; }
+    .image-slideshow img:nth-child(3) { animation-delay: 8s; }
+
+    @keyframes imageFade {
+      0% { opacity: 0; }
+      8% { opacity: 1; }
+      28% { opacity: 1; }
+      36% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    .image-caption {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    section {
+      padding: 96px 5vw;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 0.38fr 1fr;
+      gap: 64px;
+    }
+
+    .section-kicker {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 58px);
+      line-height: 1.08;
+      font-weight: 400;
+      letter-spacing: -0.04em;
+    }
+
+    .text-block {
+      max-width: 840px;
+      font-size: 17px;
+    }
+
+    .text-block p + p {
+      margin-top: 1.2em;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 42px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--card);
+      padding: 28px;
+      min-height: 260px;
+    }
+
+    .card .num {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+
+    .card h3 {
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 400;
+      margin: 0 0 18px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .teacher {
+      text-align: center;
+    }
+
+    .teacher-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .teacher-photo {
+      width: 100%;
+      max-width: 720px;
+      margin: 42px auto 34px;
+      border: 1px solid var(--line);
+      filter: grayscale(100%);
+    }
+
+    .teacher-name {
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      font-weight: 400;
+      margin-bottom: 14px;
+    }
+
+    .teacher-role {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .teacher-text {
+      max-width: 700px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    .modules {
+      display: grid;
+      margin-top: 42px;
+      border-top: 1px solid var(--line);
+    }
+
+    .module {
+      display: grid;
+      grid-template-columns: 120px 1fr 1.2fr;
+      gap: 28px;
+      padding: 26px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+
+    .module-number {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .module-title {
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .module-desc {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .price-table {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 42px;
+    }
+
+    .price {
+      border: 1px solid var(--line);
+      background: var(--card);
+      padding: 30px;
+      min-height: 620px;
+    }
+
+    .price h3 {
+      margin: 0 0 18px;
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .amount {
+      font-size: 34px;
+      letter-spacing: -0.04em;
+      margin: 22px 0 8px;
+    }
+
+    .unit {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .price ul {
+      padding-left: 1.2em;
+      margin-top: 20px;
+    }
+
+    .price li,
+    .price p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .price li + li {
+      margin-top: 0.45em;
+    }
+
+    .note {
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .faq {
+      border-top: 1px solid var(--line);
+      margin-top: 42px;
+    }
+
+    details {
+      border-bottom: 1px solid var(--line);
+      padding: 24px 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 18px;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::before {
+      content: "+ ";
+    }
+
+    details[open] summary::before {
+      content: "– ";
+    }
+
+    details p {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 780px;
+    }
+
+    .contact-form {
+      margin-top: 40px;
+      display: grid;
+      gap: 18px;
+      max-width: 720px;
+    }
+
+    .contact-form label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      border-radius: 0;
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+    }
+
+    footer {
+      padding: 56px 5vw;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+        gap: 34px;
+      }
+
+      .cards,
+      .price-table {
+        grid-template-columns: 1fr;
+      }
+
+      .price {
+        min-height: auto;
+      }
+
+      .module {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a class="logo" href="#top" aria-label="Atelier Composition Son home">
+    <img src="../images/acs-logo.png" alt="" />
+    <span>Atelier Composition Son</span>
+  </a>
+
+  <nav aria-label="Main navigation">
+    <a href="#about">About</a>
+    <a href="#instructor">Instructor</a>
+    <a href="#modules">Modules</a>
+    <a href="#price">Price</a>
+    <a href="#policies">Policies</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+    <a href="../fr/">FR</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Online atelier for sound and creation</div>
+
+      <h1>
+        音と創作のための<br>
+        オンラインアトリエ
+      </h1>
+
+      <p class="lead">
+        Atelier Composition Son は、作曲・DTM・音楽理論・電子音響・サウンドアート・AIと音楽を横断しながら、
+        ひとりひとりの創作を育てるためのオンラインアトリエです。
+      </p>
+
+      <div class="button-row">
+        <a class="btn primary" href="#contact">無料面談を申し込む</a>
+        <a class="btn" href="#price">料金を見る</a>
+        <a class="btn" href="#modules">内容を見る</a>
+      </div>
+    </div>
+
+    <aside class="hero-panel">
+      <p>
+        初心者から、音大・芸大受験、作品制作、ポートフォリオ相談、電子音響、Max/MSP、AIを使った創作まで。
+        一般的な音楽教室では扱いにくい領域を、個人の目的に合わせて設計します。
+      </p>
+
+      <p>
+        Directed by Sachie Kobayashi<br>
+        Composer / Artist / Educator
+      </p>
+    </aside>
+  </section>
+
+  <section class="image-sequence" aria-label="Atelier Composition Son visual sequence">
+    <div class="image-slideshow">
+      <img src="../images/home.jpg" alt="音と創作のためのオンラインアトリエ">
+      <img src="../images/home-2.jpg" alt="作曲・電子音響・サウンドアートの制作風景">
+      <img src="../images/home-3.jpg" alt="Atelier Composition Son の創作イメージ">
+    </div>
+    <div class="image-caption">composition / sound / electronic creation</div>
+  </section>
+
+  <section id="about">
+    <div class="section-grid">
+      <div>
+        <div class="section-kicker">Concept</div>
+        <h2>レッスンではなく、創作の場として。</h2>
+      </div>
+
+      <div class="text-block">
+        <p>
+          このアトリエでは、「正しい作曲法」を一方向に教えるのではなく、
+          受講者自身の感覚・関心・音の記憶から出発します。
+          楽譜を書くこと、DAWで音を編集すること、録音素材を変形すること、
+          アルゴリズムやAIを使うこと。そのすべてを、作品をつくるための手段として扱います。
+        </p>
+
+        <p>
+          一般的な作曲・DTMレッスンよりも、個人の創作プロセスに深く関わります。
+          まだ何を作りたいかわからない段階でも、すでに作品やポートフォリオを持っている段階でも、
+          目的に応じて内容を組み立てます。
+        </p>
+
+        <div class="cards">
+          <article class="card">
+            <div class="num">01</div>
+            <h3>創作中心</h3>
+            <p>理論やソフト操作を目的化せず、作品を作るために必要な知識と技術を選びます。</p>
+          </article>
+
+          <article class="card">
+            <div class="num">02</div>
+            <h3>音を聴くことから始める</h3>
+            <p>音色、質感、空間、身体性、時間感覚を丁寧に扱い、音楽以前の感覚を作品へ接続します。</p>
+          </article>
+
+          <article class="card">
+            <div class="num">03</div>
+            <h3>現代的な制作環境</h3>
+            <p>DAW、Max/MSP、録音、AI、電子音響、映像との関係など、現在の制作環境に対応します。</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="instructor" class="teacher">
+    <div class="teacher-inner">
+      <div class="section-kicker">Instructor</div>
+
+   <section id="instructor" class="teacher">
   <div class="teacher-inner">
     <div class="section-kicker">Instructor</div>
 
@@ -47,3 +691,435 @@
     </p>
   </div>
 </section>
+        <div class="modules">
+          <div class="module">
+            <div class="module-number">Module 00</div>
+            <div class="module-title">Listening / 聴く</div>
+            <div class="module-desc">音色、沈黙、空間、ノイズ、質感を分析し、自分の感覚と言語をつなげる。</div>
+          </div>
+
+          <div class="module">
+            <div class="module-number">Module 01</div>
+            <div class="module-title">Composition / 作曲</div>
+            <div class="module-desc">旋律・和声・形式だけでなく、時間構造、素材、展開、コンセプトから作品を考える。</div>
+          </div>
+
+          <div class="module">
+            <div class="module-number">Module 02</div>
+            <div class="module-title">Theory / 音楽理論</div>
+            <div class="module-desc">楽典、コード、和声、対位法、形式を、作曲と制作に接続する。</div>
+          </div>
+
+          <div class="module">
+            <div class="module-number">Module 03</div>
+            <div class="module-title">Solfège / ソルフェージュ</div>
+            <div class="module-desc">読譜、リズム、聴音、音感、受験レベルの基礎力を整える。</div>
+          </div>
+
+          <div class="module">
+            <div class="module-number">Module 04</div>
+            <div class="module-title">Electroacoustic / 電子音響</div>
+            <div class="module-desc">録音素材、声、環境音、加工、編集、空間化を用いた音響作品の制作。</div>
+          </div>
+
+          <div class="module">
+            <div class="module-number">Module 05</div>
+            <div class="module-title">Sound & Technology</div>
+            <div class="module-desc">DAW、Reaper、Ableton Live、Max/MSP、MIDI、OSC、センサー、生成システム。</div>
+          </div>
+
+          <div class="module">
+            <div class="module-number">Module 06</div>
+            <div class="module-title">AI and Music</div>
+            <div class="module-desc">AI生成、プロンプト、サウンド制作、作品コンセプト、既存の創作プロセスとの接続。</div>
+          </div>
+
+          <div class="module">
+            <div class="module-number">Module 07</div>
+            <div class="module-title">Portfolio / Project</div>
+            <div class="module-desc">音大・芸大・海外音楽院・公募・作品提出に向けたポートフォリオと制作計画。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="lessons">
+    <div class="section-grid">
+      <div>
+        <div class="section-kicker">For whom</div>
+        <h2>対象</h2>
+      </div>
+
+      <div class="text-block">
+        <p>
+          楽譜が読めるかどうか、音楽経験が長いかどうかよりも、
+          「音を使って何かを作りたい」という関心を重視します。
+        </p>
+
+        <div class="cards">
+          <article class="card">
+            <div class="num">Beginner</div>
+            <h3>初心者・独学者</h3>
+            <p>作曲やDTMを始めたいが、何から始めればよいかわからない方。</p>
+          </article>
+
+          <article class="card">
+            <div class="num">Creator</div>
+            <h3>制作中の人</h3>
+            <p>曲、音響作品、映像音楽、サウンドアート、AI作品などを具体的に進めたい方。</p>
+          </article>
+
+          <article class="card">
+            <div class="num">Advanced</div>
+            <h3>専門的に学びたい人</h3>
+            <p>音大・芸大・海外音楽院、ポートフォリオ、公募、現代音楽・電子音響に取り組みたい方。</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section id="price">
+  <div class="section-grid">
+    <div>
+      <div class="section-kicker">Price</div>
+      <h2>受講形式</h2>
+    </div>
+
+    <div class="text-block">
+      <p>
+        初回30分のオンライン面談は無料です。
+        内容は初回相談で確認し、目的に合わせて設計します。
+        Beginner、Advanced、対面レッスンはそれぞれ独立した料金体系です。
+      </p>
+
+      <div class="price-table">
+        <article class="price">
+          <h3>Online Lesson — Beginner</h3>
+
+          <p>
+            作曲・DTM・ソルフェージュ・音楽理論の基礎を、
+            無理なく体系的に整えたい方のためのレッスンです。
+          </p>
+
+          <div class="amount">¥4,800</div>
+          <div class="unit">60min / Online</div>
+
+          <p>
+            資料の確認、質問への回答、課題のフィードバックは、
+            原則としてレッスン時間内で行います。
+          </p>
+
+          <ul>
+            <li>音楽制作の基礎を整理するレッスン</li>
+            <li>ソルフェージュ基礎</li>
+            <li>楽典・音楽理論：属9、ドッペルドミナント和音まで</li>
+            <li>和声：基礎的な和声進行</li>
+            <li>対位法：2声対位法の基礎</li>
+            <li>作曲：コード、ドミナント、トニック、キーの理解</li>
+            <li>クラシカルな作曲形式：3部形式まで</li>
+            <li>DAW / DTM基礎</li>
+            <li>受験対応以外のソルフェージュ</li>
+          </ul>
+        </article>
+
+        <article class="price">
+          <h3>Online Lesson — Advanced</h3>
+
+          <p>
+            受験、作品制作、電子音響、ポートフォリオなど、
+            具体的な制作目標に向けた伴走型レッスンです。
+          </p>
+
+          <div class="amount">¥7,000</div>
+          <div class="unit">60min / Online</div>
+
+          <p>
+            必要に応じてオリジナル教材や個別資料を使用し、
+            事前に共有された楽譜・音源・ポートフォリオを簡易確認したうえで、
+            レッスン内で具体的な改善点や制作方針を整理します。
+          </p>
+
+          <ul>
+            <li>作品・課題・ポートフォリオへの個別フィードバック</li>
+            <li>オリジナル教材・個別資料を必要に応じて使用</li>
+            <li>事前共有された楽譜・音源・ポートフォリオの簡易確認</li>
+            <li>レッスン内で具体的な改善点・制作方針を整理</li>
+            <li>受験レベルソルフェージュ対応</li>
+            <li>クラシック作曲：受験対応</li>
+            <li>作曲形式：ロンド形式、ソナタ形式</li>
+            <li>和声：ソプラノ課題</li>
+            <li>対位法：3声以上</li>
+            <li>電子音響 / Max/MSP</li>
+            <li>AIと音楽制作</li>
+            <li>制作計画、提出前の整理、公募・海外音楽院相談</li>
+          </ul>
+        </article>
+
+        <article class="price">
+          <h3>In-person Lesson</h3>
+
+          <p>
+            対面での個人レッスンです。
+            音の確認、制作環境、楽譜・資料を直接共有しながら進めます。
+          </p>
+
+          <div class="amount">Full　満員</div>
+          <div class="unit">60min / In person</div>
+
+          <ul>
+            <li>対面での個人レッスン</li>
+            <li>作曲・DTM・音楽理論・ソルフェージュ</li>
+            <li>作品制作・音響制作相談</li>
+            <li>場所は相談のうえ調整</li>
+            <li>会場費負担なし</li>
+            <li>空き状況により受付</li>
+          </ul>
+        </article>
+      </div>
+
+      <p class="note">
+        お支払い方法は、Stripeによるクレジットカード決済、
+        または銀行振込をご相談いただけます。
+        レッスンは月謝制となっており、月初めのお支払いを基本とします。
+        月内での日程調整には可能な範囲で対応いたします。
+        お支払い後の返金、および翌月への振替には対応しておりません。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="policies">
+  <div class="section-grid">
+    <div>
+      <div class="section-kicker">Policies</div>
+      <h2>レッスン規約</h2>
+    </div>
+
+    <div class="text-block">
+      <div class="faq">
+        <details open>
+          <summary>受講について</summary>
+          <p>
+            レッスンはオンラインまたは対面で行います。
+            内容は受講者の目的や制作状況に応じて個別に設計されます。
+          </p>
+        </details>
+
+        <details>
+          <summary>初回面談について</summary>
+          <p>
+            初回30分のオンライン面談は無料です。
+            現在の状況、興味分野、制作内容、目標などを確認し、
+            適切な受講形式を提案します。
+          </p>
+        </details>
+
+        <details>
+          <summary>事前共有資料について</summary>
+          <p>
+            楽譜・音源・ポートフォリオなどの資料は、
+            レッスン前に共有していただくことができます。
+            Beginner Lesson では、資料の確認・質問への対応は
+            原則としてレッスン時間内に行います。
+            Advanced Lesson では、必要に応じて事前共有資料を簡易確認し、
+            レッスン内で扱うポイントを整理します。
+            ただし、詳細な添削・分析・制作指導はレッスン時間内で行います。
+          </p>
+        </details>
+
+        <details>
+          <summary>資料の提出期限について</summary>
+          <p>
+            Advanced Lesson で事前確認を希望される資料は、
+            原則としてレッスンの48時間前までに共有してください。
+            直前に共有された資料や分量の多い資料については、
+            事前確認ではなくレッスン時間内で確認します。
+          </p>
+        </details>
+
+        <details>
+          <summary>事前確認の範囲について</summary>
+          <p>
+            事前確認は、レッスンを効率よく進めるための簡易確認です。
+            レッスン外での詳細な添削、分析、制作指導を保証するものではありません。
+            具体的な改善点や制作方針の整理は、原則としてレッスン時間内で行います。
+          </p>
+        </details>
+
+        <details>
+          <summary>お支払いについて</summary>
+          <p>
+            レッスン料金は事前支払い制です。
+            Stripeによるクレジットカード決済、
+            または銀行振込をご相談いただけます。
+          </p>
+        </details>
+
+        <details>
+          <summary>キャンセル・日程変更</summary>
+          <p>
+            月内での日程調整には可能な範囲で対応します。
+            開始時刻を過ぎてからのご連絡や無断欠席の場合は、
+            原則としてレッスン実施扱いとなります。
+          </p>
+        </details>
+
+        <details>
+          <summary>返金・翌月振替について</summary>
+          <p>
+            お支払い後の返金、および翌月への振替には対応しておりません。
+          </p>
+        </details>
+
+        <details>
+          <summary>制作物・著作権について</summary>
+          <p>
+            レッスン内で制作された作品やアイデアの著作権は、
+            原則として受講者本人に帰属します。
+            ただし、参考作品・技術資料・共有教材の再配布はご遠慮ください。
+          </p>
+        </details>
+
+        <details>
+          <summary>ハラスメント・迷惑行為について</summary>
+          <p>
+            継続的な迷惑行為、ハラスメント、不適切なコミュニケーションが見られる場合、
+            受講をお断りすることがあります。
+          </p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section id="faq">
+    <div class="section-grid">
+      <div>
+        <div class="section-kicker">FAQ</div>
+        <h2>よくある質問</h2>
+      </div>
+
+      <div class="text-block">
+        <div class="faq">
+          <details>
+            <summary>初心者でも受講できますか？</summary>
+            <p>
+              可能です。楽譜・DTM・音楽理論の経験が少ない場合でも、目的に合わせて基礎から始めます。
+              ただし、このアトリエでは単なる操作説明よりも、音を使って何を作るかを重視します。
+            </p>
+          </details>
+
+          <details>
+            <summary>受験やポートフォリオにも対応していますか？</summary>
+            <p>
+              はい。音大・芸大受験、海外音楽院、作品提出、公募、ポートフォリオ相談に対応します。
+              専門的な内容は Advanced Lesson として扱います。
+            </p>
+          </details>
+
+          <details>
+            <summary>どのくらいの頻度で受けるのがよいですか？</summary>
+            <p>
+              基礎からしっかり進めたい場合は月4回、制作ペースに合わせたい場合は月2回、
+              作品講評や相談中心の場合は月1回も可能です。内容と生活リズムに合わせて調整します。
+            </p>
+          </details>
+
+          <details>
+            <summary>単発相談はできますか？</summary>
+            <p>
+              可能です。作品講評、制作方針、ポートフォリオ、機材・ソフトの選び方など、1回のみの相談にも対応します。
+            </p>
+          </details>
+
+          <details>
+            <summary>どのソフトに対応していますか？</summary>
+            <p>
+              Reaper、Ableton Live、Logic Pro、Max/MSP、一般的なDAW、MIDI・OSCを使った制作などに対応します。
+              必要に応じてAI生成ツールや映像制作との接続も扱います。
+            </p>
+          </details>
+
+          <details>
+            <summary>外部スクール経由のレッスンとは何が違いますか？</summary>
+            <p>
+              外部スクールでは、一般的な作曲・DTMレッスンとして受講しやすい形になっています。
+              こちらのアトリエでは、作品制作、電子音響、ポートフォリオ、AIやMax/MSPを含む個別プロジェクト設計など、
+              より創作に踏み込んだ内容を扱います。
+            </p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="section-grid">
+      <div>
+        <div class="section-kicker">Contact</div>
+        <h2>相談・問い合わせ</h2>
+      </div>
+
+      <div class="text-block">
+        <p>
+          受講を希望される方は、現在の経験、興味のある内容、作りたいもの、使用しているソフトなどを簡単に書いてご連絡ください。
+        </p>
+
+        <form class="contact-form" action="https://formspree.io/f/mbdbpqrj" method="POST">
+          <div>
+            <label for="name">お名前</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+
+          <div>
+            <label for="email">メールアドレス</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div>
+            <label for="course">ご希望の内容</label>
+            <select id="course" name="course" required>
+              <option value="">選択してください</option>
+              <option value="Online Lesson — Beginner">Online Lesson — Beginner</option>
+              <option value="Online Lesson — Advanced">Online Lesson — Advanced</option>
+              <option value="In-person Lesson">In-person Lesson</option>
+              <option value="作品講評・ポートフォリオ相談">作品講評・ポートフォリオ相談</option>
+              <option value="相談して決めたい">相談して決めたい</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="message">相談内容</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="8"
+              required
+              placeholder="現在の経験、興味のある内容、使用しているソフト、作りたい作品、ご希望の頻度などをご記入ください。"
+            ></textarea>
+          </div>
+
+          <div class="button-row">
+            <button type="submit" class="btn primary">送信する</button>
+            <a class="btn" href="mailto:info@sachiekobayashi.com">メールで相談する</a>
+          </div>
+        </form>
+
+        <p class="note">
+          直接メールする場合：info@sachiekobayashi.com
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>© Atelier Composition Son</div>
+  <div>Japanese / Français / English</div>
+</footer>
+
+</body>
+</html>
