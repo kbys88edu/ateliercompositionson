@@ -803,8 +803,8 @@ function moveSelection(delta) {
   if (!total) return;
 
   if (events.length) {
-    const currentEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-    const currentStart = currentEvent ? currentEvent.start : selectedIndex;
+    const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+    const currentStart = selectedEvent ? selectedEvent.start : selectedIndex;
     let currentPosition = events.findIndex((event) => event.start === currentStart);
 
     if (currentPosition === -1) {
@@ -812,8 +812,10 @@ function moveSelection(delta) {
     }
 
     const nextPosition = Math.max(0, Math.min(events.length - 1, currentPosition + delta));
-    selectedIndex = events[nextPosition].start;
-    inputDuration = events[nextPosition].duration;
+    const nextEvent = events[nextPosition];
+
+    selectedIndex = nextEvent.start;
+    inputDuration = nextEvent.duration;
     syncRhythmButtons(inputDuration);
     renderScore();
     return;
@@ -823,16 +825,27 @@ function moveSelection(delta) {
   renderScore();
 }
 
-function moveSelectedNote(semitone) {
-  const events = getCounterpointEvents();
-  const event = getEventAtSlot(selectedIndex);
-  if (!event) return;
-  const midi = noteToMidi(event.note);
+function moveSelectedNote(delta) {
+  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+  if (!selectedEvent || isRestEvent(selectedEvent)) {
+    return;
+  }
+
+  const midi = noteToMidi(selectedEvent.note);
   if (midi === null) return;
-  event.note = midiToNote(midi + semitone, semitone > 0 ? "sharp" : "flat");
+
+  const updatedNote = midiToNote(midi + delta);
+  const events = getCounterpointEvents().map((event) => {
+    if (event.start === selectedEvent.start) {
+      return { ...event, note: updatedNote, rest: false };
+    }
+    return event;
+  });
+
+  selectedIndex = selectedEvent.start;
   setCounterpointEvents(events);
   renderScore();
-  playNoteName(event.note, 0.45, 1, "femaleSample");
+  playNoteName(updatedNote, 0.25, 1, "femaleSample");
 }
 
 function deleteSelectedNote() {
@@ -976,32 +989,59 @@ function drawIssueRing(svg, x, y, issueClass) {
 function drawRest(svg, x, voice, index, bottomLineY, duration = "q") {
   const isSelected = index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
-  const y = bottomLineY - 20;
+  const baseClass = [
+    "rest-mark",
+    isSelected ? "selected" : "",
+    isCurrentPlayback ? "playing" : ""
+  ].filter(Boolean).join(" ");
 
-  let text = "𝄽";
-  if (duration === "h") text = "𝄼";
-  if (duration === "w") text = "𝄻";
+  // Use SVG primitives, not music-font glyphs.
+  // This avoids square/tofu boxes on systems without music-symbol fonts.
+  const y = bottomLineY - 22;
 
-  svg.appendChild(createSvgElement("text", {
-    x: x - 8,
-    y,
-    class: [
-      "rest-symbol",
-      isSelected ? "selected" : "",
-      isCurrentPlayback ? "playing" : ""
-    ].filter(Boolean).join(" ")
-  })).textContent = text;
+  if (duration === "w") {
+    svg.appendChild(createSvgElement("rect", {
+      x: x - 8,
+      y: y - 5,
+      width: 16,
+      height: 6,
+      rx: 1.5,
+      class: baseClass
+    }));
+  } else if (duration === "h") {
+    svg.appendChild(createSvgElement("rect", {
+      x: x - 8,
+      y: y + 1,
+      width: 16,
+      height: 6,
+      rx: 1.5,
+      class: baseClass
+    }));
+  } else {
+    svg.appendChild(createSvgElement("line", {
+      x1: x - 7,
+      y1: y - 8,
+      x2: x + 7,
+      y2: y + 8,
+      class: baseClass
+    }));
+    svg.appendChild(createSvgElement("line", {
+      x1: x + 7,
+      y1: y - 8,
+      x2: x - 7,
+      y2: y + 8,
+      class: baseClass
+    }));
+  }
 
-  svg.appendChild(createSvgElement("text", {
-    x: x - 10,
-    y: bottomLineY - 62,
-    class: [
-      "note-label",
-      "rest-label",
-      isSelected ? "selected" : "",
-      isCurrentPlayback ? "playing" : ""
-    ].filter(Boolean).join(" ")
-  })).textContent = "休";
+  // Small invisible hit area, useful for selecting rests.
+  svg.appendChild(createSvgElement("rect", {
+    x: x - 14,
+    y: y - 18,
+    width: 28,
+    height: 36,
+    class: "rest-hit-area"
+  }));
 }
 
 function drawNote(svg, note, x, voice, index, bottomLineY, duration = "q") {
@@ -1132,20 +1172,20 @@ function handleScoreClick(event) {
   const clickedNote = yToNaturalNote(viewY);
   const coveringEvent = getEventCoveringSlot(nearestIndex);
 
-  // Rest or empty place: replace with a note.
+  // Rest: select and replace with a note at the clicked pitch.
   if (coveringEvent && isRestEvent(coveringEvent)) {
     const start = coveringEvent.start;
+    const duration = inputDuration || coveringEvent.duration || "q";
+    const length = getDurationQuarters(duration);
+    const newEnd = start + length;
 
-    if (!isSlotAvailable(start, inputDuration, start)) {
+    if (start % 4 + length > 4 || newEnd > totalSlots) {
       selectedIndex = start;
       inputDuration = coveringEvent.duration;
       syncRhythmButtons(inputDuration);
       renderScore();
       return;
     }
-
-    const newLength = getDurationQuarters(inputDuration);
-    const newEnd = start + newLength;
 
     const events = getCounterpointEvents()
       .filter((event) => {
@@ -1154,10 +1194,11 @@ function handleScoreClick(event) {
         const eventEnd = event.start + getDurationQuarters(event.duration);
         return !(start < eventEnd && eventStart < newEnd && isRestEvent(event));
       })
-      .concat([{ start, duration: inputDuration, note: clickedNote, rest: false }])
+      .concat([{ start, duration, note: clickedNote, rest: false }])
       .sort((a, b) => a.start - b.start);
 
     selectedIndex = start;
+    inputDuration = duration;
     setCounterpointEvents(events);
     syncRhythmButtons(inputDuration);
     renderScore();
@@ -1165,7 +1206,7 @@ function handleScoreClick(event) {
     return;
   }
 
-  // Existing note: select it. If close to the head, update pitch.
+  // Existing note: select it. If close to the notehead, update its pitch.
   if (coveringEvent) {
     selectedIndex = coveringEvent.start;
     inputDuration = coveringEvent.duration;
@@ -1190,22 +1231,23 @@ function handleScoreClick(event) {
     return;
   }
 
+  // Empty slot: create a new note.
   const start = nearestIndex;
-
   if (!isSlotAvailable(start, inputDuration, null)) {
     renderScore();
     return;
   }
 
+  const length = getDurationQuarters(inputDuration);
+  const newEnd = start + length;
+
   const events = getCounterpointEvents()
     .filter((event) => {
-      const newLength = getDurationQuarters(inputDuration);
-      const newEnd = start + newLength;
       const eventStart = event.start;
       const eventEnd = event.start + getDurationQuarters(event.duration);
       return !(start < eventEnd && eventStart < newEnd && isRestEvent(event));
     })
-    .concat({ start, duration: inputDuration, note: clickedNote, rest: false })
+    .concat([{ start, duration: inputDuration, note: clickedNote, rest: false }])
     .sort((a, b) => a.start - b.start);
 
   selectedIndex = start;
