@@ -411,6 +411,31 @@ h2 {
 }
 
 
+.note-head.open {
+  fill: #ffffff;
+  stroke: #181818;
+  stroke-width: 1.6;
+}
+
+.note-head.open.cantus {
+  fill: #ffffff;
+  stroke: rgba(0, 0, 0, 0.42);
+  stroke-width: 1.6;
+}
+
+.note-head.open.selected {
+  fill: #ffffff;
+  stroke: var(--selected);
+  stroke-width: 2;
+}
+
+.note-head.open.playing {
+  fill: #ffffff;
+  stroke: var(--playhead);
+  stroke-width: 2;
+}
+
+
 .clef-symbol {
   font-family: "Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", serif;
   fill: rgba(0, 0, 0, 0.72);
@@ -418,12 +443,142 @@ h2 {
   pointer-events: none;
 }
 
-.clef-symbol.treble { font-size: 58px; }
-.clef-symbol.bass { font-size: 48px; }
+.clef-symbol.treble {
+  font-size: 58px;
+}
+
+.clef-symbol.bass {
+  font-size: 48px;
+}
 
 
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.brand-logo {
+  display: block;
+  width: 42px;
+  height: auto;
+  object-fit: contain;
+}
+
+.brand-text {
+  color: var(--muted);
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 520px) {
+  .brand-logo {
+    width: 38px;
+  }
+}
+
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+
+/* Explicit note values for Module 2 / Module 3 */
 .note-head.open {
   fill: #ffffff !important;
   stroke: #181818;
   stroke-width: 1.8;
+}
+
+.note-head.open.cantus {
+  fill: #ffffff !important;
+  stroke: rgba(0, 0, 0, 0.46);
+  stroke-width: 1.8;
+}
+
+.note-head.open.selected {
+  fill: #ffffff !important;
+  stroke: var(--selected);
+  stroke-width: 2.1;
+}
+
+.note-head.open.playing {
+  fill: #ffffff !important;
+  stroke: var(--playhead);
+  stroke-width: 2.1;
+}
+
+.duration-label {
+  font-size: 11px;
+  fill: rgba(0, 0, 0, 0.5);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+
+/* ACS logo display safeguard */
+.brand-logo,
+.logo {
+  display: block;
+  width: 48px;
+  max-width: 48px;
+  height: auto;
+  object-fit: contain;
+}
+
+
+/* Error highlighting */
+.note-head.error {
+  fill: #b3261e !important;
+  stroke: #b3261e !important;
+  stroke-width: 2.2 !important;
+}
+
+.note-head.open.error {
+  fill: #ffffff !important;
+  stroke: #b3261e !important;
+  stroke-width: 2.4 !important;
+}
+
+.note-stem.error {
+  stroke: #b3261e !important;
+  stroke-width: 2.2 !important;
+}
+
+.note-label.error,
+.accidental.error {
+  fill: #b3261e !important;
+  font-weight: 700;
+}
+
+.issue-ring {
+  fill: none;
+  stroke: #b3261e;
+  stroke-width: 2;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.issue-ring.warn {
+  stroke: #c47a00;
+}
+
+.note-head.warn {
+  stroke: #c47a00 !important;
+  stroke-width: 2.1 !important;
+}
+
+.note-stem.warn {
+  stroke: #c47a00 !important;
+  stroke-width: 2 !important;
+}
+
+.note-label.warn,
+.accidental.warn {
+  fill: #c47a00 !important;
+  font-weight: 700;
 }

@@ -12,6 +12,9 @@ Female:
 - Uses C4, G4, C5, G5.
 - No octave transposition is applied.
 
+Male:
+- Uses C2, G2, C3, G3, C4, G4.
+
 Required files:
 
 Female:
@@ -25,3 +28,5 @@ Male:
 - audio/voice/male/G2.wav
 - audio/voice/male/C3.wav
 - audio/voice/male/G3.wav
+- audio/voice/male/C4.wav
+- audio/voice/male/G4.wav

@@ -222,7 +222,7 @@ const EXERCISES = [
       ja: "G majorの基本課題。F#を含みます。",
       fr: "Exercice de base en Sol majeur, avec Fa#."
     },
-    cantus: ["G3", "A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3", "G3"],
+    cantus: ["G4", "A4", "B4", "C4", "D4", "E4", "D4", "C4", "B4", "A4", "G4"],
     counterpoint: []
   },
   {
@@ -233,7 +233,7 @@ const EXERCISES = [
       ja: "F majorの基本課題。Bbを含みます。",
       fr: "Exercice de base en Fa majeur, avec Sib."
     },
-    cantus: ["F3", "G3", "A3", "Bb3", "C4", "D4", "C4", "Bb3", "A3", "G3", "F3"],
+    cantus: ["F4", "G4", "A4", "Bb4", "C4", "D4", "C4", "Bb4", "A4", "G4", "F4"],
     counterpoint: []
   },
   {
@@ -255,7 +255,7 @@ const EXERCISES = [
       ja: "低めの音域から始まる課題。音域のバランスに注意します。",
       fr: "Commence dans un registre plus grave. Travail sur l’équilibre de tessiture."
     },
-    cantus: ["C3", "D3", "F3", "E3", "G3", "A3", "G3", "F3", "E3", "D3", "C3"],
+    cantus: ["C4", "D4", "F4", "E4", "G4", "A4", "G4", "F4", "E4", "D4", "C4"],
     counterpoint: []
   },
   {
@@ -266,7 +266,7 @@ const EXERCISES = [
       ja: "自然短音階に近い短調課題です。終止音程に注意してください。",
       fr: "Exercice en mineur naturel. Attention à l’intervalle final."
     },
-    cantus: ["A3", "B3", "C4", "D4", "E4", "F4", "E4", "D4", "C4", "B3", "A3"],
+    cantus: ["A4", "B4", "C4", "D4", "E4", "F4", "E4", "D4", "C4", "B4", "A4"],
     counterpoint: []
   },
   {
@@ -299,7 +299,7 @@ const EXERCISES = [
       ja: "跳躍と順次進行のバランスを取る課題です。",
       fr: "Exercice sur l’équilibre entre sauts et mouvements conjoints."
     },
-    cantus: ["G3", "B3", "A3", "C4", "D4", "E4", "D4", "B3", "C4", "A3", "B3", "A3", "G3"],
+    cantus: ["G4", "B4", "A4", "C4", "D4", "E4", "D4", "B4", "C4", "A4", "B4", "A4", "G4"],
     counterpoint: []
   },
   {
@@ -310,7 +310,7 @@ const EXERCISES = [
       ja: "やや広い音域を使う課題。対旋律の音域管理が難しくなります。",
       fr: "Tessiture un peu plus large. Le contrôle de la seconde voix devient plus difficile."
     },
-    cantus: ["F3", "A3", "G3", "Bb3", "C4", "D4", "F4", "E4", "D4", "C4", "Bb3", "G3", "F3"],
+    cantus: ["F4", "A4", "G4", "Bb4", "C4", "D4", "F4", "E4", "D4", "C4", "Bb4", "G4", "F4"],
     counterpoint: []
   },
   {
@@ -536,8 +536,8 @@ const SAMPLE_VOICE_SETS = {
   maleSample: {
     folder: "male",
     // Required male files:
-    // C2.wav, G2.wav, C3.wav, G3.wav
-    notes: ["C2", "G2", "C3", "G3"],
+    // C2.wav, G2.wav, C3.wav, G3.wav, C4.wav, G4.wav
+    notes: ["C2", "G2", "C3", "G3", "C4", "G4"],
     transposeSemitones: 0
   }
 };

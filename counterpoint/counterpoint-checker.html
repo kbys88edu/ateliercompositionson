@@ -10,7 +10,7 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-female-no-octave-down" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
@@ -129,7 +129,13 @@
         <label class="timbre-control" for="timbreSelect">
           <span data-i18n="timbreLabel">音色</span>
           <select id="timbreSelect" onchange="previewTimbre()">
-            <option value="humanVoice" selected data-i18n="timbreHumanVoice">人の声</option>
+            <option value="sine" data-i18n="timbreSine">Sine / 柔らかい</option>
+            <option value="triangle" selected data-i18n="timbreTriangle">Triangle / 素直</option>
+            <option value="square" data-i18n="timbreSquare">Square / 電子的</option>
+            <option value="sawtooth" data-i18n="timbreSaw">Sawtooth / 明るい</option>
+            <option value="organ" data-i18n="timbreOrgan">Organ / オルガン風</option>
+            <option value="bell" data-i18n="timbreBell">Bell / ベル風</option>
+            <option value="voice" data-i18n="timbreVoice">Voice / 声風</option>
           </select>
         </label>
 
@@ -154,7 +160,7 @@
         <svg
           id="scoreEditor"
           class="score-editor"
-          viewBox="0 0 960 340"
+          viewBox="0 0 960 300"
           role="img"
           aria-label="対位法入力用五線譜"
           tabindex="0"
@@ -181,6 +187,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-female-no-octave-down"></script>
+  <script src="js/counterpoint.js?v=20260601-voice"></script>
 </body>
 </html>

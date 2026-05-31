@@ -344,8 +344,8 @@ const SAMPLE_VOICE_SETS = {
   maleSample: {
     folder: "male",
     // Required male files:
-    // C2.wav, G2.wav, C3.wav, G3.wav
-    notes: ["C2", "G2", "C3", "G3"],
+    // C2.wav, G2.wav, C3.wav, G3.wav, C4.wav, G4.wav
+    notes: ["C2", "G2", "C3", "G3", "C4", "G4"],
     transposeSemitones: 0
   }
 };
