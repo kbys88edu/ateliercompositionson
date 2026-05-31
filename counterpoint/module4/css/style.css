@@ -887,3 +887,11 @@ main,
 .musicxml-wrapper .musicxml-display svg {
   max-width: none !important;
 }
+
+
+/* Module 4 varied invisible dummy sharps:
+   voice 9 uses C#, D#, E#, F# per measure to reserve accidental spacing at every beat. */
+.musicxml-wrapper {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
