@@ -521,3 +521,13 @@ h2 {
   stroke: none;
   pointer-events: none;
 }
+
+
+/* Module 4 stable notation reset: hide generated rest layers from previous builds. */
+.music-rest,
+.rest-symbol,
+.rest-label,
+.rest-mark,
+.rest-hit-area {
+  display: none !important;
+}
