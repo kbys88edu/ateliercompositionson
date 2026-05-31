@@ -604,21 +604,80 @@ function getNotesFromTextarea(id) {
   return value.split(/\s+/).filter(Boolean);
 }
 
+function isRestEvent(event) {
+  return !event || event.rest === true || event.note === "REST";
+}
+
+function normalizeCounterpointEvents(events) {
+  const total = getTotalQuarterSlots();
+  const cleaned = [];
+
+  (events || []).forEach((event) => {
+    if (!event || typeof event.start !== "number") return;
+    const duration = DURATIONS[event.duration] ? event.duration : "q";
+    const length = getDurationQuarters(duration);
+    if (event.start < 0 || event.start >= total) return;
+    if (event.start + length > total) return;
+    cleaned.push({
+      start: event.start,
+      duration,
+      note: isRestEvent(event) ? "REST" : event.note,
+      rest: isRestEvent(event)
+    });
+  });
+
+  cleaned.sort((a, b) => a.start - b.start);
+  return cleaned;
+}
+
+function fillRests(events) {
+  const total = getTotalQuarterSlots();
+  const source = normalizeCounterpointEvents(events).sort((a, b) => a.start - b.start);
+  const result = [];
+
+  let slot = 0;
+
+  source.forEach((event) => {
+    const eventStart = event.start;
+    const eventLength = getDurationQuarters(event.duration);
+
+    while (slot < eventStart) {
+      result.push({ start: slot, duration: "q", note: "REST", rest: true });
+      slot += 1;
+    }
+
+    if (eventStart >= slot) {
+      result.push(event);
+      slot = eventStart + eventLength;
+    }
+  });
+
+  while (slot < total) {
+    result.push({ start: slot, duration: "q", note: "REST", rest: true });
+    slot += 1;
+  }
+
+  return result.sort((a, b) => a.start - b.start);
+}
+
 function getCounterpointEvents() {
   const el = document.getElementById("counterpoint");
-  if (!el || !el.value.trim()) return [];
+  if (!el || !el.value.trim()) return fillRests([]);
+
   try {
     const parsed = JSON.parse(el.value);
-    return Array.isArray(parsed) ? parsed : [];
+    return fillRests(Array.isArray(parsed) ? parsed : []);
   } catch {
-    return [];
+    return fillRests([]);
   }
 }
 
 function setCounterpointEvents(events) {
   const el = document.getElementById("counterpoint");
   if (!el) return;
-  el.value = JSON.stringify(events);
+
+  // Store rests explicitly so gaps remain selectable and navigable.
+  el.value = JSON.stringify(fillRests(events));
 }
 
 function setCantus(notes) {
@@ -639,7 +698,10 @@ function getEventAtSlot(slot) {
 }
 
 function getEventCoveringSlot(slot) {
-  return getCounterpointEvents().find((event) => slot >= event.start && slot < event.start + getDurationQuarters(event.duration)) || null;
+  return getCounterpointEvents().find((event) => {
+    const length = getDurationQuarters(event.duration);
+    return slot >= event.start && slot < event.start + length;
+  }) || null;
 }
 
 function isSlotAvailable(start, duration, ignoreStart = null) {
@@ -651,6 +713,8 @@ function isSlotAvailable(start, duration, ignoreStart = null) {
   const events = getCounterpointEvents();
   return !events.some((event) => {
     if (ignoreStart !== null && event.start === ignoreStart) return false;
+    if (isRestEvent(event)) return false;
+
     const a1 = start;
     const a2 = start + length;
     const b1 = event.start;
@@ -669,13 +733,12 @@ function changeSelectedNoteDuration(duration) {
   if (!DURATIONS[duration]) return false;
 
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (!selectedEvent) return false;
+  if (!selectedEvent || isRestEvent(selectedEvent)) return false;
 
   const start = selectedEvent.start;
   const newLength = getDurationQuarters(duration);
   const total = getTotalQuarterSlots();
 
-  // Do not allow a note to cross the barline or exceed the whole exercise.
   if (start % 4 + newLength > 4 || start + newLength > total) {
     return false;
   }
@@ -689,10 +752,10 @@ function changeSelectedNoteDuration(duration) {
       const eventStart = event.start;
       const eventEnd = event.start + getDurationQuarters(event.duration);
 
-      // Remove events covered by the resized note.
+      // Remove all events/rests covered by the resized note.
       return !(start < eventEnd && eventStart < newEnd);
     })
-    .concat([{ ...selectedEvent, start, duration }])
+    .concat([{ ...selectedEvent, start, duration, rest: false }])
     .sort((a, b) => a.start - b.start);
 
   selectedIndex = start;
@@ -701,7 +764,6 @@ function changeSelectedNoteDuration(duration) {
   syncRhythmButtons(duration);
   updateDisplays();
   renderScore();
-
   return true;
 }
 
@@ -711,10 +773,8 @@ function setInputDuration(duration) {
   inputDuration = duration;
   syncRhythmButtons(duration);
 
-  // If a note is selected, rhythm buttons edit that selected note immediately.
   const changed = changeSelectedNoteDuration(duration);
 
-  // If no note was selected, the button only changes the next input duration.
   if (!changed) {
     renderScore();
   }
@@ -743,8 +803,8 @@ function moveSelection(delta) {
   if (!total) return;
 
   if (events.length) {
-    const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-    const currentStart = selectedEvent ? selectedEvent.start : selectedIndex;
+    const currentEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+    const currentStart = currentEvent ? currentEvent.start : selectedIndex;
     let currentPosition = events.findIndex((event) => event.start === currentStart);
 
     if (currentPosition === -1) {
@@ -779,9 +839,15 @@ function deleteSelectedNote() {
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
   if (!selectedEvent) return;
 
-  const events = getCounterpointEvents().filter((event) => event.start !== selectedEvent.start);
-  selectedIndex = selectedEvent.start;
+  const rest = { start: selectedEvent.start, duration: selectedEvent.duration, note: "REST", rest: true };
+  const events = getCounterpointEvents()
+    .filter((event) => event.start !== selectedEvent.start)
+    .concat(rest)
+    .sort((a, b) => a.start - b.start);
+
+  selectedIndex = rest.start;
   setCounterpointEvents(events);
+  syncRhythmButtons(rest.duration);
   renderScore();
 }
 
@@ -907,6 +973,37 @@ function drawIssueRing(svg, x, y, issueClass) {
   svg.appendChild(createSvgElement("circle", { cx: x, cy: y, r: 15, class: issueClass === "warn" ? "issue-ring warn" : "issue-ring" }));
 }
 
+function drawRest(svg, x, voice, index, bottomLineY, duration = "q") {
+  const isSelected = index === selectedIndex && !isPlaying;
+  const isCurrentPlayback = index === playbackIndex && isPlaying;
+  const y = bottomLineY - 20;
+
+  let text = "𝄽";
+  if (duration === "h") text = "𝄼";
+  if (duration === "w") text = "𝄻";
+
+  svg.appendChild(createSvgElement("text", {
+    x: x - 8,
+    y,
+    class: [
+      "rest-symbol",
+      isSelected ? "selected" : "",
+      isCurrentPlayback ? "playing" : ""
+    ].filter(Boolean).join(" ")
+  })).textContent = text;
+
+  svg.appendChild(createSvgElement("text", {
+    x: x - 10,
+    y: bottomLineY - 62,
+    class: [
+      "note-label",
+      "rest-label",
+      isSelected ? "selected" : "",
+      isCurrentPlayback ? "playing" : ""
+    ].filter(Boolean).join(" ")
+  })).textContent = "休";
+}
+
 function drawNote(svg, note, x, voice, index, bottomLineY, duration = "q") {
   const y = noteToY(note, bottomLineY);
   const parsed = parseNote(note);
@@ -990,7 +1087,13 @@ function renderScore() {
 
   events.forEach((event) => {
     const x = positions[event.start];
-    if (x !== undefined) drawNote(svg, event.note, x, "counterpoint", event.start, SCORE.topBottomLineY, event.duration);
+    if (x === undefined) return;
+
+    if (isRestEvent(event)) {
+      drawRest(svg, x, "counterpoint", event.start, SCORE.topBottomLineY, event.duration);
+    } else {
+      drawNote(svg, event.note, x, "counterpoint", event.start, SCORE.topBottomLineY, event.duration);
+    }
   });
 
   cantus.forEach((note, i) => {
@@ -1029,7 +1132,40 @@ function handleScoreClick(event) {
   const clickedNote = yToNaturalNote(viewY);
   const coveringEvent = getEventCoveringSlot(nearestIndex);
 
-  // Existing note: select it first. If clicked near the head, also update pitch.
+  // Rest or empty place: replace with a note.
+  if (coveringEvent && isRestEvent(coveringEvent)) {
+    const start = coveringEvent.start;
+
+    if (!isSlotAvailable(start, inputDuration, start)) {
+      selectedIndex = start;
+      inputDuration = coveringEvent.duration;
+      syncRhythmButtons(inputDuration);
+      renderScore();
+      return;
+    }
+
+    const newLength = getDurationQuarters(inputDuration);
+    const newEnd = start + newLength;
+
+    const events = getCounterpointEvents()
+      .filter((event) => {
+        if (event.start === start) return false;
+        const eventStart = event.start;
+        const eventEnd = event.start + getDurationQuarters(event.duration);
+        return !(start < eventEnd && eventStart < newEnd && isRestEvent(event));
+      })
+      .concat([{ start, duration: inputDuration, note: clickedNote, rest: false }])
+      .sort((a, b) => a.start - b.start);
+
+    selectedIndex = start;
+    setCounterpointEvents(events);
+    syncRhythmButtons(inputDuration);
+    renderScore();
+    playNoteName(clickedNote, 0.45, 1, "femaleSample");
+    return;
+  }
+
+  // Existing note: select it. If close to the head, update pitch.
   if (coveringEvent) {
     selectedIndex = coveringEvent.start;
     inputDuration = coveringEvent.duration;
@@ -1039,7 +1175,7 @@ function handleScoreClick(event) {
 
     if (closeToHead) {
       const updatedEvents = getCounterpointEvents().map((item) =>
-        item.start === coveringEvent.start ? { ...item, note: clickedNote } : item
+        item.start === coveringEvent.start ? { ...item, note: clickedNote, rest: false } : item
       );
       setCounterpointEvents(updatedEvents);
       syncRhythmButtons(coveringEvent.duration);
@@ -1054,17 +1190,25 @@ function handleScoreClick(event) {
     return;
   }
 
-  // Empty slot: create new event with currently selected rhythm.
-  if (!isSlotAvailable(nearestIndex, inputDuration, null)) {
+  const start = nearestIndex;
+
+  if (!isSlotAvailable(start, inputDuration, null)) {
     renderScore();
     return;
   }
 
-  const events = getCounterpointEvents();
-  events.push({ start: nearestIndex, duration: inputDuration, note: clickedNote });
-  events.sort((a, b) => a.start - b.start);
+  const events = getCounterpointEvents()
+    .filter((event) => {
+      const newLength = getDurationQuarters(inputDuration);
+      const newEnd = start + newLength;
+      const eventStart = event.start;
+      const eventEnd = event.start + getDurationQuarters(event.duration);
+      return !(start < eventEnd && eventStart < newEnd && isRestEvent(event));
+    })
+    .concat({ start, duration: inputDuration, note: clickedNote, rest: false })
+    .sort((a, b) => a.start - b.start);
 
-  selectedIndex = nearestIndex;
+  selectedIndex = start;
   setCounterpointEvents(events);
   syncRhythmButtons(inputDuration);
   renderScore();
@@ -1337,7 +1481,7 @@ function getPlaybackMode() {
 
 function playSelectedNote() {
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (selectedEvent && selectedEvent.note) {
+  if (selectedEvent && !isRestEvent(selectedEvent) && selectedEvent.note) {
     playNoteName(selectedEvent.note, 0.45, 1, "femaleSample");
   }
 }

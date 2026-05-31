@@ -424,3 +424,21 @@ h2 {
   stroke-width: 1;
   pointer-events: none;
 }
+
+
+.rest-symbol {
+  font-size: 26px;
+  fill: rgba(23, 23, 23, 0.48);
+  dominant-baseline: middle;
+  user-select: none;
+}
+
+.rest-symbol.selected,
+.rest-symbol.playing {
+  fill: #171717;
+  font-weight: 700;
+}
+
+.rest-label {
+  fill: rgba(23, 23, 23, 0.45);
+}
