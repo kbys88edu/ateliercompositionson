@@ -531,3 +531,39 @@ h2 {
 .rest-hit-area {
   display: none !important;
 }
+
+
+/* Module 4 MusicXML / OpenSheetMusicDisplay layer */
+.musicxml-display {
+  width: 100%;
+  min-height: 360px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 14px;
+  overflow-x: auto;
+  cursor: crosshair;
+}
+
+.musicxml-display svg {
+  max-width: none;
+}
+
+.musicxml-fallback-message {
+  color: var(--muted);
+  font-size: 0.92rem;
+  padding: 12px;
+}
+
+.legacy-score-editor.is-hidden {
+  display: none !important;
+}
+
+/* Hide generated rest layers from previous experimental builds */
+.music-rest,
+.rest-symbol,
+.rest-label,
+.rest-mark,
+.rest-hit-area {
+  display: none !important;
+}

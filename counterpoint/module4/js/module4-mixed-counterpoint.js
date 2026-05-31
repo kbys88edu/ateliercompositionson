@@ -762,7 +762,6 @@ function changeSelectedNoteDuration(duration) {
   const newLength = getDurationQuarters(duration);
   const total = getTotalQuarterSlots();
 
-  // Do not allow crossing the barline or exceeding the exercise length.
   if (start % 4 + newLength > 4 || start + newLength > total) {
     return false;
   }
@@ -775,8 +774,6 @@ function changeSelectedNoteDuration(duration) {
 
       const eventStart = event.start;
       const eventEnd = event.start + getDurationQuarters(event.duration);
-
-      // Remove only notes that overlap with the resized selected note.
       return !(start < eventEnd && eventStart < newEnd);
     })
     .concat([{ ...selectedEvent, start, duration, rest: false }])
@@ -786,6 +783,7 @@ function changeSelectedNoteDuration(duration) {
   inputDuration = duration;
   setCounterpointEvents(updatedEvents);
   syncRhythmButtons(duration);
+  setupMusicXmlInput();
   renderScore();
   updateDisplays();
   return true;
@@ -823,7 +821,6 @@ function moveSelection(delta) {
   const total = getTotalQuarterSlots();
   if (!total) return;
 
-  // Sibelius-like simple behavior: move by quarter slot.
   selectedIndex = Math.max(0, Math.min(total - 1, selectedIndex + delta));
 
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
@@ -1089,6 +1086,273 @@ function drawPlayhead(svg, positions, noteCount) {
   svg.appendChild(createSvgElement("line", { x1: x, y1: SCORE.playheadTop, x2: x, y2: SCORE.playheadBottom, class: "playhead-line" }));
 }
 
+function xmlEscape(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function noteNameToMusicXmlPitch(noteName) {
+  const parsed = parseNote(noteName);
+  if (!parsed) return null;
+
+  const step = parsed.letter.toUpperCase();
+  let alter = 0;
+  if (parsed.accidental === "#") alter = 1;
+  if (parsed.accidental === "b") alter = -1;
+
+  return { step, alter, octave: parsed.octave };
+}
+
+function durationToMusicXmlType(duration) {
+  if (duration === "w") return "whole";
+  if (duration === "h") return "half";
+  return "quarter";
+}
+
+function durationToDivisions(duration) {
+  return getDurationQuarters(duration) * 4;
+}
+
+function createMusicXmlNote(noteName, duration, staff = 1, voice = 1, isRest = false) {
+  const xmlDuration = durationToDivisions(duration);
+  const type = durationToMusicXmlType(duration);
+
+  if (isRest || !noteName) {
+    return `
+        <note>
+          <rest/>
+          <duration>${xmlDuration}</duration>
+          <voice>${voice}</voice>
+          <type>${type}</type>
+          <staff>${staff}</staff>
+        </note>`;
+  }
+
+  const pitch = noteNameToMusicXmlPitch(noteName);
+  if (!pitch) return createMusicXmlNote(null, duration, staff, voice, true);
+
+  const alter = pitch.alter ? `<alter>${pitch.alter}</alter>` : "";
+
+  return `
+        <note>
+          <pitch>
+            <step>${pitch.step}</step>
+            ${alter}
+            <octave>${pitch.octave}</octave>
+          </pitch>
+          <duration>${xmlDuration}</duration>
+          <voice>${voice}</voice>
+          <type>${type}</type>
+          <staff>${staff}</staff>
+        </note>`;
+}
+
+function createMeasureCounterpointXml(measureIndex, events) {
+  const measureStart = measureIndex * 4;
+  const measureEnd = measureStart + 4;
+  let slot = measureStart;
+  let xml = "";
+
+  const localEvents = events
+    .filter((event) => event.start >= measureStart && event.start < measureEnd)
+    .sort((a, b) => a.start - b.start);
+
+  localEvents.forEach((event) => {
+    while (slot < event.start) {
+      xml += createMusicXmlNote(null, "q", 1, 1, true);
+      slot += 1;
+    }
+
+    xml += createMusicXmlNote(event.note, event.duration, 1, 1, false);
+    slot = event.start + getDurationQuarters(event.duration);
+  });
+
+  while (slot < measureEnd) {
+    xml += createMusicXmlNote(null, "q", 1, 1, true);
+    slot += 1;
+  }
+
+  return xml;
+}
+
+function buildModule4MusicXml() {
+  const cantus = getNotesFromTextarea("cantus");
+  const events = getCounterpointEvents();
+  const measures = Math.max(cantus.length, 1);
+
+  let measureXml = "";
+
+  for (let i = 0; i < measures; i += 1) {
+    const attributes = i === 0 ? `
+      <attributes>
+        <divisions>4</divisions>
+        <key><fifths>0</fifths></key>
+        <time><beats>4</beats><beat-type>4</beat-type></time>
+        <staves>2</staves>
+        <clef number="1"><sign>G</sign><line>2</line></clef>
+        <clef number="2"><sign>F</sign><line>4</line></clef>
+      </attributes>` : "";
+
+    const counterpointXml = createMeasureCounterpointXml(i, events);
+    const cantusNote = cantus[i] || null;
+    const backup = `<backup><duration>16</duration></backup>`;
+    const cantusXml = createMusicXmlNote(cantusNote, "w", 2, 2, !cantusNote);
+
+    measureXml += `
+      <measure number="${i + 1}">
+        ${attributes}
+        ${counterpointXml}
+        ${backup}
+        ${cantusXml}
+      </measure>`;
+  }
+
+  return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="3.1">
+  <part-list>
+    <score-part id="P1">
+      <part-name>Two-Voice Mixed Counterpoint</part-name>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    ${measureXml}
+  </part>
+</score-partwise>`;
+}
+
+function getOsmdInstance() {
+  const container = document.getElementById("musicXmlDisplay");
+  if (!container || typeof opensheetmusicdisplay === "undefined") {
+    return null;
+  }
+
+  if (!window.module4OSMD) {
+    window.module4OSMD = new opensheetmusicdisplay.OpenSheetMusicDisplay(container, {
+      autoResize: true,
+      backend: "svg",
+      drawTitle: false,
+      drawComposer: false,
+      drawingParameters: "compacttight",
+      disableCursor: false
+    });
+  }
+
+  return window.module4OSMD;
+}
+
+async function renderMusicXmlScore() {
+  const container = document.getElementById("musicXmlDisplay");
+  const legacySvg = document.getElementById("scoreEditor");
+
+  if (!container) return false;
+
+  if (typeof opensheetmusicdisplay === "undefined") {
+    if (legacySvg) legacySvg.classList.remove("is-hidden");
+    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML viewer could not be loaded. Using fallback SVG editor.</div>`;
+    return false;
+  }
+
+  try {
+    const osmd = getOsmdInstance();
+    if (!osmd) return false;
+
+    const xml = buildModule4MusicXml();
+    await osmd.load(xml);
+    osmd.render();
+
+    container.dataset.ready = "true";
+    setupMusicXmlInput();
+    if (legacySvg) legacySvg.classList.add("is-hidden");
+    return true;
+  } catch (error) {
+    console.error("MusicXML render failed:", error);
+    if (legacySvg) legacySvg.classList.remove("is-hidden");
+    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML display error. Using fallback SVG editor.</div>`;
+    return false;
+  }
+}
+
+function musicXmlClickToSlotAndNote(event) {
+  const container = document.getElementById("musicXmlDisplay");
+  if (!container) return null;
+
+  const rect = container.getBoundingClientRect();
+  const total = getTotalQuarterSlots();
+  if (!total || !rect.width || !rect.height) return null;
+
+  const localX = event.clientX - rect.left;
+  const localY = event.clientY - rect.top;
+
+  // OSMD has left/right margins; this approximation is intentionally simple.
+  const usableLeft = rect.width * 0.08;
+  const usableRight = rect.width * 0.96;
+  const ratioX = Math.max(0, Math.min(1, (localX - usableLeft) / (usableRight - usableLeft)));
+  const slot = Math.max(0, Math.min(total - 1, Math.round(ratioX * (total - 1))));
+
+  // Top staff input: map vertical position around the upper half to treble notes.
+  const ratioY = Math.max(0, Math.min(1, localY / rect.height));
+  const trebleRelative = (0.47 - ratioY) * 18;
+  const baseMidi = noteToMidi("E4");
+  const midi = baseMidi + Math.round(trebleRelative);
+  const note = midiToNote(midi);
+
+  return { slot, note };
+}
+
+function handleMusicXmlClick(event) {
+  if (isPlaying) return;
+
+  const mapped = musicXmlClickToSlotAndNote(event);
+  if (!mapped) return;
+
+  const { slot, note } = mapped;
+  const coveringEvent = getEventCoveringSlot(slot);
+
+  if (coveringEvent) {
+    selectedIndex = coveringEvent.start;
+    inputDuration = coveringEvent.duration;
+    syncRhythmButtons(inputDuration);
+
+    const events = getCounterpointEvents().map((item) =>
+      item.start === coveringEvent.start ? { ...item, note, rest: false } : item
+    );
+
+    setCounterpointEvents(events);
+    renderScore();
+    updateDisplays();
+    playNoteName(note, 0.35, 1, "femaleSample");
+    return;
+  }
+
+  if (!isSlotAvailable(slot, inputDuration, null)) {
+    selectedIndex = slot;
+    renderScore();
+    return;
+  }
+
+  const events = getCounterpointEvents();
+  events.push({ start: slot, duration: inputDuration, note, rest: false });
+  events.sort((a, b) => a.start - b.start);
+
+  selectedIndex = slot;
+  setCounterpointEvents(events);
+  renderScore();
+  updateDisplays();
+  playNoteName(note, 0.35, 1, "femaleSample");
+}
+
+function setupMusicXmlInput() {
+  const container = document.getElementById("musicXmlDisplay");
+  if (!container || container.dataset.inputReady === "true") return;
+
+  container.addEventListener("click", handleMusicXmlClick);
+  container.dataset.inputReady = "true";
+}
+
 function renderScore() {
   const svg = document.getElementById("scoreEditor");
   if (!svg) return;
@@ -1122,6 +1386,7 @@ function renderScore() {
   });
 
   updateDisplays();
+  renderMusicXmlScore();
 }
 
 function handleScoreClick(event) {
@@ -1152,7 +1417,6 @@ function handleScoreClick(event) {
   const clickedNote = yToNaturalNote(viewY);
   const coveringEvent = getEventCoveringSlot(nearestIndex);
 
-  // Existing note: select it and update pitch when clicking near its head.
   if (coveringEvent) {
     selectedIndex = coveringEvent.start;
     inputDuration = coveringEvent.duration;
@@ -1178,8 +1442,6 @@ function handleScoreClick(event) {
   }
 
   const start = nearestIndex;
-
-  // Empty slot: insert note if it does not overlap another note.
   if (!isSlotAvailable(start, inputDuration, null)) {
     selectedIndex = start;
     renderScore();
@@ -1465,7 +1727,7 @@ function getPlaybackMode() {
 
 function playSelectedNote() {
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (selectedEvent && selectedEvent.note) {
+  if (selectedEvent && selectedEvent.note && !isRestEvent(selectedEvent)) {
     playNoteName(selectedEvent.note, 0.45, 1, "femaleSample");
   }
 }
@@ -1767,4 +2029,9 @@ window.addEventListener("DOMContentLoaded", () => {
   setInputDuration(inputDuration);
   loadSelectedExercise();
   updatePlayPauseButton();
+});
+
+
+window.addEventListener("DOMContentLoaded", () => {
+  setupMusicXmlInput();
 });
