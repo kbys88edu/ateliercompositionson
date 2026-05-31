@@ -9,17 +9,16 @@ Automatic assignment:
 - Bass clef cantus: male samples
 
 Female:
-- Uses only C3, G3, C4, G4.
-- C2 and G2 are intentionally not used.
-- Female samples are played one octave lower.
+- Uses C4, G4, C5, G5.
+- No octave transposition is applied.
 
 Required files:
 
 Female:
-- audio/voice/female/C3.wav
-- audio/voice/female/G3.wav
 - audio/voice/female/C4.wav
 - audio/voice/female/G4.wav
+- audio/voice/female/C5.wav
+- audio/voice/female/G5.wav
 
 Male:
 - audio/voice/male/C2.wav
