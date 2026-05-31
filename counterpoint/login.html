@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Login｜Atelier Composition Son</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --text: #181818;
+      --muted: #666666;
+      --line: rgba(0, 0, 0, 0.14);
+      --card: rgba(255, 255, 255, 0.72);
+      --error: #b3261e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        "Yu Gothic",
+        "YuGothic",
+        "Hiragino Sans",
+        "Hiragino Kaku Gothic ProN",
+        Meiryo,
+        sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.78), transparent 34rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .box {
+      width: min(440px, 100%);
+      padding: 34px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--card);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .logo {
+      display: block;
+      width: 64px;
+      height: auto;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 7vw, 2.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.06em;
+    }
+
+    p {
+      margin: 18px 0 20px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    input {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 16px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: rgba(0, 0, 0, 0.45);
+    }
+
+    button {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--text);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .error {
+      min-height: 1.3em;
+      margin-top: 12px;
+      color: var(--error);
+      font-size: 0.9rem;
+    }
+
+    .hint {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="box">
+    <img class="logo" src="./images/acs-logo.png?v=logo-20260601" alt="Atelier Composition Son" />
+    <p class="eyebrow">Atelier Composition Son</p>
+    <h1>Counterpoint Tools</h1>
+    <p>教材ページを開くには、パスワードを入力してください。</p>
+
+    <label for="passwordInput">Password</label>
+    <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Password" />
+
+    <button type="button" onclick="login()">Enter</button>
+
+    <div class="error" id="errorMessage"></div>
+    <div class="hint">日本語 / Français versions are available after login.</div>
+  </main>
+
+  <script>
+    const PASSWORD = "2026";
+
+    function login() {
+      const input = document.getElementById("passwordInput").value;
+
+      if (input === PASSWORD) {
+        sessionStorage.setItem("acsCounterpointAuth", "true");
+
+        const params = new URLSearchParams(window.location.search);
+        const next = params.get("next");
+
+        if (next && !next.startsWith("http")) {
+          window.location.href = next;
+        } else {
+          window.location.href = "index.html";
+        }
+      } else {
+        document.getElementById("errorMessage").textContent = "パスワードが違います。";
+      }
+    }
+
+    document.getElementById("passwordInput").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        login();
+      }
+    });
+  </script>
+</body>
+</html>

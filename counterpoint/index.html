@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <script src="auth.js"></script>
+
+  <title>Counterpoint Practice Tools｜Atelier Composition Son</title>
+  <meta
+    name="description"
+    content="第一種2声対位法、二分音符対位法、四分音符対位法、3声対位法を練習するためのオンラインツールです。"
+  />
+
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --text: #181818;
+      --muted: #666666;
+      --line: rgba(0, 0, 0, 0.14);
+      --card: rgba(255, 255, 255, 0.72);
+      --card-strong: rgba(255, 255, 255, 0.88);
+      --shadow: rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        "Yu Gothic",
+        "YuGothic",
+        "Hiragino Sans",
+        "Hiragino Kaku Gothic ProN",
+        Meiryo,
+        sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.78), transparent 34rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 64px 0 88px;
+    }
+
+    .header {
+      padding: 48px 0 44px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .home-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+
+    .language-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.65);
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .language-control select {
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(2.35rem, 7vw, 5.8rem);
+      line-height: 0.98;
+      letter-spacing: -0.07em;
+    }
+
+    .lead {
+      max-width: 830px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .sublead {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-end;
+      margin-top: 38px;
+      margin-bottom: 16px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.12;
+      letter-spacing: -0.045em;
+    }
+
+    .section-heading p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      min-height: 330px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 12px 28px var(--shadow);
+      text-decoration: none;
+      color: var(--text);
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0, 0, 0, 0.32);
+      background: var(--card-strong);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .arrow {
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--muted);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3vw, 2.45rem);
+      line-height: 1.05;
+      letter-spacing: -0.055em;
+    }
+
+    .card p {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 28px;
+    }
+
+    .feature {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .structure {
+      margin-top: 34px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.54);
+    }
+
+    .structure h2 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+      letter-spacing: -0.03em;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--text);
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .footer {
+      margin-top: 42px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        width: min(100% - 24px, 1120px);
+        padding-top: 36px;
+        padding-bottom: 64px;
+      }
+
+      .header {
+        padding-top: 36px;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-heading p {
+        margin-top: 8px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: 280px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        width: min(100% - 18px, 1120px);
+      }
+
+      .top-controls {
+        display: block;
+      }
+
+      .language-control {
+        margin-top: 14px;
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .language-control select {
+        width: 100%;
+      }
+
+      .card,
+      .structure {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        letter-spacing: -0.05em;
+      }
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      display: block;
+      width: 42px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      color: var(--muted);
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+
+    @media (max-width: 520px) {
+      .brand-logo {
+        width: 38px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="top-controls">
+        <a class="brand-link" href="index.html" aria-label="Atelier Composition Son">
+          <img class="brand-logo" src="./images/acs-logo.png?v=logo-20260601" alt="Atelier Composition Son" />
+          <span class="brand-text">Atelier Composition Son</span>
+        </a>
+
+        <label class="language-control" for="languageSelect">
+          <span data-i18n="languageLabel">言語</span>
+          <select id="languageSelect" onchange="setLanguage(this.value)">
+            <option value="ja">日本語</option>
+            <option value="fr">Français</option>
+          </select>
+        </label>
+      </div>
+
+      <p class="eyebrow">Counterpoint Practice Tools</p>
+      <h1 data-i18n="title">対位法練習ツール</h1>
+      <p class="lead" data-i18n="lead">
+        第一種2声対位法から、二分音符対位法、四分音符対位法、3声対位法までをブラウザ上で練習するためのオンラインツールです。
+      </p>
+      <p class="sublead" data-i18n="sublead">
+        各ページ内でも日本語 / フランス語を切り替えられます。
+      </p>
+    </header>
+
+    <section class="section-heading" aria-labelledby="twoVoiceHeading">
+      <div>
+        <p class="eyebrow">Two voices</p>
+        <h2 id="twoVoiceHeading" data-i18n="twoVoiceHeading">2声対位法モジュール</h2>
+      </div>
+      <p data-i18n="twoVoiceNote">
+        Module 1から順に、1対1、二分音符、四分音符へ進みます。
+      </p>
+    </section>
+
+    <section class="grid" aria-label="Two voice counterpoint modules">
+      <a class="card" href="counterpoint-checker.html">
+        <div class="card-top">
+          <span class="tag" data-i18n="module1Tag">Module 1</span>
+          <span class="arrow">↗</span>
+        </div>
+
+        <h3 data-i18n="module1Title">第一種2声対位法</h3>
+        <p data-i18n="module1Description">
+          定旋律1音に対して、対旋律1音を置きます。協和音程、連続5度、連続8度を確認します。
+        </p>
+
+        <div class="features">
+          <span class="feature" data-i18n="featureOneToOne">1 : 1</span>
+          <span class="feature" data-i18n="featureBilingual">日本語 / Français</span>
+          <span class="feature" data-i18n="featurePlayback">再生</span>
+          <span class="feature" data-i18n="featureLevels">レベル</span>
+        </div>
+      </a>
+
+      <a class="card" href="module2/module2-halfnote-counterpoint.html">
+        <div class="card-top">
+          <span class="tag" data-i18n="module2Tag">Module 2</span>
+          <span class="arrow">↗</span>
+        </div>
+
+        <h3 data-i18n="module2Title">二分音符対位法</h3>
+        <p data-i18n="module2Description">
+          定旋律1音に対して、対旋律を二分音符2つで入力します。タイでつながれた音は扱いません。
+        </p>
+
+        <div class="features">
+          <span class="feature" data-i18n="featureTwoPerNote">2 notes / cantus</span>
+          <span class="feature" data-i18n="featureNoTies">タイなし</span>
+          <span class="feature" data-i18n="featurePlayback">再生</span>
+          <span class="feature" data-i18n="featureLevels">レベル</span>
+        </div>
+      </a>
+
+      <a class="card" href="module3/module3-quarter-counterpoint.html">
+        <div class="card-top">
+          <span class="tag" data-i18n="module3Tag">Module 3</span>
+          <span class="arrow">↗</span>
+        </div>
+
+        <h3 data-i18n="module3Title">四分音符対位法</h3>
+        <p data-i18n="module3Description">
+          定旋律1音に対して、対旋律を四分音符4つで入力します。弱拍の経過音・補助音も確認します。
+        </p>
+
+        <div class="features">
+          <span class="feature" data-i18n="featureFourPerNote">4 notes / cantus</span>
+          <span class="feature" data-i18n="featureNoTies">タイなし</span>
+          <span class="feature" data-i18n="featurePlayback">再生</span>
+          <span class="feature" data-i18n="featureLevels">レベル</span>
+        </div>
+      </a>
+
+      <a class="card" href="three-voice/three-voice-counterpoint.html">
+        <div class="card-top">
+          <span class="tag" data-i18n="threeVoiceTag">Three voices</span>
+          <span class="arrow">↗</span>
+        </div>
+
+        <h3 data-i18n="threeVoiceTitle">第一種3声対位法</h3>
+        <p data-i18n="threeVoiceDescription">
+          定旋律に対して2つの対旋律を入力します。3つの声部をそれぞれ独立した楽譜で表示します。
+        </p>
+
+        <div class="features">
+          <span class="feature" data-i18n="featureThreeVoices">3 voices</span>
+          <span class="feature" data-i18n="featureSeparateScores">声部別楽譜</span>
+          <span class="feature" data-i18n="featurePlayback">再生</span>
+          <span class="feature" data-i18n="featureLevels">レベル</span>
+        </div>
+      </a>
+    </section>
+<footer class="footer">
+      <p data-i18n="footer">
+        © Atelier Composition Son｜Composition, music theory, and creative listening.
+      </p>
+    </footer>
+  </main>
+
+  <script>
+    const I18N = {
+      ja: {
+        languageLabel: "言語",
+        title: "対位法練習ツール",
+        lead: "第一種2声対位法から、二分音符対位法、四分音符対位法、3声対位法までをブラウザ上で練習するためのオンラインツールです。",
+        sublead: "各ページ内でも日本語 / フランス語を切り替えられます。",
+        twoVoiceHeading: "2声対位法モジュール",
+        twoVoiceNote: "Module 1から順に、1対1、二分音符、四分音符へ進みます。",
+        module1Tag: "Module 1",
+        module1Title: "第一種2声対位法",
+        module1Description: "定旋律1音に対して、対旋律1音を置きます。協和音程、連続5度、連続8度を確認します。",
+        module2Tag: "Module 2",
+        module2Title: "二分音符対位法",
+        module2Description: "定旋律1音に対して、対旋律を二分音符2つで入力します。タイでつながれた音は扱いません。",
+        module3Tag: "Module 3",
+        module3Title: "四分音符対位法",
+        module3Description: "定旋律1音に対して、対旋律を四分音符4つで入力します。弱拍の経過音・補助音も確認します。",
+        threeVoiceTag: "Three voices",
+        threeVoiceTitle: "第一種3声対位法",
+        threeVoiceDescription: "定旋律に対して2つの対旋律を入力します。3つの声部をそれぞれ独立した楽譜で表示します。",
+        featureOneToOne: "1 : 1",
+        featureTwoPerNote: "2 notes / cantus",
+        featureFourPerNote: "4 notes / cantus",
+        featureBilingual: "日本語 / Français",
+        featurePlayback: "再生",
+        featureLevels: "レベル",
+        featureNoTies: "タイなし",
+        featureThreeVoices: "3 voices",
+        featureSeparateScores: "声部別楽譜",
+        footer: "© Atelier Composition Son｜Composition, music theory, and creative listening."
+      },
+      fr: {
+        languageLabel: "Langue",
+        title: "Outils de pratique du contrepoint",
+        lead: "Outils en ligne pour pratiquer le contrepoint à deux voix, le contrepoint en blanches, le contrepoint en noires et le contrepoint à trois voix directement dans le navigateur.",
+        sublead: "Chaque page peut également être affichée en japonais ou en français.",
+        twoVoiceHeading: "Modules de contrepoint à deux voix",
+        twoVoiceNote: "Les modules progressent de 1 contre 1 vers les blanches, puis les noires.",
+        module1Tag: "Module 1",
+        module1Title: "Contrepoint à deux voix — première espèce",
+        module1Description: "Placez une note de contrepoint contre chaque note du cantus. Vérifiez les consonances, les quintes parallèles et les octaves parallèles.",
+        module2Tag: "Module 2",
+        module2Title: "Contrepoint en blanches",
+        module2Description: "Pour chaque note du cantus, saisissez deux blanches dans le contrepoint. Les notes liées ne sont pas utilisées.",
+        module3Tag: "Module 3",
+        module3Title: "Contrepoint en noires",
+        module3Description: "Pour chaque note du cantus, saisissez quatre noires. Le module vérifie aussi les notes de passage et les notes auxiliaires sur les temps faibles.",
+        threeVoiceTag: "Trois voix",
+        threeVoiceTitle: "Contrepoint à trois voix — première espèce",
+        threeVoiceDescription: "Saisissez deux voix de contrepoint au-dessus d’un cantus. Chaque voix est affichée sur une portée indépendante.",
+        featureOneToOne: "1 : 1",
+        featureTwoPerNote: "2 notes / cantus",
+        featureFourPerNote: "4 notes / cantus",
+        featureBilingual: "日本語 / Français",
+        featurePlayback: "Lecture",
+        featureLevels: "Niveaux",
+        featureNoTies: "Sans liaisons",
+        featureThreeVoices: "3 voix",
+        featureSeparateScores: "Portées séparées",
+        footer: "© Atelier Composition Son｜Composition, théorie musicale et écoute créative."
+      }
+    };
+
+    function setLanguage(lang) {
+      const dictionary = I18N[lang] || I18N.ja;
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.getAttribute("data-i18n");
+        if (dictionary[key]) {
+          element.textContent = dictionary[key];
+        }
+      });
+
+      localStorage.setItem("counterpointIndexLanguage", lang);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedLanguage = localStorage.getItem("counterpointIndexLanguage") || "ja";
+      const select = document.getElementById("languageSelect");
+
+      if (select) {
+        select.value = savedLanguage;
+      }
+
+      setLanguage(savedLanguage);
+    });
+  </script>
+</body>
+</html>
