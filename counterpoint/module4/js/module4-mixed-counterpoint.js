@@ -222,6 +222,18 @@ let playbackTimerId = null;
 let audioContext = null;
 let analysisIssues = [];
 
+const FIXED_EDITOR = {
+  width: 1180,
+  height: 360,
+  left: 92,
+  topStaffY: 98,
+  bottomStaffY: 238,
+  staffGap: 10,
+  beatWidth: 68,
+  noteStep: 5,
+  cursorColor: "#ff4f8b"
+};
+
 const MUSICXML_INPUT = {
   cursorColor: "#ff4f8b",
   minWidth: 1120,
@@ -797,6 +809,7 @@ function changeSelectedNoteDuration(duration) {
   syncRhythmButtons(duration);
   setupMusicXmlInput();
   setupModule4KeyboardInput();
+  setupFixedGridEditorInput();
   renderScore();
   updateDisplays();
   return true;
@@ -1293,13 +1306,9 @@ async function renderMusicXmlScore() {
 
   if (!container) return false;
 
-  // Set fixed grid width before OSMD renders, so OSMD and overlay start from the same stable container.
-  getMusicXmlOverlayMetrics();
-
   if (typeof opensheetmusicdisplay === "undefined") {
     if (legacySvg) legacySvg.classList.remove("is-hidden");
-    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML viewer could not be loaded. Using fallback SVG editor.</div>`;
-    renderMusicXmlOverlay();
+    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML viewer could not be loaded.</div>`;
     return false;
   }
 
@@ -1312,20 +1321,12 @@ async function renderMusicXmlScore() {
     osmd.render();
 
     container.dataset.ready = "true";
-    setupMusicXmlInput();
-
-    requestAnimationFrame(() => {
-      getMusicXmlOverlayMetrics();
-      renderMusicXmlOverlay();
-    });
-
     if (legacySvg) legacySvg.classList.add("is-hidden");
     return true;
   } catch (error) {
     console.error("MusicXML render failed:", error);
     if (legacySvg) legacySvg.classList.remove("is-hidden");
-    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML display error. Using fallback SVG editor.</div>`;
-    renderMusicXmlOverlay();
+    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML display error.</div>`;
     return false;
   }
 }
@@ -1377,19 +1378,8 @@ function handleMusicXmlClick(event) {
 }
 
 function setupMusicXmlInput() {
-  const overlay = document.getElementById("musicXmlOverlay");
-  const wrapper = document.getElementById("musicXmlWrapper");
-  if (!overlay || overlay.dataset.inputReady === "true") return;
-
-  overlay.addEventListener("click", handleMusicXmlClick);
-  overlay.dataset.inputReady = "true";
-
-  window.addEventListener("resize", () => requestAnimationFrame(renderMusicXmlOverlay));
-
-  if (wrapper && wrapper.dataset.overlayScrollReady !== "true") {
-    wrapper.addEventListener("scroll", () => requestAnimationFrame(renderMusicXmlOverlay));
-    wrapper.dataset.overlayScrollReady = "true";
-  }
+  // MusicXML is preview-only in this version.
+  // Input is handled by the fixed-grid editor above.
 }
 
 function getMusicXmlSlotX(slot) {
@@ -1690,6 +1680,206 @@ function getMusicXmlSlotWidth() {
   return MUSICXML_INPUT.beatWidth;
 }
 
+function getFixedEditorTotalWidth() {
+  const total = Math.max(1, getTotalQuarterSlots());
+  return Math.max(FIXED_EDITOR.width, FIXED_EDITOR.left + total * FIXED_EDITOR.beatWidth + 80);
+}
+
+function fixedXForSlot(slot) {
+  const total = Math.max(1, getTotalQuarterSlots());
+  const clamped = Math.max(0, Math.min(total, slot));
+  return FIXED_EDITOR.left + clamped * FIXED_EDITOR.beatWidth;
+}
+
+function fixedSlotFromX(x) {
+  const total = Math.max(1, getTotalQuarterSlots());
+  const raw = (x - FIXED_EDITOR.left) / FIXED_EDITOR.beatWidth;
+  return Math.max(0, Math.min(total - 1, Math.floor(raw)));
+}
+
+function fixedYForNote(note) {
+  const midi = noteToMidi(note);
+  const base = noteToMidi("E4");
+  if (midi === null || base === null) return FIXED_EDITOR.topStaffY + 20;
+  return FIXED_EDITOR.topStaffY + 40 - (midi - base) * FIXED_EDITOR.noteStep;
+}
+
+function fixedNoteFromY(y) {
+  const base = noteToMidi("E4");
+  const diff = Math.round((FIXED_EDITOR.topStaffY + 40 - y) / FIXED_EDITOR.noteStep);
+  return midiToNote(base + diff);
+}
+
+function createFixedSvgElement(tag, attrs = {}) {
+  const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+  return element;
+}
+
+function drawFixedStaff(svg, y, width) {
+  for (let i = 0; i < 5; i += 1) {
+    const yy = y + i * FIXED_EDITOR.staffGap;
+    svg.appendChild(createFixedSvgElement("line", {
+      x1: 32,
+      y1: yy,
+      x2: width - 32,
+      y2: yy,
+      class: "fixed-staff-line"
+    }));
+  }
+}
+
+function drawFixedNote(svg, event) {
+  const x = fixedXForSlot(event.start) + FIXED_EDITOR.beatWidth * 0.48;
+  const y = fixedYForNote(event.note);
+  const duration = event.duration || "q";
+
+  const noteGroup = createFixedSvgElement("g", {
+    class: event.start === selectedIndex ? "fixed-note selected" : "fixed-note"
+  });
+
+  noteGroup.appendChild(createFixedSvgElement("ellipse", {
+    cx: x,
+    cy: y,
+    rx: duration === "w" ? 9 : 8,
+    ry: 6,
+    transform: `rotate(-18 ${x} ${y})`,
+    class: duration === "w" || duration === "h" ? "fixed-notehead open" : "fixed-notehead filled"
+  }));
+
+  if (duration !== "w") {
+    noteGroup.appendChild(createFixedSvgElement("line", {
+      x1: x + 7,
+      y1: y,
+      x2: x + 7,
+      y2: y - 42,
+      class: "fixed-stem"
+    }));
+  }
+
+  if (duration === "h") {
+    noteGroup.appendChild(createFixedSvgElement("text", {
+      x: x + 16,
+      y: y + 4,
+      class: "fixed-duration-label"
+    }));
+    noteGroup.lastChild.textContent = "h";
+  }
+
+  svg.appendChild(noteGroup);
+}
+
+function renderFixedGridEditor() {
+  const svg = document.getElementById("fixedGridEditor");
+  if (!svg) return;
+
+  const total = getTotalQuarterSlots();
+  const width = getFixedEditorTotalWidth();
+  const height = FIXED_EDITOR.height;
+  const slotWidth = FIXED_EDITOR.beatWidth;
+
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.style.width = `${width}px`;
+  svg.style.height = `${height}px`;
+  svg.innerHTML = "";
+
+  drawFixedStaff(svg, FIXED_EDITOR.topStaffY, width);
+  drawFixedStaff(svg, FIXED_EDITOR.bottomStaffY, width);
+
+  svg.appendChild(createFixedSvgElement("text", {
+    x: 42,
+    y: FIXED_EDITOR.topStaffY + 25,
+    class: "fixed-clef"
+  })).textContent = "𝄞";
+
+  svg.appendChild(createFixedSvgElement("text", {
+    x: 42,
+    y: FIXED_EDITOR.bottomStaffY + 25,
+    class: "fixed-clef"
+  })).textContent = "𝄢";
+
+  for (let i = 0; i <= total; i += 1) {
+    const x = fixedXForSlot(i);
+    const isMeasureStart = i % 4 === 0;
+
+    svg.appendChild(createFixedSvgElement("line", {
+      x1: x,
+      y1: FIXED_EDITOR.topStaffY - 28,
+      x2: x,
+      y2: FIXED_EDITOR.bottomStaffY + 64,
+      class: isMeasureStart ? "fixed-beat-line measure" : "fixed-beat-line"
+    }));
+  }
+
+  const cursorX = fixedXForSlot(selectedIndex);
+
+  svg.appendChild(createFixedSvgElement("rect", {
+    x: cursorX,
+    y: FIXED_EDITOR.topStaffY - 22,
+    width: slotWidth,
+    height: 112,
+    class: "fixed-input-highlight"
+  }));
+
+  svg.appendChild(createFixedSvgElement("line", {
+    x1: cursorX,
+    y1: FIXED_EDITOR.topStaffY - 30,
+    x2: cursorX,
+    y2: FIXED_EDITOR.topStaffY + 92,
+    class: "fixed-cursor-line"
+  }));
+
+  svg.appendChild(createFixedSvgElement("path", {
+    d: `M ${cursorX - 5} ${FIXED_EDITOR.topStaffY - 28} L ${cursorX + 5} ${FIXED_EDITOR.topStaffY - 28} L ${cursorX} ${FIXED_EDITOR.topStaffY - 18} Z`,
+    class: "fixed-cursor-triangle"
+  }));
+
+  getCounterpointEvents().forEach((event) => {
+    if (event.note && !isRestEvent(event)) drawFixedNote(svg, event);
+  });
+
+  const cantus = getNotesFromTextarea("cantus");
+  cantus.forEach((note, index) => {
+    const x = fixedXForSlot(index * 4) + FIXED_EDITOR.beatWidth * 1.85;
+    const y = FIXED_EDITOR.bottomStaffY + 40 - (noteToMidi(note) - noteToMidi("C3")) * 2.8;
+
+    svg.appendChild(createFixedSvgElement("ellipse", {
+      cx: x,
+      cy: y,
+      rx: 9,
+      ry: 6,
+      transform: `rotate(-18 ${x} ${y})`,
+      class: "fixed-cantus-note"
+    }));
+  });
+}
+
+function handleFixedGridClick(event) {
+  if (isPlaying) return;
+
+  const svg = document.getElementById("fixedGridEditor");
+  if (!svg) return;
+
+  const rect = svg.getBoundingClientRect();
+  const viewBox = svg.viewBox.baseVal;
+  const localX = ((event.clientX - rect.left) / rect.width) * viewBox.width;
+  const localY = ((event.clientY - rect.top) / rect.height) * viewBox.height;
+
+  const slot = fixedSlotFromX(localX);
+  const note = fixedNoteFromY(localY);
+
+  selectedIndex = slot;
+  insertNoteAtSelectedIndex(note);
+}
+
+function setupFixedGridEditorInput() {
+  const svg = document.getElementById("fixedGridEditor");
+  if (!svg || svg.dataset.inputReady === "true") return;
+
+  svg.addEventListener("click", handleFixedGridClick);
+  svg.dataset.inputReady = "true";
+}
+
 function renderScore() {
   const svg = document.getElementById("scoreEditor");
   if (!svg) return;
@@ -1723,7 +1913,8 @@ function renderScore() {
   });
 
   updateDisplays();
-  renderMusicXmlOverlay();
+  renderFixedGridEditor();
+  
   renderMusicXmlScore();
 }
 

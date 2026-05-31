@@ -820,3 +820,106 @@ h2 {
 .musicxml-wrapper .musicxml-display svg {
   max-width: none !important;
 }
+
+
+/* Module 4 fixed input editor + MusicXML preview separation */
+.fixed-editor-section {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #ffffff;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-bottom: 18px;
+}
+
+.fixed-editor-label,
+.xml-preview-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 8px 4px 8px;
+}
+
+.fixed-grid-editor {
+  display: block;
+  min-height: 360px;
+  cursor: crosshair;
+  background: #fff;
+}
+
+.fixed-staff-line {
+  stroke: rgba(20, 20, 20, 0.55);
+  stroke-width: 1;
+}
+
+.fixed-beat-line {
+  stroke: rgba(20, 20, 20, 0.055);
+  stroke-width: 1;
+}
+
+.fixed-beat-line.measure {
+  stroke: rgba(20, 20, 20, 0.18);
+  stroke-width: 1.4;
+}
+
+.fixed-input-highlight {
+  fill: rgba(255, 79, 139, 0.07);
+}
+
+.fixed-cursor-line {
+  stroke: #ff4f8b;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.fixed-cursor-triangle {
+  fill: #ff4f8b;
+}
+
+.fixed-clef {
+  font-family: "Bravura", "Noto Music", "Segoe UI Symbol", "Apple Symbols", serif;
+  font-size: 34px;
+  fill: rgba(20, 20, 20, 0.72);
+  dominant-baseline: middle;
+}
+
+.fixed-notehead.filled {
+  fill: rgba(20, 20, 20, 0.85);
+}
+
+.fixed-notehead.open {
+  fill: #ffffff;
+  stroke: rgba(20, 20, 20, 0.85);
+  stroke-width: 2;
+}
+
+.fixed-note.selected .fixed-notehead {
+  stroke: #ff4f8b;
+  stroke-width: 2.4;
+}
+
+.fixed-stem {
+  stroke: rgba(20, 20, 20, 0.82);
+  stroke-width: 1.8;
+}
+
+.fixed-duration-label {
+  font-size: 11px;
+  fill: var(--muted);
+}
+
+.fixed-cantus-note {
+  fill: #ffffff;
+  stroke: rgba(20, 20, 20, 0.55);
+  stroke-width: 1.6;
+}
+
+.xml-preview-wrapper {
+  opacity: 0.92;
+}
+
+.musicxml-overlay {
+  display: none !important;
+}
