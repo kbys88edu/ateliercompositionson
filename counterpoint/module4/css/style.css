@@ -895,3 +895,11 @@ main,
   overflow-x: auto !important;
   overflow-y: hidden !important;
 }
+
+
+/* Module 4 invisible accidental cluster spacing:
+   voice 9 uses hidden C# D# E# F# G# A# B# chords on every beat. */
+.musicxml-wrapper {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}

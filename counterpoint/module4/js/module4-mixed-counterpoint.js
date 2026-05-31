@@ -1170,6 +1170,45 @@ function createMusicXmlNote(noteName, duration, staff = 1, voice = 1, isRest = f
         </note>`;
 }
 
+function createInvisibleDummyAccidentalNoteXml(step = "C", octave = 5, isChord = false) {
+  const chordTag = isChord ? "<chord/>" : "";
+
+  return `
+        <note print-object="no" print-spacing="yes">
+          ${chordTag}
+          <pitch>
+            <step>${step}</step>
+            <alter>1</alter>
+            <octave>${octave}</octave>
+          </pitch>
+          <duration>4</duration>
+          <voice>9</voice>
+          <type>quarter</type>
+          <staff>1</staff>
+          <accidental>sharp</accidental>
+          <notehead>none</notehead>
+        </note>`;
+}
+
+function createInvisibleDummyAccidentalClusterXml() {
+  // One invisible chromatic-looking chord per beat.
+  // This reserves substantially more horizontal space for accidentals than a single hidden C#.
+  // The first note advances the beat; the rest are chord tones at the same rhythmic position.
+  const dummyNotes = [
+    { step: "C", octave: 5 },
+    { step: "D", octave: 5 },
+    { step: "E", octave: 5 },
+    { step: "F", octave: 5 },
+    { step: "G", octave: 5 },
+    { step: "A", octave: 5 },
+    { step: "B", octave: 5 }
+  ];
+
+  return dummyNotes
+    .map((item, index) => createInvisibleDummyAccidentalNoteXml(item.step, item.octave, index > 0))
+    .join("");
+}
+
 function createInvisibleDummyQuarterNoteXml(step = "C", octave = 5) {
   return `
         <note print-object="no" print-spacing="yes">
@@ -1190,19 +1229,12 @@ function createInvisibleDummyQuarterNoteXml(step = "C", octave = 5) {
 function createInvisibleDummyGridVoiceXml() {
   let xml = "";
 
-  // Different invisible sharped notes per beat.
-  // Using C#, D#, E#, F# avoids OSMD suppressing repeated accidentals
-  // for the same pitch name within a measure.
-  const dummyNotes = [
-    { step: "C", octave: 5 },
-    { step: "D", octave: 5 },
-    { step: "E", octave: 5 },
-    { step: "F", octave: 5 }
-  ];
-
-  dummyNotes.forEach((item) => {
-    xml += createInvisibleDummyQuarterNoteXml(item.step, item.octave);
-  });
+  // Four invisible accidental clusters per measure.
+  // Each beat receives C# D# E# F# G# A# B# as hidden chord tones.
+  // This reserves accidental space on every beat before user input changes the real notes.
+  for (let beat = 0; beat < 4; beat += 1) {
+    xml += createInvisibleDummyAccidentalClusterXml();
+  }
 
   return xml;
 }
@@ -1232,8 +1264,7 @@ function createMeasureCounterpointXml(measureIndex, events) {
     slot += 1;
   }
 
-  // Invisible varied sharp voice for spacing only.
-  // Beat 1 = C#, Beat 2 = D#, Beat 3 = E#, Beat 4 = F#.
+  // Invisible accidental cluster voice for spacing only.
   // Voice 9 is excluded from JSON / analysis / playback / MIDI export.
   xml += `<backup><duration>16</duration></backup>`;
   xml += createInvisibleDummyGridVoiceXml();
