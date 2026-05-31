@@ -35,7 +35,7 @@ const SAMPLE_VOICE_SETS = {
   femaleSample: {
     folder: "female",
     notes: ["C4", "G4", "C5", "G5"],
-    transposeSemitones: 0
+    transposeSemitones: -12
   },
   maleSample: {
     folder: "male",
@@ -438,10 +438,11 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 
   const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
   if (!buffer) {
+    const fallbackMidi = midi + (set.transposeSemitones || 0);
     if (typeof playFallbackVoice === "function") {
-      playFallbackVoice(midi, duration, gainScale);
+      playFallbackVoice(fallbackMidi, duration, gainScale);
     } else if (typeof playVoiceLikeNote === "function") {
-      playVoiceLikeNote(midi, duration, gainScale);
+      playVoiceLikeNote(fallbackMidi, duration, gainScale);
     }
     return;
   }
@@ -452,12 +453,9 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
   const source = ctx.createBufferSource();
   source.buffer = buffer;
 
-  const exactName = midiToSampleNoteName(midi);
-  const isExactSample = nearestNote === exactName;
-
-  // Exact sample names are never transposed.
-  // G4 must play female/G4.wav at playbackRate 1.0.
-  const semitoneShift = isExactSample ? 0 : (midi - sourceMidi + set.transposeSemitones);
+  // Exact sample file is used, then set-level transposition is applied.
+  // Soprano/female: G4 on screen -> female/G4.wav at playbackRate 0.5.
+  const semitoneShift = midi - sourceMidi + (set.transposeSemitones || 0);
   source.playbackRate.setValueAtTime(Math.pow(2, semitoneShift / 12), now);
 
   const gain = ctx.createGain();
