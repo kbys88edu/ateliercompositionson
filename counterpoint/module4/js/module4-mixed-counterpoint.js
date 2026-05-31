@@ -222,27 +222,14 @@ let playbackTimerId = null;
 let audioContext = null;
 let analysisIssues = [];
 
-const FIXED_EDITOR = {
-  width: 1180,
-  height: 360,
-  left: 92,
-  topStaffY: 98,
-  bottomStaffY: 238,
-  staffGap: 10,
-  beatWidth: 68,
-  noteStep: 5,
-  cursorColor: "#ff4f8b"
-};
-
 const MUSICXML_INPUT = {
   cursorColor: "#ff4f8b",
-  minWidth: 1120,
-  height: 360,
-  left: 92,
-  rightPadding: 44,
-  topStaffCenterY: 124,
-  noteStep: 7.5,
-  beatWidth: 68
+  fallbackWidth: 1200,
+  fallbackHeight: 360,
+  paddingLeftRatio: 0.075,
+  paddingRightRatio: 0.035,
+  topStaffRatio: 0.34,
+  noteStepRatio: 0.021
 };
 
 
@@ -316,6 +303,13 @@ function createVoiceFormant(ctx, source, destination, now, duration, gainScale) 
     filter.connect(gain);
     gain.connect(destination);
   });
+}
+
+function getRealEventsForMidiExport() {
+  // Dummy spacing notes are generated only inside MusicXML.
+  // They are never stored in JSON. This guard also excludes them if future code adds voices/channels.
+  return getCounterpointEvents()
+    .filter((event) => event && !event.dummy && event.voice !== 9 && event.channel !== 9 && event.note && !isRestEvent(event));
 }
 
 function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
@@ -694,6 +688,7 @@ function getCounterpointEvents() {
 
     return parsed
       .filter((event) => event && typeof event.start === "number" && event.note && !isRestEvent(event))
+      .filter((event) => event.voice !== 9 && event.channel !== 9 && event.dummy !== true)
       .map((event) => ({
         start: event.start,
         duration: DURATIONS[event.duration] ? event.duration : "q",
@@ -809,7 +804,6 @@ function changeSelectedNoteDuration(duration) {
   syncRhythmButtons(duration);
   setupMusicXmlInput();
   setupModule4KeyboardInput();
-  setupFixedGridEditorInput();
   renderScore();
   updateDisplays();
   return true;
@@ -1175,18 +1169,28 @@ function createMusicXmlNote(noteName, duration, staff = 1, voice = 1, isRest = f
         </note>`;
 }
 
-function createHiddenGridVoiceXml() {
-  let xml = "";
-
-  for (let i = 0; i < 4; i += 1) {
-    xml += `
+function createInvisibleDummyQuarterNoteXml(step = "C", octave = 5) {
+  return `
         <note print-object="no" print-spacing="yes">
-          <rest/>
+          <pitch>
+            <step>${step}</step>
+            <octave>${octave}</octave>
+          </pitch>
           <duration>4</duration>
           <voice>9</voice>
           <type>quarter</type>
           <staff>1</staff>
+          <notehead>none</notehead>
         </note>`;
+}
+
+function createInvisibleDummyGridVoiceXml() {
+  let xml = "";
+
+  // Four fixed quarter notes per measure.
+  // They are intentionally invisible but still create stable spacing for OSMD.
+  for (let i = 0; i < 4; i += 1) {
+    xml += createInvisibleDummyQuarterNoteXml("C", 5);
   }
 
   return xml;
@@ -1217,10 +1221,10 @@ function createMeasureCounterpointXml(measureIndex, events) {
     slot += 1;
   }
 
-  // Add a hidden fixed quarter grid in another voice.
-  // This stabilizes OSMD spacing when visible notes change duration.
+  // Invisible dummy voice for spacing only.
+  // This is not part of the user input, analysis, playback, or MIDI export.
   xml += `<backup><duration>16</duration></backup>`;
-  xml += createHiddenGridVoiceXml();
+  xml += createInvisibleDummyGridVoiceXml();
 
   return xml;
 }
@@ -1245,8 +1249,8 @@ function buildModule4MusicXml() {
 
     const counterpointXml = createMeasureCounterpointXml(i, events);
 
-    // We are at the end of hidden grid voice; back up to measure start before bass/cantus.
-    const backupToBass = `<backup><duration>16</duration></backup>`;
+    // Back up after dummy voice before writing the cantus staff.
+    const backupToCantus = `<backup><duration>16</duration></backup>`;
     const cantusNote = cantus[i] || null;
     const cantusXml = createMusicXmlNote(cantusNote, "w", 2, 2, !cantusNote);
 
@@ -1254,7 +1258,7 @@ function buildModule4MusicXml() {
       <measure number="${i + 1}">
         ${attributes}
         ${counterpointXml}
-        ${backupToBass}
+        ${backupToCantus}
         ${cantusXml}
       </measure>`;
   }
@@ -1308,7 +1312,8 @@ async function renderMusicXmlScore() {
 
   if (typeof opensheetmusicdisplay === "undefined") {
     if (legacySvg) legacySvg.classList.remove("is-hidden");
-    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML viewer could not be loaded.</div>`;
+    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML viewer could not be loaded. Using fallback SVG editor.</div>`;
+    renderMusicXmlOverlay();
     return false;
   }
 
@@ -1321,12 +1326,20 @@ async function renderMusicXmlScore() {
     osmd.render();
 
     container.dataset.ready = "true";
+    setupMusicXmlInput();
+
+    requestAnimationFrame(() => {
+      renderMusicXmlOverlay();
+      requestAnimationFrame(renderMusicXmlOverlay);
+    });
+
     if (legacySvg) legacySvg.classList.add("is-hidden");
     return true;
   } catch (error) {
     console.error("MusicXML render failed:", error);
     if (legacySvg) legacySvg.classList.remove("is-hidden");
-    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML display error.</div>`;
+    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML display error. Using fallback SVG editor.</div>`;
+    renderMusicXmlOverlay();
     return false;
   }
 }
@@ -1378,27 +1391,41 @@ function handleMusicXmlClick(event) {
 }
 
 function setupMusicXmlInput() {
-  // MusicXML is preview-only in this version.
-  // Input is handled by the fixed-grid editor above.
+  const overlay = document.getElementById("musicXmlOverlay");
+  if (!overlay || overlay.dataset.inputReady === "true") return;
+
+  overlay.addEventListener("click", handleMusicXmlClick);
+  overlay.dataset.inputReady = "true";
+
+  window.addEventListener("resize", () => requestAnimationFrame(renderMusicXmlOverlay));
+
+  const wrapper = document.getElementById("musicXmlWrapper");
+  if (wrapper && wrapper.dataset.overlayScrollReady !== "true") {
+    wrapper.addEventListener("scroll", () => requestAnimationFrame(renderMusicXmlOverlay));
+    wrapper.dataset.overlayScrollReady = "true";
+  }
 }
 
 function getMusicXmlSlotX(slot) {
   const metrics = getMusicXmlOverlayMetrics();
   const total = Math.max(1, getTotalQuarterSlots());
-  const clampedSlot = Math.max(0, Math.min(total, slot));
+  const usable = Math.max(1, metrics.right - metrics.left);
 
-  // Insertion cursor boundary before the target beat.
-  return metrics.left + clampedSlot * MUSICXML_INPUT.beatWidth;
+  // Sibelius-like insertion caret:
+  // slot 0 = start boundary before the first beat,
+  // slot n = boundary before beat n.
+  return metrics.left + (Math.max(0, Math.min(total, slot)) / total) * usable;
 }
 
 function getMusicXmlSlotFromX(x) {
   const metrics = getMusicXmlOverlayMetrics();
   const total = Math.max(1, getTotalQuarterSlots());
+  const usable = Math.max(1, metrics.right - metrics.left);
 
-  // Fixed-grid floor mapping.
-  // Beat 0 is [left, left+beatWidth), beat 1 is [left+beatWidth, left+2*beatWidth), etc.
-  const raw = (x - metrics.left) / MUSICXML_INPUT.beatWidth;
-  return Math.max(0, Math.min(total - 1, Math.floor(raw)));
+  // Pure floor boundary mapping.
+  // This prevents input from jumping to the next beat before the boundary is crossed.
+  const ratio = Math.max(0, Math.min(0.999999, (x - metrics.left) / usable));
+  return Math.max(0, Math.min(total - 1, Math.floor(ratio * total)));
 }
 
 function getMusicXmlNoteFromY(y) {
@@ -1426,10 +1453,8 @@ function renderMusicXmlOverlay() {
 
   if (!total) return;
 
-  const topY = 32;
-  const bottomY = 326;
-  const highlightY = 52;
-  const highlightHeight = 238;
+  const topY = Math.max(0, metrics.topStaffCenterY - 96);
+  const bottomY = Math.min(metrics.height, metrics.topStaffCenterY + 174);
 
   for (let i = 0; i <= total; i += 1) {
     const x = getMusicXmlSlotX(i);
@@ -1445,7 +1470,10 @@ function renderMusicXmlOverlay() {
   }
 
   const cursorX = getMusicXmlSlotX(selectedIndex);
+  const highlightY = Math.max(0, metrics.topStaffCenterY - 78);
+  const highlightHeight = Math.min(metrics.height - highlightY, 150);
 
+  // Pale rectangle showing the beat that will receive the next input.
   overlay.appendChild(createOverlaySvgElement("rect", {
     x: cursorX,
     y: highlightY,
@@ -1454,6 +1482,7 @@ function renderMusicXmlOverlay() {
     class: "musicxml-input-slot-highlight"
   }));
 
+  // Sibelius-like insertion caret immediately before the target beat.
   overlay.appendChild(createOverlaySvgElement("line", {
     x1: cursorX,
     y1: topY,
@@ -1474,7 +1503,7 @@ function renderMusicXmlOverlay() {
 
     if (midi !== null && baseMidi !== null) {
       const y = metrics.topStaffCenterY - (midi - baseMidi) * metrics.noteStep;
-      const noteX = getMusicXmlSlotX(selectedEvent.start) + slotWidth * 0.48;
+      const noteX = getMusicXmlSlotX(selectedEvent.start) + slotWidth * 0.46;
 
       overlay.appendChild(createOverlaySvgElement("circle", {
         cx: noteX,
@@ -1490,28 +1519,31 @@ function getMusicXmlOverlayMetrics() {
   const wrapper = document.getElementById("musicXmlWrapper");
   const display = document.getElementById("musicXmlDisplay");
   const overlay = document.getElementById("musicXmlOverlay");
+  const displaySvg = display ? display.querySelector("svg") : null;
 
-  const total = Math.max(1, getTotalQuarterSlots());
+  const svgRect = displaySvg ? displaySvg.getBoundingClientRect() : null;
 
-  // Fixed input grid:
-  // width depends only on the number of beats, never on OSMD's rendered SVG width.
-  // This prevents the cursor from drifting when OSMD widens the score after note input.
   const width = Math.max(
-    MUSICXML_INPUT.minWidth,
-    MUSICXML_INPUT.left + total * MUSICXML_INPUT.beatWidth + MUSICXML_INPUT.rightPadding,
-    wrapper ? wrapper.clientWidth : 0
+    displaySvg ? Math.ceil(displaySvg.scrollWidth || svgRect.width) : 0,
+    display ? display.scrollWidth : 0,
+    wrapper ? wrapper.scrollWidth : 0,
+    MUSICXML_INPUT.fallbackWidth || 1200
   );
 
-  const height = MUSICXML_INPUT.height;
-  const left = MUSICXML_INPUT.left;
-  const right = left + total * MUSICXML_INPUT.beatWidth;
-  const topStaffCenterY = MUSICXML_INPUT.topStaffCenterY;
-  const noteStep = MUSICXML_INPUT.noteStep;
+  const height = Math.max(
+    displaySvg ? Math.ceil(displaySvg.scrollHeight || svgRect.height) : 0,
+    display ? display.scrollHeight : 0,
+    wrapper ? wrapper.clientHeight : 0,
+    MUSICXML_INPUT.fallbackHeight || 360
+  );
 
-  if (display) {
-    display.style.width = `${width}px`;
-    display.style.minWidth = `${width}px`;
-  }
+  // Cursor is an insertion cursor, so it uses beat boundaries.
+  // The left edge is intentionally placed a little before the first notehead,
+  // like Sibelius' caret before the note.
+  const left = width * 0.075;
+  const right = width * 0.965;
+  const topStaffCenterY = height * 0.34;
+  const noteStep = Math.max(6, height * 0.021);
 
   if (overlay) {
     overlay.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -1677,207 +1709,9 @@ function setupModule4KeyboardInput() {
 }
 
 function getMusicXmlSlotWidth() {
-  return MUSICXML_INPUT.beatWidth;
-}
-
-function getFixedEditorTotalWidth() {
+  const metrics = getMusicXmlOverlayMetrics();
   const total = Math.max(1, getTotalQuarterSlots());
-  return Math.max(FIXED_EDITOR.width, FIXED_EDITOR.left + total * FIXED_EDITOR.beatWidth + 80);
-}
-
-function fixedXForSlot(slot) {
-  const total = Math.max(1, getTotalQuarterSlots());
-  const clamped = Math.max(0, Math.min(total, slot));
-  return FIXED_EDITOR.left + clamped * FIXED_EDITOR.beatWidth;
-}
-
-function fixedSlotFromX(x) {
-  const total = Math.max(1, getTotalQuarterSlots());
-  const raw = (x - FIXED_EDITOR.left) / FIXED_EDITOR.beatWidth;
-  return Math.max(0, Math.min(total - 1, Math.floor(raw)));
-}
-
-function fixedYForNote(note) {
-  const midi = noteToMidi(note);
-  const base = noteToMidi("E4");
-  if (midi === null || base === null) return FIXED_EDITOR.topStaffY + 20;
-  return FIXED_EDITOR.topStaffY + 40 - (midi - base) * FIXED_EDITOR.noteStep;
-}
-
-function fixedNoteFromY(y) {
-  const base = noteToMidi("E4");
-  const diff = Math.round((FIXED_EDITOR.topStaffY + 40 - y) / FIXED_EDITOR.noteStep);
-  return midiToNote(base + diff);
-}
-
-function createFixedSvgElement(tag, attrs = {}) {
-  const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
-  Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
-  return element;
-}
-
-function drawFixedStaff(svg, y, width) {
-  for (let i = 0; i < 5; i += 1) {
-    const yy = y + i * FIXED_EDITOR.staffGap;
-    svg.appendChild(createFixedSvgElement("line", {
-      x1: 32,
-      y1: yy,
-      x2: width - 32,
-      y2: yy,
-      class: "fixed-staff-line"
-    }));
-  }
-}
-
-function drawFixedNote(svg, event) {
-  const x = fixedXForSlot(event.start) + FIXED_EDITOR.beatWidth * 0.48;
-  const y = fixedYForNote(event.note);
-  const duration = event.duration || "q";
-
-  const noteGroup = createFixedSvgElement("g", {
-    class: event.start === selectedIndex ? "fixed-note selected" : "fixed-note"
-  });
-
-  noteGroup.appendChild(createFixedSvgElement("ellipse", {
-    cx: x,
-    cy: y,
-    rx: duration === "w" ? 9 : 8,
-    ry: 6,
-    transform: `rotate(-18 ${x} ${y})`,
-    class: duration === "w" || duration === "h" ? "fixed-notehead open" : "fixed-notehead filled"
-  }));
-
-  if (duration !== "w") {
-    noteGroup.appendChild(createFixedSvgElement("line", {
-      x1: x + 7,
-      y1: y,
-      x2: x + 7,
-      y2: y - 42,
-      class: "fixed-stem"
-    }));
-  }
-
-  if (duration === "h") {
-    noteGroup.appendChild(createFixedSvgElement("text", {
-      x: x + 16,
-      y: y + 4,
-      class: "fixed-duration-label"
-    }));
-    noteGroup.lastChild.textContent = "h";
-  }
-
-  svg.appendChild(noteGroup);
-}
-
-function renderFixedGridEditor() {
-  const svg = document.getElementById("fixedGridEditor");
-  if (!svg) return;
-
-  const total = getTotalQuarterSlots();
-  const width = getFixedEditorTotalWidth();
-  const height = FIXED_EDITOR.height;
-  const slotWidth = FIXED_EDITOR.beatWidth;
-
-  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-  svg.style.width = `${width}px`;
-  svg.style.height = `${height}px`;
-  svg.innerHTML = "";
-
-  drawFixedStaff(svg, FIXED_EDITOR.topStaffY, width);
-  drawFixedStaff(svg, FIXED_EDITOR.bottomStaffY, width);
-
-  svg.appendChild(createFixedSvgElement("text", {
-    x: 42,
-    y: FIXED_EDITOR.topStaffY + 25,
-    class: "fixed-clef"
-  })).textContent = "𝄞";
-
-  svg.appendChild(createFixedSvgElement("text", {
-    x: 42,
-    y: FIXED_EDITOR.bottomStaffY + 25,
-    class: "fixed-clef"
-  })).textContent = "𝄢";
-
-  for (let i = 0; i <= total; i += 1) {
-    const x = fixedXForSlot(i);
-    const isMeasureStart = i % 4 === 0;
-
-    svg.appendChild(createFixedSvgElement("line", {
-      x1: x,
-      y1: FIXED_EDITOR.topStaffY - 28,
-      x2: x,
-      y2: FIXED_EDITOR.bottomStaffY + 64,
-      class: isMeasureStart ? "fixed-beat-line measure" : "fixed-beat-line"
-    }));
-  }
-
-  const cursorX = fixedXForSlot(selectedIndex);
-
-  svg.appendChild(createFixedSvgElement("rect", {
-    x: cursorX,
-    y: FIXED_EDITOR.topStaffY - 22,
-    width: slotWidth,
-    height: 112,
-    class: "fixed-input-highlight"
-  }));
-
-  svg.appendChild(createFixedSvgElement("line", {
-    x1: cursorX,
-    y1: FIXED_EDITOR.topStaffY - 30,
-    x2: cursorX,
-    y2: FIXED_EDITOR.topStaffY + 92,
-    class: "fixed-cursor-line"
-  }));
-
-  svg.appendChild(createFixedSvgElement("path", {
-    d: `M ${cursorX - 5} ${FIXED_EDITOR.topStaffY - 28} L ${cursorX + 5} ${FIXED_EDITOR.topStaffY - 28} L ${cursorX} ${FIXED_EDITOR.topStaffY - 18} Z`,
-    class: "fixed-cursor-triangle"
-  }));
-
-  getCounterpointEvents().forEach((event) => {
-    if (event.note && !isRestEvent(event)) drawFixedNote(svg, event);
-  });
-
-  const cantus = getNotesFromTextarea("cantus");
-  cantus.forEach((note, index) => {
-    const x = fixedXForSlot(index * 4) + FIXED_EDITOR.beatWidth * 1.85;
-    const y = FIXED_EDITOR.bottomStaffY + 40 - (noteToMidi(note) - noteToMidi("C3")) * 2.8;
-
-    svg.appendChild(createFixedSvgElement("ellipse", {
-      cx: x,
-      cy: y,
-      rx: 9,
-      ry: 6,
-      transform: `rotate(-18 ${x} ${y})`,
-      class: "fixed-cantus-note"
-    }));
-  });
-}
-
-function handleFixedGridClick(event) {
-  if (isPlaying) return;
-
-  const svg = document.getElementById("fixedGridEditor");
-  if (!svg) return;
-
-  const rect = svg.getBoundingClientRect();
-  const viewBox = svg.viewBox.baseVal;
-  const localX = ((event.clientX - rect.left) / rect.width) * viewBox.width;
-  const localY = ((event.clientY - rect.top) / rect.height) * viewBox.height;
-
-  const slot = fixedSlotFromX(localX);
-  const note = fixedNoteFromY(localY);
-
-  selectedIndex = slot;
-  insertNoteAtSelectedIndex(note);
-}
-
-function setupFixedGridEditorInput() {
-  const svg = document.getElementById("fixedGridEditor");
-  if (!svg || svg.dataset.inputReady === "true") return;
-
-  svg.addEventListener("click", handleFixedGridClick);
-  svg.dataset.inputReady = "true";
+  return Math.max(1, (metrics.right - metrics.left) / total);
 }
 
 function renderScore() {
@@ -1913,8 +1747,7 @@ function renderScore() {
   });
 
   updateDisplays();
-  renderFixedGridEditor();
-  
+  renderMusicXmlOverlay();
   renderMusicXmlScore();
 }
 

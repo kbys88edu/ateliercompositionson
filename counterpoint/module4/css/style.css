@@ -741,8 +741,17 @@ h2 {
 }
 
 
-/* Module 4 fixed input grid.
-   The cursor grid no longer follows OSMD's changing SVG width. */
+/* Module 4 XML dummy voice version */
+.fixed-editor-section,
+.fixed-grid-editor,
+.xml-preview-label {
+  display: none !important;
+}
+
+.musicxml-overlay {
+  display: block !important;
+}
+
 .musicxml-wrapper {
   position: relative;
   width: 100%;
@@ -754,40 +763,8 @@ h2 {
   overflow-y: hidden;
 }
 
-.musicxml-wrapper .musicxml-display {
-  position: relative;
-  z-index: 1;
-  min-height: 360px;
-  padding: 14px;
-  background: transparent;
-  box-sizing: border-box;
-}
-
-.musicxml-overlay {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 360px;
-  pointer-events: auto;
-  cursor: crosshair;
-  z-index: 5;
-}
-
-.musicxml-input-slot-highlight {
-  fill: rgba(255, 79, 139, 0.075);
-  stroke: none;
-  pointer-events: none;
-}
-
-.musicxml-grid-line {
-  stroke: rgba(20, 20, 20, 0.055);
-  stroke-width: 1;
-  pointer-events: none;
-}
-
-.musicxml-grid-line.measure {
-  stroke: rgba(20, 20, 20, 0.15);
-  stroke-width: 1.5;
+.musicxml-wrapper .musicxml-display svg {
+  max-width: none !important;
 }
 
 .musicxml-cursor-line {
@@ -798,128 +775,8 @@ h2 {
   pointer-events: none;
 }
 
-.musicxml-cursor-triangle {
-  fill: #ff4f8b;
-  opacity: 0.96;
+.musicxml-input-slot-highlight {
+  fill: rgba(255, 79, 139, 0.075);
+  stroke: none;
   pointer-events: none;
-}
-
-.musicxml-selected-note {
-  fill: rgba(255, 79, 139, 0.18);
-  stroke: #ff4f8b;
-  stroke-width: 2.4;
-  pointer-events: none;
-}
-
-
-/* Module 4 stable OSMD grid layer */
-.musicxml-wrapper .musicxml-display {
-  transform-origin: top left;
-}
-
-.musicxml-wrapper .musicxml-display svg {
-  max-width: none !important;
-}
-
-
-/* Module 4 fixed input editor + MusicXML preview separation */
-.fixed-editor-section {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: #ffffff;
-  overflow-x: auto;
-  overflow-y: hidden;
-  margin-bottom: 18px;
-}
-
-.fixed-editor-label,
-.xml-preview-label {
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 8px 4px 8px;
-}
-
-.fixed-grid-editor {
-  display: block;
-  min-height: 360px;
-  cursor: crosshair;
-  background: #fff;
-}
-
-.fixed-staff-line {
-  stroke: rgba(20, 20, 20, 0.55);
-  stroke-width: 1;
-}
-
-.fixed-beat-line {
-  stroke: rgba(20, 20, 20, 0.055);
-  stroke-width: 1;
-}
-
-.fixed-beat-line.measure {
-  stroke: rgba(20, 20, 20, 0.18);
-  stroke-width: 1.4;
-}
-
-.fixed-input-highlight {
-  fill: rgba(255, 79, 139, 0.07);
-}
-
-.fixed-cursor-line {
-  stroke: #ff4f8b;
-  stroke-width: 3.5;
-  stroke-linecap: round;
-}
-
-.fixed-cursor-triangle {
-  fill: #ff4f8b;
-}
-
-.fixed-clef {
-  font-family: "Bravura", "Noto Music", "Segoe UI Symbol", "Apple Symbols", serif;
-  font-size: 34px;
-  fill: rgba(20, 20, 20, 0.72);
-  dominant-baseline: middle;
-}
-
-.fixed-notehead.filled {
-  fill: rgba(20, 20, 20, 0.85);
-}
-
-.fixed-notehead.open {
-  fill: #ffffff;
-  stroke: rgba(20, 20, 20, 0.85);
-  stroke-width: 2;
-}
-
-.fixed-note.selected .fixed-notehead {
-  stroke: #ff4f8b;
-  stroke-width: 2.4;
-}
-
-.fixed-stem {
-  stroke: rgba(20, 20, 20, 0.82);
-  stroke-width: 1.8;
-}
-
-.fixed-duration-label {
-  font-size: 11px;
-  fill: var(--muted);
-}
-
-.fixed-cantus-note {
-  fill: #ffffff;
-  stroke: rgba(20, 20, 20, 0.55);
-  stroke-width: 1.6;
-}
-
-.xml-preview-wrapper {
-  opacity: 0.92;
-}
-
-.musicxml-overlay {
-  display: none !important;
 }
