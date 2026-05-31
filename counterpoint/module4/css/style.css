@@ -416,3 +416,11 @@ h2 {
   .language-control select, .timbre-control select, .playback-control select, .exercise-control select { min-width: 0; width: 100%; }
   h1 { letter-spacing: -0.045em; }
 }
+
+
+.selection-halo {
+  fill: rgba(29, 78, 216, 0.07);
+  stroke: rgba(29, 78, 216, 0.28);
+  stroke-width: 1;
+  pointer-events: none;
+}

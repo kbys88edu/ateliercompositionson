@@ -54,6 +54,8 @@ const I18N = {
     timbreOrgan: "Organ / オルガン風",
     timbreBell: "Bell / ベル風",
     timbreVoice: "Voice / 声風",
+    timbreFemaleSample: "Female Sample / 女声サンプル",
+    timbreMaleSample: "Male Sample / 男声サンプル",
     playbackHint: "Space：再生 / 停止　｜　← / →：前後の二分音符へ移動",
     scoreInputTitle: "五線入力",
     scoreInputHelp: "上段はト音記号の二分音符対旋律、下段はヘ音記号の全音符定旋律です。タイ入力はありません。",
@@ -135,6 +137,8 @@ const I18N = {
     timbreOrgan: "Organ / orgue",
     timbreBell: "Bell / cloche",
     timbreVoice: "Voice / voix",
+    timbreFemaleSample: "Female Sample / voix féminine",
+    timbreMaleSample: "Male Sample / voix masculine",
     playbackHint: "Espace : lecture / arrêt　｜　← / → : blanche précédente / suivante",
     scoreInputTitle: "Saisie sur portée",
     scoreInputHelp: "La portée supérieure montre le contrepoint en blanches en clé de sol ; la portée inférieure montre le cantus en rondes en clé de fa. Il n’y a pas de liaison.",
@@ -425,8 +429,119 @@ function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
   noise.stop(stopAt);
 }
 
+
+const SAMPLE_VOICE_SETS = {
+  femaleSample: {
+    folder: "female",
+    notes: ["C3", "G3", "C4", "G4"]
+  },
+  maleSample: {
+    folder: "male",
+    notes: ["C2", "G2", "C3", "G3"]
+  }
+};
+
+const sampleVoiceCache = {};
+
+function getSampleVoiceBasePath() {
+  const path = window.location.pathname;
+  if (
+    path.includes("/module2/") ||
+    path.includes("/module3/") ||
+    path.includes("/module4/") ||
+    path.includes("/three-voice/")
+  ) {
+    return "../audio/voice";
+  }
+  return "audio/voice";
+}
+
+function getNearestSampleNote(targetMidi, sampleNotes) {
+  let nearest = sampleNotes[0];
+  let nearestDistance = Infinity;
+
+  sampleNotes.forEach((note) => {
+    const midi = noteToMidi(note);
+    if (midi === null) return;
+    const distance = Math.abs(midi - targetMidi);
+    if (distance < nearestDistance) {
+      nearest = note;
+      nearestDistance = distance;
+    }
+  });
+
+  return nearest;
+}
+
+async function loadSampleVoiceBuffer(setName, note) {
+  const set = SAMPLE_VOICE_SETS[setName];
+  if (!set) return null;
+
+  const cacheKey = `${setName}:${note}`;
+  if (sampleVoiceCache[cacheKey]) return sampleVoiceCache[cacheKey];
+
+  const ctx = getAudioContext();
+  const url = `${getSampleVoiceBasePath()}/${set.folder}/${note}.wav`;
+
+  try {
+    const response = await fetch(url, { cache: "force-cache" });
+    if (!response.ok) throw new Error(`Sample not found: ${url}`);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+    sampleVoiceCache[cacheKey] = audioBuffer;
+    return audioBuffer;
+  } catch (error) {
+    console.warn(error);
+    return null;
+  }
+}
+
+async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1) {
+  const set = SAMPLE_VOICE_SETS[setName];
+  if (!set) return;
+
+  const targetMidi = midi;
+  const nearestNote = getNearestSampleNote(targetMidi, set.notes);
+  const sourceMidi = noteToMidi(nearestNote);
+
+  if (sourceMidi === null) return;
+
+  const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
+
+  if (!buffer) {
+    // Fallback to synthetic voice if sample files are missing.
+    playVoiceLikeNote(midi, duration, gainScale);
+    return;
+  }
+
+  const ctx = getAudioContext();
+  const now = ctx.currentTime;
+
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  source.playbackRate.setValueAtTime(Math.pow(2, (targetMidi - sourceMidi) / 12), now);
+
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.78 * gainScale, now + 0.025);
+  gain.gain.setValueAtTime(0.70 * gainScale, now + Math.max(0.03, duration * 0.72));
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
+
+  source.connect(gain);
+  gain.connect(ctx.destination);
+
+  source.start(now);
+  source.stop(now + duration + 0.12);
+}
+
+
 function playMidiNote(midi, duration = 0.38, gainScale = 1) {
   const timbre = getTimbre();
+
+  if (timbre === "femaleSample" || timbre === "maleSample") {
+    playSampleVoiceNote(timbre, midi, duration, gainScale);
+    return;
+  }
 
   if (timbre === "voice") {
     playVoiceLikeNote(midi, duration, gainScale);
