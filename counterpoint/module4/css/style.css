@@ -780,3 +780,98 @@ h2 {
   stroke: none;
   pointer-events: none;
 }
+
+
+/* Module 4 single-scroll cleanup.
+   Only the MusicXML score frame should scroll horizontally.
+   The page itself must not create a second horizontal scrollbar. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+main,
+.container,
+.page,
+.app,
+.module,
+.panel,
+.card,
+.score-card,
+.score-panel,
+.editor-panel,
+.exercise-panel {
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.musicxml-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 360px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #ffffff;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain;
+  box-sizing: border-box;
+}
+
+.musicxml-wrapper .musicxml-display {
+  position: relative;
+  z-index: 1;
+  border: 0 !important;
+  border-radius: 0 !important;
+  min-height: 360px;
+  padding: 14px;
+  background: transparent;
+  overflow: visible !important;
+  box-sizing: border-box;
+}
+
+.musicxml-wrapper .musicxml-display > div,
+.musicxml-wrapper .musicxml-display svg {
+  overflow: visible !important;
+  max-width: none !important;
+}
+
+.musicxml-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 360px;
+  pointer-events: auto;
+  cursor: crosshair;
+  z-index: 5;
+  overflow: visible !important;
+}
+
+/* Remove any experimental fixed editor from previous builds. */
+.fixed-editor-section,
+.fixed-grid-editor,
+.xml-preview-label {
+  display: none !important;
+}
+
+/* Make the scrollbar appear only inside the score frame and keep it visually small. */
+.musicxml-wrapper::-webkit-scrollbar {
+  height: 10px;
+}
+
+.musicxml-wrapper::-webkit-scrollbar-track {
+  background: rgba(20, 20, 20, 0.04);
+  border-radius: 999px;
+}
+
+.musicxml-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(20, 20, 20, 0.18);
+  border-radius: 999px;
+}
+
+.musicxml-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(20, 20, 20, 0.28);
+}
