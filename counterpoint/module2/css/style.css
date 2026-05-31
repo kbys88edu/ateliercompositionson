@@ -529,3 +529,56 @@ h2 {
   height: auto;
   object-fit: contain;
 }
+
+
+/* Error highlighting */
+.note-head.error {
+  fill: #b3261e !important;
+  stroke: #b3261e !important;
+  stroke-width: 2.2 !important;
+}
+
+.note-head.open.error {
+  fill: #ffffff !important;
+  stroke: #b3261e !important;
+  stroke-width: 2.4 !important;
+}
+
+.note-stem.error {
+  stroke: #b3261e !important;
+  stroke-width: 2.2 !important;
+}
+
+.note-label.error,
+.accidental.error {
+  fill: #b3261e !important;
+  font-weight: 700;
+}
+
+.issue-ring {
+  fill: none;
+  stroke: #b3261e;
+  stroke-width: 2;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.issue-ring.warn {
+  stroke: #c47a00;
+}
+
+.note-head.warn {
+  stroke: #c47a00 !important;
+  stroke-width: 2.1 !important;
+}
+
+.note-stem.warn {
+  stroke: #c47a00 !important;
+  stroke-width: 2 !important;
+}
+
+.note-label.warn,
+.accidental.warn {
+  fill: #c47a00 !important;
+  font-weight: 700;
+}

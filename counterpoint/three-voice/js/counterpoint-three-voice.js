@@ -69,6 +69,7 @@ const I18N = {
     clearVoice: "選択声部をクリア",
     refreshScore: "楽譜を更新",
     playSelected: "選択音を鳴らす",
+    exportMidi: "MIDIを書き出す",
     resetStart: "最初に戻す",
     playbackModeLabel: "再生対象",
     playAll: "3声すべて",
@@ -151,6 +152,7 @@ const I18N = {
     clearVoice: "Effacer la voix sélectionnée",
     refreshScore: "Actualiser la partition",
     playSelected: "Jouer la note sélectionnée",
+    exportMidi: "Exporter MIDI",
     resetStart: "Revenir au début",
     playbackModeLabel: "Lecture",
     playAll: "Les trois voix",
@@ -1484,3 +1486,131 @@ window.addEventListener("DOMContentLoaded", () => {
   renderScore();
   updatePlayPauseButton();
 });
+
+
+
+function midiEncodeVariableLength(value) {
+  let buffer = value & 0x7f;
+  const bytes = [];
+
+  while ((value >>= 7)) {
+    buffer <<= 8;
+    buffer |= ((value & 0x7f) | 0x80);
+  }
+
+  while (true) {
+    bytes.push(buffer & 0xff);
+    if (buffer & 0x80) buffer >>= 8;
+    else break;
+  }
+
+  return bytes;
+}
+
+function midiTextBytes(text) {
+  return Array.from(text).map((char) => char.charCodeAt(0) & 0xff);
+}
+
+function midiNumberToBytes(value, length) {
+  const bytes = [];
+  for (let i = length - 1; i >= 0; i--) {
+    bytes.push((value >> (i * 8)) & 0xff);
+  }
+  return bytes;
+}
+
+function midiTrackChunk(events) {
+  const data = [];
+  events.forEach((event) => data.push(...event));
+
+  const header = midiTextBytes("MTrk");
+  const length = midiNumberToBytes(data.length, 4);
+  return [...header, ...length, ...data];
+}
+
+function midiNoteEvent(delta, status, note, velocity) {
+  return [...midiEncodeVariableLength(delta), status, note, velocity];
+}
+
+function midiMetaEvent(delta, type, data) {
+  return [...midiEncodeVariableLength(delta), 0xff, type, data.length, ...data];
+}
+
+function midiCreateFile(tracks, ticksPerQuarter = 480) {
+  const header = [
+    ...midiTextBytes("MThd"),
+    0x00, 0x00, 0x00, 0x06,
+    0x00, 0x01,
+    ...midiNumberToBytes(tracks.length, 2),
+    ...midiNumberToBytes(ticksPerQuarter, 2)
+  ];
+
+  return new Uint8Array([...header, ...tracks.flat()]);
+}
+
+function midiDownload(bytes, filename) {
+  const blob = new Blob([bytes], { type: "audio/midi" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function midiBuildNoteTrack(trackName, notes, channel, ticksPerNote, velocity = 84) {
+  const events = [];
+  events.push(midiMetaEvent(0, 0x03, midiTextBytes(trackName)));
+
+  let pendingDelta = 0;
+
+  notes.forEach((note) => {
+    const midi = noteToMidi(note);
+
+    if (midi === null) {
+      pendingDelta += ticksPerNote;
+      return;
+    }
+
+    events.push(midiNoteEvent(pendingDelta, 0x90 + channel, midi, velocity));
+    events.push(midiNoteEvent(ticksPerNote, 0x80 + channel, midi, 0));
+    pendingDelta = 0;
+  });
+
+  events.push(midiMetaEvent(pendingDelta, 0x2f, []));
+  return midiTrackChunk(events);
+}
+
+function exportMidi() {
+  const ticksPerQuarter = 480;
+  const wholeTicks = ticksPerQuarter * 4;
+
+  const cantus = getNotesFromTextarea("cantus");
+  const counterpoint1 = getNotesFromTextarea("counterpoint1");
+  const counterpoint2 = getNotesFromTextarea("counterpoint2");
+
+  if (!cantus.length && !counterpoint1.length && !counterpoint2.length) {
+    alert(currentLanguage === "fr" ? "Aucune note à exporter." : "書き出す音がありません。");
+    return;
+  }
+
+  const conductorEvents = [
+    midiMetaEvent(0, 0x03, midiTextBytes("Tempo / Meter")),
+    midiMetaEvent(0, 0x51, [0x0f, 0x42, 0x40]),
+    midiMetaEvent(0, 0x58, [0x04, 0x02, 0x18, 0x08]),
+    midiMetaEvent(0, 0x2f, [])
+  ];
+
+  const tracks = [
+    midiTrackChunk(conductorEvents),
+    midiBuildNoteTrack("Cantus", cantus, 0, wholeTicks, 72),
+    midiBuildNoteTrack("Counterpoint 1", counterpoint1, 1, wholeTicks, 86),
+    midiBuildNoteTrack("Counterpoint 2", counterpoint2, 2, wholeTicks, 82)
+  ];
+
+  const bytes = midiCreateFile(tracks, ticksPerQuarter);
+  midiDownload(bytes, "three_voice_counterpoint_tempo60_4-4.mid");
+}
+

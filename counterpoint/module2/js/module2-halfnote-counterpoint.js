@@ -40,6 +40,7 @@ const I18N = {
     clearCounterpoint: "対旋律をクリア",
     refreshScore: "楽譜を更新",
     playSelected: "選択音を鳴らす",
+    exportMidi: "MIDIを書き出す",
     resetStart: "最初に戻す",
     playbackModeLabel: "再生対象",
     playBoth: "両声",
@@ -119,6 +120,7 @@ const I18N = {
     clearCounterpoint: "Effacer le contrepoint",
     refreshScore: "Actualiser la partition",
     playSelected: "Jouer la note sélectionnée",
+    exportMidi: "Exporter MIDI",
     resetStart: "Revenir au début",
     playbackModeLabel: "Lecture",
     playBoth: "Deux voix",
@@ -252,6 +254,7 @@ let playbackIndex = 0;
 let isPlaying = false;
 let playbackTimerId = null;
 let audioContext = null;
+let analysisIssues = [];
 
 function t(key) {
   return I18N[currentLanguage][key];
@@ -688,6 +691,7 @@ function renderSummary(errorCount, warnCount, okCount) {
 }
 
 function analyzeCounterpoint() {
+  analysisIssues = [];
   const cantus = getNotesFromTextarea("cantus");
   const counterpoint = getNotesFromTextarea("counterpoint");
   const results = [];
@@ -699,6 +703,7 @@ function analyzeCounterpoint() {
     addResult(results, "error", t("needInput"));
     renderSummary(1, 0, 0);
     renderResults(results);
+    renderScore();
     return;
   }
 
@@ -726,6 +731,7 @@ function analyzeCounterpoint() {
 
     if (cMidi === null || cpMidi === null) {
       addResult(results, "error", t("invalidNote")(i + 1));
+      analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
       errorCount++;
       continue;
     }
@@ -739,6 +745,8 @@ function analyzeCounterpoint() {
         okCount++;
       } else {
         addResult(results, "error", t("downbeatBad")(measure + 1, name));
+        analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
+        analysisIssues.push({ voice: "cantus", index: measure * SCORE.quartersPerCantus, type: "error" });
         errorCount++;
       }
     } else {
@@ -753,6 +761,7 @@ function analyzeCounterpoint() {
         okCount++;
       } else {
         addResult(results, "warn", t("offbeatBad")(i + 1, name));
+        analysisIssues.push({ voice: "counterpoint", index: i, type: "warn" });
         warnCount++;
       }
     }
@@ -778,11 +787,19 @@ function analyzeCounterpoint() {
 
     if (cDir !== 0 && cDir === cpDir && isPerfectFifth(interval1) && isPerfectFifth(interval2)) {
       addResult(results, "error", t("parallelFifth")(i + 1, i + 2));
+      analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
+      analysisIssues.push({ voice: "counterpoint", index: i + 1, type: "error" });
+      analysisIssues.push({ voice: "cantus", index: measure1 * SCORE.quartersPerCantus, type: "error" });
+      analysisIssues.push({ voice: "cantus", index: measure2 * SCORE.quartersPerCantus, type: "error" });
       errorCount++;
     }
 
     if (cDir !== 0 && cDir === cpDir && isPerfectOctaveOrUnison(interval1) && isPerfectOctaveOrUnison(interval2)) {
       addResult(results, "error", t("parallelOctave")(i + 1, i + 2));
+      analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
+      analysisIssues.push({ voice: "counterpoint", index: i + 1, type: "error" });
+      analysisIssues.push({ voice: "cantus", index: measure1 * SCORE.quartersPerCantus, type: "error" });
+      analysisIssues.push({ voice: "cantus", index: measure2 * SCORE.quartersPerCantus, type: "error" });
       errorCount++;
     }
   }
@@ -804,9 +821,17 @@ function clearSvg(svg) {
 
 function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const noteStep = getDiatonicStep(note);
-  const e4Step = getDiatonicStep("E4");
-  if (noteStep === null || e4Step === null) return null;
-  return bottomLineY - (noteStep - e4Step) * SCORE.noteStep;
+
+  // Treble staff:
+  //   bottom line = E4
+  // Bass staff:
+  //   bottom line = G2
+  // This keeps the cantus visually centered in the bass clef.
+  const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
+  const referenceStep = getDiatonicStep(referenceNote);
+
+  if (noteStep === null || referenceStep === null) return null;
+  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
 }
 
 function yToNaturalNote(y) {
@@ -994,14 +1019,14 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
   }
 }
 
-function drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback) {
+function drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass = "") {
   if (!parsed.accidental) return;
   const symbol = parsed.accidental === "#" ? "♯" : "♭";
 
   svg.appendChild(createSvgElement("text", {
     x: x - 30,
     y: y + 1,
-    class: `accidental${isCantus ? " cantus" : ""}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}`
+    class: `accidental${isCantus ? " cantus" : ""}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}${issueClass ? " " + issueClass : ""}`
   })).textContent = symbol;
 }
 
@@ -1013,6 +1038,30 @@ function drawHalfFlag(svg, x, y, isSelected, isCurrentPlayback) {
   }));
 }
 
+function getIssueFor(voice, index) {
+  if (!Array.isArray(analysisIssues)) return null;
+  const exactError = analysisIssues.find((issue) => issue.voice === voice && issue.index === index && issue.type === "error");
+  if (exactError) return exactError;
+  const exactWarn = analysisIssues.find((issue) => issue.voice === voice && issue.index === index && issue.type === "warn");
+  if (exactWarn) return exactWarn;
+  return null;
+}
+
+function getIssueClass(voice, index) {
+  const issue = getIssueFor(voice, index);
+  return issue ? issue.type : "";
+}
+
+function drawIssueRing(svg, x, y, issueClass) {
+  if (!issueClass) return;
+  svg.appendChild(createSvgElement("circle", {
+    cx: x,
+    cy: y,
+    r: 15,
+    class: issueClass === "warn" ? "issue-ring warn" : "issue-ring"
+  }));
+}
+
 function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const y = noteToY(note, bottomLineY);
   const parsed = parseNote(note);
@@ -1021,16 +1070,19 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const isCantus = voice === "cantus";
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
+  const issueClass = getIssueClass(voice, index);
 
   drawLedgerLines(svg, x, y, bottomLineY);
-  drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback);
+  drawIssueRing(svg, x, y, issueClass);
+  drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
 
   const noteClass = [
     "note-head",
     "open",
     isCantus ? "cantus" : "",
     isCurrentPlayback ? "playing" : "",
-    isSelected ? "selected" : ""
+    isSelected ? "selected" : "",
+    issueClass
   ].filter(Boolean).join(" ");
 
   // Module 2:
@@ -1051,14 +1103,14 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
       y1: y,
       x2: x + 7,
       y2: y - 34,
-      class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem"
+      class: ["note-stem", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
     }));
   }
 
   svg.appendChild(createSvgElement("text", {
     x: x - 12,
     y: isCantus ? bottomLineY + 48 : bottomLineY - 62,
-    class: isCurrentPlayback ? "note-label playing" : isSelected ? "note-label selected" : "note-label"
+    class: ["note-label", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
   })).textContent = note;
 }
 
@@ -1285,3 +1337,131 @@ window.addEventListener("DOMContentLoaded", () => {
   renderScore();
   updatePlayPauseButton();
 });
+
+
+
+function midiEncodeVariableLength(value) {
+  let buffer = value & 0x7f;
+  const bytes = [];
+
+  while ((value >>= 7)) {
+    buffer <<= 8;
+    buffer |= ((value & 0x7f) | 0x80);
+  }
+
+  while (true) {
+    bytes.push(buffer & 0xff);
+    if (buffer & 0x80) buffer >>= 8;
+    else break;
+  }
+
+  return bytes;
+}
+
+function midiTextBytes(text) {
+  return Array.from(text).map((char) => char.charCodeAt(0) & 0xff);
+}
+
+function midiNumberToBytes(value, length) {
+  const bytes = [];
+  for (let i = length - 1; i >= 0; i--) {
+    bytes.push((value >> (i * 8)) & 0xff);
+  }
+  return bytes;
+}
+
+function midiTrackChunk(events) {
+  const data = [];
+  events.forEach((event) => data.push(...event));
+
+  const header = midiTextBytes("MTrk");
+  const length = midiNumberToBytes(data.length, 4);
+  return [...header, ...length, ...data];
+}
+
+function midiNoteEvent(delta, status, note, velocity) {
+  return [...midiEncodeVariableLength(delta), status, note, velocity];
+}
+
+function midiMetaEvent(delta, type, data) {
+  return [...midiEncodeVariableLength(delta), 0xff, type, data.length, ...data];
+}
+
+function midiCreateFile(tracks, ticksPerQuarter = 480) {
+  const header = [
+    ...midiTextBytes("MThd"),
+    0x00, 0x00, 0x00, 0x06,
+    0x00, 0x01,
+    ...midiNumberToBytes(tracks.length, 2),
+    ...midiNumberToBytes(ticksPerQuarter, 2)
+  ];
+
+  return new Uint8Array([...header, ...tracks.flat()]);
+}
+
+function midiDownload(bytes, filename) {
+  const blob = new Blob([bytes], { type: "audio/midi" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function midiBuildNoteTrack(trackName, notes, channel, ticksPerNote, velocity = 84) {
+  const events = [];
+  events.push(midiMetaEvent(0, 0x03, midiTextBytes(trackName)));
+
+  let pendingDelta = 0;
+
+  notes.forEach((note) => {
+    const midi = noteToMidi(note);
+
+    if (midi === null) {
+      pendingDelta += ticksPerNote;
+      return;
+    }
+
+    events.push(midiNoteEvent(pendingDelta, 0x90 + channel, midi, velocity));
+    events.push(midiNoteEvent(ticksPerNote, 0x80 + channel, midi, 0));
+    pendingDelta = 0;
+  });
+
+  events.push(midiMetaEvent(pendingDelta, 0x2f, []));
+  return midiTrackChunk(events);
+}
+
+function exportMidi() {
+  const ticksPerQuarter = 480;
+  const tempoMicroseconds = 1000000; // 60 BPM
+  const cantus = getNotesFromTextarea("cantus");
+  const counterpoint = getNotesFromTextarea("counterpoint");
+
+  if (!cantus.length && !counterpoint.length) {
+    alert(currentLanguage === "fr" ? "Aucune note à exporter." : "書き出す音がありません。");
+    return;
+  }
+
+  const cantusTicks = ticksPerQuarter * 4;
+  const counterpointTicks = Math.max(1, Math.round(cantusTicks / SCORE.quartersPerCantus));
+
+  const conductorEvents = [
+    midiMetaEvent(0, 0x03, midiTextBytes("Tempo / Meter")),
+    midiMetaEvent(0, 0x51, [0x0f, 0x42, 0x40]),
+    midiMetaEvent(0, 0x58, [0x04, 0x02, 0x18, 0x08]),
+    midiMetaEvent(0, 0x2f, [])
+  ];
+
+  const tracks = [
+    midiTrackChunk(conductorEvents),
+    midiBuildNoteTrack("Cantus / whole notes", cantus, 0, cantusTicks, 72),
+    midiBuildNoteTrack("Counterpoint", counterpoint, 1, counterpointTicks, 86)
+  ];
+
+  const bytes = midiCreateFile(tracks, ticksPerQuarter);
+  midiDownload(bytes, "counterpoint_tempo60_4-4.mid");
+}
+

@@ -47,6 +47,7 @@ const I18N = {
     clearCounterpoint: "対旋律をクリア",
     refreshScore: "楽譜を更新",
     playSelected: "選択音を鳴らす",
+    exportMidi: "MIDIを書き出す",
     resetStart: "最初に戻す",
     playbackModeLabel: "再生対象",
     playBoth: "両声",
@@ -124,6 +125,7 @@ const I18N = {
     clearCounterpoint: "Effacer le contrepoint",
     refreshScore: "Actualiser la partition",
     playSelected: "Jouer la note sélectionnée",
+    exportMidi: "Exporter MIDI",
     resetStart: "Revenir au début",
     playbackModeLabel: "Lecture",
     playBoth: "Deux voix",
@@ -338,6 +340,7 @@ let playbackIndex = 0;
 let isPlaying = false;
 let playbackTimerId = null;
 let audioContext = null;
+let analysisIssues = [];
 
 function t(key) {
   return I18N[currentLanguage][key];
@@ -793,6 +796,7 @@ function renderSummary(errorCount, warnCount, okCount) {
 }
 
 function analyzeCounterpoint() {
+  analysisIssues = [];
   const cantus = getNotesFromTextarea("cantus");
   const counterpoint = getNotesFromTextarea("counterpoint");
   const results = [];
@@ -805,6 +809,7 @@ function analyzeCounterpoint() {
     addResult(results, "error", t("needInput"));
     renderSummary(1, 0, 0);
     renderResults(results);
+    renderScore();
     return;
   }
 
@@ -829,6 +834,7 @@ function analyzeCounterpoint() {
 
     if (cMidi === null || cpMidi === null) {
       addResult(results, "error", t("invalidNote")(i + 1));
+      analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
       errorCount++;
       continue;
     }
@@ -1111,67 +1117,93 @@ function drawLedgerLines(svg, x, y) {
   }
 }
 
-function drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback) {
+function drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass = "") {
   if (!parsed.accidental) return;
-
   const symbol = parsed.accidental === "#" ? "♯" : "♭";
 
   svg.appendChild(createSvgElement("text", {
     x: x - 30,
     y: y + 1,
-    class: `accidental${isCantus ? " cantus" : ""}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}`
+    class: `accidental${isCantus ? " cantus" : ""}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}${issueClass ? " " + issueClass : ""}`
   })).textContent = symbol;
 }
 
-function drawNote(svg, note, x, voice, index) {
-  const y = noteToY(note);
-  const parsed = parseNote(note);
+function getIssueFor(voice, index) {
+  if (!Array.isArray(analysisIssues)) return null;
+  const exactError = analysisIssues.find((issue) => issue.voice === voice && issue.index === index && issue.type === "error");
+  if (exactError) return exactError;
+  const exactWarn = analysisIssues.find((issue) => issue.voice === voice && issue.index === index && issue.type === "warn");
+  if (exactWarn) return exactWarn;
+  return null;
+}
 
+function getIssueClass(voice, index) {
+  const issue = getIssueFor(voice, index);
+  return issue ? issue.type : "";
+}
+
+function drawIssueRing(svg, x, y, issueClass) {
+  if (!issueClass) return;
+  svg.appendChild(createSvgElement("circle", {
+    cx: x,
+    cy: y,
+    r: 15,
+    class: issueClass === "warn" ? "issue-ring warn" : "issue-ring"
+  }));
+}
+
+function drawNote(svg, note, x, voice, index, bottomLineY) {
+  const y = noteToY(note, bottomLineY);
+  const parsed = parseNote(note);
   if (y === null || !parsed) return;
 
   const isCantus = voice === "cantus";
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
+  const issueClass = getIssueClass(voice, index);
 
-  const xOffset = isCantus ? -7 : 7;
-  const noteX = x + xOffset;
-
-  drawLedgerLines(svg, noteX, y);
-  drawAccidental(svg, parsed, noteX, y, isCantus, isSelected, isCurrentPlayback);
+  drawLedgerLines(svg, x, y, bottomLineY);
+  drawIssueRing(svg, x, y, issueClass);
+  drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
 
   svg.appendChild(createSvgElement("ellipse", {
-    cx: noteX,
+    cx: x,
     cy: y,
     rx: 8.5,
     ry: 5.8,
-    transform: `rotate(-18 ${noteX} ${y})`,
-    class: isCantus
-      ? isCurrentPlayback ? "note-head cantus playing" : "note-head cantus"
-      : isCurrentPlayback ? "note-head playing" : isSelected ? "note-head selected" : "note-head"
+    transform: `rotate(-18 ${x} ${y})`,
+    class: [
+      "note-head",
+      isCantus ? "cantus" : "",
+      isCurrentPlayback ? "playing" : "",
+      isSelected ? "selected" : "",
+      issueClass
+    ].filter(Boolean).join(" ")
   }));
 
-  if (isCantus) {
-    svg.appendChild(createSvgElement("line", {
-      x1: noteX - 7,
-      y1: y,
-      x2: noteX - 7,
-      y2: y + 34,
-      class: isCurrentPlayback ? "note-stem cantus playing" : "note-stem cantus"
-    }));
-  } else {
-    svg.appendChild(createSvgElement("line", {
-      x1: noteX + 7,
-      y1: y,
-      x2: noteX + 7,
-      y2: y - 34,
-      class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem"
-    }));
-  }
+  svg.appendChild(createSvgElement("line", {
+    x1: isCantus ? x - 7 : x + 7,
+    y1: y,
+    x2: isCantus ? x - 7 : x + 7,
+    y2: isCantus ? y + 34 : y - 34,
+    class: [
+      "note-stem",
+      isCantus ? "cantus" : "",
+      isCurrentPlayback ? "playing" : "",
+      isSelected ? "selected" : "",
+      issueClass
+    ].filter(Boolean).join(" ")
+  }));
 
   svg.appendChild(createSvgElement("text", {
-    x: noteX - 12,
-    y: isCantus ? SCORE.bottomLineY + 52 : SCORE.bottomLineY - 72,
-    class: isCurrentPlayback ? "note-label playing" : isSelected ? "note-label selected" : "note-label"
+    x: x - 12,
+    y: isCantus ? bottomLineY + 48 : bottomLineY - 62,
+    class: [
+      "note-label",
+      isCurrentPlayback ? "playing" : "",
+      isSelected ? "selected" : "",
+      issueClass
+    ].filter(Boolean).join(" ")
   })).textContent = note;
 }
 
@@ -1421,3 +1453,131 @@ window.addEventListener("DOMContentLoaded", () => {
   renderScore();
   updatePlayPauseButton();
 });
+
+
+
+function midiEncodeVariableLength(value) {
+  let buffer = value & 0x7f;
+  const bytes = [];
+
+  while ((value >>= 7)) {
+    buffer <<= 8;
+    buffer |= ((value & 0x7f) | 0x80);
+  }
+
+  while (true) {
+    bytes.push(buffer & 0xff);
+    if (buffer & 0x80) buffer >>= 8;
+    else break;
+  }
+
+  return bytes;
+}
+
+function midiTextBytes(text) {
+  return Array.from(text).map((char) => char.charCodeAt(0) & 0xff);
+}
+
+function midiNumberToBytes(value, length) {
+  const bytes = [];
+  for (let i = length - 1; i >= 0; i--) {
+    bytes.push((value >> (i * 8)) & 0xff);
+  }
+  return bytes;
+}
+
+function midiTrackChunk(events) {
+  const data = [];
+  events.forEach((event) => data.push(...event));
+
+  const header = midiTextBytes("MTrk");
+  const length = midiNumberToBytes(data.length, 4);
+  return [...header, ...length, ...data];
+}
+
+function midiNoteEvent(delta, status, note, velocity) {
+  return [...midiEncodeVariableLength(delta), status, note, velocity];
+}
+
+function midiMetaEvent(delta, type, data) {
+  return [...midiEncodeVariableLength(delta), 0xff, type, data.length, ...data];
+}
+
+function midiCreateFile(tracks, ticksPerQuarter = 480) {
+  const header = [
+    ...midiTextBytes("MThd"),
+    0x00, 0x00, 0x00, 0x06,
+    0x00, 0x01,
+    ...midiNumberToBytes(tracks.length, 2),
+    ...midiNumberToBytes(ticksPerQuarter, 2)
+  ];
+
+  return new Uint8Array([...header, ...tracks.flat()]);
+}
+
+function midiDownload(bytes, filename) {
+  const blob = new Blob([bytes], { type: "audio/midi" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function midiBuildNoteTrack(trackName, notes, channel, ticksPerNote, velocity = 84) {
+  const events = [];
+  events.push(midiMetaEvent(0, 0x03, midiTextBytes(trackName)));
+
+  let pendingDelta = 0;
+
+  notes.forEach((note) => {
+    const midi = noteToMidi(note);
+
+    if (midi === null) {
+      pendingDelta += ticksPerNote;
+      return;
+    }
+
+    events.push(midiNoteEvent(pendingDelta, 0x90 + channel, midi, velocity));
+    events.push(midiNoteEvent(ticksPerNote, 0x80 + channel, midi, 0));
+    pendingDelta = 0;
+  });
+
+  events.push(midiMetaEvent(pendingDelta, 0x2f, []));
+  return midiTrackChunk(events);
+}
+
+function exportMidi() {
+  const ticksPerQuarter = 480;
+  const tempoMicroseconds = 1000000; // 60 BPM
+  const cantus = getNotesFromTextarea("cantus");
+  const counterpoint = getNotesFromTextarea("counterpoint");
+
+  if (!cantus.length && !counterpoint.length) {
+    alert(currentLanguage === "fr" ? "Aucune note à exporter." : "書き出す音がありません。");
+    return;
+  }
+
+  const cantusTicks = ticksPerQuarter * 4;
+  const counterpointTicks = Math.max(1, Math.round(cantusTicks / SCORE.quartersPerCantus));
+
+  const conductorEvents = [
+    midiMetaEvent(0, 0x03, midiTextBytes("Tempo / Meter")),
+    midiMetaEvent(0, 0x51, [0x0f, 0x42, 0x40]),
+    midiMetaEvent(0, 0x58, [0x04, 0x02, 0x18, 0x08]),
+    midiMetaEvent(0, 0x2f, [])
+  ];
+
+  const tracks = [
+    midiTrackChunk(conductorEvents),
+    midiBuildNoteTrack("Cantus / whole notes", cantus, 0, cantusTicks, 72),
+    midiBuildNoteTrack("Counterpoint", counterpoint, 1, counterpointTicks, 86)
+  ];
+
+  const bytes = midiCreateFile(tracks, ticksPerQuarter);
+  midiDownload(bytes, "counterpoint_tempo60_4-4.mid");
+}
+
