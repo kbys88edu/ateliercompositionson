@@ -810,3 +810,13 @@ h2 {
   stroke-width: 2.4;
   pointer-events: none;
 }
+
+
+/* Module 4 stable OSMD grid layer */
+.musicxml-wrapper .musicxml-display {
+  transform-origin: top left;
+}
+
+.musicxml-wrapper .musicxml-display svg {
+  max-width: none !important;
+}

@@ -230,7 +230,7 @@ const MUSICXML_INPUT = {
   rightPadding: 44,
   topStaffCenterY: 124,
   noteStep: 7.5,
-  beatWidth: 64
+  beatWidth: 68
 };
 
 
@@ -1162,6 +1162,23 @@ function createMusicXmlNote(noteName, duration, staff = 1, voice = 1, isRest = f
         </note>`;
 }
 
+function createHiddenGridVoiceXml() {
+  let xml = "";
+
+  for (let i = 0; i < 4; i += 1) {
+    xml += `
+        <note print-object="no" print-spacing="yes">
+          <rest/>
+          <duration>4</duration>
+          <voice>9</voice>
+          <type>quarter</type>
+          <staff>1</staff>
+        </note>`;
+  }
+
+  return xml;
+}
+
 function createMeasureCounterpointXml(measureIndex, events) {
   const measureStart = measureIndex * 4;
   const measureEnd = measureStart + 4;
@@ -1187,6 +1204,11 @@ function createMeasureCounterpointXml(measureIndex, events) {
     slot += 1;
   }
 
+  // Add a hidden fixed quarter grid in another voice.
+  // This stabilizes OSMD spacing when visible notes change duration.
+  xml += `<backup><duration>16</duration></backup>`;
+  xml += createHiddenGridVoiceXml();
+
   return xml;
 }
 
@@ -1209,15 +1231,17 @@ function buildModule4MusicXml() {
       </attributes>` : "";
 
     const counterpointXml = createMeasureCounterpointXml(i, events);
+
+    // We are at the end of hidden grid voice; back up to measure start before bass/cantus.
+    const backupToBass = `<backup><duration>16</duration></backup>`;
     const cantusNote = cantus[i] || null;
-    const backup = `<backup><duration>16</duration></backup>`;
     const cantusXml = createMusicXmlNote(cantusNote, "w", 2, 2, !cantusNote);
 
     measureXml += `
       <measure number="${i + 1}">
         ${attributes}
         ${counterpointXml}
-        ${backup}
+        ${backupToBass}
         ${cantusXml}
       </measure>`;
   }
@@ -1244,7 +1268,7 @@ function getOsmdInstance() {
 
   if (!window.module4OSMD) {
     window.module4OSMD = new opensheetmusicdisplay.OpenSheetMusicDisplay(container, {
-      autoResize: true,
+      autoResize: false,
       backend: "svg",
       drawTitle: false,
       drawComposer: false,
@@ -1252,6 +1276,12 @@ function getOsmdInstance() {
       disableCursor: false,
       renderSingleHorizontalStaffline: true
     });
+
+    if (window.module4OSMD.EngravingRules) {
+      window.module4OSMD.EngravingRules.RenderXMeasuresPerLine = 4;
+      window.module4OSMD.EngravingRules.MinimumDistanceBetweenNotes = 1.0;
+      window.module4OSMD.EngravingRules.MinimumDistanceBetweenGraphicalObjects = 1.0;
+    }
   }
 
   return window.module4OSMD;
