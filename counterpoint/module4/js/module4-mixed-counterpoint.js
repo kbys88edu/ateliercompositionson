@@ -890,10 +890,16 @@ function clearSvg(svg) {
   while (svg.firstChild) svg.removeChild(svg.firstChild);
 }
 
-function drawClef(svg, bottomLineY, clefType) {
-  const clef = clefType === "bass" ? "𝄢" : "𝄞";
-  const className = clefType === "bass" ? "clef-symbol bass" : "clef-symbol treble";
-  svg.appendChild(createSvgElement("text", { x: 52, y: bottomLineY - 20, class: className })).textContent = clef;
+function drawClef(svg, bottomLineY, clef = "treble") {
+  const symbol = clef === "bass" ? "𝄢" : "𝄞";
+  const x = clef === "bass" ? 30 : 28;
+  const y = clef === "bass" ? bottomLineY - SCORE.lineGap * 1.45 : bottomLineY + SCORE.lineGap * 0.15;
+
+  svg.appendChild(createSvgElement("text", {
+    x,
+    y,
+    class: "music-symbol clef-symbol"
+  })).textContent = symbol;
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
@@ -986,55 +992,95 @@ function drawIssueRing(svg, x, y, issueClass) {
   svg.appendChild(createSvgElement("circle", { cx: x, cy: y, r: 15, class: issueClass === "warn" ? "issue-ring warn" : "issue-ring" }));
 }
 
+function supportsMusicFontGlyph() {
+  if (typeof document === "undefined") return false;
+
+  // Prefer the browser Font Loading API when available.
+  if (document.fonts && typeof document.fonts.check === "function") {
+    const candidates = [
+      "28px Bravura",
+      "28px Noto Music",
+      "28px Finale Maestro",
+      "28px Petaluma",
+      "28px Maestro",
+      "28px Opus"
+    ];
+
+    if (candidates.some((font) => document.fonts.check(font, "𝄽"))) {
+      return true;
+    }
+  }
+
+  // Conservative fallback: use SVG if support cannot be confirmed.
+  return false;
+}
+
+function getRestGlyph(duration = "q") {
+  if (duration === "w") return "𝄻";
+  if (duration === "h") return "𝄼";
+  return "𝄽";
+}
+
 function drawRest(svg, x, voice, index, bottomLineY, duration = "q") {
   const isSelected = index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
+  const y = bottomLineY - 22;
+
   const baseClass = [
     "rest-mark",
     isSelected ? "selected" : "",
     isCurrentPlayback ? "playing" : ""
   ].filter(Boolean).join(" ");
 
-  // Use SVG primitives, not music-font glyphs.
-  // This avoids square/tofu boxes on systems without music-symbol fonts.
-  const y = bottomLineY - 22;
-
-  if (duration === "w") {
-    svg.appendChild(createSvgElement("rect", {
-      x: x - 8,
-      y: y - 5,
-      width: 16,
-      height: 6,
-      rx: 1.5,
-      class: baseClass
-    }));
-  } else if (duration === "h") {
-    svg.appendChild(createSvgElement("rect", {
-      x: x - 8,
-      y: y + 1,
-      width: 16,
-      height: 6,
-      rx: 1.5,
-      class: baseClass
-    }));
+  if (supportsMusicFontGlyph()) {
+    svg.appendChild(createSvgElement("text", {
+      x: x - 10,
+      y: y + 8,
+      class: [
+        "music-symbol",
+        "music-rest",
+        isSelected ? "selected" : "",
+        isCurrentPlayback ? "playing" : ""
+      ].filter(Boolean).join(" ")
+    })).textContent = getRestGlyph(duration);
   } else {
-    svg.appendChild(createSvgElement("line", {
-      x1: x - 7,
-      y1: y - 8,
-      x2: x + 7,
-      y2: y + 8,
-      class: baseClass
-    }));
-    svg.appendChild(createSvgElement("line", {
-      x1: x + 7,
-      y1: y - 8,
-      x2: x - 7,
-      y2: y + 8,
-      class: baseClass
-    }));
+    // SVG fallback: no tofu squares when music fonts are unavailable.
+    if (duration === "w") {
+      svg.appendChild(createSvgElement("rect", {
+        x: x - 8,
+        y: y - 5,
+        width: 16,
+        height: 6,
+        rx: 1.5,
+        class: baseClass
+      }));
+    } else if (duration === "h") {
+      svg.appendChild(createSvgElement("rect", {
+        x: x - 8,
+        y: y + 1,
+        width: 16,
+        height: 6,
+        rx: 1.5,
+        class: baseClass
+      }));
+    } else {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - 7,
+        y1: y - 8,
+        x2: x + 7,
+        y2: y + 8,
+        class: baseClass
+      }));
+      svg.appendChild(createSvgElement("line", {
+        x1: x + 7,
+        y1: y - 8,
+        x2: x - 7,
+        y2: y + 8,
+        class: baseClass
+      }));
+    }
   }
 
-  // Small invisible hit area, useful for selecting rests.
   svg.appendChild(createSvgElement("rect", {
     x: x - 14,
     y: y - 18,

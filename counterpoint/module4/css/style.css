@@ -465,3 +465,59 @@ h2 {
   stroke: none;
   pointer-events: none;
 }
+
+
+/* Module 4 music-font notation layer.
+   No font files are bundled. The browser uses installed notation fonts if available. */
+.music-symbol {
+  font-family:
+    "Bravura",
+    "Noto Music",
+    "Finale Maestro",
+    "Petaluma",
+    "Maestro",
+    "Opus",
+    "Segoe UI Symbol",
+    "Apple Symbols",
+    serif;
+  fill: rgba(23, 23, 23, 0.82);
+  user-select: none;
+  dominant-baseline: middle;
+}
+
+.clef-symbol {
+  font-size: 44px;
+  fill: rgba(23, 23, 23, 0.74);
+}
+
+.music-rest {
+  font-size: 30px;
+  fill: rgba(23, 23, 23, 0.58);
+}
+
+.music-rest.selected,
+.music-rest.playing {
+  fill: #171717;
+  font-weight: 700;
+}
+
+.rest-mark {
+  stroke: rgba(23, 23, 23, 0.52);
+  fill: rgba(23, 23, 23, 0.52);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.rest-mark.selected,
+.rest-mark.playing {
+  stroke: #171717;
+  fill: #171717;
+  stroke-width: 3;
+}
+
+.rest-hit-area {
+  fill: transparent;
+  stroke: none;
+  pointer-events: none;
+}
