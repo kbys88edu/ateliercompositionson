@@ -60,6 +60,7 @@ const I18N = {
     timbreSaw: "Sawtooth / 明るい",
     timbreOrgan: "Organ / オルガン風",
     timbreBell: "Bell / ベル風",
+    timbreVoice: "Voice / 声風",
     playbackHint: "Space：再生 / 停止　｜　← / →：前後の音へ移動",
     scoreInputTitle: "五線入力",
     scoreInputHelp: "五線をクリックして音を置きます。置いた音は青色で選択され、↑↓で半音移動、←→で前後の音へ移動できます。",
@@ -138,6 +139,7 @@ const I18N = {
     timbreSaw: "Sawtooth / brillant",
     timbreOrgan: "Organ / orgue",
     timbreBell: "Bell / cloche",
+    timbreVoice: "Voice / voix",
     playbackHint: "Espace : lecture / arrêt　｜　← / → : note précédente / suivante",
     scoreInputTitle: "Saisie sur portée",
     scoreInputHelp: "Cliquez sur la portée pour placer une note. La note sélectionnée apparaît en bleu. ↑↓ déplacent par demi-ton, ←→ changent de note.",
@@ -416,10 +418,120 @@ function midiToFrequency(midi) {
   return 440 * Math.pow(2, (midi - 69) / 12);
 }
 
-function playMidiNote(midi, duration = 0.35, gainScale = 1) {
+function createVoiceFormant(ctx, source, destination, now, duration, gainScale) {
+  const inputGain = ctx.createGain();
+  inputGain.gain.setValueAtTime(0.0001, now);
+  inputGain.gain.exponentialRampToValueAtTime(0.16 * gainScale, now + 0.055);
+  inputGain.gain.setValueAtTime(0.13 * gainScale, now + Math.max(0.06, duration * 0.72));
+  inputGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.16);
+
+  const formants = [
+    { frequency: 750, q: 7.5, gain: 0.9 },
+    { frequency: 1150, q: 9.0, gain: 0.55 },
+    { frequency: 2450, q: 11.0, gain: 0.35 }
+  ];
+
+  source.connect(inputGain);
+
+  formants.forEach((formant) => {
+    const filter = ctx.createBiquadFilter();
+    const gain = ctx.createGain();
+
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(formant.frequency, now);
+    filter.Q.setValueAtTime(formant.q, now);
+
+    gain.gain.setValueAtTime(formant.gain, now);
+
+    inputGain.connect(filter);
+    filter.connect(gain);
+    gain.connect(destination);
+  });
+}
+
+function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
   const ctx = getAudioContext();
   const now = ctx.currentTime;
-  const config = getTimbreConfig();
+  const frequency = midiToFrequency(midi);
+
+  const output = ctx.createGain();
+  output.gain.setValueAtTime(0.85, now);
+  output.connect(ctx.destination);
+
+  const vibrato = ctx.createOscillator();
+  const vibratoGain = ctx.createGain();
+  vibrato.type = "sine";
+  vibrato.frequency.setValueAtTime(5.4, now);
+  vibratoGain.gain.setValueAtTime(Math.max(1.0, frequency * 0.006), now);
+  vibrato.connect(vibratoGain);
+
+  const osc1 = ctx.createOscillator();
+  osc1.type = "sawtooth";
+  osc1.frequency.setValueAtTime(frequency, now);
+  vibratoGain.connect(osc1.frequency);
+
+  const osc2 = ctx.createOscillator();
+  osc2.type = "triangle";
+  osc2.frequency.setValueAtTime(frequency * 0.997, now);
+  vibratoGain.connect(osc2.frequency);
+
+  const osc3 = ctx.createOscillator();
+  osc3.type = "sine";
+  osc3.frequency.setValueAtTime(frequency * 2.005, now);
+  vibratoGain.connect(osc3.frequency);
+
+  createVoiceFormant(ctx, osc1, output, now, duration, gainScale * 0.85);
+  createVoiceFormant(ctx, osc2, output, now, duration, gainScale * 0.45);
+  createVoiceFormant(ctx, osc3, output, now, duration, gainScale * 0.18);
+
+  const noiseBuffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * (duration + 0.18)), ctx.sampleRate);
+  const data = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) {
+    data[i] = (Math.random() * 2 - 1) * 0.018;
+  }
+
+  const noise = ctx.createBufferSource();
+  noise.buffer = noiseBuffer;
+
+  const noiseFilter = ctx.createBiquadFilter();
+  noiseFilter.type = "bandpass";
+  noiseFilter.frequency.setValueAtTime(3200, now);
+  noiseFilter.Q.setValueAtTime(0.9, now);
+
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.setValueAtTime(0.0001, now);
+  noiseGain.gain.exponentialRampToValueAtTime(0.018 * gainScale, now + 0.035);
+  noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
+
+  noise.connect(noiseFilter);
+  noiseFilter.connect(noiseGain);
+  noiseGain.connect(output);
+
+  vibrato.start(now);
+  osc1.start(now);
+  osc2.start(now);
+  osc3.start(now);
+  noise.start(now);
+
+  const stopAt = now + duration + 0.25;
+  vibrato.stop(stopAt);
+  osc1.stop(stopAt);
+  osc2.stop(stopAt);
+  osc3.stop(stopAt);
+  noise.stop(stopAt);
+}
+
+function playMidiNote(midi, duration = 0.38, gainScale = 1) {
+  const timbre = getTimbre();
+
+  if (timbre === "voice") {
+    playVoiceLikeNote(midi, duration, gainScale);
+    return;
+  }
+
+  const ctx = getAudioContext();
+  const now = ctx.currentTime;
+  const config = getTimbreConfig(timbre);
   const frequency = midiToFrequency(midi);
 
   const mainOsc = ctx.createOscillator();
@@ -451,7 +563,6 @@ function playMidiNote(midi, duration = 0.35, gainScale = 1) {
 
     secondOsc.connect(secondGain);
     secondGain.connect(ctx.destination);
-
     secondOsc.start(now);
     secondOsc.stop(now + duration + config.release + 0.05);
   }
