@@ -550,7 +550,7 @@ async function loadSampleVoiceBuffer(setName, note) {
   }
 }
 
-async async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1) {
+async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1) {
   const set = SAMPLE_VOICE_SETS[setName];
   if (!set) return;
 
