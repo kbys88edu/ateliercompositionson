@@ -306,7 +306,7 @@ function createVoiceFormant(ctx, source, destination, now, duration, gainScale) 
 }
 
 function getRealEventsForMidiExport() {
-  // Dummy spacing notes are generated only inside MusicXML.
+  // Dummy sharp spacing notes are generated only inside MusicXML.
   // They are never stored in JSON. This guard also excludes them if future code adds voices/channels.
   return getCounterpointEvents()
     .filter((event) => event && !event.dummy && event.voice !== 9 && event.channel !== 9 && event.note && !isRestEvent(event));
@@ -708,6 +708,7 @@ function setCounterpointEvents(events) {
   const total = getTotalQuarterSlots();
   const cleaned = (events || [])
     .filter((event) => event && typeof event.start === "number" && event.note && !isRestEvent(event))
+    .filter((event) => event.voice !== 9 && event.channel !== 9 && event.dummy !== true)
     .map((event) => ({
       start: event.start,
       duration: DURATIONS[event.duration] ? event.duration : "q",
@@ -1174,12 +1175,14 @@ function createInvisibleDummyQuarterNoteXml(step = "C", octave = 5) {
         <note print-object="no" print-spacing="yes">
           <pitch>
             <step>${step}</step>
+            <alter>1</alter>
             <octave>${octave}</octave>
           </pitch>
           <duration>4</duration>
           <voice>9</voice>
           <type>quarter</type>
           <staff>1</staff>
+          <accidental>sharp</accidental>
           <notehead>none</notehead>
         </note>`;
 }
@@ -1187,8 +1190,9 @@ function createInvisibleDummyQuarterNoteXml(step = "C", octave = 5) {
 function createInvisibleDummyGridVoiceXml() {
   let xml = "";
 
-  // Four fixed quarter notes per measure.
-  // They are intentionally invisible but still create stable spacing for OSMD.
+  // Four invisible C# quarter notes per measure.
+  // They reserve accidental spacing before the user enters sharps/flats,
+  // but are never stored in JSON, played, analyzed, or exported to MIDI.
   for (let i = 0; i < 4; i += 1) {
     xml += createInvisibleDummyQuarterNoteXml("C", 5);
   }
@@ -1221,8 +1225,8 @@ function createMeasureCounterpointXml(measureIndex, events) {
     slot += 1;
   }
 
-  // Invisible dummy voice for spacing only.
-  // This is not part of the user input, analysis, playback, or MIDI export.
+  // Invisible dummy sharp voice for spacing only.
+  // Voice 9 is excluded from JSON / analysis / playback / MIDI export.
   xml += `<backup><duration>16</duration></backup>`;
   xml += createInvisibleDummyGridVoiceXml();
 
@@ -1249,7 +1253,7 @@ function buildModule4MusicXml() {
 
     const counterpointXml = createMeasureCounterpointXml(i, events);
 
-    // Back up after dummy voice before writing the cantus staff.
+    // Back up after dummy sharp voice before writing the cantus staff.
     const backupToCantus = `<backup><duration>16</duration></backup>`;
     const cantusNote = cantus[i] || null;
     const cantusXml = createMusicXmlNote(cantusNote, "w", 2, 2, !cantusNote);
@@ -1580,7 +1584,6 @@ function normalizeKeyboardNoteRegister(letter, octave) {
   const midi = noteToMidi(note);
   if (midi === null) return note;
 
-  // Keep keyboard input in a practical treble range.
   if (midi < noteToMidi("C4")) return `${letter.toUpperCase()}${octave + 1}`;
   if (midi > noteToMidi("G5")) return `${letter.toUpperCase()}${octave - 1}`;
   return note;

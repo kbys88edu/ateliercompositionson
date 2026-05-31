@@ -875,3 +875,15 @@ main,
 .musicxml-wrapper::-webkit-scrollbar-thumb:hover {
   background: rgba(20, 20, 20, 0.28);
 }
+
+
+/* Module 4 semitone mode with invisible dummy sharp spacing.
+   User input keeps chromatic notes; dummy voice 9 reserves accidental width. */
+.musicxml-wrapper {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+.musicxml-wrapper .musicxml-display svg {
+  max-width: none !important;
+}
