@@ -1248,7 +1248,8 @@ function getOsmdInstance() {
       drawTitle: false,
       drawComposer: false,
       drawingParameters: "compacttight",
-      disableCursor: false
+      disableCursor: false,
+      renderSingleHorizontalStaffline: true
     });
   }
 
@@ -1362,20 +1363,21 @@ function getMusicXmlSlotX(slot) {
   const total = Math.max(1, getTotalQuarterSlots());
   const usable = Math.max(1, metrics.right - metrics.left);
 
-  if (total <= 1) return metrics.left;
-  return metrics.left + (slot / (total - 1)) * usable;
+  // Sibelius-like insertion caret:
+  // slot 0 = start boundary before the first beat,
+  // slot n = boundary before beat n.
+  return metrics.left + (Math.max(0, Math.min(total, slot)) / total) * usable;
 }
 
 function getMusicXmlSlotFromX(x) {
   const metrics = getMusicXmlOverlayMetrics();
   const total = Math.max(1, getTotalQuarterSlots());
   const usable = Math.max(1, metrics.right - metrics.left);
-  const ratio = Math.max(0, Math.min(1, (x - metrics.left) / usable));
 
-  // Use floor-biased quantization.
-  // This prevents clicks near the middle of a beat from being placed in the next beat too early.
-  const raw = ratio * total;
-  return Math.max(0, Math.min(total - 1, Math.floor(raw)));
+  // Pure floor boundary mapping.
+  // This prevents input from jumping to the next beat before the boundary is crossed.
+  const ratio = Math.max(0, Math.min(0.999999, (x - metrics.left) / usable));
+  return Math.max(0, Math.min(total - 1, Math.floor(ratio * total)));
 }
 
 function getMusicXmlNoteFromY(y) {
@@ -1397,48 +1399,66 @@ function renderMusicXmlOverlay() {
 
   const total = getTotalQuarterSlots();
   const metrics = getMusicXmlOverlayMetrics();
+  const slotWidth = getMusicXmlSlotWidth();
 
   overlay.innerHTML = "";
 
   if (!total) return;
 
-  for (let i = 0; i < total; i += 1) {
+  const topY = Math.max(0, metrics.topStaffCenterY - 96);
+  const bottomY = Math.min(metrics.height, metrics.topStaffCenterY + 174);
+
+  for (let i = 0; i <= total; i += 1) {
     const x = getMusicXmlSlotX(i);
     const isMeasureStart = i % 4 === 0;
 
     overlay.appendChild(createOverlaySvgElement("line", {
       x1: x,
-      y1: Math.max(0, metrics.topStaffCenterY - 86),
+      y1: topY,
       x2: x,
-      y2: Math.min(metrics.height, metrics.topStaffCenterY + 160),
+      y2: bottomY,
       class: isMeasureStart ? "musicxml-grid-line measure" : "musicxml-grid-line"
     }));
   }
 
   const cursorX = getMusicXmlSlotX(selectedIndex);
+  const highlightY = Math.max(0, metrics.topStaffCenterY - 78);
+  const highlightHeight = Math.min(metrics.height - highlightY, 150);
+
+  // Pale rectangle showing the beat that will receive the next input.
+  overlay.appendChild(createOverlaySvgElement("rect", {
+    x: cursorX,
+    y: highlightY,
+    width: slotWidth,
+    height: highlightHeight,
+    class: "musicxml-input-slot-highlight"
+  }));
+
+  // Sibelius-like insertion caret immediately before the target beat.
   overlay.appendChild(createOverlaySvgElement("line", {
     x1: cursorX,
-    y1: Math.max(0, metrics.topStaffCenterY - 95),
+    y1: topY,
     x2: cursorX,
-    y2: Math.min(metrics.height, metrics.topStaffCenterY + 170),
+    y2: bottomY,
     class: "musicxml-cursor-line"
   }));
 
-  overlay.appendChild(createOverlaySvgElement("circle", {
-    cx: cursorX,
-    cy: metrics.topStaffCenterY,
-    r: 6,
-    class: "musicxml-cursor-dot"
+  overlay.appendChild(createOverlaySvgElement("path", {
+    d: `M ${cursorX - 5} ${topY + 2} L ${cursorX + 5} ${topY + 2} L ${cursorX} ${topY + 11} Z`,
+    class: "musicxml-cursor-triangle"
   }));
 
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
   if (selectedEvent && selectedEvent.note && !isRestEvent(selectedEvent)) {
     const midi = noteToMidi(selectedEvent.note);
     const baseMidi = noteToMidi("E4");
+
     if (midi !== null && baseMidi !== null) {
       const y = metrics.topStaffCenterY - (midi - baseMidi) * metrics.noteStep;
+      const noteX = getMusicXmlSlotX(selectedEvent.start) + slotWidth * 0.46;
+
       overlay.appendChild(createOverlaySvgElement("circle", {
-        cx: getMusicXmlSlotX(selectedEvent.start),
+        cx: noteX,
         cy: y,
         r: 8,
         class: "musicxml-selected-note"
@@ -1451,29 +1471,31 @@ function getMusicXmlOverlayMetrics() {
   const wrapper = document.getElementById("musicXmlWrapper");
   const display = document.getElementById("musicXmlDisplay");
   const overlay = document.getElementById("musicXmlOverlay");
-
   const displaySvg = display ? display.querySelector("svg") : null;
 
+  const svgRect = displaySvg ? displaySvg.getBoundingClientRect() : null;
+
   const width = Math.max(
-    displaySvg ? Math.ceil(displaySvg.getBoundingClientRect().width) : 0,
+    displaySvg ? Math.ceil(displaySvg.scrollWidth || svgRect.width) : 0,
     display ? display.scrollWidth : 0,
-    wrapper ? wrapper.clientWidth : 0,
-    MUSICXML_INPUT.fallbackWidth
+    wrapper ? wrapper.scrollWidth : 0,
+    MUSICXML_INPUT.fallbackWidth || 1200
   );
 
   const height = Math.max(
-    displaySvg ? Math.ceil(displaySvg.getBoundingClientRect().height) : 0,
+    displaySvg ? Math.ceil(displaySvg.scrollHeight || svgRect.height) : 0,
     display ? display.scrollHeight : 0,
     wrapper ? wrapper.clientHeight : 0,
-    MUSICXML_INPUT.fallbackHeight
+    MUSICXML_INPUT.fallbackHeight || 360
   );
 
-  const paddingLeft = width * MUSICXML_INPUT.paddingLeftRatio;
-  const paddingRight = width * MUSICXML_INPUT.paddingRightRatio;
-  const left = paddingLeft;
-  const right = width - paddingRight;
-  const topStaffCenterY = height * MUSICXML_INPUT.topStaffRatio;
-  const noteStep = Math.max(6, height * MUSICXML_INPUT.noteStepRatio);
+  // Cursor is an insertion cursor, so it uses beat boundaries.
+  // The left edge is intentionally placed a little before the first notehead,
+  // like Sibelius' caret before the note.
+  const left = width * 0.075;
+  const right = width * 0.965;
+  const topStaffCenterY = height * 0.34;
+  const noteStep = Math.max(6, height * 0.021);
 
   if (overlay) {
     overlay.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -1520,7 +1542,7 @@ function insertNoteAtSelectedIndex(note) {
   const total = getTotalQuarterSlots();
   if (!total) return;
 
-  let start = Math.max(0, Math.min(total - 1, selectedIndex));
+  const start = Math.max(0, Math.min(total - 1, selectedIndex));
   const coveringEvent = getEventCoveringSlot(start);
 
   // If cursor is inside an existing note, replace its pitch.
@@ -1636,6 +1658,12 @@ function setupModule4KeyboardInput() {
       deleteSelectedNote();
     }
   });
+}
+
+function getMusicXmlSlotWidth() {
+  const metrics = getMusicXmlOverlayMetrics();
+  const total = Math.max(1, getTotalQuarterSlots());
+  return Math.max(1, (metrics.right - metrics.left) / total);
 }
 
 function renderScore() {
