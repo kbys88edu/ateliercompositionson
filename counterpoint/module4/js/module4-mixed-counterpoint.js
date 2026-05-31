@@ -339,7 +339,7 @@ const SAMPLE_VOICE_SETS = {
     // C4.wav, G4.wav, C5.wav, G5.wav
     // These files are played at their written sample octave.
     notes: ["C4", "G4", "C5", "G5"],
-    transposeSemitones: -12
+    transposeSemitones: 0
   },
   maleSample: {
     folder: "male",
@@ -372,21 +372,36 @@ function midiToSampleNoteName(midi) {
   return `${names[pitch]}${octave}`;
 }
 
-function getNearestSampleNote(targetMidi, sampleNotes) {
-  const exactName = midiToSampleNoteName(targetMidi);
+function getNearestSampleNote(targetMidi, sampleNotes, setName = "") {
+  const exactName = typeof midiToSampleNoteName === "function"
+    ? midiToSampleNoteName(targetMidi)
+    : midiToNote(targetMidi, "sharp");
 
-  // If the exact sample exists, use it directly with playbackRate 1.0.
-  // Example: written G4 -> female/G4.wav, not G5.wav or a shifted file.
   if (sampleNotes.includes(exactName)) {
     return exactName;
   }
 
-  let nearest = sampleNotes[0];
+  // Female / soprano correction:
+  // Keep A4 and B4 in the G4 sample region instead of jumping to the C5 sample.
+  // This avoids the previous A4+ area sounding an octave too high.
+  let candidates = sampleNotes;
+
+  if (setName === "femaleSample") {
+    const c5Midi = noteToMidi("C5");
+    candidates = targetMidi < c5Midi
+      ? sampleNotes.filter((note) => ["C4", "G4"].includes(note))
+      : sampleNotes.filter((note) => ["C5", "G5"].includes(note));
+
+    if (!candidates.length) candidates = sampleNotes;
+  }
+
+  let nearest = candidates[0];
   let nearestDistance = Infinity;
 
-  sampleNotes.forEach((note) => {
+  candidates.forEach((note) => {
     const midi = noteToMidi(note);
     if (midi === null) return;
+
     const distance = Math.abs(midi - targetMidi);
     if (distance < nearestDistance) {
       nearest = note;
@@ -424,17 +439,16 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
   const set = SAMPLE_VOICE_SETS[setName];
   if (!set) return;
 
-  const nearestNote = getNearestSampleNote(midi, set.notes);
+  const nearestNote = getNearestSampleNote(midi, set.notes, setName);
   const sourceMidi = noteToMidi(nearestNote);
   if (sourceMidi === null) return;
 
   const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
   if (!buffer) {
-    const fallbackMidi = midi + (set.transposeSemitones || 0);
     if (typeof playFallbackVoice === "function") {
-      playFallbackVoice(fallbackMidi, duration, gainScale);
+      playFallbackVoice(midi, duration, gainScale);
     } else if (typeof playVoiceLikeNote === "function") {
-      playVoiceLikeNote(fallbackMidi, duration, gainScale);
+      playVoiceLikeNote(midi, duration, gainScale);
     }
     return;
   }
@@ -445,8 +459,9 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
   const source = ctx.createBufferSource();
   source.buffer = buffer;
 
-  // Exact sample file is used, then set-level transposition is applied.
-  // Soprano/female: G4 on screen -> female/G4.wav at playbackRate 0.5.
+  // No global octave transposition.
+  // Exact G4 plays female/G4.wav at playbackRate 1.0.
+  // A4/B4 use the G4 region instead of jumping to C5.
   const semitoneShift = midi - sourceMidi + (set.transposeSemitones || 0);
   source.playbackRate.setValueAtTime(Math.pow(2, semitoneShift / 12), now);
 
