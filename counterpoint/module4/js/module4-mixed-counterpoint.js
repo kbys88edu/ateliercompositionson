@@ -659,49 +659,81 @@ function isSlotAvailable(start, duration, ignoreStart = null) {
   });
 }
 
-function setInputDuration(duration) {
-  inputDuration = duration;
-
+function syncRhythmButtons(duration = inputDuration) {
   document.querySelectorAll(".rhythm-button").forEach((button) => {
     button.classList.toggle("active", button.getAttribute("data-duration") === duration);
   });
+}
 
-  // If a note is selected, change that note's duration immediately.
-  const events = getCounterpointEvents();
+function changeSelectedNoteDuration(duration) {
+  if (!DURATIONS[duration]) return false;
+
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+  if (!selectedEvent) return false;
 
-  if (selectedEvent) {
-    const originalStart = selectedEvent.start;
-    const updatedEvents = events.map((event) => {
-      if (event.start === selectedEvent.start) {
-        return { ...event, duration };
-      }
-      return event;
-    });
+  const start = selectedEvent.start;
+  const newLength = getDurationQuarters(duration);
+  const total = getTotalQuarterSlots();
 
-    const length = getDurationQuarters(duration);
-    const total = getTotalQuarterSlots();
-
-    const crossesMeasure = originalStart % 4 + length > 4;
-    const exceedsTotal = originalStart + length > total;
-    const overlaps = updatedEvents.some((event) => {
-      if (event.start === originalStart) return false;
-      const a1 = originalStart;
-      const a2 = originalStart + length;
-      const b1 = event.start;
-      const b2 = event.start + getDurationQuarters(event.duration);
-      return a1 < b2 && b1 < a2;
-    });
-
-    if (!crossesMeasure && !exceedsTotal && !overlaps) {
-      selectedIndex = originalStart;
-      setCounterpointEvents(updatedEvents);
-      renderScore();
-      return;
-    }
+  // Do not allow a note to cross the barline or exceed the whole exercise.
+  if (start % 4 + newLength > 4 || start + newLength > total) {
+    return false;
   }
 
+  const newEnd = start + newLength;
+
+  const updatedEvents = getCounterpointEvents()
+    .filter((event) => {
+      if (event.start === start) return false;
+
+      const eventStart = event.start;
+      const eventEnd = event.start + getDurationQuarters(event.duration);
+
+      // Remove events covered by the resized note.
+      return !(start < eventEnd && eventStart < newEnd);
+    })
+    .concat([{ ...selectedEvent, start, duration }])
+    .sort((a, b) => a.start - b.start);
+
+  selectedIndex = start;
+  inputDuration = duration;
+  setCounterpointEvents(updatedEvents);
+  syncRhythmButtons(duration);
+  updateDisplays();
   renderScore();
+
+  return true;
+}
+
+function setInputDuration(duration) {
+  if (!DURATIONS[duration]) return;
+
+  inputDuration = duration;
+  syncRhythmButtons(duration);
+
+  // If a note is selected, rhythm buttons edit that selected note immediately.
+  const changed = changeSelectedNoteDuration(duration);
+
+  // If no note was selected, the button only changes the next input duration.
+  if (!changed) {
+    renderScore();
+  }
+}
+
+function selectCounterpointEventAtSlot(slot, playPreview = true) {
+  const event = getEventAtSlot(slot) || getEventCoveringSlot(slot);
+  if (!event) return null;
+
+  selectedIndex = event.start;
+  inputDuration = event.duration;
+  syncRhythmButtons(event.duration);
+  renderScore();
+
+  if (playPreview && event.note) {
+    playNoteName(event.note, 0.25, 0.8, "femaleSample");
+  }
+
+  return event;
 }
 
 function moveSelection(delta) {
@@ -710,46 +742,24 @@ function moveSelection(delta) {
 
   if (!total) return;
 
-  // When notes exist, left/right moves between existing notes, not empty quarter slots.
   if (events.length) {
-    const currentEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-    const currentStart = currentEvent ? currentEvent.start : selectedIndex;
-
+    const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+    const currentStart = selectedEvent ? selectedEvent.start : selectedIndex;
     let currentPosition = events.findIndex((event) => event.start === currentStart);
 
     if (currentPosition === -1) {
-      if (delta > 0) {
-        currentPosition = events.findIndex((event) => event.start > selectedIndex);
-        if (currentPosition === -1) currentPosition = 0;
-      } else {
-        for (let i = events.length - 1; i >= 0; i--) {
-          if (events[i].start < selectedIndex) {
-            currentPosition = i;
-            break;
-          }
-        }
-        if (currentPosition === -1) currentPosition = events.length - 1;
-      }
-
-      selectedIndex = events[currentPosition].start;
-      renderScore();
-      const note = events[currentPosition].note;
-      if (note) playNoteName(note, 0.25, 0.75, "femaleSample");
-      return;
+      currentPosition = delta > 0 ? -1 : events.length;
     }
 
-    const nextPosition = (currentPosition + delta + events.length) % events.length;
+    const nextPosition = Math.max(0, Math.min(events.length - 1, currentPosition + delta));
     selectedIndex = events[nextPosition].start;
+    inputDuration = events[nextPosition].duration;
+    syncRhythmButtons(inputDuration);
     renderScore();
-
-    const note = events[nextPosition].note;
-    if (note) playNoteName(note, 0.25, 0.75, "femaleSample");
     return;
   }
 
-  selectedIndex += delta;
-  if (selectedIndex < 0) selectedIndex = total - 1;
-  if (selectedIndex >= total) selectedIndex = 0;
+  selectedIndex = Math.max(0, Math.min(total - 1, selectedIndex + delta));
   renderScore();
 }
 
@@ -766,7 +776,11 @@ function moveSelectedNote(semitone) {
 }
 
 function deleteSelectedNote() {
-  const events = getCounterpointEvents().filter((event) => event.start !== selectedIndex);
+  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+  if (!selectedEvent) return;
+
+  const events = getCounterpointEvents().filter((event) => event.start !== selectedEvent.start);
+  selectedIndex = selectedEvent.start;
   setCounterpointEvents(events);
   renderScore();
 }
@@ -1014,28 +1028,47 @@ function handleScoreClick(event) {
 
   const clickedNote = yToNaturalNote(viewY);
   const coveringEvent = getEventCoveringSlot(nearestIndex);
-  const start = coveringEvent ? coveringEvent.start : nearestIndex;
-  const old = getEventAtSlot(start);
 
-  if (!isSlotAvailable(start, inputDuration, old ? old.start : null)) {
-    // If the slot is covered by an existing note, select it rather than doing nothing.
-    if (coveringEvent) {
-      selectedIndex = coveringEvent.start;
+  // Existing note: select it first. If clicked near the head, also update pitch.
+  if (coveringEvent) {
+    selectedIndex = coveringEvent.start;
+    inputDuration = coveringEvent.duration;
+
+    const headX = positions[coveringEvent.start];
+    const closeToHead = headX !== undefined && Math.abs(viewX - headX) < 20;
+
+    if (closeToHead) {
+      const updatedEvents = getCounterpointEvents().map((item) =>
+        item.start === coveringEvent.start ? { ...item, note: clickedNote } : item
+      );
+      setCounterpointEvents(updatedEvents);
+      syncRhythmButtons(coveringEvent.duration);
       renderScore();
-      if (coveringEvent.note) playNoteName(coveringEvent.note, 0.35, 0.8);
+      playNoteName(clickedNote, 0.45, 1, "femaleSample");
+      return;
     }
+
+    syncRhythmButtons(coveringEvent.duration);
+    renderScore();
+    if (coveringEvent.note) playNoteName(coveringEvent.note, 0.25, 0.8, "femaleSample");
     return;
   }
 
-  const events = getCounterpointEvents().filter((event) => event.start !== start);
-  events.push({ start, duration: inputDuration, note: clickedNote });
+  // Empty slot: create new event with currently selected rhythm.
+  if (!isSlotAvailable(nearestIndex, inputDuration, null)) {
+    renderScore();
+    return;
+  }
+
+  const events = getCounterpointEvents();
+  events.push({ start: nearestIndex, duration: inputDuration, note: clickedNote });
   events.sort((a, b) => a.start - b.start);
 
-  selectedIndex = start;
+  selectedIndex = nearestIndex;
   setCounterpointEvents(events);
+  syncRhythmButtons(inputDuration);
   renderScore();
   playNoteName(clickedNote, 0.45, 1, "femaleSample");
-  svg.focus();
 }
 
 function updateDisplays() {
@@ -1303,8 +1336,10 @@ function getPlaybackMode() {
 }
 
 function playSelectedNote() {
-  const event = getEventAtSlot(selectedIndex);
-  if (event) playNoteName(event.note, 0.45, 1, "femaleSample");
+  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+  if (selectedEvent && selectedEvent.note) {
+    playNoteName(selectedEvent.note, 0.45, 1, "femaleSample");
+  }
 }
 
 function previewTimbre() {
