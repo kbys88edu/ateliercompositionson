@@ -57,9 +57,7 @@ const I18N = {
     timbreTriangle: "Triangle / 素直",
     timbreOrgan: "Organ / オルガン風",
     timbreBell: "Bell / ベル風",
-    timbreVoice: "Voice / 声風",
-    timbreFemaleSample: "Female Sample / 女声サンプル",
-    timbreMaleSample: "Male Sample / 男声サンプル",
+    timbreHumanVoice: "人の声",
     playbackHint: "クリック：音を入力　｜　← / →：選択移動　｜　↑ / ↓：半音移動　｜　Space：再生 / 停止",
     scoreInputTitle: "五線入力",
     scoreInputHelp: "上段はト音記号の混合対旋律、下段はヘ音記号の全音符定旋律です。",
@@ -137,9 +135,7 @@ const I18N = {
     timbreTriangle: "Triangle / simple",
     timbreOrgan: "Organ / orgue",
     timbreBell: "Bell / cloche",
-    timbreVoice: "Voice / voix",
-    timbreFemaleSample: "Female Sample / voix féminine",
-    timbreMaleSample: "Male Sample / voix masculine",
+    timbreHumanVoice: "Voix humaine",
     playbackHint: "Clic : saisir une note　｜　← / → : déplacer la sélection　｜　↑ / ↓ : demi-ton　｜　Espace : lecture / arrêt",
     scoreInputTitle: "Saisie sur portée",
     scoreInputHelp: "La portée supérieure montre le contrepoint mixte en clé de sol ; la portée inférieure montre le cantus en rondes en clé de fa.",
@@ -335,14 +331,22 @@ function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
 }
 
 
+
 const SAMPLE_VOICE_SETS = {
   femaleSample: {
     folder: "female",
-    notes: ["C3", "G3", "C4", "G4"]
+    // Required female files:
+    // C3.wav, G3.wav, C4.wav, G4.wav
+    // C2.wav and G2.wav are intentionally not used.
+    notes: ["C3", "G3", "C4", "G4"],
+    transposeSemitones: -12
   },
   maleSample: {
     folder: "male",
-    notes: ["C2", "G2", "C3", "G3"]
+    // Required male files:
+    // C2.wav, G2.wav, C3.wav, G3.wav
+    notes: ["C2", "G2", "C3", "G3"],
+    transposeSemitones: 0
   }
 };
 
@@ -414,7 +418,6 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
   const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
 
   if (!buffer) {
-    // Fallback to synthetic voice if sample files are missing.
     playVoiceLikeNote(midi, duration, gainScale);
     return;
   }
@@ -424,7 +427,13 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 
   const source = ctx.createBufferSource();
   source.buffer = buffer;
-  source.playbackRate.setValueAtTime(Math.pow(2, (targetMidi - sourceMidi) / 12), now);
+
+  // Female samples are intentionally played one octave lower.
+  // Male samples are played at their normal register.
+  source.playbackRate.setValueAtTime(
+    Math.pow(2, (targetMidi - sourceMidi + set.transposeSemitones) / 12),
+    now
+  );
 
   const gain = ctx.createGain();
   gain.gain.setValueAtTime(0.0001, now);
@@ -440,11 +449,14 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 }
 
 
-function playMidiNote(midi, duration = 0.38, gainScale = 1) {
+
+
+
+function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
   const timbre = getTimbre();
 
-  if (timbre === "femaleSample" || timbre === "maleSample") {
-    playSampleVoiceNote(timbre, midi, duration, gainScale);
+  if (timbre === "humanVoice") {
+    playSampleVoiceNote(voiceSet, midi, duration, gainScale);
     return;
   }
 
@@ -692,7 +704,7 @@ function moveSelection(delta) {
       selectedIndex = events[currentPosition].start;
       renderScore();
       const note = events[currentPosition].note;
-      if (note) playNoteName(note, 0.25, 0.75);
+      if (note) playNoteName(note, 0.25, 0.75, "femaleSample");
       return;
     }
 
@@ -701,7 +713,7 @@ function moveSelection(delta) {
     renderScore();
 
     const note = events[nextPosition].note;
-    if (note) playNoteName(note, 0.25, 0.75);
+    if (note) playNoteName(note, 0.25, 0.75, "femaleSample");
     return;
   }
 
@@ -720,7 +732,7 @@ function moveSelectedNote(semitone) {
   event.note = midiToNote(midi + semitone, semitone > 0 ? "sharp" : "flat");
   setCounterpointEvents(events);
   renderScore();
-  playNoteName(event.note, 0.45, 1);
+  playNoteName(event.note, 0.45, 1, "femaleSample");
 }
 
 function deleteSelectedNote() {
@@ -992,7 +1004,7 @@ function handleScoreClick(event) {
   selectedIndex = start;
   setCounterpointEvents(events);
   renderScore();
-  playNoteName(clickedNote, 0.45, 1);
+  playNoteName(clickedNote, 0.45, 1, "femaleSample");
   svg.focus();
 }
 
@@ -1238,10 +1250,10 @@ function analyzeCounterpoint() {
   renderScore();
 }
 
-function playNoteName(note, duration = 0.38, gainScale = 1) {
+function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
   const midi = noteToMidi(note);
   if (midi === null) return;
-  playMidiNote(midi, duration, gainScale);
+  playMidiNote(midi, duration, gainScale, voiceSet);
 }
 
 function getTempo() {
@@ -1262,13 +1274,13 @@ function getPlaybackMode() {
 
 function playSelectedNote() {
   const event = getEventAtSlot(selectedIndex);
-  if (event) playNoteName(event.note, 0.45, 1);
+  if (event) playNoteName(event.note, 0.45, 1, "femaleSample");
 }
 
 function previewTimbre() {
   const event = getEventAtSlot(selectedIndex) || getCounterpointEvents()[0];
   const note = event?.note || "C4";
-  playNoteName(note, 0.5, 1);
+  playNoteName(note, 0.5, 1, "femaleSample");
 }
 
 function updatePlayPauseButton() {
@@ -1329,7 +1341,7 @@ function playCurrentStep() {
   const event = getEventAtSlot(playbackIndex);
 
   if ((mode === "both" || mode === "cantus") && playbackIndex % 4 === 0 && cantus[cantusIndex]) {
-    playNoteName(cantus[cantusIndex], qDuration * 3.85, mode === "both" ? 0.62 : 1);
+    playNoteName(cantus[cantusIndex], qDuration * 3.85, mode === "both" ? 0.62 : 1, "maleSample", "maleSample");
   }
 
   if ((mode === "both" || mode === "counterpoint") && event) {

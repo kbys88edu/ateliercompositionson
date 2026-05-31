@@ -19,14 +19,15 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 
 const SCORE = {
   width: 960,
-  height: 300,
+  height: 330,
   left: 95,
   right: 45,
   staffGap: 10,
-  bottomLineY: 145,
+  bottomLineY: 120,
+  cantusBottomLineY: 245,
   noteStep: 5,
   playheadTop: 55,
-  playheadBottom: 228
+  playheadBottom: 305
 };
 
 const I18N = {
@@ -60,9 +61,7 @@ const I18N = {
     timbreSaw: "Sawtooth / 明るい",
     timbreOrgan: "Organ / オルガン風",
     timbreBell: "Bell / ベル風",
-    timbreVoice: "Voice / 声風",
-    timbreFemaleSample: "Female Sample / 女声サンプル",
-    timbreMaleSample: "Male Sample / 男声サンプル",
+    timbreHumanVoice: "人の声",
     playbackHint: "Space：再生 / 停止　｜　← / →：前後の音へ移動",
     scoreInputTitle: "五線入力",
     scoreInputHelp: "五線をクリックして音を置きます。置いた音は青色で選択され、↑↓で半音移動、←→で前後の音へ移動できます。",
@@ -141,9 +140,7 @@ const I18N = {
     timbreSaw: "Sawtooth / brillant",
     timbreOrgan: "Organ / orgue",
     timbreBell: "Bell / cloche",
-    timbreVoice: "Voice / voix",
-    timbreFemaleSample: "Female Sample / voix féminine",
-    timbreMaleSample: "Male Sample / voix masculine",
+    timbreHumanVoice: "Voix humaine",
     playbackHint: "Espace : lecture / arrêt　｜　← / → : note précédente / suivante",
     scoreInputTitle: "Saisie sur portée",
     scoreInputHelp: "Cliquez sur la portée pour placer une note. La note sélectionnée apparaît en bleu. ↑↓ déplacent par demi-ton, ←→ changent de note.",
@@ -526,14 +523,22 @@ function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
 }
 
 
+
 const SAMPLE_VOICE_SETS = {
   femaleSample: {
     folder: "female",
-    notes: ["C3", "G3", "C4", "G4"]
+    // Required female files:
+    // C3.wav, G3.wav, C4.wav, G4.wav
+    // C2.wav and G2.wav are intentionally not used.
+    notes: ["C3", "G3", "C4", "G4"],
+    transposeSemitones: -12
   },
   maleSample: {
     folder: "male",
-    notes: ["C2", "G2", "C3", "G3"]
+    // Required male files:
+    // C2.wav, G2.wav, C3.wav, G3.wav
+    notes: ["C2", "G2", "C3", "G3"],
+    transposeSemitones: 0
   }
 };
 
@@ -605,7 +610,6 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
   const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
 
   if (!buffer) {
-    // Fallback to synthetic voice if sample files are missing.
     playVoiceLikeNote(midi, duration, gainScale);
     return;
   }
@@ -615,7 +619,13 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 
   const source = ctx.createBufferSource();
   source.buffer = buffer;
-  source.playbackRate.setValueAtTime(Math.pow(2, (targetMidi - sourceMidi) / 12), now);
+
+  // Female samples are intentionally played one octave lower.
+  // Male samples are played at their normal register.
+  source.playbackRate.setValueAtTime(
+    Math.pow(2, (targetMidi - sourceMidi + set.transposeSemitones) / 12),
+    now
+  );
 
   const gain = ctx.createGain();
   gain.gain.setValueAtTime(0.0001, now);
@@ -631,11 +641,14 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 }
 
 
-function playMidiNote(midi, duration = 0.38, gainScale = 1) {
+
+
+
+function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
   const timbre = getTimbre();
 
-  if (timbre === "femaleSample" || timbre === "maleSample") {
-    playSampleVoiceNote(timbre, midi, duration, gainScale);
+  if (timbre === "humanVoice") {
+    playSampleVoiceNote(voiceSet, midi, duration, gainScale);
     return;
   }
 
@@ -683,10 +696,10 @@ function playMidiNote(midi, duration = 0.38, gainScale = 1) {
   }
 }
 
-function playNoteName(note, duration = 0.35, gainScale = 1) {
+function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
   const midi = noteToMidi(note);
   if (midi === null) return;
-  playMidiNote(midi, duration, gainScale);
+  playMidiNote(midi, duration, gainScale, voiceSet);
 }
 
 function getPlaybackMode() {
@@ -700,14 +713,14 @@ function playSelectedNote() {
 
   if (!note) return;
 
-  playNoteName(note, 0.55, 1);
+  playNoteName(note, 0.55, 1, "femaleSample");
 }
 
 function previewTimbre() {
   const counterpoint = getNotesFromTextarea("counterpoint");
   const cantus = getNotesFromTextarea("cantus");
   const note = counterpoint[selectedIndex] || cantus[selectedIndex] || "C4";
-  playNoteName(note, 0.5, 1);
+  playNoteName(note, 0.5, 1, "femaleSample");
 }
 
 function getTempo() {
@@ -742,7 +755,7 @@ function playVerticalSonority(index) {
   const counterpointNote = counterpoint[index];
 
   if ((mode === "both" || mode === "cantus") && cantusNote) {
-    playNoteName(cantusNote, noteDuration, mode === "cantus" ? 1 : 0.72);
+    playNoteName(cantusNote, noteDuration, mode === "cantus" ? 1 : 0.72, "maleSample");
   }
 
   if ((mode === "both" || mode === "counterpoint") && counterpointNote) {
@@ -1154,13 +1167,14 @@ function clearSvg(svg) {
   }
 }
 
-function noteToY(note) {
+function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const noteStep = getDiatonicStep(note);
-  const e4Step = getDiatonicStep("E4");
+  const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
+  const referenceStep = getDiatonicStep(referenceNote);
 
-  if (noteStep === null || e4Step === null) return null;
+  if (noteStep === null || referenceStep === null) return null;
 
-  return SCORE.bottomLineY - (noteStep - e4Step) * SCORE.noteStep;
+  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
 }
 
 function yToNaturalNote(y) {
@@ -1228,7 +1242,7 @@ function moveSelectedNote(semitone) {
 
   setNotesToTextarea("counterpoint", counterpoint);
   renderScore();
-  playNoteName(counterpoint[selectedIndex], 0.45, 1);
+  playNoteName(counterpoint[selectedIndex], 0.45, 1, "femaleSample");
 }
 
 /* Left/right changes selectedIndex only. The red playhead stays at playbackIndex. */
@@ -1250,7 +1264,7 @@ function moveSelection(delta) {
   const note = counterpoint[selectedIndex];
 
   if (note) {
-    playNoteName(note, 0.35, 0.8);
+    playNoteName(note, 0.35, 0.8, "femaleSample");
   }
 }
 
@@ -1271,31 +1285,58 @@ function deleteSelectedNote() {
   renderScore();
 }
 
-function drawStaff(svg, noteCount) {
+function drawClef(svg, bottomLineY, clefType) {
+  const clef = clefType === "bass" ? "𝄢" : "𝄞";
+  const className = clefType === "bass" ? "clef-symbol bass" : "clef-symbol treble";
+  svg.appendChild(createSvgElement("text", { x: 52, y: bottomLineY - 20, class: className })).textContent = clef;
+}
+
+function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const startX = SCORE.left - 30;
   const endX = SCORE.width - SCORE.right + 10;
 
   for (let i = 0; i < 5; i++) {
-    const y = SCORE.bottomLineY - i * SCORE.staffGap;
-    svg.appendChild(createSvgElement("line", { x1: startX, y1: y, x2: endX, y2: y, class: "staff-line" }));
+    const y = bottomLineY - i * SCORE.staffGap;
+    svg.appendChild(createSvgElement("line", {
+      x1: startX,
+      y1: y,
+      x2: endX,
+      y2: y,
+      class: "staff-line"
+    }));
   }
 
-  svg.appendChild(createSvgElement("text", { x: 22, y: SCORE.bottomLineY - 25, class: "voice-label" })).textContent = "Counterpoint";
-  svg.appendChild(createSvgElement("text", { x: 22, y: SCORE.bottomLineY + 58, class: "voice-label" })).textContent = "Cantus";
+  drawClef(svg, bottomLineY, clefType);
+
+  svg.appendChild(createSvgElement("text", {
+    x: 22,
+    y: bottomLineY - 58,
+    class: "voice-label"
+  })).textContent = label;
 
   const positions = getScorePositions(noteCount);
 
   positions.forEach((x, i) => {
-    svg.appendChild(createSvgElement("circle", { cx: x, cy: SCORE.bottomLineY + 65, r: 2.8, class: "slot-marker" }));
-    svg.appendChild(createSvgElement("text", { x: x - 4, y: SCORE.bottomLineY + 92, class: "note-label" })).textContent = i + 1;
+    svg.appendChild(createSvgElement("circle", {
+      cx: x,
+      cy: bottomLineY + 56,
+      r: 2.6,
+      class: "slot-marker"
+    }));
+
+    svg.appendChild(createSvgElement("text", {
+      x: x - 4,
+      y: bottomLineY + 82,
+      class: "note-label"
+    })).textContent = i + 1;
 
     if (i > 0) {
       const midX = (positions[i - 1] + x) / 2;
       svg.appendChild(createSvgElement("line", {
         x1: midX,
-        y1: SCORE.bottomLineY - 52,
+        y1: bottomLineY - 50,
         x2: midX,
-        y2: SCORE.bottomLineY + 78,
+        y2: bottomLineY + 66,
         class: "measure-line"
       }));
     }
@@ -1449,14 +1490,15 @@ function renderScore() {
   if (playbackIndex >= noteCount) playbackIndex = 0;
   if (playbackIndex < 0) playbackIndex = 0;
 
-  drawStaff(svg, noteCount);
+  drawStaff(svg, SCORE.bottomLineY, "Counterpoint / treble clef", noteCount, "treble");
+  drawStaff(svg, SCORE.cantusBottomLineY, "Cantus / bass clef", noteCount, "bass");
   drawPlayhead(svg, positions, noteCount);
 
-  cantus.forEach((note, i) => drawNote(svg, note, positions[i], "cantus", i));
+  cantus.forEach((note, i) => drawNote(svg, note, positions[i], "cantus", i, SCORE.cantusBottomLineY));
 
   counterpoint.forEach((note, i) => {
     if (note) {
-      drawNote(svg, note, positions[i], "counterpoint", i);
+      drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY);
     }
   });
 
@@ -1504,7 +1546,7 @@ function handleScoreClick(event) {
 
   setNotesToTextarea("counterpoint", counterpoint);
   renderScore();
-  playNoteName(clickedNote, 0.55, 1);
+  playNoteName(clickedNote, 0.55, 1, "femaleSample");
 
   svg.focus();
 }

@@ -10,7 +10,7 @@
   <title>モジュール3｜2声4分音符対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="定旋律1音に対して4分音符4つを置く、2声4分音符対位法のオンライン練習ページです。タイでつながれた音は扱いません。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-no-flag" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-clefs-final" />
 </head>
 
 <body>
@@ -129,15 +129,7 @@
         <label class="timbre-control" for="timbreSelect">
           <span data-i18n="timbreLabel">音色</span>
           <select id="timbreSelect" onchange="previewTimbre()">
-            <option value="sine" data-i18n="timbreSine">Sine / 柔らかい</option>
-            <option value="triangle" selected data-i18n="timbreTriangle">Triangle / 素直</option>
-            <option value="square" data-i18n="timbreSquare">Square / 電子的</option>
-            <option value="sawtooth" data-i18n="timbreSaw">Sawtooth / 明るい</option>
-            <option value="organ" data-i18n="timbreOrgan">Organ / オルガン風</option>
-            <option value="bell" data-i18n="timbreBell">Bell / ベル風</option>
-            <option value="voice" data-i18n="timbreVoice">Voice / 声風</option>
-            <option value="femaleSample" data-i18n="timbreFemaleSample">Female Sample / 女声サンプル</option>
-            <option value="maleSample" data-i18n="timbreMaleSample">Male Sample / 男声サンプル</option>
+            <option value="humanVoice" selected data-i18n="timbreHumanVoice">人の声</option>
           </select>
         </label>
 
@@ -189,6 +181,6 @@
     </section>
   </main>
 
-  <script src="js/module3-quarter-counterpoint.js?v=20260601-sample-voice"></script>
+  <script src="js/module3-quarter-counterpoint.js?v=20260601-clefs-final"></script>
 </body>
 </html>

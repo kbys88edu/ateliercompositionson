@@ -672,3 +672,14 @@ h2 {
   fill: #c47a00 !important;
   font-weight: 700;
 }
+
+
+.clef-symbol {
+  font-family: "Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  fill: rgba(0, 0, 0, 0.72);
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.clef-symbol.treble { font-size: 58px; }
+.clef-symbol.bass { font-size: 48px; }
