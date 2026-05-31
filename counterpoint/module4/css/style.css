@@ -903,3 +903,39 @@ main,
   overflow-x: auto !important;
   overflow-y: hidden !important;
 }
+
+
+/* Module 4 OSMD note-aligned cursor.
+   Cursor follows actual rendered note x-positions, not an equal-spaced measure grid. */
+.musicxml-input-slot-highlight {
+  fill: rgba(255, 79, 139, 0.075);
+  stroke: none;
+  pointer-events: none;
+}
+
+.musicxml-cursor-line {
+  stroke: #ff4f8b;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  opacity: 0.96;
+  pointer-events: none;
+}
+
+.musicxml-cursor-triangle {
+  fill: #ff4f8b;
+  opacity: 0.96;
+  pointer-events: none;
+}
+
+.musicxml-selected-note {
+  fill: rgba(255, 79, 139, 0.18);
+  stroke: #ff4f8b;
+  stroke-width: 2.4;
+  pointer-events: none;
+}
+
+/* Do not hide real accidentals. */
+.osmd-dummy-accidental-hidden {
+  opacity: 1 !important;
+  visibility: visible !important;
+}

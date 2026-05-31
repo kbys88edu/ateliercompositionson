@@ -1191,9 +1191,6 @@ function createInvisibleDummyAccidentalNoteXml(step = "C", octave = 5, isChord =
 }
 
 function createInvisibleDummyAccidentalClusterXml() {
-  // One invisible chromatic-looking chord per beat.
-  // This reserves substantially more horizontal space for accidentals than a single hidden C#.
-  // The first note advances the beat; the rest are chord tones at the same rhythmic position.
   const dummyNotes = [
     { step: "C", octave: 5 },
     { step: "D", octave: 5 },
@@ -1229,9 +1226,6 @@ function createInvisibleDummyQuarterNoteXml(step = "C", octave = 5) {
 function createInvisibleDummyGridVoiceXml() {
   let xml = "";
 
-  // Four invisible accidental clusters per measure.
-  // Each beat receives C# D# E# F# G# A# B# as hidden chord tones.
-  // This reserves accidental space on every beat before user input changes the real notes.
   for (let beat = 0; beat < 4; beat += 1) {
     xml += createInvisibleDummyAccidentalClusterXml();
   }
@@ -1264,8 +1258,8 @@ function createMeasureCounterpointXml(measureIndex, events) {
     slot += 1;
   }
 
-  // Invisible accidental cluster voice for spacing only.
-  // Voice 9 is excluded from JSON / analysis / playback / MIDI export.
+  // Invisible accidental spacing voice.
+  // It reserves accidental space for every beat but is not user data.
   xml += `<backup><duration>16</duration></backup>`;
   xml += createInvisibleDummyGridVoiceXml();
 
@@ -1356,6 +1350,7 @@ async function renderMusicXmlScore() {
   if (typeof opensheetmusicdisplay === "undefined") {
     if (legacySvg) legacySvg.classList.remove("is-hidden");
     container.innerHTML = `<div class="musicxml-fallback-message">MusicXML viewer could not be loaded. Using fallback SVG editor.</div>`;
+    clearOsmdSlotCache();
     renderMusicXmlOverlay();
     return false;
   }
@@ -1368,12 +1363,18 @@ async function renderMusicXmlScore() {
     await osmd.load(xml);
     osmd.render();
 
+    clearOsmdSlotCache();
+
     container.dataset.ready = "true";
     setupMusicXmlInput();
 
     requestAnimationFrame(() => {
+      clearOsmdSlotCache();
       renderMusicXmlOverlay();
-      requestAnimationFrame(renderMusicXmlOverlay);
+      requestAnimationFrame(() => {
+        clearOsmdSlotCache();
+        renderMusicXmlOverlay();
+      });
     });
 
     if (legacySvg) legacySvg.classList.add("is-hidden");
@@ -1382,6 +1383,7 @@ async function renderMusicXmlScore() {
     console.error("MusicXML render failed:", error);
     if (legacySvg) legacySvg.classList.remove("is-hidden");
     container.innerHTML = `<div class="musicxml-fallback-message">MusicXML display error. Using fallback SVG editor.</div>`;
+    clearOsmdSlotCache();
     renderMusicXmlOverlay();
     return false;
   }
@@ -1394,9 +1396,13 @@ function musicXmlClickToSlotAndNote(event) {
   const rect = overlay.getBoundingClientRect();
   if (!rect.width || !rect.height) return null;
 
+  const box = getOsmdSvgBox();
   const metrics = getMusicXmlOverlayMetrics();
-  const localX = ((event.clientX - rect.left) / rect.width) * metrics.width;
-  const localY = ((event.clientY - rect.top) / rect.height) * metrics.height;
+  const width = box ? box.width : metrics.width;
+  const height = box ? box.height : metrics.height;
+
+  const localX = ((event.clientX - rect.left) / rect.width) * width;
+  const localY = ((event.clientY - rect.top) / rect.height) * height;
 
   const slot = getMusicXmlSlotFromX(localX);
   const note = getMusicXmlNoteFromY(localY);
@@ -1450,25 +1456,28 @@ function setupMusicXmlInput() {
 }
 
 function getMusicXmlSlotX(slot) {
-  const metrics = getMusicXmlOverlayMetrics();
+  const xs = getOsmdSlotXs();
   const total = Math.max(1, getTotalQuarterSlots());
-  const usable = Math.max(1, metrics.right - metrics.left);
-
-  // Sibelius-like insertion caret:
-  // slot 0 = start boundary before the first beat,
-  // slot n = boundary before beat n.
-  return metrics.left + (Math.max(0, Math.min(total, slot)) / total) * usable;
+  const clamped = Math.max(0, Math.min(total - 1, slot));
+  return xs[clamped] ?? 0;
 }
 
 function getMusicXmlSlotFromX(x) {
-  const metrics = getMusicXmlOverlayMetrics();
-  const total = Math.max(1, getTotalQuarterSlots());
-  const usable = Math.max(1, metrics.right - metrics.left);
+  const xs = getOsmdSlotXs();
+  if (!xs.length) return 0;
 
-  // Pure floor boundary mapping.
-  // This prevents input from jumping to the next beat before the boundary is crossed.
-  const ratio = Math.max(0, Math.min(0.999999, (x - metrics.left) / usable));
-  return Math.max(0, Math.min(total - 1, Math.floor(ratio * total)));
+  let bestIndex = 0;
+  let bestDistance = Infinity;
+
+  xs.forEach((slotX, index) => {
+    const distance = Math.abs(slotX - x);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = index;
+    }
+  });
+
+  return bestIndex;
 }
 
 function getMusicXmlNoteFromY(y) {
@@ -1484,48 +1493,160 @@ function createOverlaySvgElement(tag, attrs = {}) {
   return element;
 }
 
+function getOsmdSvgElement() {
+  const container = document.getElementById("musicXmlDisplay");
+  if (!container) return null;
+  return container.querySelector("svg");
+}
+
+function getOsmdSvgBox() {
+  const svg = getOsmdSvgElement();
+  if (!svg) return null;
+
+  const rect = svg.getBoundingClientRect();
+  return {
+    width: Math.max(rect.width, svg.scrollWidth || 0, 1),
+    height: Math.max(rect.height, svg.scrollHeight || 0, 1)
+  };
+}
+
+function collectOsmdCandidateNoteXs() {
+  const svg = getOsmdSvgElement();
+  if (!svg) return [];
+
+  const svgRect = svg.getBoundingClientRect();
+  const nodes = Array.from(svg.querySelectorAll("path, ellipse, circle"));
+
+  const candidates = [];
+
+  nodes.forEach((node) => {
+    if (!node || node.classList.contains("osmd-dummy-accidental-hidden")) return;
+
+    let box = null;
+    try {
+      if (typeof node.getBBox === "function") box = node.getBBox();
+    } catch {
+      box = null;
+    }
+    if (!box) return;
+
+    // Noteheads are compact, not huge staff/beam/barline paths.
+    // We keep a deliberately broad filter because OSMD's internal SVG structure varies.
+    const compact =
+      box.width >= 4 &&
+      box.width <= 32 &&
+      box.height >= 3 &&
+      box.height <= 28;
+
+    if (!compact) return;
+
+    // Focus on the upper staff region where counterpoint input lives.
+    // This avoids bass cantus whole notes and most staff-line fragments.
+    const y = box.y + box.height / 2;
+    const upperStaff = y > 35 && y < Math.max(180, svgRect.height * 0.55);
+    if (!upperStaff) return;
+
+    const x = box.x + box.width / 2;
+    if (Number.isFinite(x)) candidates.push(x);
+  });
+
+  // Deduplicate close x positions.
+  const sorted = candidates.sort((a, b) => a - b);
+  const unique = [];
+  sorted.forEach((x) => {
+    if (!unique.length || Math.abs(unique[unique.length - 1] - x) > 8) {
+      unique.push(x);
+    }
+  });
+
+  return unique;
+}
+
+function getOsmdSlotXs() {
+  const total = Math.max(1, getTotalQuarterSlots());
+  const cached = window.module4OsmdSlotXs;
+
+  if (Array.isArray(cached) && cached.length === total) {
+    return cached;
+  }
+
+  const candidates = collectOsmdCandidateNoteXs();
+
+  // If OSMD candidate extraction works, use actual rendered note/rest positions.
+  if (candidates.length >= Math.min(total, 4)) {
+    const minX = Math.min(...candidates);
+    const maxX = Math.max(...candidates);
+    const xs = [];
+
+    // Use candidate note x positions where possible.
+    // For missing empty slots, interpolate between available rendered positions.
+    for (let i = 0; i < total; i += 1) {
+      if (candidates[i] !== undefined) {
+        xs.push(candidates[i]);
+      } else {
+        const ratio = total <= 1 ? 0 : i / (total - 1);
+        xs.push(minX + ratio * (maxX - minX));
+      }
+    }
+
+    window.module4OsmdSlotXs = xs;
+    return xs;
+  }
+
+  // Fallback: stable proportional placement inside the rendered SVG.
+  const box = getOsmdSvgBox();
+  const width = box ? box.width : 1100;
+  const left = width * 0.08;
+  const right = width * 0.965;
+  const xs = [];
+
+  for (let i = 0; i < total; i += 1) {
+    const ratio = total <= 1 ? 0 : i / (total - 1);
+    xs.push(left + ratio * (right - left));
+  }
+
+  window.module4OsmdSlotXs = xs;
+  return xs;
+}
+
+function clearOsmdSlotCache() {
+  window.module4OsmdSlotXs = null;
+}
+
 function renderMusicXmlOverlay() {
   const overlay = document.getElementById("musicXmlOverlay");
   if (!overlay) return;
 
   const total = getTotalQuarterSlots();
+  const box = getOsmdSvgBox();
   const metrics = getMusicXmlOverlayMetrics();
+  const width = box ? box.width : metrics.width;
+  const height = box ? box.height : metrics.height;
   const slotWidth = getMusicXmlSlotWidth();
 
+  overlay.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  overlay.style.width = `${width}px`;
+  overlay.style.height = `${height}px`;
   overlay.innerHTML = "";
 
   if (!total) return;
 
-  const topY = Math.max(0, metrics.topStaffCenterY - 96);
-  const bottomY = Math.min(metrics.height, metrics.topStaffCenterY + 174);
-
-  for (let i = 0; i <= total; i += 1) {
-    const x = getMusicXmlSlotX(i);
-    const isMeasureStart = i % 4 === 0;
-
-    overlay.appendChild(createOverlaySvgElement("line", {
-      x1: x,
-      y1: topY,
-      x2: x,
-      y2: bottomY,
-      class: isMeasureStart ? "musicxml-grid-line measure" : "musicxml-grid-line"
-    }));
-  }
-
   const cursorX = getMusicXmlSlotX(selectedIndex);
+  const topY = Math.max(0, metrics.topStaffCenterY - 96);
+  const bottomY = Math.min(height, metrics.topStaffCenterY + 174);
   const highlightY = Math.max(0, metrics.topStaffCenterY - 78);
-  const highlightHeight = Math.min(metrics.height - highlightY, 150);
+  const highlightHeight = Math.min(height - highlightY, 150);
 
-  // Pale rectangle showing the beat that will receive the next input.
+  // Target highlight is centered on the actual OSMD note x-position, not an independent grid.
   overlay.appendChild(createOverlaySvgElement("rect", {
-    x: cursorX,
+    x: cursorX - slotWidth * 0.5,
     y: highlightY,
     width: slotWidth,
     height: highlightHeight,
     class: "musicxml-input-slot-highlight"
   }));
 
-  // Sibelius-like insertion caret immediately before the target beat.
+  // Cursor is placed directly above the note's rendered x-position.
   overlay.appendChild(createOverlaySvgElement("line", {
     x1: cursorX,
     y1: topY,
@@ -1546,10 +1667,8 @@ function renderMusicXmlOverlay() {
 
     if (midi !== null && baseMidi !== null) {
       const y = metrics.topStaffCenterY - (midi - baseMidi) * metrics.noteStep;
-      const noteX = getMusicXmlSlotX(selectedEvent.start) + slotWidth * 0.46;
-
       overlay.appendChild(createOverlaySvgElement("circle", {
-        cx: noteX,
+        cx: getMusicXmlSlotX(selectedEvent.start),
         cy: y,
         r: 8,
         class: "musicxml-selected-note"
@@ -1751,9 +1870,12 @@ function setupModule4KeyboardInput() {
 }
 
 function getMusicXmlSlotWidth() {
-  const metrics = getMusicXmlOverlayMetrics();
+  const xs = getOsmdSlotXs();
   const total = Math.max(1, getTotalQuarterSlots());
-  return Math.max(1, (metrics.right - metrics.left) / total);
+  if (total <= 1 || xs.length < 2) return 48;
+
+  const index = Math.max(0, Math.min(total - 2, selectedIndex));
+  return Math.max(24, Math.abs(xs[index + 1] - xs[index]));
 }
 
 function renderScore() {
