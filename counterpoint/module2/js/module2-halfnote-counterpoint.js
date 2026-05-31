@@ -19,15 +19,15 @@ const SCORE = {
   cantusBottomLineY: 260,
   playheadTop: 55,
   playheadBottom: 308,
-  quartersPerCantus: 2
+  halfsPerCantus: 4
 };
 
 const I18N = {
   ja: {
     backLink: "← トップへ戻る",
     languageLabel: "言語",
-    title: "Module 2｜全音符に対する2声二分音符対位法チェッカー",
-    lead: "ヘ音記号の全音符の定旋律1音に対して、ト音記号の対旋律を二分音符2つで入力します。タイでつながれた音は扱いません。五線譜をクリックして音を置き、↑↓で半音移動、←→で前後の二分音符へ移動できます。",
+    title: "Module 2｜2声二分音符対位法チェッカー",
+    lead: "定旋律1音に対して、対旋律を二分音符2つで入力します。タイでつながれた音は扱いません。五線譜をクリックして音を置き、↑↓で半音移動、←→で前後の二分音符へ移動できます。",
     levelFilterLabel: "レベル",
     levelAll: "すべて",
     levelBeginner: "初級",
@@ -40,7 +40,6 @@ const I18N = {
     clearCounterpoint: "対旋律をクリア",
     refreshScore: "楽譜を更新",
     playSelected: "選択音を鳴らす",
-    exportMidi: "MIDIを書き出す",
     resetStart: "最初に戻す",
     playbackModeLabel: "再生対象",
     playBoth: "両声",
@@ -53,10 +52,9 @@ const I18N = {
     timbreSaw: "Sawtooth / 明るい",
     timbreOrgan: "Organ / オルガン風",
     timbreBell: "Bell / ベル風",
-    timbreHumanVoice: "人の声",
     playbackHint: "Space：再生 / 停止　｜　← / →：前後の二分音符へ移動",
     scoreInputTitle: "五線入力",
-    scoreInputHelp: "上段はト音記号の二分音符対旋律、下段はヘ音記号の全音符定旋律です。タイ入力はありません。",
+    scoreInputHelp: "上段に二分音符の対旋律、下段に定旋律を表示します。タイ入力はありません。",
     currentInput: "現在の入力",
     cantusLabel: "定旋律：",
     counterpointLabel: "対旋律：",
@@ -108,7 +106,7 @@ const I18N = {
     backLink: "← Retour à l’accueil",
     languageLabel: "Langue",
     title: "Module 2 — Contrepoint à deux voix en blanches",
-    lead: "Pour chaque ronde du cantus en clé de fa, saisissez deux blanches dans le contrepoint en clé de sol. Ce module n’utilise pas de notes liées. Cliquez sur la portée pour placer une note, ↑↓ déplacent par demi-ton, ←→ changent de blanche.",
+    lead: "Pour chaque note du cantus, saisissez deux blanches dans le contrepoint. Ce module n’utilise pas de notes liées. Cliquez sur la portée pour placer une note, ↑↓ déplacent par demi-ton, ←→ changent de blanche.",
     levelFilterLabel: "Niveau",
     levelAll: "Tous",
     levelBeginner: "Débutant",
@@ -121,7 +119,6 @@ const I18N = {
     clearCounterpoint: "Effacer le contrepoint",
     refreshScore: "Actualiser la partition",
     playSelected: "Jouer la note sélectionnée",
-    exportMidi: "Exporter MIDI",
     resetStart: "Revenir au début",
     playbackModeLabel: "Lecture",
     playBoth: "Deux voix",
@@ -134,10 +131,9 @@ const I18N = {
     timbreSaw: "Sawtooth / brillant",
     timbreOrgan: "Organ / orgue",
     timbreBell: "Bell / cloche",
-    timbreHumanVoice: "Voix humaine",
     playbackHint: "Espace : lecture / arrêt　｜　← / → : blanche précédente / suivante",
     scoreInputTitle: "Saisie sur portée",
-    scoreInputHelp: "La portée supérieure montre le contrepoint en blanches en clé de sol ; la portée inférieure montre le cantus en rondes en clé de fa. Il n’y a pas de liaison.",
+    scoreInputHelp: "La portée supérieure montre le contrepoint en blanches ; la portée inférieure montre le cantus. Il n’y a pas de liaison.",
     currentInput: "Saisie actuelle",
     cantusLabel: "Cantus :",
     counterpointLabel: "Contrepoint :",
@@ -193,8 +189,8 @@ const EXERCISES = [
     level: "beginner",
     title: { ja: "初級 01｜C major｜順次進行", fr: "Débutant 01｜Do majeur｜Mouvement conjoint" },
     description: {
-      ja: "全音符の定旋律1音につき、二分音符を2つ置く基本課題です。",
-      fr: "Exercice de base : deux blanches de contrepoint pour chaque ronde du cantus."
+      ja: "定旋律1音につき2つの二分音符を置く基本課題です。",
+      fr: "Exercice de base : deux blanches de contrepoint pour chaque note du cantus."
     },
     cantus: ["C4", "D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4", "C4"],
     counterpoint: []
@@ -256,7 +252,6 @@ let playbackIndex = 0;
 let isPlaying = false;
 let playbackTimerId = null;
 let audioContext = null;
-let analysisIssues = [];
 
 function t(key) {
   return I18N[currentLanguage][key];
@@ -321,111 +316,6 @@ function getTimbreConfig(timbre = getTimbre()) {
 function midiToFrequency(midi) {
   return 440 * Math.pow(2, (midi - 69) / 12);
 }
-
-function createVoiceFormant(ctx, source, destination, now, duration, gainScale) {
-  const inputGain = ctx.createGain();
-  inputGain.gain.setValueAtTime(0.0001, now);
-  inputGain.gain.exponentialRampToValueAtTime(0.16 * gainScale, now + 0.055);
-  inputGain.gain.setValueAtTime(0.13 * gainScale, now + Math.max(0.06, duration * 0.72));
-  inputGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.16);
-
-  const formants = [
-    { frequency: 750, q: 7.5, gain: 0.9 },
-    { frequency: 1150, q: 9.0, gain: 0.55 },
-    { frequency: 2450, q: 11.0, gain: 0.35 }
-  ];
-
-  source.connect(inputGain);
-
-  formants.forEach((formant) => {
-    const filter = ctx.createBiquadFilter();
-    const gain = ctx.createGain();
-
-    filter.type = "bandpass";
-    filter.frequency.setValueAtTime(formant.frequency, now);
-    filter.Q.setValueAtTime(formant.q, now);
-
-    gain.gain.setValueAtTime(formant.gain, now);
-
-    inputGain.connect(filter);
-    filter.connect(gain);
-    gain.connect(destination);
-  });
-}
-
-function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
-  const ctx = getAudioContext();
-  const now = ctx.currentTime;
-  const frequency = midiToFrequency(midi);
-
-  const output = ctx.createGain();
-  output.gain.setValueAtTime(0.85, now);
-  output.connect(ctx.destination);
-
-  const vibrato = ctx.createOscillator();
-  const vibratoGain = ctx.createGain();
-  vibrato.type = "sine";
-  vibrato.frequency.setValueAtTime(5.4, now);
-  vibratoGain.gain.setValueAtTime(Math.max(1.0, frequency * 0.006), now);
-  vibrato.connect(vibratoGain);
-
-  const osc1 = ctx.createOscillator();
-  osc1.type = "sawtooth";
-  osc1.frequency.setValueAtTime(frequency, now);
-  vibratoGain.connect(osc1.frequency);
-
-  const osc2 = ctx.createOscillator();
-  osc2.type = "triangle";
-  osc2.frequency.setValueAtTime(frequency * 0.997, now);
-  vibratoGain.connect(osc2.frequency);
-
-  const osc3 = ctx.createOscillator();
-  osc3.type = "sine";
-  osc3.frequency.setValueAtTime(frequency * 2.005, now);
-  vibratoGain.connect(osc3.frequency);
-
-  createVoiceFormant(ctx, osc1, output, now, duration, gainScale * 0.85);
-  createVoiceFormant(ctx, osc2, output, now, duration, gainScale * 0.45);
-  createVoiceFormant(ctx, osc3, output, now, duration, gainScale * 0.18);
-
-  const noiseBuffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * (duration + 0.18)), ctx.sampleRate);
-  const data = noiseBuffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) {
-    data[i] = (Math.random() * 2 - 1) * 0.018;
-  }
-
-  const noise = ctx.createBufferSource();
-  noise.buffer = noiseBuffer;
-
-  const noiseFilter = ctx.createBiquadFilter();
-  noiseFilter.type = "bandpass";
-  noiseFilter.frequency.setValueAtTime(3200, now);
-  noiseFilter.Q.setValueAtTime(0.9, now);
-
-  const noiseGain = ctx.createGain();
-  noiseGain.gain.setValueAtTime(0.0001, now);
-  noiseGain.gain.exponentialRampToValueAtTime(0.018 * gainScale, now + 0.035);
-  noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
-
-  noise.connect(noiseFilter);
-  noiseFilter.connect(noiseGain);
-  noiseGain.connect(output);
-
-  vibrato.start(now);
-  osc1.start(now);
-  osc2.start(now);
-  osc3.start(now);
-  noise.start(now);
-
-  const stopAt = now + duration + 0.25;
-  vibrato.stop(stopAt);
-  osc1.stop(stopAt);
-  osc2.stop(stopAt);
-  osc3.stop(stopAt);
-  noise.stop(stopAt);
-}
-
-
 
 const SAMPLE_VOICE_SETS = {
   femaleSample: {
@@ -544,9 +434,6 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 }
 
 
-
-
-
 function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
   const timbre = getTimbre();
 
@@ -636,7 +523,7 @@ function getStepDurationSeconds() {
 }
 
 function getRequiredHalfCount() {
-  return getNotesFromTextarea("cantus").length * SCORE.quartersPerCantus;
+  return getNotesFromTextarea("cantus").length * SCORE.halfsPerCantus;
 }
 
 function getPlaybackLength() {
@@ -650,14 +537,14 @@ function playVerticalSonority(index) {
 
   const qDuration = getStepDurationSeconds();
   const noteDuration = Math.max(0.35, qDuration * 0.9);
-  const cantusIndex = Math.floor(index / SCORE.quartersPerCantus);
+  const cantusIndex = Math.floor(index / SCORE.halfsPerCantus);
 
   const cantusNote = cantus[cantusIndex];
   const counterpointNote = counterpoint[index];
 
   if ((mode === "both" || mode === "cantus") && cantusNote) {
-    const cantusDuration = index % SCORE.quartersPerCantus === 0 ? Math.max(0.5, qDuration * 3.85) : noteDuration;
-    if (mode === "cantus" || index % SCORE.quartersPerCantus === 0) {
+    const cantusDuration = index % SCORE.halfsPerCantus === 0 ? Math.max(0.5, qDuration * 3.85) : noteDuration;
+    if (mode === "cantus" || index % SCORE.halfsPerCantus === 0) {
       playNoteName(cantusNote, cantusDuration, mode === "cantus" ? 1 : 0.62, "maleSample");
     }
   }
@@ -930,7 +817,6 @@ function renderSummary(errorCount, warnCount, okCount) {
 }
 
 function analyzeCounterpoint() {
-  analysisIssues = [];
   const cantus = getNotesFromTextarea("cantus");
   const counterpoint = getNotesFromTextarea("counterpoint");
   const results = [];
@@ -942,11 +828,10 @@ function analyzeCounterpoint() {
     addResult(results, "error", t("needInput"));
     renderSummary(1, 0, 0);
     renderResults(results);
-    renderScore();
     return;
   }
 
-  const required = cantus.length * SCORE.quartersPerCantus;
+  const required = cantus.length * SCORE.halfsPerCantus;
   if (counterpoint.length !== required) {
     addResult(results, "error", t("lengthMismatch")(required, counterpoint.length));
     errorCount++;
@@ -963,14 +848,13 @@ function analyzeCounterpoint() {
   const counterMidi = counterpoint.map(noteToMidi);
 
   for (let i = 0; i < length; i++) {
-    const measure = Math.floor(i / SCORE.quartersPerCantus);
-    const beatInMeasure = i % SCORE.quartersPerCantus;
+    const measure = Math.floor(i / SCORE.halfsPerCantus);
+    const beatInMeasure = i % SCORE.halfsPerCantus;
     const cMidi = cantusMidi[measure];
     const cpMidi = counterMidi[i];
 
     if (cMidi === null || cpMidi === null) {
       addResult(results, "error", t("invalidNote")(i + 1));
-      analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
       errorCount++;
       continue;
     }
@@ -984,8 +868,6 @@ function analyzeCounterpoint() {
         okCount++;
       } else {
         addResult(results, "error", t("downbeatBad")(measure + 1, name));
-        analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
-        analysisIssues.push({ voice: "cantus", index: measure * SCORE.quartersPerCantus, type: "error" });
         errorCount++;
       }
     } else {
@@ -1000,15 +882,14 @@ function analyzeCounterpoint() {
         okCount++;
       } else {
         addResult(results, "warn", t("offbeatBad")(i + 1, name));
-        analysisIssues.push({ voice: "counterpoint", index: i, type: "warn" });
         warnCount++;
       }
     }
   }
 
   for (let i = 0; i < length - 1; i++) {
-    const measure1 = Math.floor(i / SCORE.quartersPerCantus);
-    const measure2 = Math.floor((i + 1) / SCORE.quartersPerCantus);
+    const measure1 = Math.floor(i / SCORE.halfsPerCantus);
+    const measure2 = Math.floor((i + 1) / SCORE.halfsPerCantus);
 
     if (measure1 === measure2) continue;
 
@@ -1026,19 +907,11 @@ function analyzeCounterpoint() {
 
     if (cDir !== 0 && cDir === cpDir && isPerfectFifth(interval1) && isPerfectFifth(interval2)) {
       addResult(results, "error", t("parallelFifth")(i + 1, i + 2));
-      analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
-      analysisIssues.push({ voice: "counterpoint", index: i + 1, type: "error" });
-      analysisIssues.push({ voice: "cantus", index: measure1 * SCORE.quartersPerCantus, type: "error" });
-      analysisIssues.push({ voice: "cantus", index: measure2 * SCORE.quartersPerCantus, type: "error" });
       errorCount++;
     }
 
     if (cDir !== 0 && cDir === cpDir && isPerfectOctaveOrUnison(interval1) && isPerfectOctaveOrUnison(interval2)) {
       addResult(results, "error", t("parallelOctave")(i + 1, i + 2));
-      analysisIssues.push({ voice: "counterpoint", index: i, type: "error" });
-      analysisIssues.push({ voice: "counterpoint", index: i + 1, type: "error" });
-      analysisIssues.push({ voice: "cantus", index: measure1 * SCORE.quartersPerCantus, type: "error" });
-      analysisIssues.push({ voice: "cantus", index: measure2 * SCORE.quartersPerCantus, type: "error" });
       errorCount++;
     }
   }
@@ -1061,11 +934,6 @@ function clearSvg(svg) {
 function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const noteStep = getDiatonicStep(note);
 
-  // Treble staff:
-  //   bottom line = E4
-  // Bass staff:
-  //   bottom line = G2
-  // This keeps the cantus visually centered in the bass clef.
   const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
   const referenceStep = getDiatonicStep(referenceNote);
 
@@ -1182,7 +1050,7 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const positions = getScorePositions(noteCount);
 
   positions.forEach((x, i) => {
-    const isDownbeat = i % 4 === 0;
+    const isDownbeat = i % 2 === 0;
 
     svg.appendChild(createSvgElement("circle", {
       cx: x,
@@ -1192,7 +1060,7 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
     }));
 
     if (bottomLineY === SCORE.cantusBottomLineY && isDownbeat) {
-      svg.appendChild(createSvgElement("text", { x: x - 4, y: bottomLineY + 82, class: "note-label" })).textContent = Math.floor(i / 4) + 1;
+      svg.appendChild(createSvgElement("text", { x: x - 4, y: bottomLineY + 82, class: "note-label" })).textContent = Math.floor(i / 2) + 1;
     }
 
     if (i > 0) {
@@ -1248,14 +1116,14 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
   }
 }
 
-function drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass = "") {
+function drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback) {
   if (!parsed.accidental) return;
   const symbol = parsed.accidental === "#" ? "♯" : "♭";
 
   svg.appendChild(createSvgElement("text", {
     x: x - 30,
     y: y + 1,
-    class: `accidental${isCantus ? " cantus" : ""}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}${issueClass ? " " + issueClass : ""}`
+    class: `accidental${isCantus ? " cantus" : ""}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}`
   })).textContent = symbol;
 }
 
@@ -1267,30 +1135,6 @@ function drawHalfFlag(svg, x, y, isSelected, isCurrentPlayback) {
   }));
 }
 
-function getIssueFor(voice, index) {
-  if (!Array.isArray(analysisIssues)) return null;
-  const exactError = analysisIssues.find((issue) => issue.voice === voice && issue.index === index && issue.type === "error");
-  if (exactError) return exactError;
-  const exactWarn = analysisIssues.find((issue) => issue.voice === voice && issue.index === index && issue.type === "warn");
-  if (exactWarn) return exactWarn;
-  return null;
-}
-
-function getIssueClass(voice, index) {
-  const issue = getIssueFor(voice, index);
-  return issue ? issue.type : "";
-}
-
-function drawIssueRing(svg, x, y, issueClass) {
-  if (!issueClass) return;
-  svg.appendChild(createSvgElement("circle", {
-    cx: x,
-    cy: y,
-    r: 15,
-    class: issueClass === "warn" ? "issue-ring warn" : "issue-ring"
-  }));
-}
-
 function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const y = noteToY(note, bottomLineY);
   const parsed = parseNote(note);
@@ -1299,47 +1143,45 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const isCantus = voice === "cantus";
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
-  const issueClass = getIssueClass(voice, index);
 
   drawLedgerLines(svg, x, y, bottomLineY);
-  drawIssueRing(svg, x, y, issueClass);
-  drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
+  drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback);
 
-  const noteClass = [
-    "note-head",
-    "open",
-    isCantus ? "cantus" : "",
-    isCurrentPlayback ? "playing" : "",
-    isSelected ? "selected" : "",
-    issueClass
-  ].filter(Boolean).join(" ");
-
-  // Module 2:
-  // - cantus: whole note = open notehead, no stem
-  // - counterpoint: half note = open notehead + stem, no flag
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: y,
-    rx: 8.8,
+    rx: 8.5,
     ry: 5.8,
     transform: `rotate(-18 ${x} ${y})`,
-    class: noteClass
+    class: isCantus
+      ? isCurrentPlayback ? "note-head cantus playing" : "note-head cantus"
+      : isCurrentPlayback ? "note-head playing" : isSelected ? "note-head selected" : "note-head"
   }));
 
-  if (!isCantus) {
+  if (isCantus) {
+    svg.appendChild(createSvgElement("line", {
+      x1: x - 7,
+      y1: y,
+      x2: x - 7,
+      y2: y + 34,
+      class: isCurrentPlayback ? "note-stem cantus playing" : "note-stem cantus"
+    }));
+  } else {
     svg.appendChild(createSvgElement("line", {
       x1: x + 7,
       y1: y,
       x2: x + 7,
       y2: y - 34,
-      class: ["note-stem", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
+      class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem"
     }));
+
+    drawHalfFlag(svg, x, y, isSelected, isCurrentPlayback);
   }
 
   svg.appendChild(createSvgElement("text", {
     x: x - 12,
     y: isCantus ? bottomLineY + 48 : bottomLineY - 62,
-    class: ["note-label", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
+    class: isCurrentPlayback ? "note-label playing" : isSelected ? "note-label selected" : "note-label"
   })).textContent = note;
 }
 
@@ -1566,131 +1408,3 @@ window.addEventListener("DOMContentLoaded", () => {
   renderScore();
   updatePlayPauseButton();
 });
-
-
-
-function midiEncodeVariableLength(value) {
-  let buffer = value & 0x7f;
-  const bytes = [];
-
-  while ((value >>= 7)) {
-    buffer <<= 8;
-    buffer |= ((value & 0x7f) | 0x80);
-  }
-
-  while (true) {
-    bytes.push(buffer & 0xff);
-    if (buffer & 0x80) buffer >>= 8;
-    else break;
-  }
-
-  return bytes;
-}
-
-function midiTextBytes(text) {
-  return Array.from(text).map((char) => char.charCodeAt(0) & 0xff);
-}
-
-function midiNumberToBytes(value, length) {
-  const bytes = [];
-  for (let i = length - 1; i >= 0; i--) {
-    bytes.push((value >> (i * 8)) & 0xff);
-  }
-  return bytes;
-}
-
-function midiTrackChunk(events) {
-  const data = [];
-  events.forEach((event) => data.push(...event));
-
-  const header = midiTextBytes("MTrk");
-  const length = midiNumberToBytes(data.length, 4);
-  return [...header, ...length, ...data];
-}
-
-function midiNoteEvent(delta, status, note, velocity) {
-  return [...midiEncodeVariableLength(delta), status, note, velocity];
-}
-
-function midiMetaEvent(delta, type, data) {
-  return [...midiEncodeVariableLength(delta), 0xff, type, data.length, ...data];
-}
-
-function midiCreateFile(tracks, ticksPerQuarter = 480) {
-  const header = [
-    ...midiTextBytes("MThd"),
-    0x00, 0x00, 0x00, 0x06,
-    0x00, 0x01,
-    ...midiNumberToBytes(tracks.length, 2),
-    ...midiNumberToBytes(ticksPerQuarter, 2)
-  ];
-
-  return new Uint8Array([...header, ...tracks.flat()]);
-}
-
-function midiDownload(bytes, filename) {
-  const blob = new Blob([bytes], { type: "audio/midi" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-function midiBuildNoteTrack(trackName, notes, channel, ticksPerNote, velocity = 84) {
-  const events = [];
-  events.push(midiMetaEvent(0, 0x03, midiTextBytes(trackName)));
-
-  let pendingDelta = 0;
-
-  notes.forEach((note) => {
-    const midi = noteToMidi(note);
-
-    if (midi === null) {
-      pendingDelta += ticksPerNote;
-      return;
-    }
-
-    events.push(midiNoteEvent(pendingDelta, 0x90 + channel, midi, velocity));
-    events.push(midiNoteEvent(ticksPerNote, 0x80 + channel, midi, 0));
-    pendingDelta = 0;
-  });
-
-  events.push(midiMetaEvent(pendingDelta, 0x2f, []));
-  return midiTrackChunk(events);
-}
-
-function exportMidi() {
-  const ticksPerQuarter = 480;
-  const tempoMicroseconds = 1000000; // 60 BPM
-  const cantus = getNotesFromTextarea("cantus");
-  const counterpoint = getNotesFromTextarea("counterpoint");
-
-  if (!cantus.length && !counterpoint.length) {
-    alert(currentLanguage === "fr" ? "Aucune note à exporter." : "書き出す音がありません。");
-    return;
-  }
-
-  const cantusTicks = ticksPerQuarter * 4;
-  const counterpointTicks = Math.max(1, Math.round(cantusTicks / SCORE.quartersPerCantus));
-
-  const conductorEvents = [
-    midiMetaEvent(0, 0x03, midiTextBytes("Tempo / Meter")),
-    midiMetaEvent(0, 0x51, [0x0f, 0x42, 0x40]),
-    midiMetaEvent(0, 0x58, [0x04, 0x02, 0x18, 0x08]),
-    midiMetaEvent(0, 0x2f, [])
-  ];
-
-  const tracks = [
-    midiTrackChunk(conductorEvents),
-    midiBuildNoteTrack("Cantus / whole notes", cantus, 0, cantusTicks, 72),
-    midiBuildNoteTrack("Counterpoint", counterpoint, 1, counterpointTicks, 86)
-  ];
-
-  const bytes = midiCreateFile(tracks, ticksPerQuarter);
-  midiDownload(bytes, "counterpoint_tempo60_4-4.mid");
-}
-
