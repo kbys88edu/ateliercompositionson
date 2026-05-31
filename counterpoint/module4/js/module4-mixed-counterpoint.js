@@ -795,6 +795,7 @@ function changeSelectedNoteDuration(duration) {
   setCounterpointEvents(updatedEvents);
   syncRhythmButtons(duration);
   setupMusicXmlInput();
+  setupModule4KeyboardInput();
   renderScore();
   updateDisplays();
   return true;
@@ -836,7 +837,6 @@ function moveSelection(delta) {
 
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
   if (selectedEvent) {
-    selectedIndex = selectedEvent.start;
     inputDuration = selectedEvent.duration;
     syncRhythmButtons(inputDuration);
   }
@@ -1319,8 +1319,9 @@ function handleMusicXmlClick(event) {
   if (!mapped) return;
 
   const { slot, note } = mapped;
-  const coveringEvent = getEventCoveringSlot(slot);
+  selectedIndex = slot;
 
+  const coveringEvent = getEventCoveringSlot(slot);
   if (coveringEvent) {
     selectedIndex = coveringEvent.start;
     inputDuration = coveringEvent.duration;
@@ -1337,21 +1338,7 @@ function handleMusicXmlClick(event) {
     return;
   }
 
-  if (!isSlotAvailable(slot, inputDuration, null)) {
-    selectedIndex = slot;
-    renderScore();
-    return;
-  }
-
-  const events = getCounterpointEvents();
-  events.push({ start: slot, duration: inputDuration, note, rest: false });
-  events.sort((a, b) => a.start - b.start);
-
-  selectedIndex = slot;
-  setCounterpointEvents(events);
-  renderScore();
-  updateDisplays();
-  playNoteName(note, 0.35, 1, "femaleSample");
+  insertNoteAtSelectedIndex(note);
 }
 
 function setupMusicXmlInput() {
@@ -1384,7 +1371,11 @@ function getMusicXmlSlotFromX(x) {
   const total = Math.max(1, getTotalQuarterSlots());
   const usable = Math.max(1, metrics.right - metrics.left);
   const ratio = Math.max(0, Math.min(1, (x - metrics.left) / usable));
-  return Math.max(0, Math.min(total - 1, Math.round(ratio * (total - 1))));
+
+  // Use floor-biased quantization.
+  // This prevents clicks near the middle of a beat from being placed in the next beat too early.
+  const raw = ratio * total;
+  return Math.max(0, Math.min(total - 1, Math.floor(raw)));
 }
 
 function getMusicXmlNoteFromY(y) {
@@ -1491,6 +1482,160 @@ function getMusicXmlOverlayMetrics() {
   }
 
   return { width, height, left, right, topStaffCenterY, noteStep };
+}
+
+function getKeyboardInputOctave(letter) {
+  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+  if (selectedEvent && selectedEvent.note) {
+    const parsed = parseNote(selectedEvent.note);
+    if (parsed && typeof parsed.octave === "number") return parsed.octave;
+  }
+
+  const events = getCounterpointEvents().filter((event) => event.note && !isRestEvent(event));
+  if (events.length) {
+    const nearest = events.reduce((best, event) => {
+      const bestDistance = Math.abs(best.start - selectedIndex);
+      const distance = Math.abs(event.start - selectedIndex);
+      return distance < bestDistance ? event : best;
+    }, events[0]);
+    const parsed = parseNote(nearest.note);
+    if (parsed && typeof parsed.octave === "number") return parsed.octave;
+  }
+
+  return 4;
+}
+
+function normalizeKeyboardNoteRegister(letter, octave) {
+  const note = `${letter.toUpperCase()}${octave}`;
+  const midi = noteToMidi(note);
+  if (midi === null) return note;
+
+  // Keep keyboard input in a practical treble range.
+  if (midi < noteToMidi("C4")) return `${letter.toUpperCase()}${octave + 1}`;
+  if (midi > noteToMidi("G5")) return `${letter.toUpperCase()}${octave - 1}`;
+  return note;
+}
+
+function insertNoteAtSelectedIndex(note) {
+  const total = getTotalQuarterSlots();
+  if (!total) return;
+
+  let start = Math.max(0, Math.min(total - 1, selectedIndex));
+  const coveringEvent = getEventCoveringSlot(start);
+
+  // If cursor is inside an existing note, replace its pitch.
+  if (coveringEvent) {
+    selectedIndex = coveringEvent.start;
+    inputDuration = coveringEvent.duration;
+    syncRhythmButtons(inputDuration);
+
+    const events = getCounterpointEvents().map((event) =>
+      event.start === coveringEvent.start ? { ...event, note, rest: false } : event
+    );
+
+    setCounterpointEvents(events);
+    renderScore();
+    updateDisplays();
+    playNoteName(note, 0.35, 1, "femaleSample");
+    return;
+  }
+
+  if (!isSlotAvailable(start, inputDuration, null)) {
+    renderScore();
+    return;
+  }
+
+  const length = getDurationQuarters(inputDuration);
+  const end = start + length;
+
+  const events = getCounterpointEvents()
+    .filter((event) => {
+      const eventStart = event.start;
+      const eventEnd = event.start + getDurationQuarters(event.duration);
+      return !(start < eventEnd && eventStart < end);
+    });
+
+  events.push({ start, duration: inputDuration, note, rest: false });
+  events.sort((a, b) => a.start - b.start);
+
+  selectedIndex = start;
+  setCounterpointEvents(events);
+  renderScore();
+  updateDisplays();
+  playNoteName(note, 0.35, 1, "femaleSample");
+}
+
+function handleKeyboardPitchInput(letter) {
+  const octave = getKeyboardInputOctave(letter);
+  const note = normalizeKeyboardNoteRegister(letter, octave);
+  insertNoteAtSelectedIndex(note);
+}
+
+function setupModule4KeyboardInput() {
+  if (window.module4KeyboardInputReady) return;
+  window.module4KeyboardInputReady = true;
+
+  document.addEventListener("keydown", (event) => {
+    const active = document.activeElement;
+    const tag = active ? active.tagName : "";
+    const isTyping = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (active && active.isContentEditable);
+    if (isTyping) return;
+
+    const key = event.key;
+
+    if (/^[a-gA-G]$/.test(key)) {
+      event.preventDefault();
+      handleKeyboardPitchInput(key.toUpperCase());
+      return;
+    }
+
+    if (key === "1") {
+      event.preventDefault();
+      setInputDuration("q");
+      return;
+    }
+
+    if (key === "2") {
+      event.preventDefault();
+      setInputDuration("h");
+      return;
+    }
+
+    if (key === "4") {
+      event.preventDefault();
+      setInputDuration("w");
+      return;
+    }
+
+    if (key === "ArrowLeft") {
+      event.preventDefault();
+      moveSelection(-1);
+      return;
+    }
+
+    if (key === "ArrowRight") {
+      event.preventDefault();
+      moveSelection(1);
+      return;
+    }
+
+    if (key === "ArrowUp") {
+      event.preventDefault();
+      moveSelectedNote(1);
+      return;
+    }
+
+    if (key === "ArrowDown") {
+      event.preventDefault();
+      moveSelectedNote(-1);
+      return;
+    }
+
+    if (key === "Backspace" || key === "Delete") {
+      event.preventDefault();
+      deleteSelectedNote();
+    }
+  });
 }
 
 function renderScore() {
