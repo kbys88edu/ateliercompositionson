@@ -10,7 +10,7 @@
   <title>Module 4｜2声混合対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="全音符の定旋律に対して、全音符・二分音符・四分音符を混合して置く2声混合対位法の練習ページです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module4-musicxml-osmd-clickfix" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module4-musicxml-overlay-cursor" />
 </head>
 
 <body>
@@ -113,7 +113,10 @@
           <div class="score-status" id="scoreStatus">対旋律：0音</div>
         </div>
 
-        <div id="musicXmlDisplay" class="musicxml-display" aria-label="MusicXML score display"></div>
+        <div id="musicXmlWrapper" class="musicxml-wrapper">
+          <div id="musicXmlDisplay" class="musicxml-display" aria-label="MusicXML score display"></div>
+          <svg id="musicXmlOverlay" class="musicxml-overlay" aria-label="MusicXML input overlay"></svg>
+        </div>
         <svg id="scoreEditor" class="legacy-score-editor" class="score-editor" viewBox="0 0 1280 360" role="img" aria-label="2声混合対位法入力用五線譜" tabindex="0"></svg>
       </div>
 
@@ -133,6 +136,6 @@
     </section>
   </main>
 
-  <script src="js/module4-mixed-counterpoint.js?v=20260601-module4-musicxml-osmd-clickfix"></script>
+  <script src="js/module4-mixed-counterpoint.js?v=20260601-module4-musicxml-overlay-cursor"></script>
 </body>
 </html>

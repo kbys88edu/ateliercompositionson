@@ -222,6 +222,17 @@ let playbackTimerId = null;
 let audioContext = null;
 let analysisIssues = [];
 
+const MUSICXML_INPUT = {
+  viewBoxWidth: 1200,
+  viewBoxHeight: 360,
+  left: 86,
+  right: 1146,
+  topStaffCenterY: 126,
+  noteStep: 7.5,
+  cursorColor: "#ff4f8b"
+};
+
+
 function t(key) { return I18N[currentLanguage][key]; }
 
 function setLanguage(lang) {
@@ -1253,6 +1264,7 @@ async function renderMusicXmlScore() {
   if (typeof opensheetmusicdisplay === "undefined") {
     if (legacySvg) legacySvg.classList.remove("is-hidden");
     container.innerHTML = `<div class="musicxml-fallback-message">MusicXML viewer could not be loaded. Using fallback SVG editor.</div>`;
+    renderMusicXmlOverlay();
     return false;
   }
 
@@ -1266,39 +1278,31 @@ async function renderMusicXmlScore() {
 
     container.dataset.ready = "true";
     setupMusicXmlInput();
+    renderMusicXmlOverlay();
+
     if (legacySvg) legacySvg.classList.add("is-hidden");
     return true;
   } catch (error) {
     console.error("MusicXML render failed:", error);
     if (legacySvg) legacySvg.classList.remove("is-hidden");
     container.innerHTML = `<div class="musicxml-fallback-message">MusicXML display error. Using fallback SVG editor.</div>`;
+    renderMusicXmlOverlay();
     return false;
   }
 }
 
 function musicXmlClickToSlotAndNote(event) {
-  const container = document.getElementById("musicXmlDisplay");
-  if (!container) return null;
+  const overlay = document.getElementById("musicXmlOverlay");
+  if (!overlay) return null;
 
-  const rect = container.getBoundingClientRect();
-  const total = getTotalQuarterSlots();
-  if (!total || !rect.width || !rect.height) return null;
+  const rect = overlay.getBoundingClientRect();
+  if (!rect.width || !rect.height) return null;
 
-  const localX = event.clientX - rect.left;
-  const localY = event.clientY - rect.top;
+  const localX = ((event.clientX - rect.left) / rect.width) * MUSICXML_INPUT.viewBoxWidth;
+  const localY = ((event.clientY - rect.top) / rect.height) * MUSICXML_INPUT.viewBoxHeight;
 
-  // OSMD has left/right margins; this approximation is intentionally simple.
-  const usableLeft = rect.width * 0.08;
-  const usableRight = rect.width * 0.96;
-  const ratioX = Math.max(0, Math.min(1, (localX - usableLeft) / (usableRight - usableLeft)));
-  const slot = Math.max(0, Math.min(total - 1, Math.round(ratioX * (total - 1))));
-
-  // Top staff input: map vertical position around the upper half to treble notes.
-  const ratioY = Math.max(0, Math.min(1, localY / rect.height));
-  const trebleRelative = (0.47 - ratioY) * 18;
-  const baseMidi = noteToMidi("E4");
-  const midi = baseMidi + Math.round(trebleRelative);
-  const note = midiToNote(midi);
+  const slot = getMusicXmlSlotFromX(localX);
+  const note = getMusicXmlNoteFromY(localY);
 
   return { slot, note };
 }
@@ -1346,11 +1350,94 @@ function handleMusicXmlClick(event) {
 }
 
 function setupMusicXmlInput() {
-  const container = document.getElementById("musicXmlDisplay");
-  if (!container || container.dataset.inputReady === "true") return;
+  const overlay = document.getElementById("musicXmlOverlay");
+  if (!overlay || overlay.dataset.inputReady === "true") return;
 
-  container.addEventListener("click", handleMusicXmlClick);
-  container.dataset.inputReady = "true";
+  overlay.addEventListener("click", handleMusicXmlClick);
+  overlay.dataset.inputReady = "true";
+}
+
+function getMusicXmlSlotX(slot) {
+  const total = Math.max(1, getTotalQuarterSlots());
+  const usable = MUSICXML_INPUT.right - MUSICXML_INPUT.left;
+  if (total <= 1) return MUSICXML_INPUT.left;
+  return MUSICXML_INPUT.left + (slot / (total - 1)) * usable;
+}
+
+function getMusicXmlSlotFromX(x) {
+  const total = Math.max(1, getTotalQuarterSlots());
+  const usable = MUSICXML_INPUT.right - MUSICXML_INPUT.left;
+  const ratio = Math.max(0, Math.min(1, (x - MUSICXML_INPUT.left) / usable));
+  return Math.max(0, Math.min(total - 1, Math.round(ratio * (total - 1))));
+}
+
+function getMusicXmlNoteFromY(y) {
+  const baseMidi = noteToMidi("E4");
+  const diff = Math.round((MUSICXML_INPUT.topStaffCenterY - y) / MUSICXML_INPUT.noteStep);
+  return midiToNote(baseMidi + diff);
+}
+
+function createOverlaySvgElement(tag, attrs = {}) {
+  const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+  return element;
+}
+
+function renderMusicXmlOverlay() {
+  const overlay = document.getElementById("musicXmlOverlay");
+  if (!overlay) return;
+
+  const total = getTotalQuarterSlots();
+  overlay.setAttribute("viewBox", `0 0 ${MUSICXML_INPUT.viewBoxWidth} ${MUSICXML_INPUT.viewBoxHeight}`);
+  overlay.innerHTML = "";
+
+  if (!total) return;
+
+  // Light beat grid, aligned with the input model rather than OSMD internals.
+  for (let i = 0; i < total; i += 1) {
+    const x = getMusicXmlSlotX(i);
+    const isMeasureStart = i % 4 === 0;
+    overlay.appendChild(createOverlaySvgElement("line", {
+      x1: x,
+      y1: 32,
+      x2: x,
+      y2: 318,
+      class: isMeasureStart ? "musicxml-grid-line measure" : "musicxml-grid-line"
+    }));
+  }
+
+  // Selected cursor
+  const cursorX = getMusicXmlSlotX(selectedIndex);
+  overlay.appendChild(createOverlaySvgElement("line", {
+    x1: cursorX,
+    y1: 26,
+    x2: cursorX,
+    y2: 326,
+    class: "musicxml-cursor-line"
+  }));
+
+  overlay.appendChild(createOverlaySvgElement("circle", {
+    cx: cursorX,
+    cy: MUSICXML_INPUT.topStaffCenterY,
+    r: 6,
+    class: "musicxml-cursor-dot"
+  }));
+
+  // Show selected note head position when the selected slot contains a note.
+  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+  if (selectedEvent && selectedEvent.note && !isRestEvent(selectedEvent)) {
+    const midi = noteToMidi(selectedEvent.note);
+    const baseMidi = noteToMidi("E4");
+    if (midi !== null && baseMidi !== null) {
+      const y = MUSICXML_INPUT.topStaffCenterY - (midi - baseMidi) * MUSICXML_INPUT.noteStep;
+      overlay.appendChild(createOverlaySvgElement("circle", {
+        cx: getMusicXmlSlotX(selectedEvent.start),
+        cy: y,
+        r: 8,
+        class: "musicxml-selected-note"
+      }));
+    }
+  }
 }
 
 function renderScore() {
@@ -1386,6 +1473,7 @@ function renderScore() {
   });
 
   updateDisplays();
+  renderMusicXmlOverlay();
   renderMusicXmlScore();
 }
 
