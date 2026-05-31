@@ -1,32 +1,12 @@
 # Voice sample folders
 
-The playback menu has one option only:
-
-- 人の声 / Voix humaine
-
-Automatic assignment:
-- Treble / counterpoint: female samples
-- Bass clef cantus: male samples
-
 Female:
-- Uses C4, G4, C5, G5.
-- No octave transposition is applied.
+C4.wav, G4.wav, C5.wav, G5.wav
 
 Male:
-- Uses C2, G2, C3, G3, C4, G4.
+C2.wav, G2.wav, C3.wav, G3.wav, C4.wav, G4.wav
 
-Required files:
-
-Female:
-- audio/voice/female/C4.wav
-- audio/voice/female/G4.wav
-- audio/voice/female/C5.wav
-- audio/voice/female/G5.wav
-
-Male:
-- audio/voice/male/C2.wav
-- audio/voice/male/G2.wav
-- audio/voice/male/C3.wav
-- audio/voice/male/G3.wav
-- audio/voice/male/C4.wav
-- audio/voice/male/G4.wav
+Exact sample behavior:
+- Written G4 plays G4.wav directly at playbackRate 1.0.
+- Written C4 plays C4.wav directly at playbackRate 1.0.
+- Written G5 plays G5.wav directly at playbackRate 1.0.

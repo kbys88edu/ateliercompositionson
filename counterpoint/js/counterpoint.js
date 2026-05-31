@@ -347,7 +347,22 @@ function direction(a, b) {
   return 0;
 }
 
+function midiToSampleNoteName(midi) {
+  const names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const pitch = ((midi % 12) + 12) % 12;
+  const octave = Math.floor(midi / 12) - 1;
+  return `${names[pitch]}${octave}`;
+}
+
 function getNearestSampleNote(targetMidi, sampleNotes) {
+  const exactName = midiToSampleNoteName(targetMidi);
+
+  // If the exact sample exists, use it directly with playbackRate 1.0.
+  // Example: written G4 -> female/G4.wav, not G5.wav or a shifted file.
+  if (sampleNotes.includes(exactName)) {
+    return exactName;
+  }
+
   let nearest = sampleNotes[0];
   let nearestDistance = Infinity;
 
@@ -413,7 +428,7 @@ function playFallbackVoice(midi, duration = 0.45, gainScale = 1) {
   osc.stop(now + duration + 0.1);
 }
 
-async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1) {
+async async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1) {
   const set = SAMPLE_VOICE_SETS[setName];
   if (!set) return;
 
@@ -423,7 +438,11 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 
   const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
   if (!buffer) {
-    playFallbackVoice(midi, duration, gainScale);
+    if (typeof playFallbackVoice === "function") {
+      playFallbackVoice(midi, duration, gainScale);
+    } else if (typeof playVoiceLikeNote === "function") {
+      playVoiceLikeNote(midi, duration, gainScale);
+    }
     return;
   }
 
@@ -432,7 +451,14 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 
   const source = ctx.createBufferSource();
   source.buffer = buffer;
-  source.playbackRate.setValueAtTime(Math.pow(2, (midi - sourceMidi + set.transposeSemitones) / 12), now);
+
+  const exactName = midiToSampleNoteName(midi);
+  const isExactSample = nearestNote === exactName;
+
+  // Exact sample names are never transposed.
+  // G4 must play female/G4.wav at playbackRate 1.0.
+  const semitoneShift = isExactSample ? 0 : (midi - sourceMidi + set.transposeSemitones);
+  source.playbackRate.setValueAtTime(Math.pow(2, semitoneShift / 12), now);
 
   const gain = ctx.createGain();
   gain.gain.setValueAtTime(0.0001, now);
