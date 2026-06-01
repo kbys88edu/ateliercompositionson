@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Module 2 — Contrepoint à deux voix en blanches｜Atelier Composition Son</title>
+  <meta name="description" content="Module de contrepoint rythmique avec blanches liées." />
+
+  <link rel="stylesheet" href="css/style.css?v=20260601-module3-renamed-from-module2-5" />
+</head>
+
+<body>
+  <main class="page">
+    <header class="checker-header">
+      <div class="top-controls">
+        <a class="back-link" href="../index.html" data-i18n="backLink">← トップへ戻る</a>
+
+        <label class="language-control" for="languageSelect">
+          <span data-i18n="languageLabel">Langue</span>
+          <select id="languageSelect" onchange="if(this.value) window.location.href=this.value">
+            <option value="module2-halfnote-counterpoint-fr.html" selected>Français</option>
+            <option value="module2-halfnote-counterpoint.html">日本語</option>
+          </select>
+        </label>
+      </div>
+
+      <p class="eyebrow">Module 3 / Tied Rhythm Counterpoint</p>
+      <h1 data-i18n="title">2声二分音符対位法チェッカー</h1>
+      <p class="lead" data-i18n="lead">
+        全音符の定旋律1音に対して、対旋律を二分音符2つで入力します。タイでつながれた音は扱いません。
+        五線譜をクリックして音を置き、↑↓で半音移動、←→で前後の二分音符へ移動できます。
+      </p>
+    </header>
+
+    <section class="checker-panel">
+      <textarea id="cantus" class="hidden-input">C4 D4 E4 F4 G4 A4 G4 F4 E4 D4 C4</textarea>
+      <textarea id="counterpoint" class="hidden-input"></textarea>
+      <textarea id="counterpointTies" class="hidden-input"></textarea>
+
+      <div class="exercise-tools">
+        <label class="exercise-control" for="exerciseSelect">
+          <span data-i18n="exerciseLabel">課題</span>
+          <select id="exerciseSelect"></select>
+        </label>
+
+        <button class="button small" type="button" onclick="loadSelectedExercise()" data-i18n="loadExercise">
+          課題を読み込む
+        </button>
+
+        <p class="exercise-description" id="exerciseDescription">
+          課題を選択してください。
+        </p>
+      </div>
+
+      <div class="score-tools">
+        <button class="button small" type="button" onclick="undoCounterpointNote()" data-i18n="deleteLast">
+          最後の音を削除
+        </button>
+
+        <button class="button small" type="button" onclick="clearCounterpoint()" data-i18n="clearCounterpoint">
+          対旋律をクリア
+        </button>
+
+        <button class="button small" type="button" onclick="playSelectedNote()" data-i18n="playSelected">
+          選択音を鳴らす
+        </button>
+
+        <button class="button small" type="button" onclick="toggleTieAtSelected()" data-i18n="toggleTie">
+          タイを切り替え
+        </button>
+      </div>
+
+      <div class="playback-tools">
+        <button id="playPauseButton" class="button primary" type="button" onclick="togglePlayback()" aria-label="Lecture / arrêt" title="Lecture / arrêt">▶</button>
+
+        <button class="button small" type="button" onclick="stopPlayback(true)" aria-label="Revenir au début" title="Revenir au début">⏮</button>
+
+        <label class="tempo-control" for="tempoInput">
+          Tempo
+          <input id="tempoInput" type="number" min="40" max="160" value="72" />
+        </label>
+
+        <p class="playback-hint" data-i18n="playbackHint">
+          Space：再生 / 停止　｜　← / →：前後の二分音符へ移動
+        </p>
+      </div>
+
+      <div class="score-box">
+        <div class="score-head">
+          <div>
+            <h2 data-i18n="scoreInputTitle">五線入力</h2>
+            <p data-i18n="scoreInputHelp">
+              上段に二分音符の対旋律、下段に全音符の定旋律を表示します。タイ入力はありません。
+            </p>
+          </div>
+          <div class="score-status" id="scoreStatus">
+            対旋律：0音
+          </div>
+        </div>
+
+        <svg
+          id="scoreEditor"
+          class="score-editor"
+          viewBox="0 0 1240 440"
+          role="img"
+          aria-label="全音符の定旋律に対する2声二分音符対位法入力用五線譜"
+          tabindex="0"
+        ></svg>
+      </div>
+
+      <div class="current-notes">
+        <h2 data-i18n="currentInput">現在の入力</h2>
+        <p><strong data-i18n="cantusLabel">定旋律：</strong><span id="cantusDisplay"></span></p>
+        <p><strong data-i18n="counterpointLabel">対旋律：</strong><span id="counterpointDisplay"></span></p>
+      </div>
+
+      <button class="button primary" onclick="analyzeCounterpoint()" data-i18n="analyze">
+        解析する
+      </button>
+      <div id="analysisInlineResult" class="analysis-inline-result" data-i18n="notAnalyzed">まだ解析していません。</div>
+    </section>
+</main>
+
+  <script src="js/module2-5-tied-counterpoint-fr.js?v=20260601-module3-renamed-from-module2-5"></script>
+</body>
+</html>
