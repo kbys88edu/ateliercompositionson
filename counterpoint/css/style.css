@@ -1617,3 +1617,24 @@ input {
 .staff-mute-button {
   pointer-events: auto !important;
 }
+
+
+/* 2026-06-01 interaction/sound fix */
+.score-editor {
+  pointer-events: auto !important;
+  cursor: crosshair;
+}
+
+.stable-notehead {
+  pointer-events: auto;
+}
+
+.stable-notehead.selected {
+  stroke: #ff4f8b !important;
+  fill: rgba(255,79,139,0.08);
+  stroke-width: 2.8 !important;
+}
+
+.senzoku-selected-ring {
+  pointer-events: none;
+}

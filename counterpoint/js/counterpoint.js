@@ -1955,3 +1955,295 @@ window.addEventListener("DOMContentLoaded", () => {
   }, 180);
 })();
 
+
+
+
+/* ===== Module 1 interaction + sound override: 2026-06-01 ===== */
+(function () {
+  const STABLE_SCORE = {
+    width: 1480,
+    height: 430,
+    left: 128,
+    right: 64,
+    measureWidth: 118,
+    staffGap: 14,
+    noteStep: 7,
+    counterpointBottomLineY: 150,
+    cantusBottomLineY: 320,
+    playheadTop: 56,
+    playheadBottom: 400,
+    noteImageWidth: 31.3,
+    noteImageHeight: 18.4
+  };
+
+  function ensureAudioReady() {
+    try {
+      const ctx = getAudioContext();
+      if (ctx && ctx.state === "suspended") {
+        ctx.resume();
+      }
+      return ctx;
+    } catch (error) {
+      console.warn("AudioContext unavailable", error);
+      return null;
+    }
+  }
+
+  window.playFallbackVoice = function playFallbackVoice(midi, duration = 0.45, gainScale = 1) {
+    const ctx = ensureAudioReady();
+    if (!ctx || typeof midiToFrequency !== "function") return;
+
+    const now = ctx.currentTime;
+    const freq = midiToFrequency(midi);
+
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc1.type = "triangle";
+    osc2.type = "sine";
+    osc1.frequency.setValueAtTime(freq, now);
+    osc2.frequency.setValueAtTime(freq * 2, now);
+
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(1500, now);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.20 * gainScale, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.12);
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+    filter.connect(gain);
+
+    if (typeof getModule1AudioDestination === "function") {
+      gain.connect(getModule1AudioDestination());
+    } else {
+      gain.connect(ctx.destination);
+    }
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + duration + 0.14);
+    osc2.stop(now + duration + 0.14);
+  };
+
+  window.playMidiNote = function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
+    ensureAudioReady();
+
+    if (typeof playSampleVoiceNote === "function") {
+      try {
+        const result = playSampleVoiceNote(voiceSet, midi, duration, gainScale);
+        if (result && typeof result.catch === "function") {
+          result.catch(() => playFallbackVoice(midi, duration, gainScale));
+        }
+        return;
+      } catch (error) {
+        playFallbackVoice(midi, duration, gainScale);
+        return;
+      }
+    }
+
+    playFallbackVoice(midi, duration, gainScale);
+  };
+
+  window.playNoteName = function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
+    const midi = typeof noteToMidi === "function" ? noteToMidi(note) : null;
+    if (midi === null) return;
+    playMidiNote(midi, duration, gainScale, voiceSet);
+  };
+
+  function stableGetMeasureStartX(index) {
+    return STABLE_SCORE.left + index * STABLE_SCORE.measureWidth;
+  }
+
+  function stableGetMeasureNoteX(index) {
+    return stableGetMeasureStartX(index) + STABLE_SCORE.measureWidth * 0.54;
+  }
+
+  function stableGetMeasureIndexFromX(x, noteCount) {
+    const count = Math.max(noteCount, 1);
+    const raw = Math.floor((x - STABLE_SCORE.left) / STABLE_SCORE.measureWidth);
+    return Math.max(0, Math.min(count - 1, raw));
+  }
+
+  function pitchFromY(viewY) {
+    if (typeof yToNaturalNote === "function") {
+      return yToNaturalNote(viewY);
+    }
+
+    const bottom = STABLE_SCORE.counterpointBottomLineY;
+    const steps = Math.round((bottom - viewY) / STABLE_SCORE.noteStep);
+    const scale = ["E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5"];
+    return scale[Math.max(0, Math.min(scale.length - 1, steps))] || "G4";
+  }
+
+  function clickToScorePoint(event) {
+    const svg = document.getElementById("scoreEditor");
+    if (!svg) return null;
+
+    const rect = svg.getBoundingClientRect();
+    const viewBox = svg.viewBox.baseVal;
+    const viewX = ((event.clientX - rect.left) / rect.width) * viewBox.width;
+    const viewY = ((event.clientY - rect.top) / rect.height) * viewBox.height;
+    return { svg, viewX, viewY };
+  }
+
+  window.handleScoreClick = function handleScoreClick(event) {
+    if (isPlaying) return;
+
+    const mapped = clickToScorePoint(event);
+    if (!mapped) return;
+
+    const { viewX, viewY } = mapped;
+
+    // Edit upper staff only. Lower staff is cantus reference.
+    if (viewY > (STABLE_SCORE.counterpointBottomLineY + STABLE_SCORE.cantusBottomLineY) / 2) {
+      return;
+    }
+
+    const cantus = getNotesFromTextarea("cantus");
+    let counterpoint = getNotesFromTextarea("counterpoint");
+    const noteCount = Math.max(cantus.length, counterpoint.length, 1);
+    const clickedIndex = stableGetMeasureIndexFromX(viewX, noteCount);
+
+    while (counterpoint.length < noteCount) counterpoint.push("");
+
+    const current = counterpoint[clickedIndex];
+    const noteX = stableGetMeasureNoteX(clickedIndex);
+    const currentY = current && typeof noteToY === "function"
+      ? noteToY(current, STABLE_SCORE.counterpointBottomLineY)
+      : null;
+
+    selectedIndex = clickedIndex;
+
+    // If the existing notehead is clicked, just select/play it.
+    if (current && currentY !== null && Math.abs(viewX - noteX) < 26 && Math.abs(viewY - currentY) < 22) {
+      setNotesToTextarea("counterpoint", counterpoint);
+      renderScore();
+      updateDisplays();
+      playNoteName(current, 0.32, 1, "femaleSample");
+      return;
+    }
+
+    const newNote = pitchFromY(viewY);
+    counterpoint[clickedIndex] = newNote;
+    setNotesToTextarea("counterpoint", counterpoint);
+    renderScore();
+    updateDisplays();
+    playNoteName(newNote, 0.32, 1, "femaleSample");
+  };
+
+  window.moveSelection = function moveSelection(delta) {
+    const length = Math.max(getPlaybackLength(), 1);
+    selectedIndex = Math.max(0, Math.min(length - 1, selectedIndex + delta));
+    renderScore();
+    updateDisplays();
+
+    const counterpoint = getNotesFromTextarea("counterpoint");
+    const note = counterpoint[selectedIndex];
+    if (note) playNoteName(note, 0.24, 1, "femaleSample");
+  };
+
+  window.moveSelectedNote = function moveSelectedNote(semitone) {
+    const cantus = getNotesFromTextarea("cantus");
+    let counterpoint = getNotesFromTextarea("counterpoint");
+    const length = Math.max(cantus.length, counterpoint.length, 1);
+
+    while (counterpoint.length < length) counterpoint.push("");
+
+    if (selectedIndex < 0) selectedIndex = 0;
+    if (selectedIndex >= length) selectedIndex = length - 1;
+
+    const currentNote = counterpoint[selectedIndex] || "G4";
+    const nextNote = typeof moveNoteChromatic === "function"
+      ? moveNoteChromatic(currentNote, semitone)
+      : currentNote;
+
+    counterpoint[selectedIndex] = nextNote;
+    setNotesToTextarea("counterpoint", counterpoint);
+    renderScore();
+    updateDisplays();
+    playNoteName(nextNote, 0.24, 1, "femaleSample");
+  };
+
+  window.handleModule1Keyboard = function handleModule1Keyboard(event) {
+    const tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
+    const isTextEntry = tag === "input" || tag === "textarea";
+    if (isTextEntry) return;
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      event.stopPropagation();
+      moveSelection(-1);
+      return;
+    }
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      event.stopPropagation();
+      moveSelection(1);
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      event.stopPropagation();
+      moveSelectedNote(1);
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      event.stopPropagation();
+      moveSelectedNote(-1);
+      return;
+    }
+
+    if (event.key === " " || event.code === "Space") {
+      event.preventDefault();
+      event.stopPropagation();
+      ensureAudioReady();
+      togglePlayback();
+      return;
+    }
+
+    if (event.key === "Delete" || event.key === "Backspace") {
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof deleteSelectedNote === "function") deleteSelectedNote();
+    }
+  };
+
+  window.setupModule1KeyboardControls = function setupModule1KeyboardControls() {
+    if (window.module1KeyboardControlsReady) return;
+    window.module1KeyboardControlsReady = true;
+    window.addEventListener("keydown", window.handleModule1Keyboard, { capture: true });
+    document.addEventListener("keydown", window.handleModule1Keyboard, { capture: true });
+  };
+
+  window.rebindModule1Interactions = function rebindModule1Interactions() {
+    const svg = document.getElementById("scoreEditor");
+    if (svg) {
+      const clone = svg.cloneNode(true);
+      svg.parentNode.replaceChild(clone, svg);
+      clone.addEventListener("click", window.handleScoreClick);
+      clone.addEventListener("keydown", window.handleModule1Keyboard);
+    }
+
+    setupModule1KeyboardControls();
+    renderScore();
+    updateDisplays();
+    syncVoiceMuteButtons();
+  };
+
+  window.addEventListener("DOMContentLoaded", function () {
+    window.setTimeout(window.rebindModule1Interactions, 80);
+  });
+
+  window.addEventListener("load", function () {
+    window.setTimeout(window.rebindModule1Interactions, 120);
+  });
+})();
+
