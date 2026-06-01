@@ -328,7 +328,7 @@ function getAudioContext() {
 
 function getTimbre() {
   const select = document.getElementById("timbreSelect");
-  return select ? select.value : "triangle";
+  return select ? select.value : "humanVoice";
 }
 
 function getTimbreConfig(timbre = getTimbre()) {
@@ -446,9 +446,9 @@ async function playSampleVoiceNote(setName, midi, duration = 0.75, gainScale = 1
   filter.type = "lowpass";
   filter.frequency.setValueAtTime(6200, now);
 
-  const attack = 0.018;
-  const release = 0.30;
-  const targetGain = 0.72 * gainScale;
+  const attack = 0.016;
+  const release = 0.22;
+  const targetGain = 0.95 * gainScale;
 
   gain.gain.setValueAtTime(0.0001, now);
   gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, targetGain), now + attack);
@@ -502,10 +502,10 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
   mainOsc.stop(now + duration + 0.05);
 }
 
-function playNoteName(note, duration = 0.38, gainScale = 1) {
+function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
   const midi = noteToMidi(note);
   if (midi === null) return;
-  playMidiNote(midi, duration, gainScale);
+  playMidiNote(midi, duration, gainScale, voiceSet);
 }
 
 function getPlaybackMode() {
@@ -940,16 +940,19 @@ function clearSvg(svg) {
 
 function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const noteStep = getDiatonicStep(note);
-  const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
+  const isCantusStaff = bottomLineY === SCORE.cantusBottomLineY;
+  const referenceNote = isCantusStaff ? "G2" : "E4";
   const referenceStep = getDiatonicStep(referenceNote);
   if (noteStep === null || referenceStep === null) return null;
 
-  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
+  const trebleVisualOffset = isCantusStaff ? 0 : SCORE.noteStep;
+  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep - trebleVisualOffset;
 }
 
 function yToNaturalNote(y) {
   const e4Step = getDiatonicStep("E4");
-  const rawStep = Math.round((SCORE.bottomLineY - y) / SCORE.noteStep);
+  const trebleVisualOffset = SCORE.noteStep;
+  const rawStep = Math.round((SCORE.bottomLineY - trebleVisualOffset - y) / SCORE.noteStep);
   const targetStep = e4Step + rawStep;
 
   let closest = NATURAL_NOTES[0];
