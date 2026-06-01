@@ -117,86 +117,16 @@ const I18N = {
 };
 
 const EXERCISES = [
-  {
-    id: "c-major-arch",
-    titleJa: "C major / アーチ型",
-    titleFr: "Do majeur / arche",
-    descriptionJa: "Cから上行し、中央で頂点を作って戻る基本課題です。",
-    descriptionFr: "Cantus conjoint en arche depuis do.",
-    cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"]
-  },
-  {
-    id: "d-minor-step",
-    titleJa: "D minor / 順次進行",
-    titleFr: "Ré mineur / mouvement conjoint",
-    descriptionJa: "短調の感覚を保ちながら順次進行を練習します。",
-    descriptionFr: "Travail conjoint dans une couleur mineure.",
-    cantus: ["D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4"]
-  },
-  {
-    id: "g-major-low",
-    titleJa: "G major / 低めの音域",
-    titleFr: "Sol majeur / registre grave",
-    descriptionJa: "やや低い音域で、安定した協和音程を作る課題です。",
-    descriptionFr: "Cantus dans un registre un peu plus grave.",
-    cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"]
-  },
-  {
-    id: "f-major-small-peak",
-    titleJa: "F major / 小さな頂点",
-    titleFr: "Fa majeur / petit sommet",
-    descriptionJa: "短い上行と下行を含む、まとまりやすい定旋律です。",
-    descriptionFr: "Ligne courte avec un petit sommet.",
-    cantus: ["F3", "G3", "A3", "C4", "B3", "A3", "G3", "F3"]
-  },
-  {
-    id: "a-minor-return",
-    titleJa: "A minor / 回帰",
-    titleFr: "La mineur / retour",
-    descriptionJa: "開始音へ自然に戻ることを意識する課題です。",
-    descriptionFr: "Exercice centré sur le retour au son initial.",
-    cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"]
-  },
-  {
-    id: "c-major-leap",
-    titleJa: "C major / 小さな跳躍",
-    titleFr: "Do majeur / petit saut",
-    descriptionJa: "小さな跳躍を含む定旋律に対して対旋律を作ります。",
-    descriptionFr: "Cantus avec un petit saut.",
-    cantus: ["C4", "E4", "D4", "F4", "G4", "E4", "F4", "D4", "C4"]
-  },
-  {
-    id: "e-minor-middle",
-    titleJa: "E minor / 中音域",
-    titleFr: "Mi mineur / registre médian",
-    descriptionJa: "中音域で対旋律の輪郭を整える課題です。",
-    descriptionFr: "Travail de contour dans le registre médian.",
-    cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"]
-  },
-  {
-    id: "g-major-long",
-    titleJa: "G major / 長め",
-    titleFr: "Sol majeur / plus long",
-    descriptionJa: "少し長い定旋律で、連続5度・8度を避ける練習です。",
-    descriptionFr: "Cantus plus long pour éviter les quintes/octaves parallèles.",
-    cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"]
-  },
-  {
-    id: "f-major-descend",
-    titleJa: "F major / 下降中心",
-    titleFr: "Fa majeur / descente",
-    descriptionJa: "下降形を中心にした定旋律です。",
-    descriptionFr: "Cantus principalement descendant.",
-    cantus: ["F4", "E4", "D4", "C4", "B3", "C4", "D4", "C4", "F3"]
-  },
-  {
-    id: "c-major-extended",
-    titleJa: "C major / 拡張",
-    titleFr: "Do majeur / étendu",
-    descriptionJa: "やや長めの総合練習です。",
-    descriptionFr: "Exercice de synthèse un peu plus long.",
-    cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "F4", "E4", "D4", "C4"]
-  }
+  { id: "c-major-arch", titleJa: "C major / アーチ型", titleFr: "Do majeur / arche", descriptionJa: "Cから上行し、中央で頂点を作って戻る基本課題です。", descriptionFr: "Cantus conjoint en arche depuis do.", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
+  { id: "d-minor-step", titleJa: "D minor / 順次進行", titleFr: "Ré mineur / mouvement conjoint", descriptionJa: "短調の感覚を保ちながら順次進行を練習します。", descriptionFr: "Travail conjoint dans une couleur mineure.", cantus: ["D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4"] },
+  { id: "g-major-low", titleJa: "G major / 低めの音域", titleFr: "Sol majeur / registre grave", descriptionJa: "やや低い音域で、安定した協和音程を作る課題です。", descriptionFr: "Cantus dans un registre un peu plus grave.", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
+  { id: "f-major-small-peak", titleJa: "F major / 小さな頂点", titleFr: "Fa majeur / petit sommet", descriptionJa: "短い上行と下行を含む、まとまりやすい定旋律です。", descriptionFr: "Ligne courte avec un petit sommet.", cantus: ["F3", "G3", "A3", "C4", "B3", "A3", "G3", "F3"] },
+  { id: "a-minor-return", titleJa: "A minor / 回帰", titleFr: "La mineur / retour", descriptionJa: "開始音へ自然に戻ることを意識する課題です。", descriptionFr: "Exercice centré sur le retour au son initial.", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
+  { id: "c-major-leap", titleJa: "C major / 小さな跳躍", titleFr: "Do majeur / petit saut", descriptionJa: "小さな跳躍を含む定旋律に対して対旋律を作ります。", descriptionFr: "Cantus avec un petit saut.", cantus: ["C4", "E4", "D4", "F4", "G4", "E4", "F4", "D4", "C4"] },
+  { id: "e-minor-middle", titleJa: "E minor / 中音域", titleFr: "Mi mineur / registre médian", descriptionJa: "中音域で対旋律の輪郭を整える課題です。", descriptionFr: "Travail de contour dans le registre médian.", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
+  { id: "g-major-long", titleJa: "G major / 長め", titleFr: "Sol majeur / plus long", descriptionJa: "少し長い定旋律で、連続5度・8度を避ける練習です。", descriptionFr: "Cantus plus long pour éviter les quintes/octaves parallèles.", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
+  { id: "f-major-descend", titleJa: "F major / 下降中心", titleFr: "Fa majeur / descente", descriptionJa: "下降形を中心にした定旋律です。", descriptionFr: "Cantus principalement descendant.", cantus: ["F4", "E4", "D4", "C4", "B3", "C4", "D4", "C4", "F3"] },
+  { id: "c-major-extended", titleJa: "C major / 拡張", titleFr: "Do majeur / étendu", descriptionJa: "やや長めの総合練習です。", descriptionFr: "Exercice de synthèse un peu plus long.", cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "F4", "E4", "D4", "C4"] }
 ];
 
 let currentLanguage = "ja";
@@ -249,8 +179,8 @@ function setLanguage(lang) {
 
 function getSelectedExercise() {
   const select = document.getElementById("exerciseSelect");
-  const selectedId = select && select.value ? select.value : "";
-  return EXERCISES.find((exercise) => exercise.id === selectedId) || EXERCISES[0] || null;
+  const id = select && select.value ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
+  return EXERCISES.find((exercise) => exercise.id === id) || EXERCISES[0] || null;
 }
 
 function forceRenderAfterDataChange() {
@@ -289,7 +219,6 @@ function updateExerciseDescription() {
   if (!description) return;
 
   const exercise = getSelectedExercise();
-
   description.textContent = exercise
     ? (currentLanguage === "fr"
         ? (exercise.descriptionFr || exercise.descriptionJa || "")
@@ -301,14 +230,12 @@ function loadSelectedExercise() {
   const exercise = getSelectedExercise();
   if (!exercise) return;
 
-  const cantus = Array.isArray(exercise.cantus) ? exercise.cantus.slice() : [];
-  setNotesToTextarea("cantus", cantus);
+  setNotesToTextarea("cantus", exercise.cantus || []);
   setNotesToTextarea("counterpoint", []);
 
   selectedIndex = 0;
   playbackIndex = 0;
   isPlaying = false;
-
   if (playbackTimerId) {
     window.clearTimeout(playbackTimerId);
     playbackTimerId = null;
@@ -316,7 +243,9 @@ function loadSelectedExercise() {
 
   updateExerciseDescription();
   updatePlayPauseButton();
-  forceRenderAfterDataChange();
+  renderScore();
+  updateDisplays();
+  syncVoiceMuteButtons();
 }
 
 function setExample() {
@@ -669,9 +598,6 @@ function setNotesToTextarea(id, notes) {
   const value = Array.isArray(notes) ? notes.filter(Boolean).join(" ") : String(notes || "");
   el.value = value;
   el.textContent = value;
-
-  el.dispatchEvent(new Event("input", { bubbles: true }));
-  el.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
 function getPlaybackMode() {
@@ -1212,22 +1138,19 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const endX = getMeasureStartX(noteCount);
-
-  // Extend the staff slightly to the left so it visually passes under the clef.
   const staffX = SCORE.left - 18;
-  const staffY = bottomLineY - SCORE.staffGap * 4;
-  const staffWidth = Math.max(SCORE.measureWidth, endX - staffX);
-  const staffHeight = SCORE.staffGap * 4 + 2;
+  const staffEndX = Math.max(staffX + SCORE.measureWidth, endX);
 
-  svg.appendChild(createSvgImage(
-    NOTATION_IMAGES.staff,
-    staffX,
-    staffY - 1,
-    staffWidth,
-    staffHeight + 2,
-    "png-notation png-staff",
-    "none"
-  ));
+  for (let i = 0; i < 5; i += 1) {
+    const y = bottomLineY - SCORE.staffGap * i;
+    svg.appendChild(createSvgElement("line", {
+      x1: staffX,
+      y1: y,
+      x2: staffEndX,
+      y2: y,
+      class: "staff-line senzoku-staff-line"
+    }));
+  }
 
   drawClef(svg, bottomLineY, clefType);
 
@@ -1311,9 +1234,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
   const issueClass = getIssueClass(voice, index);
+  const muted = isVoiceMuted(isCantus ? "cantus" : "counterpoint");
 
-  // Optical correction only; pitch logic remains unchanged.
-  // Bass noteheads were slightly too low/then too high. Set a mild upward correction.
   const noteImageYOffset = isCantus ? -2 : -0.5;
   const noteDrawY = y + noteImageYOffset;
 
@@ -1321,31 +1243,28 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, [
     isCantus ? "cantus" : "",
-    isVoiceMuted(isCantus ? "cantus" : "counterpoint") ? "muted-voice" : "",
+    muted ? "muted-voice" : "",
     isSelected ? "selected" : "",
     isCurrentPlayback ? "playing" : "",
     issueClass
   ].filter(Boolean).join(" "));
 
-  const imageClass = [
-    "png-notation",
-    "png-notehead",
-    "png-whole-note",
-    isCantus ? "cantus" : "",
-    isVoiceMuted(isCantus ? "cantus" : "counterpoint") ? "muted-voice" : "",
-    isSelected ? "selected" : "",
-    isCurrentPlayback ? "playing" : "",
-    issueClass
-  ].filter(Boolean).join(" ");
-
-  svg.appendChild(createSvgImage(
-    NOTATION_IMAGES.wholeNote,
-    x - SCORE.noteImageWidth / 2,
-    noteDrawY - SCORE.noteImageHeight / 2,
-    SCORE.noteImageWidth,
-    SCORE.noteImageHeight,
-    imageClass
-  ));
+  // SVG fallback notehead: this guarantees notation remains visible even if PNGs fail to load.
+  svg.appendChild(createSvgElement("ellipse", {
+    cx: x,
+    cy: noteDrawY,
+    rx: SCORE.noteImageWidth / 2,
+    ry: SCORE.noteImageHeight / 2,
+    transform: `rotate(-18 ${x} ${noteDrawY})`,
+    class: [
+      "svg-fallback-notehead",
+      isCantus ? "cantus" : "",
+      muted ? "muted-voice" : "",
+      isSelected ? "selected" : "",
+      isCurrentPlayback ? "playing" : "",
+      issueClass
+    ].filter(Boolean).join(" ")
+  }));
 
   if (!isCantus && isSelected) {
     svg.appendChild(createSvgElement("circle", {
@@ -1695,9 +1614,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const exerciseSelect = document.getElementById("exerciseSelect");
   if (exerciseSelect) {
-    exerciseSelect.addEventListener("change", () => {
-      loadSelectedExercise();
-    });
+    exerciseSelect.addEventListener("change", loadSelectedExercise);
   }
 
   const svg = document.getElementById("scoreEditor");
@@ -1706,7 +1623,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   setupModule1KeyboardControls();
-
   loadSelectedExercise();
   updatePlayPauseButton();
   syncVoiceMuteButtons();
