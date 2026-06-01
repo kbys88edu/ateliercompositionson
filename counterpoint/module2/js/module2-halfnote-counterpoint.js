@@ -93,7 +93,7 @@ const I18N = {
     stop: "停止",
     noInput: "未入力",
     emptySlot: "未入力",
-    status: (cp, cf, pos, len) => `対旋律：${cp}音 / 必要：${cf * 4}音 / 再生位置：${pos}/${len}`,
+    status: (cp, cf, pos, len) => `対旋律：${cp}音 / 必要：${cf * 2}音 / 再生位置：${pos}/${len}`,
     summaryOk: (ok) => `大きな問題は見つかりませんでした。OK項目：${ok}件`,
     summaryCounts: (e, w, ok) => `禁止：${e}件 / 注意：${w}件 / OK：${ok}件`,
     labelOk: "OK",
@@ -983,15 +983,9 @@ function drawMeasureBarlines(svg, positions, noteCount) {
   if (!positions || !positions.length) return;
 
   const spacing = getHalfSpacing(positions);
-  const staffStartX = positions[0] - spacing / 2;
   const staffEndX = positions[positions.length - 1] + spacing / 2;
   const topY = SCORE.bottomLineY - SCORE.staffGap * 4;
   const bottomY = SCORE.cantusBottomLineY;
-
-  // start barline
-  svg.appendChild(createSvgElement("line", {
-    x1: staffStartX, y1: topY, x2: staffStartX, y2: bottomY, class: "measure-barline start"
-  }));
 
   // internal measure barlines: one whole-note cantus = one measure = two half notes
   for (let i = SCORE.halfsPerCantus; i < noteCount; i += SCORE.halfsPerCantus) {
@@ -1074,7 +1068,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
   const width = isBass ? 58 : 60;
   const height = isBass ? 74 : 112;
   const x = SCORE.left - 76;
-  const y = isBass ? bottomLineY - 62 : bottomLineY - 90;
+  const y = isBass ? bottomLineY - 62 : bottomLineY - 100;
 
   const fallback = createSvgElement("text", {
     x: 52,
@@ -1188,13 +1182,13 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   drawAccidental(svg, parsed, x, y);
 
   if (isCantus) {
-    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 12, y - 8, 24, 16, "png-notation png-notehead whole-note"));
+    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 14, y - 9, 28, 18, "png-notation png-notehead whole-note"));
   } else {
     const stemDirection = y < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
     const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
-    const imgX = x - 12;
-    const imgY = stemDirection === "down" ? y - 10 : y - 32;
-    svg.appendChild(createSvgImage(image, imgX, imgY, 24, 42, `png-notation png-notehead half-note ${stemDirection}`));
+    const imgX = x - 14;
+    const imgY = stemDirection === "down" ? y - 11 : y - 36;
+    svg.appendChild(createSvgImage(image, imgX, imgY, 28, 48, `png-notation png-notehead half-note ${stemDirection}`));
   }
 
   const noteClass = [
@@ -1209,8 +1203,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: y,
-    rx: 8.8,
-    ry: 5.8,
+    rx: 10,
+    ry: 6.6,
     transform: `rotate(-18 ${x} ${y})`,
     class: noteClass
   }));
@@ -1219,15 +1213,15 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     svg.appendChild(createSvgElement("ellipse", {
       cx: x,
       cy: y,
-      rx: 14,
-      ry: 10,
+      rx: 15.5,
+      ry: 11.5,
       class: "selected-note-ring"
     }));
   }
 
   svg.appendChild(createSvgElement("text", {
     x: x - 12,
-    y: isCantus ? bottomLineY + 48 : bottomLineY - 62,
+    y: isCantus ? bottomLineY + 52 : bottomLineY - 66,
     class: isCurrentPlayback ? "note-label playing" : isSelected ? "note-label selected" : "note-label"
   })).textContent = note;
 }
@@ -1340,7 +1334,7 @@ function populateExerciseSelect(keepValue = false) {
   filteredExercises.forEach((exercise, index) => {
     const option = document.createElement("option");
     option.value = exercise.id;
-    option.textContent = `${getLevelName(exercise.level)}｜${exercise.title[currentLanguage] || exercise.title.ja}`;
+    option.textContent = exercise.title[currentLanguage] || exercise.title.ja;
 
     if ((keepValue && previousValue === exercise.id) || (!keepValue && index === 0)) {
       option.selected = true;
@@ -1367,10 +1361,7 @@ function updateExerciseDescription() {
   const exercise = getSelectedExercise();
   if (!description || !exercise) return;
 
-  description.innerHTML = `
-    <span class="level-badge ${exercise.level}">${getLevelName(exercise.level)}</span>
-    ${exercise.description[currentLanguage] || exercise.description.ja}
-  `;
+  description.textContent = exercise.description[currentLanguage] || exercise.description.ja;
 }
 
 function loadSelectedExercise() {

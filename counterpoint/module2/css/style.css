@@ -643,3 +643,81 @@ h2 {
 .measure-barline.end {
   stroke-width: 1.6;
 }
+
+
+/* 2026-06-01 Module 2 UI align to Module 1 Beta1 */
+.exercise-tools {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  margin-bottom: 12px;
+}
+
+.exercise-description {
+  flex: 1 1 260px;
+  min-width: 260px;
+  margin-left: 2px;
+}
+
+.level-badge { display: none !important; }
+
+.playback-tools {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.score-editor {
+  min-height: 390px;
+}
+
+.staff-mute-overlay {
+  left: 64px;
+  top: 154px;
+}
+
+.staff-mute-button {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.staff-mute-button.counterpoint {
+  top: 0;
+  left: 0;
+}
+
+.staff-mute-button.cantus {
+  top: 115px;
+  left: 0;
+}
+
+.note-label {
+  font-size: 13px;
+}
+
+.measure-barline {
+  stroke: rgba(0,0,0,0.42);
+  stroke-width: 1.2;
+}
+
+.measure-barline.end {
+  stroke-width: 1.5;
+}
+
+@media (max-width: 820px) {
+  .staff-mute-overlay {
+    left: 52px;
+    top: 152px;
+  }
+}
+
+@media (max-width: 520px) {
+  .staff-mute-overlay {
+    left: 42px;
+    top: 170px;
+  }
+}
