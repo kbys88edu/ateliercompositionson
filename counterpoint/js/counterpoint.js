@@ -145,6 +145,12 @@ const EXERCISES = [
 
 let currentLanguage = "ja";
 let selectedIndex = 0;
+
+const voiceMuteState = {
+  counterpoint: false,
+  cantus: false
+};
+
 let playbackIndex = 0;
 let isPlaying = false;
 let playbackTimerId = null;
@@ -570,33 +576,27 @@ function stopPlayback(resetToStart = false) {
 }
 
 function playCurrentStep() {
-  if (!isPlaying) return;
-
   const cantus = getNotesFromTextarea("cantus");
   const counterpoint = getNotesFromTextarea("counterpoint");
-  const length = getPlaybackLength();
-  const mode = getPlaybackMode();
-  const duration = getStepDurationSeconds();
+  const maxLength = getPlaybackLength();
 
-  if (playbackIndex >= length) {
-    stopPlayback(true);
-    return;
+  if (!maxLength) return;
+
+  if (playbackIndex >= maxLength) playbackIndex = 0;
+
+  const mode = getPlaybackMode();
+  const counterpointNote = counterpoint[playbackIndex];
+  const cantusNote = cantus[playbackIndex];
+
+  if (!isVoiceMuted("counterpoint") && counterpointNote) {
+    playNoteName(counterpointNote, 0.9, 0.95, mode);
+  }
+
+  if (!isVoiceMuted("cantus") && cantusNote) {
+    playNoteName(cantusNote, 0.9, 0.8, mode);
   }
 
   renderScore();
-
-  if ((mode === "both" || mode === "cantus") && cantus[playbackIndex]) {
-    playNoteName(cantus[playbackIndex], duration * 0.88, mode === "both" ? 0.62 : 1, "maleSample");
-  }
-
-  if ((mode === "both" || mode === "counterpoint") && counterpoint[playbackIndex]) {
-    playNoteName(counterpoint[playbackIndex], duration * 0.88, 1, "femaleSample");
-  }
-
-  playbackTimerId = window.setTimeout(() => {
-    playbackIndex += 1;
-    playCurrentStep();
-  }, duration * 1000);
 }
 
 function previewTimbre() {
@@ -795,6 +795,62 @@ function drawSenzokuBarlines(svg, noteCount) {
   }
 }
 
+
+function toggleVoiceMute(voice) {
+  if (!Object.prototype.hasOwnProperty.call(voiceMuteState, voice)) return;
+
+  voiceMuteState[voice] = !voiceMuteState[voice];
+  renderScore();
+}
+
+function isVoiceMuted(voice) {
+  return !!voiceMuteState[voice];
+}
+
+function drawVoiceMuteButton(svg, voice, x, y) {
+  const muted = isVoiceMuted(voice);
+  const group = createSvgElement("g", {
+    class: ["voice-mute-button", muted ? "muted" : "", voice].filter(Boolean).join(" "),
+    "data-voice": voice,
+    tabindex: "0",
+    role: "button",
+    "aria-label": muted ? `${voice} muted` : `${voice} active`
+  });
+
+  group.appendChild(createSvgElement("rect", {
+    x,
+    y,
+    width: 34,
+    height: 24,
+    rx: 8,
+    ry: 8,
+    class: "voice-mute-button-bg"
+  }));
+
+  const label = createSvgElement("text", {
+    x: x + 17,
+    y: y + 12.7,
+    class: "voice-mute-button-label"
+  });
+  label.textContent = "M";
+  group.appendChild(label);
+
+  group.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleVoiceMute(voice);
+  });
+
+  group.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleVoiceMute(voice);
+    }
+  });
+
+  svg.appendChild(group);
+}
+
 function drawSenzokuSystemLabels(svg) {
   svg.appendChild(createSvgElement("text", {
     x: 24,
@@ -802,11 +858,15 @@ function drawSenzokuSystemLabels(svg) {
     class: "voice-label senzoku-label"
   })).textContent = "Counterpoint";
 
+  drawVoiceMuteButton(svg, "counterpoint", 24, SCORE.counterpointBottomLineY - 54);
+
   svg.appendChild(createSvgElement("text", {
     x: 24,
     y: SCORE.cantusBottomLineY - 70,
     class: "voice-label senzoku-label"
   })).textContent = "Cantus";
+
+  drawVoiceMuteButton(svg, "cantus", 24, SCORE.cantusBottomLineY - 54);
 }
 
 
@@ -822,7 +882,7 @@ const NOTATION_IMAGES = {
   natural: `${NOTATION_IMAGE_BASE}natural.png`
 };
 
-function createSvgImage(href, x, y, width, height, className = "") {
+function createSvgImage(href, x, y, width, height, className = "", preserveAspectRatio = "xMidYMid meet") {
   const image = createSvgElement("image", {
     x,
     y,
@@ -830,7 +890,7 @@ function createSvgImage(href, x, y, width, height, className = "") {
     height,
     href,
     class: className,
-    preserveAspectRatio: "xMidYMid meet"
+    preserveAspectRatio
   });
 
   image.setAttributeNS("http://www.w3.org/1999/xlink", "href", href);
@@ -975,13 +1035,16 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const staffWidth = Math.max(SCORE.measureWidth, endX - SCORE.left);
   const staffHeight = SCORE.staffGap * 4 + 2;
 
+  // Staff image must be stretched horizontally.
+  // If preserveAspectRatio is "meet", the long PNG is centered and becomes too short.
   svg.appendChild(createSvgImage(
     NOTATION_IMAGES.staff,
     staffX,
     staffY - 1,
     staffWidth,
     staffHeight + 2,
-    "png-notation png-staff"
+    "png-notation png-staff",
+    "none"
   ));
 
   drawClef(svg, bottomLineY, clefType);
@@ -1071,6 +1134,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, [
     isCantus ? "cantus" : "",
+    isVoiceMuted(isCantus ? "cantus" : "counterpoint") ? "muted-voice" : "",
     isSelected ? "selected" : "",
     isCurrentPlayback ? "playing" : "",
     issueClass
@@ -1081,6 +1145,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
     "png-notehead",
     "png-whole-note",
     isCantus ? "cantus" : "",
+    isVoiceMuted(isCantus ? "cantus" : "counterpoint") ? "muted-voice" : "",
     isSelected ? "selected" : "",
     isCurrentPlayback ? "playing" : "",
     issueClass

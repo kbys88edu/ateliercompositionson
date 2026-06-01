@@ -688,3 +688,56 @@ input {
 .editor-panel {
   overflow-x: auto;
 }
+
+
+/* Staff stretch fix:
+   Five-line PNG uses preserveAspectRatio='none' in JS so it fills the full measure width. */
+.png-staff {
+  opacity: 0.92;
+}
+
+
+/* DAW-style voice mute buttons for Module 1 */
+.voice-mute-button {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.voice-mute-button-bg {
+  fill: rgba(255,255,255,0.86);
+  stroke: rgba(20,20,20,0.25);
+  stroke-width: 1;
+}
+
+.voice-mute-button-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  fill: rgba(20,20,20,0.72);
+  pointer-events: none;
+  user-select: none;
+}
+
+.voice-mute-button:hover .voice-mute-button-bg {
+  stroke: rgba(255,79,139,0.8);
+  fill: rgba(255,79,139,0.08);
+}
+
+.voice-mute-button.muted .voice-mute-button-bg {
+  fill: #ff4f8b;
+  stroke: #ff4f8b;
+}
+
+.voice-mute-button.muted .voice-mute-button-label {
+  fill: #ffffff;
+}
+
+.png-notehead.muted-voice,
+.png-accidental.muted-voice {
+  opacity: 0.28;
+}
+
+.voice-mute-button.muted + .voice-label {
+  opacity: 0.4;
+}
