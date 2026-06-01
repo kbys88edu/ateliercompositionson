@@ -943,13 +943,16 @@ function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
   const referenceStep = getDiatonicStep(referenceNote);
   if (noteStep === null || referenceStep === null) return null;
-  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
+  // Treble-staff PNG noteheads sit visually one diatonic step low,
+  // so lift only the upper voice by one step to match the printed pitch.
+  const visualCorrection = bottomLineY === SCORE.cantusBottomLineY ? 0 : SCORE.noteStep;
+  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep - visualCorrection;
 }
 
 function yToNaturalNote(y) {
-  const e4Step = getDiatonicStep("E4");
+  const d4Step = getDiatonicStep("D4");
   const rawStep = Math.round((SCORE.bottomLineY - y) / SCORE.noteStep);
-  const targetStep = e4Step + rawStep;
+  const targetStep = d4Step + rawStep;
 
   let closest = NATURAL_NOTES[0];
   let closestDistance = Infinity;
@@ -996,9 +999,12 @@ function drawMeasureBarlines(svg, positions, noteCount) {
     }));
   }
 
-  // final barline
+  // final double barline: thin line + thicker right line
   svg.appendChild(createSvgElement("line", {
-    x1: staffEndX, y1: topY, x2: staffEndX, y2: bottomY, class: "measure-barline end"
+    x1: staffEndX - 7, y1: topY, x2: staffEndX - 7, y2: bottomY, class: "measure-barline final-thin"
+  }));
+  svg.appendChild(createSvgElement("line", {
+    x1: staffEndX, y1: topY, x2: staffEndX, y2: bottomY, class: "measure-barline final-thick"
   }));
 }
 
@@ -1069,7 +1075,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
   const width = isBass ? 62 : 64;
   const height = isBass ? 78 : 118;
   const x = SCORE.left - 80;
-  const y = isBass ? bottomLineY - 49 : bottomLineY - 86;
+  const y = isBass ? bottomLineY - 29 : bottomLineY - 66;
 
   const fallback = createSvgElement("text", {
     x: 52,
@@ -1083,7 +1089,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
-  const startX = SCORE.left - 24;
+  const startX = SCORE.left - 62;
   const endX = SCORE.width - SCORE.right + 6;
   const staffY = bottomLineY - SCORE.staffGap * 4;
   const staffWidth = endX - startX;

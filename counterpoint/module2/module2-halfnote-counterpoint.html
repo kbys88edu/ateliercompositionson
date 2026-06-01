@@ -38,7 +38,6 @@
       <textarea id="counterpoint" class="hidden-input"></textarea>
 
       <div class="exercise-tools">
-
         <label class="exercise-control" for="exerciseSelect">
           <span data-i18n="exerciseLabel">課題</span>
           <select id="exerciseSelect"></select>
@@ -54,20 +53,12 @@
       </div>
 
       <div class="score-tools">
-        <button class="button small" type="button" onclick="setExample()" data-i18n="loadExample">
-          例題を読み込む
-        </button>
-
         <button class="button small" type="button" onclick="undoCounterpointNote()" data-i18n="deleteLast">
           最後の音を削除
         </button>
 
         <button class="button small" type="button" onclick="clearCounterpoint()" data-i18n="clearCounterpoint">
           対旋律をクリア
-        </button>
-
-        <button class="button small" type="button" onclick="renderScore()" data-i18n="refreshScore">
-          楽譜を更新
         </button>
 
         <button class="button small" type="button" onclick="playSelectedNote()" data-i18n="playSelected">
