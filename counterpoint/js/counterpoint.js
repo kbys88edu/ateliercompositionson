@@ -217,12 +217,11 @@ function populateExercises() {
 function updateExerciseDescription() {
   const description = document.getElementById("exerciseDescription");
   if (!description) return;
-
   const exercise = getSelectedExercise();
   description.textContent = exercise
     ? (currentLanguage === "fr"
-        ? (exercise.descriptionFr || exercise.descriptionJa || "")
-        : (exercise.descriptionJa || exercise.descriptionFr || ""))
+      ? (exercise.descriptionFr || exercise.descriptionJa || "")
+      : (exercise.descriptionJa || exercise.descriptionFr || ""))
     : "課題を選択してください。";
 }
 
@@ -236,6 +235,7 @@ function loadSelectedExercise() {
   selectedIndex = 0;
   playbackIndex = 0;
   isPlaying = false;
+
   if (playbackTimerId) {
     window.clearTimeout(playbackTimerId);
     playbackTimerId = null;
@@ -594,10 +594,7 @@ function getNotesFromTextarea(id) {
 function setNotesToTextarea(id, notes) {
   const el = document.getElementById(id);
   if (!el) return;
-
-  const value = Array.isArray(notes) ? notes.filter(Boolean).join(" ") : String(notes || "");
-  el.value = value;
-  el.textContent = value;
+  el.value = Array.isArray(notes) ? notes.filter(Boolean).join(" ") : String(notes || "");
 }
 
 function getPlaybackMode() {
@@ -1120,20 +1117,13 @@ function getScorePositions(noteCount) {
 
 function drawClef(svg, bottomLineY, clefType = "treble") {
   const isBass = clefType === "bass";
-  const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
-
-  const width = isBass ? 68 : 72;
-  const height = isBass ? 88 : 136;
-
-  // Clefs overlap the staff area.
-  const x = SCORE.left - 60;
-  const y = isBass ? bottomLineY - 76 : bottomLineY - 117;
-
-  svg.appendChild(createSvgImage(href, x, y, width, height, [
-    "png-notation",
-    "png-clef",
-    isBass ? "bass" : "treble"
-  ].join(" ")));
+  const clef = createSvgElement("text", {
+    x: SCORE.left - 54,
+    y: isBass ? bottomLineY - 20 : bottomLineY - 25,
+    class: ["stable-clef", isBass ? "bass" : "treble"].join(" ")
+  });
+  clef.textContent = isBass ? "𝄢" : "𝄞";
+  svg.appendChild(clef);
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
@@ -1148,7 +1138,7 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
       y1: y,
       x2: staffEndX,
       y2: y,
-      class: "staff-line senzoku-staff-line"
+      class: "stable-staff-line"
     }));
   }
 
@@ -1195,25 +1185,15 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
 }
 
 function drawAccidental(svg, parsed, x, y, className = "") {
-  const href = getAccidentalImage(parsed);
-  if (!href) return;
+  if (!parsed || !parsed.accidental) return;
 
-  let width = SCORE.accidentalWidth;
-  let height = SCORE.accidentalHeight;
-
-  if (parsed.accidental === "b") {
-    width = 18;
-    height = 46;
-  }
-
-  svg.appendChild(createSvgImage(
-    href,
-    x - 34,
-    y - height * 0.53,
-    width,
-    height,
-    ["png-notation", "png-accidental", className].filter(Boolean).join(" ")
-  ));
+  const accidental = createSvgElement("text", {
+    x: x - 28,
+    y: y + 1,
+    class: ["stable-accidental", className].filter(Boolean).join(" ")
+  });
+  accidental.textContent = parsed.accidental === "#" ? "♯" : "♭";
+  svg.appendChild(accidental);
 }
 
 function getIssueClass(voice, index) {
@@ -1235,7 +1215,6 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   const isCurrentPlayback = index === playbackIndex && isPlaying;
   const issueClass = getIssueClass(voice, index);
   const muted = isVoiceMuted(isCantus ? "cantus" : "counterpoint");
-
   const noteImageYOffset = isCantus ? -2 : -0.5;
   const noteDrawY = y + noteImageYOffset;
 
@@ -1249,7 +1228,6 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
     issueClass
   ].filter(Boolean).join(" "));
 
-  // SVG fallback notehead: this guarantees notation remains visible even if PNGs fail to load.
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: noteDrawY,
@@ -1257,7 +1235,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
     ry: SCORE.noteImageHeight / 2,
     transform: `rotate(-18 ${x} ${noteDrawY})`,
     class: [
-      "svg-fallback-notehead",
+      "stable-notehead",
       isCantus ? "cantus" : "",
       muted ? "muted-voice" : "",
       isSelected ? "selected" : "",
