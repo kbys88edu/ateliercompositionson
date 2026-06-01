@@ -887,15 +887,14 @@ input {
 }
 
 
-/* 2026-06-01 toolbar cleanup:
-   level dropdown removed; MIDI export separated to the right. */
+/* 2026-06-01 keep exercise selector / remove level selector / MIDI right */
 .module1-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
   width: 100%;
-  margin: 14px 0 12px;
+  margin: 12px 0 12px;
 }
 
 .module1-toolbar-left,
@@ -911,13 +910,13 @@ input {
 }
 
 .midi-export-button {
-  margin-left: 28px;
+  margin-left: 32px;
 }
 
 @media (max-width: 760px) {
   .module1-toolbar {
-    align-items: stretch;
     flex-direction: column;
+    align-items: stretch;
   }
 
   .module1-toolbar-right {

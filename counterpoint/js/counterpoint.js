@@ -1143,7 +1143,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
 
   // Optical correction only; pitch logic remains unchanged.
   // Bass noteheads were slightly too low/then too high. Set a mild upward correction.
-  const noteImageYOffset = isCantus ? -2 : -3;
+  const noteImageYOffset = isCantus ? -2 : -1.5;
   const noteDrawY = y + noteImageYOffset;
 
   drawLedgerLines(svg, x, y, bottomLineY);
