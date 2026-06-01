@@ -522,8 +522,7 @@ function setNotesToTextarea(id, notes) {
 }
 
 function getPlaybackMode() {
-  const select = document.getElementById("playbackModeSelect");
-  return select ? select.value : "both";
+  return "both";
 }
 
 function getStepDurationSeconds() {
@@ -576,27 +575,32 @@ function stopPlayback(resetToStart = false) {
 }
 
 function playCurrentStep() {
+  if (!isPlaying) return;
+
   const cantus = getNotesFromTextarea("cantus");
   const counterpoint = getNotesFromTextarea("counterpoint");
-  const maxLength = getPlaybackLength();
+  const length = getPlaybackLength();
+  const duration = getStepDurationSeconds();
 
-  if (!maxLength) return;
-
-  if (playbackIndex >= maxLength) playbackIndex = 0;
-
-  const mode = getPlaybackMode();
-  const counterpointNote = counterpoint[playbackIndex];
-  const cantusNote = cantus[playbackIndex];
-
-  if (!isVoiceMuted("counterpoint") && counterpointNote) {
-    playNoteName(counterpointNote, 0.9, 0.95, mode);
-  }
-
-  if (!isVoiceMuted("cantus") && cantusNote) {
-    playNoteName(cantusNote, 0.9, 0.8, mode);
+  if (playbackIndex >= length) {
+    stopPlayback(true);
+    return;
   }
 
   renderScore();
+
+  if (!isVoiceMuted("cantus") && cantus[playbackIndex]) {
+    playNoteName(cantus[playbackIndex], duration * 0.88, 0.72, "maleSample");
+  }
+
+  if (!isVoiceMuted("counterpoint") && counterpoint[playbackIndex]) {
+    playNoteName(counterpoint[playbackIndex], duration * 0.88, 1, "femaleSample");
+  }
+
+  playbackTimerId = window.setTimeout(() => {
+    playbackIndex += 1;
+    playCurrentStep();
+  }, duration * 1000);
 }
 
 function previewTimbre() {
@@ -1021,7 +1025,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 
   // Move clefs onto the staff area. Previously they sat too far left and did not overlap the five-line staff.
   const x = SCORE.left - 60;
-  const y = isBass ? bottomLineY - 76 : bottomLineY - 115;
+  const y = isBass ? bottomLineY - 76 : bottomLineY - 117;
 
   svg.appendChild(createSvgImage(href, x, y, width, height, [
     "png-notation",
@@ -1135,7 +1139,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
 
   // The whole-note PNG has a slightly low optical center in the bass staff.
   // Move bass-staff note images slightly upward while keeping pitch logic unchanged.
-  const noteImageYOffset = isCantus ? 2 : -5;
+  const noteImageYOffset = isCantus ? 0 : -3;
   const noteDrawY = y + noteImageYOffset;
 
   drawLedgerLines(svg, x, y, bottomLineY);

@@ -754,3 +754,7 @@ input {
 }
 
 /* 2026-06-01 micro-adjust: treble noteheads up 5px, bass noteheads down ~5px, treble clef down 5px. */
+
+
+/* 2026-06-01 position/sound/UI fix:
+   positions slightly returned; playback sample routing restored; sound-selection UI removed. */

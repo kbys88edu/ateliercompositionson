@@ -10,7 +10,7 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-micro-adjust" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-position-sound-ui-fix" />
 </head>
 
 <body>
@@ -113,29 +113,7 @@
           Tempo
           <input id="tempoInput" type="number" min="40" max="180" value="72" />
         </label>
-
-        <label class="playback-control" for="playbackModeSelect">
-          <span data-i18n="playbackModeLabel">再生対象</span>
-          <select id="playbackModeSelect">
-            <option value="both" data-i18n="playBoth">両声</option>
-            <option value="cantus" data-i18n="playCantus">定旋律のみ</option>
-            <option value="counterpoint" data-i18n="playCounterpoint">対旋律のみ</option>
-          </select>
-        </label>
-
-        <label class="timbre-control" for="timbreSelect">
-          <span data-i18n="timbreLabel">音色</span>
-          <select id="timbreSelect" onchange="previewTimbre()">
-            <option value="sine" data-i18n="timbreSine">Sine / 柔らかい</option>
-            <option value="triangle" selected data-i18n="timbreTriangle">Triangle / 素直</option>
-            <option value="square" data-i18n="timbreSquare">Square / 電子的</option>
-            <option value="sawtooth" data-i18n="timbreSaw">Sawtooth / 明るい</option>
-            <option value="organ" data-i18n="timbreOrgan">Organ / オルガン風</option>
-            <option value="bell" data-i18n="timbreBell">Bell / ベル風</option>
-          </select>
-        </label>
-
-        <p class="playback-hint" data-i18n="playbackHint">
+<p class="playback-hint" data-i18n="playbackHint">
           Space：再生 / 停止　｜　← / →：前後の音へ移動
         </p>
       </div>
@@ -183,6 +161,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-module1-micro-adjust"></script>
+  <script src="js/counterpoint.js?v=20260601-module1-position-sound-ui-fix"></script>
 </body>
 </html>
