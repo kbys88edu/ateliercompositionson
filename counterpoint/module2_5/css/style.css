@@ -409,3 +409,31 @@ h2 {
 
   h1 { letter-spacing: -0.045em; }
 }
+
+/* Module 2.5 selection fix: no large black dot; selected note changes color only. */
+.png-notehead.selected {
+  filter: invert(32%) sepia(62%) saturate(1169%) hue-rotate(192deg) brightness(84%) contrast(93%);
+}
+
+.png-notehead.playing {
+  filter: invert(19%) sepia(86%) saturate(2042%) hue-rotate(344deg) brightness(92%) contrast(95%);
+}
+
+.selected-note-ring,
+.fallback-notehead {
+  display: none !important;
+}
+
+.measure-barline {
+  stroke: rgba(23, 23, 23, 0.42);
+  stroke-width: 1.35;
+  vector-effect: non-scaling-stroke;
+}
+
+.measure-barline.final-thin {
+  stroke-width: 1.15;
+}
+
+.measure-barline.final-thick {
+  stroke-width: 2.3;
+}

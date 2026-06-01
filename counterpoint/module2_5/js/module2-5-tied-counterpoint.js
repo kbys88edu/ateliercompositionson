@@ -1157,22 +1157,44 @@ function drawMeasureBarlines(svg, positions, noteCount) {
   if (!positions || !positions.length) return;
 
   const spacing = getHalfSpacing(positions);
+  const staffStartX = SCORE.left - 64;
   const staffEndX = positions[positions.length - 1] + spacing / 2;
   const topY = SCORE.bottomLineY - SCORE.staffGap * 4;
   const bottomY = SCORE.cantusBottomLineY;
 
+  svg.appendChild(createSvgElement("line", {
+    x1: staffStartX,
+    y1: topY,
+    x2: staffStartX,
+    y2: bottomY,
+    class: "measure-barline"
+  }));
+
   for (let i = SCORE.halfsPerCantus; i < noteCount; i += SCORE.halfsPerCantus) {
     const x = (positions[i - 1] + positions[i]) / 2;
     svg.appendChild(createSvgElement("line", {
-      x1: x, y1: topY, x2: x, y2: bottomY, class: "measure-barline"
+      x1: x,
+      y1: topY,
+      x2: x,
+      y2: bottomY,
+      class: "measure-barline"
     }));
   }
 
   svg.appendChild(createSvgElement("line", {
-    x1: staffEndX - 7, y1: topY, x2: staffEndX - 7, y2: bottomY, class: "measure-barline final-thin"
+    x1: staffEndX - 7,
+    y1: topY,
+    x2: staffEndX - 7,
+    y2: bottomY,
+    class: "measure-barline final-thin"
   }));
+
   svg.appendChild(createSvgElement("line", {
-    x1: staffEndX, y1: topY, x2: staffEndX, y2: bottomY, class: "measure-barline final-thick"
+    x1: staffEndX,
+    y1: topY,
+    x2: staffEndX,
+    y2: bottomY,
+    class: "measure-barline final-thick"
   }));
 }
 
@@ -1401,7 +1423,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
       renderY - cantusHeight / 2,
       cantusWidth,
       cantusHeight,
-      "png-notation png-notehead whole-note"
+      `png-notation png-notehead whole-note${isCurrentPlayback ? " playing" : ""}`
     ));
   } else {
     // Counterpoint notehead is rendered in the same centered way as cantus,
@@ -1416,7 +1438,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
       renderY - noteheadHeight / 2,
       noteheadWidth,
       noteheadHeight,
-      `png-notation png-notehead half-note ${stemDirection}`
+      `png-notation png-notehead half-note ${stemDirection}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}`
     ));
 
     if (stemDirection === "down") {
@@ -1447,16 +1469,6 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
   // Draw ledger lines after notehead so the C4 ledger line crosses the notehead,
   // matching the cantus behavior.
   drawLedgerLines(svg, x, renderY, bottomLineY);
-
-  if (isSelected) {
-    svg.appendChild(createSvgElement("ellipse", {
-      cx: x,
-      cy: renderY,
-      rx: isCantus ? 15 : 15.5,
-      ry: isCantus ? 11 : 11.3,
-      class: "selected-note-ring"
-    }));
-  }
 
   svg.appendChild(createSvgElement("text", {
     x: x - 12,
