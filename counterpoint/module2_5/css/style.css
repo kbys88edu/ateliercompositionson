@@ -457,3 +457,13 @@ h2 {
   letter-spacing: 0;
   text-align: center;
 }
+
+/* Module 2.5 icon playback buttons. */
+#playPauseButton,
+button[onclick="stopPlayback(true)"] {
+  min-width: 2.45rem;
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+}
