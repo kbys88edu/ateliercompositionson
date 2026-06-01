@@ -741,3 +741,14 @@ input {
 .voice-mute-button.muted + .voice-label {
   opacity: 0.4;
 }
+
+
+/* Module 1 alignment patch:
+   clefs now overlap the staff; bass-staff whole-note PNGs are optically corrected in JS. */
+.png-clef {
+  opacity: 0.96;
+}
+
+.png-notehead.cantus {
+  opacity: 0.72;
+}

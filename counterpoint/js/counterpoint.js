@@ -1018,7 +1018,9 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 
   const width = isBass ? 68 : 72;
   const height = isBass ? 88 : 136;
-  const x = SCORE.left - 96;
+
+  // Move clefs onto the staff area. Previously they sat too far left and did not overlap the five-line staff.
+  const x = SCORE.left - 60;
   const y = isBass ? bottomLineY - 76 : bottomLineY - 120;
 
   svg.appendChild(createSvgImage(href, x, y, width, height, [
@@ -1030,13 +1032,14 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const endX = getMeasureStartX(noteCount);
-  const staffX = SCORE.left;
+
+  // Extend the staff slightly to the left so it visually passes under the clef.
+  const staffX = SCORE.left - 18;
   const staffY = bottomLineY - SCORE.staffGap * 4;
-  const staffWidth = Math.max(SCORE.measureWidth, endX - SCORE.left);
+  const staffWidth = Math.max(SCORE.measureWidth, endX - staffX);
   const staffHeight = SCORE.staffGap * 4 + 2;
 
   // Staff image must be stretched horizontally.
-  // If preserveAspectRatio is "meet", the long PNG is centered and becomes too short.
   svg.appendChild(createSvgImage(
     NOTATION_IMAGES.staff,
     staffX,
@@ -1130,6 +1133,11 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   const isCurrentPlayback = index === playbackIndex && isPlaying;
   const issueClass = getIssueClass(voice, index);
 
+  // The whole-note PNG has a slightly low optical center in the bass staff.
+  // Move bass-staff note images slightly upward while keeping pitch logic unchanged.
+  const noteImageYOffset = isCantus ? -3 : 0;
+  const noteDrawY = y + noteImageYOffset;
+
   drawLedgerLines(svg, x, y, bottomLineY);
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, [
@@ -1154,7 +1162,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   svg.appendChild(createSvgImage(
     NOTATION_IMAGES.wholeNote,
     x - SCORE.noteImageWidth / 2,
-    y - SCORE.noteImageHeight / 2,
+    noteDrawY - SCORE.noteImageHeight / 2,
     SCORE.noteImageWidth,
     SCORE.noteImageHeight,
     imageClass
