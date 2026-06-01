@@ -1532,3 +1532,68 @@ input {
 .staff-mute-button.counterpoint { top: 0; left: 0; }
 .staff-mute-button.cantus { top: 170px; left: 0; }
 .staff-mute-button.muted { border-color: #ff4f8b; background: #ff4f8b; color: #fff; }
+
+
+/* 2026-06-01 PNG return with robust initial rendering */
+.png-notation {
+  pointer-events: none;
+  user-select: none;
+}
+
+.png-staff {
+  opacity: 0.94;
+}
+
+.png-staff-fallback-line {
+  opacity: 0.22;
+}
+
+.png-clef {
+  opacity: 0.94;
+}
+
+.png-notehead {
+  opacity: 1;
+}
+
+.png-notehead.cantus {
+  opacity: 0.70;
+}
+
+.png-notehead.selected {
+  filter:
+    invert(41%)
+    sepia(84%)
+    saturate(2534%)
+    hue-rotate(313deg)
+    brightness(103%)
+    contrast(102%);
+}
+
+.png-notehead.playing,
+.png-notehead.error,
+.png-accidental.playing,
+.png-accidental.error {
+  filter:
+    invert(31%)
+    sepia(88%)
+    saturate(2604%)
+    hue-rotate(340deg)
+    brightness(95%)
+    contrast(92%);
+}
+
+.png-notehead.muted-voice,
+.png-accidental.muted-voice {
+  opacity: 0.32;
+}
+
+.png-accidental.selected {
+  filter:
+    invert(41%)
+    sepia(84%)
+    saturate(2534%)
+    hue-rotate(313deg)
+    brightness(103%)
+    contrast(102%);
+}
