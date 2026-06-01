@@ -458,7 +458,7 @@ h2 {
   text-align: center;
 }
 
-/* Module 2.5 icon playback buttons. */
+/* Module 2.5 playback icon buttons. */
 #playPauseButton,
 button[onclick="stopPlayback(true)"] {
   min-width: 2.45rem;
