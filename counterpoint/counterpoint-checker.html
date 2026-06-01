@@ -10,7 +10,7 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-layout-images-select-final" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-exercise-select-hardfix" />
 </head>
 
 <body>
@@ -52,7 +52,18 @@
       <div class="module1-exercise-row">
         <label class="exercise-control" for="exerciseSelect">
           <span data-i18n="exerciseLabel">課題</span>
-          <select id="exerciseSelect" onchange="updateExerciseDescription(); loadSelectedExercise();"></select>
+          <select id="exerciseSelect" onchange="loadSelectedExercise()">
+              <option value="c-major-arch">C major / アーチ型</option>
+              <option value="d-minor-step">D minor / 順次進行</option>
+              <option value="g-major-low">G major / 低めの音域</option>
+              <option value="f-major-small-peak">F major / 小さな頂点</option>
+              <option value="a-minor-return">A minor / 回帰</option>
+              <option value="c-major-leap">C major / 小さな跳躍</option>
+              <option value="e-minor-middle">E minor / 中音域</option>
+              <option value="g-major-long">G major / 長め</option>
+              <option value="f-major-descend">F major / 下降中心</option>
+              <option value="c-major-extended">C major / 拡張</option>
+            </select>
         </label>
         <p class="exercise-description" id="exerciseDescription">課題を選択してください。</p>
       </div>
@@ -133,6 +144,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-module1-layout-images-select-final"></script>
+  <script src="js/counterpoint.js?v=20260601-module1-exercise-select-hardfix"></script>
 </body>
 </html>

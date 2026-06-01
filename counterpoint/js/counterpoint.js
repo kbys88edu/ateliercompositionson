@@ -248,12 +248,9 @@ function setLanguage(lang) {
 
 function populateExercises() {
   const select = document.getElementById("exerciseSelect");
-  if (!select) {
-    updateExerciseDescription();
-    return;
-  }
+  if (!select) return;
 
-  const previousValue = select.value;
+  const currentValue = select.value;
   select.innerHTML = "";
 
   EXERCISES.forEach((exercise) => {
@@ -265,8 +262,10 @@ function populateExercises() {
     select.appendChild(option);
   });
 
-  if (previousValue && EXERCISES.some((exercise) => exercise.id === previousValue)) {
-    select.value = previousValue;
+  if (currentValue && EXERCISES.some((exercise) => exercise.id === currentValue)) {
+    select.value = currentValue;
+  } else if (EXERCISES[0]) {
+    select.value = EXERCISES[0].id;
   }
 
   updateExerciseDescription();
@@ -277,22 +276,19 @@ function updateExerciseDescription() {
   if (!description) return;
 
   const select = document.getElementById("exerciseSelect");
-  const id = select ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
+  const id = select && select.value ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
   const exercise = EXERCISES.find((item) => item.id === id) || EXERCISES[0];
 
-  if (!exercise) {
-    description.textContent = "";
-    return;
-  }
-
-  description.textContent = currentLanguage === "fr"
-    ? (exercise.descriptionFr || exercise.descriptionJa || "")
-    : (exercise.descriptionJa || exercise.descriptionFr || "");
+  description.textContent = exercise
+    ? (currentLanguage === "fr"
+        ? (exercise.descriptionFr || exercise.descriptionJa || "")
+        : (exercise.descriptionJa || exercise.descriptionFr || ""))
+    : "";
 }
 
 function loadSelectedExercise() {
   const select = document.getElementById("exerciseSelect");
-  const id = select ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
+  const id = select && select.value ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
   const exercise = EXERCISES.find((item) => item.id === id) || EXERCISES[0];
   if (!exercise) return;
 
@@ -1675,7 +1671,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const exerciseSelect = document.getElementById("exerciseSelect");
   if (exerciseSelect) {
-    exerciseSelect.addEventListener("change", updateExerciseDescription);
+    exerciseSelect.addEventListener("change", () => {
+      updateExerciseDescription();
+      loadSelectedExercise();
+    });
   }
 
   const svg = document.getElementById("scoreEditor");
@@ -1683,46 +1682,15 @@ window.addEventListener("DOMContentLoaded", () => {
     svg.addEventListener("click", handleScoreClick);
   }
 
-  document.addEventListener("keydown", (event) => {
-    const activeTag = document.activeElement?.tagName?.toLowerCase();
-    if (activeTag === "textarea" || activeTag === "input" || activeTag === "select") return;
+  setupModule1KeyboardControls();
 
-    if (event.code === "Space") {
-      event.preventDefault();
-      togglePlayback();
-      return;
-    }
+  if (EXERCISES[0]) {
+    loadSelectedExercise();
+  } else {
+    renderScore();
+  }
 
-    if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      moveSelection(-1);
-      return;
-    }
-
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      moveSelection(1);
-      return;
-    }
-
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
-      moveSelectedNote(1);
-      return;
-    }
-
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      moveSelectedNote(-1);
-      return;
-    }
-
-    if (event.key === "Backspace" || event.key === "Delete") {
-      event.preventDefault();
-      deleteSelectedNote();
-    }
-  });
-
-  setLanguage("ja");
-  renderScore();
+  applyLanguage();
+  updatePlayPauseButton();
+  syncVoiceMuteButtons();
 });

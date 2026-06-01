@@ -1261,3 +1261,9 @@ input {
 .score-stage {
   background: rgba(255, 252, 247, 0.55);
 }
+
+
+/* 2026-06-01 exercise select hardfix */
+#exerciseSelect {
+  min-width: 260px;
+}
