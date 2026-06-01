@@ -14,6 +14,9 @@
       --ink: #171717;
       --muted: rgba(23,23,23,0.62);
       --line: rgba(23,23,23,0.14);
+      --test-bg: rgba(23,23,23,0.045);
+      --test-ink: rgba(23,23,23,0.46);
+      --test-line: rgba(23,23,23,0.10);
     }
     body {
       margin: 0;
@@ -104,12 +107,24 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, opacity 0.14s ease;
     }
     .card:hover {
       transform: translateY(-3px);
       box-shadow: 0 24px 58px rgba(0,0,0,0.1);
       border-color: rgba(23,23,23,0.32);
+    }
+    .card.is-test {
+      background: var(--test-bg);
+      border-color: var(--test-line);
+      color: var(--test-ink);
+      box-shadow: none;
+      filter: grayscale(1);
+    }
+    .card.is-test:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: rgba(23,23,23,0.18);
     }
     .num {
       color: var(--muted);
@@ -117,6 +132,25 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 18px;
+    }
+    .card.is-test .num,
+    .card.is-test p,
+    .card.is-test .open {
+      color: var(--test-ink);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      margin: 0 0 12px;
+      padding: 5px 9px;
+      border: 1px solid rgba(23,23,23,0.16);
+      border-radius: 999px;
+      color: var(--test-ink);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.44);
     }
     h2 {
       margin: 0;
@@ -192,7 +226,7 @@
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
-      <a class="card" href="/counterpoint/module2_5/module2-5-tied-counterpoint.html">
+      <a class="card" href="/counterpoint/module3/module2-5-tied-counterpoint.html">
         <div>
           <div class="num">Module 3</div>
           <h2 data-i18n="m3Title">タイ付きリズム</h2>
@@ -201,27 +235,30 @@
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
-      <a class="card" href="/counterpoint/module3/module3-quarter-counterpoint.html">
+      <a class="card is-test" href="/counterpoint/module4/module3-quarter-counterpoint.html">
         <div>
           <div class="num">Module 4</div>
+          <div class="badge" data-i18n="testBadge">テスト段階</div>
           <h2 data-i18n="m4Title">四分音符対位法</h2>
           <p data-i18n="m4Desc">経過音や刺繍音を含む、より細かい動きを練習します。</p>
         </div>
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
-      <a class="card" href="/counterpoint/module4/module4-mixed-counterpoint.html">
+      <a class="card is-test" href="/counterpoint/module5/module4-mixed-counterpoint.html">
         <div>
           <div class="num">Module 5</div>
+          <div class="badge" data-i18n="testBadge">テスト段階</div>
           <h2 data-i18n="m5Title">混合リズム</h2>
           <p data-i18n="m5Desc">二分音符・四分音符などを組み合わせて対旋律を作ります。</p>
         </div>
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
-      <a class="card" href="/counterpoint/three-voice/three-voice-counterpoint.html">
+      <a class="card is-test" href="/counterpoint/module6/three-voice-counterpoint.html">
         <div>
           <div class="num">Module 6</div>
+          <div class="badge" data-i18n="testBadge">テスト段階</div>
           <h2 data-i18n="m6Title">3声対位法</h2>
           <p data-i18n="m6Desc">定旋律に対して、2つの対旋律を組み合わせます。</p>
         </div>
@@ -248,6 +285,7 @@
         m5Desc: "二分音符・四分音符などを組み合わせて対旋律を作ります。",
         m6Title: "3声対位法",
         m6Desc: "定旋律に対して、2つの対旋律を組み合わせます。",
+        testBadge: "テスト段階",
         open: "開く"
       },
       fr: {
@@ -266,6 +304,7 @@
         m5Desc: "Combiner blanches, noires et rythmes plus variés.",
         m6Title: "Contrepoint à 3 voix",
         m6Desc: "Combiner deux voix de contrepoint autour d’un cantus.",
+        testBadge: "En test",
         open: "Ouvrir"
       }
     };
