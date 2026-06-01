@@ -615,3 +615,36 @@ button[onclick="stopPlayback(true)"] {
 .accidental {
   display: none !important;
 }
+
+/* Module 4 pitch alignment and barlines. */
+.measure-barline {
+  stroke: rgba(23, 23, 23, 0.42);
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.measure-barline.final-thin {
+  stroke-width: 1.15;
+}
+
+.measure-barline.final-thick {
+  stroke-width: 2.55;
+}
+
+.note-stem {
+  stroke: #171717;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.note-stem.playing,
+.note-stem.selected {
+  stroke: currentColor;
+}
+
+.png-notehead.quarter-note-head {
+  transform-box: fill-box;
+  transform-origin: center;
+}

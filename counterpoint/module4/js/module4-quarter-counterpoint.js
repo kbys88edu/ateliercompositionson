@@ -1357,7 +1357,7 @@ function drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayba
   const href = parsed.accidental === "#" ? NOTATION_IMAGES.sharp : NOTATION_IMAGES.flat;
   const width = parsed.accidental === "#" ? 16 : 15;
   const height = parsed.accidental === "#" ? 40 : 39;
-  const yOffset = parsed.accidental === "b" ? -7 : -2;
+  const yOffset = parsed.accidental === "b" ? -8 : -2;
 
   svg.appendChild(createSvgImage(
     href,
@@ -1412,33 +1412,37 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter")
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
 
-  if (isCantus || duration === "whole") {
-    const w = 30.4;
-    const h = 17.8;
-    svg.appendChild(createSvgImage(
-      NOTATION_IMAGES.wholeNote,
-      x - w / 2,
-      y - h / 2,
-      w,
-      h,
-      ["png-notation", "png-notehead", "whole-note", isCantus ? "cantus" : "", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
-    ));
-  } else {
-    const stemDirection = y < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
-    const href = stemDirection === "down" ? NOTATION_IMAGES.quarterNoteDown : NOTATION_IMAGES.quarterNoteUp;
-    const w = 29.5;
-    const h = 54;
-    const imgX = x - w / 2;
-    const imgY = stemDirection === "down" ? y - 40 : y - 14;
+  const headW = isCantus || duration === "whole" ? 30.4 : 28.4;
+  const headH = isCantus || duration === "whole" ? 17.8 : 17.0;
 
-    svg.appendChild(createSvgImage(
-      href,
-      imgX,
-      imgY,
-      w,
-      h,
-      ["png-notation", "png-notehead", "quarter-note", stemDirection, isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
-    ));
+  svg.appendChild(createSvgImage(
+    NOTATION_IMAGES.wholeNote,
+    x - headW / 2,
+    y - headH / 2,
+    headW,
+    headH,
+    ["png-notation", "png-notehead", isCantus || duration === "whole" ? "whole-note" : "quarter-note-head", isCantus ? "cantus" : "", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
+  ));
+
+  if (!isCantus && duration !== "whole") {
+    const stemDirection = y < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
+    if (stemDirection === "down") {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - 7,
+        y1: y,
+        x2: x - 7,
+        y2: y + 34,
+        class: ["note-stem", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
+      }));
+    } else {
+      svg.appendChild(createSvgElement("line", {
+        x1: x + 7,
+        y1: y,
+        x2: x + 7,
+        y2: y - 34,
+        class: ["note-stem", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
+      }));
+    }
   }
 
   svg.appendChild(createSvgElement("text", {
@@ -1446,6 +1450,46 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter")
     y: isCantus ? bottomLineY + 48 : bottomLineY - 62,
     class: ["note-label", isCurrentPlayback ? "playing" : "", isSelected ? "selected" : "", issueClass].filter(Boolean).join(" ")
   })).textContent = note;
+}
+
+function drawMeasureBarlines(svg, positions, quarterCount) {
+  if (!positions.length) return;
+
+  const spacing = positions.length > 1 ? positions[1] - positions[0] : (SCORE.width - SCORE.left - SCORE.right);
+  const leftEdge = positions[0] - spacing / 2;
+  const rightEdge = positions[positions.length - 1] + spacing / 2;
+  const top = SCORE.bottomLineY - SCORE.staffGap * 4;
+  const bottom = SCORE.cantusBottomLineY;
+
+  for (let i = 0; i <= quarterCount; i += SCORE.quartersPerCantus) {
+    const x = i === quarterCount ? rightEdge : leftEdge + spacing * i;
+    const isFinal = i === quarterCount;
+
+    if (isFinal) {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - 4,
+        y1: top,
+        x2: x - 4,
+        y2: bottom,
+        class: "measure-barline final-thin"
+      }));
+      svg.appendChild(createSvgElement("line", {
+        x1: x,
+        y1: top,
+        x2: x,
+        y2: bottom,
+        class: "measure-barline final-thick"
+      }));
+    } else {
+      svg.appendChild(createSvgElement("line", {
+        x1: x,
+        y1: top,
+        x2: x,
+        y2: bottom,
+        class: "measure-barline"
+      }));
+    }
+  }
 }
 
 function renderScore() {
@@ -1467,10 +1511,12 @@ function renderScore() {
 
   drawStaff(svg, SCORE.bottomLineY, "Counterpoint / quarter notes / treble clef", quarterCount, "treble");
   drawStaff(svg, SCORE.cantusBottomLineY, "Cantus / whole notes / bass clef", quarterCount, "bass");
+  drawMeasureBarlines(svg, positions, quarterCount);
   drawPlayhead(svg, positions, quarterCount);
 
   counterpoint.forEach((note, i) => {
-    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, "quarter");
+    const durationType = i === quarterCount - 1 ? "whole" : "quarter";
+    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, durationType);
   });
 
   cantus.forEach((note, i) => {
@@ -1514,6 +1560,7 @@ function handleScoreClick(event) {
   while (counterpoint.length < required) counterpoint.push("");
 
   selectedIndex = nearestIndex;
+  pushUndoState();
   counterpoint[nearestIndex] = clickedNote;
 
   setNotesToTextarea("counterpoint", counterpoint);
