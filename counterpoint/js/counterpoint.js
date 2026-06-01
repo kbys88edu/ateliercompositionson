@@ -12,8 +12,8 @@ const SCORE = {
   cantusBottomLineY: 320,
   playheadTop: 56,
   playheadBottom: 400,
-  noteImageWidth: 34,
-  noteImageHeight: 20,
+  noteImageWidth: 32.3,
+  noteImageHeight: 19,
   accidentalWidth: 19,
   accidentalHeight: 52
 };
@@ -824,16 +824,16 @@ function drawVoiceMuteButton(svg, voice, x, y) {
   group.appendChild(createSvgElement("rect", {
     x,
     y,
-    width: 34,
-    height: 24,
+    width: 38,
+    height: 26,
     rx: 8,
     ry: 8,
     class: "voice-mute-button-bg"
   }));
 
   const label = createSvgElement("text", {
-    x: x + 17,
-    y: y + 12.7,
+    x: x + 19,
+    y: y + 13.8,
     class: "voice-mute-button-label"
   });
   label.textContent = "M";
@@ -857,20 +857,20 @@ function drawVoiceMuteButton(svg, voice, x, y) {
 
 function drawSenzokuSystemLabels(svg) {
   svg.appendChild(createSvgElement("text", {
-    x: 26,
-    y: SCORE.counterpointBottomLineY - 74,
+    x: 18,
+    y: SCORE.counterpointBottomLineY - 76,
     class: "voice-label senzoku-label"
   })).textContent = "Counterpoint";
 
-  drawVoiceMuteButton(svg, "counterpoint", 78, SCORE.counterpointBottomLineY - 66);
+  drawVoiceMuteButton(svg, "counterpoint", 18, SCORE.counterpointBottomLineY - 62);
 
   svg.appendChild(createSvgElement("text", {
-    x: 26,
-    y: SCORE.cantusBottomLineY - 74,
+    x: 18,
+    y: SCORE.cantusBottomLineY - 76,
     class: "voice-label senzoku-label"
   })).textContent = "Cantus";
 
-  drawVoiceMuteButton(svg, "cantus", 78, SCORE.cantusBottomLineY - 66);
+  drawVoiceMuteButton(svg, "cantus", 18, SCORE.cantusBottomLineY - 62);
 }
 
 

@@ -10,7 +10,7 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-bass-up-mute-scroll" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-note-small-mute-ui" />
 </head>
 
 <body>
@@ -69,6 +69,13 @@
           課題を読み込む
         </button>
 
+<button class="button secondary" type="button" onclick="loadExample()" data-i18n="loadExample">
+  例題を読み込む
+</button>
+<button class="button small" type="button" onclick="renderScore()" data-i18n="refreshScore">
+          楽譜を更新
+        </button>
+
         <p class="exercise-description" id="exerciseDescription">
           課題を選択してください。
         </p>
@@ -86,12 +93,7 @@
         <button class="button small" type="button" onclick="clearCounterpoint()" data-i18n="clearCounterpoint">
           対旋律をクリア
         </button>
-
-        <button class="button small" type="button" onclick="renderScore()" data-i18n="refreshScore">
-          楽譜を更新
-        </button>
-
-        <button class="button small" type="button" onclick="playSelectedNote()" data-i18n="playSelected">
+<button class="button small" type="button" onclick="playSelectedNote()" data-i18n="playSelected">
           選択音を鳴らす
         </button>
         <button class="button small" type="button" onclick="exportMidi()" data-i18n="exportMidi">
@@ -161,6 +163,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-module1-bass-up-mute-scroll"></script>
+  <script src="js/counterpoint.js?v=20260601-module1-note-small-mute-ui"></script>
 </body>
 </html>
