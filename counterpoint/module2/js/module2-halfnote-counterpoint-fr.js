@@ -1219,10 +1219,12 @@ function drawAccidental(svg, parsedOrAccidental, x, y, isCantus = false) {
     ? (accidental === "#" ? 40 : 39)
     : (accidental === "#" ? 30 : 29);
 
+  const accidentalYOffset = isCantus && accidental === "b" ? -5 : 0;
+
   svg.appendChild(createSvgImage(
     href,
     x - (isCantus ? 32 : 27),
-    y - height / 2,
+    y - height / 2 + accidentalYOffset,
     width,
     height,
     `png-notation png-accidental ${isCantus ? "cantus" : "counterpoint"} accidental-${accidental === "#" ? "sharp" : accidental === "b" ? "flat" : "natural"}`
