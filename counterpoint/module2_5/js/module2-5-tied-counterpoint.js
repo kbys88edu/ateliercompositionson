@@ -373,17 +373,18 @@ function drawTiePath(svg, x1, x2, y) {
   const end = x2 - 14;
   if (end <= start) return;
 
-  const mid = (start + end) / 2;
-  const tieY = y - 25;
-  const d = `M ${start} ${tieY} C ${mid - 18} ${tieY - 10}, ${mid + 18} ${tieY - 10}, ${end} ${tieY}`;
-  svg.appendChild(createSvgElement("path", {
-    d,
-    fill: "none",
-    stroke: "#181818",
-    "stroke-width": 2,
-    "stroke-linecap": "round",
-    class: "tie-curve"
-  }));
+  const width = Math.max(42, end - start);
+  const tieY = y - 31;
+
+  svg.appendChild(createSvgImage(
+    `${NOTATION_IMAGE_BASE}tie.png`,
+    start,
+    tieY,
+    width,
+    16,
+    "png-notation png-tie",
+    "none"
+  ));
 }
 
 function drawCounterpointTies(svg, positions, counterpoint) {
@@ -1261,14 +1262,6 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
   const x = SCORE.left - 82;
   const y = isBass ? bottomLineY - 70 : bottomLineY - 102;
 
-  const fallback = createSvgElement("text", {
-    x: SCORE.left - 70,
-    y: isBass ? bottomLineY - 18 : bottomLineY - 6,
-    class: `clef-symbol ${isBass ? "bass" : "treble"} clef-fallback`
-  });
-  fallback.textContent = isBass ? "𝄢" : "𝄞";
-  svg.appendChild(fallback);
-
   svg.appendChild(createSvgImage(href, x, y, width, height, `png-notation png-clef ${isBass ? "bass" : "treble"}`));
 }
 
@@ -1278,11 +1271,6 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const staffY = bottomLineY - SCORE.staffGap * 4;
   const staffWidth = endX - startX;
   const staffHeight = SCORE.staffGap * 4 + 2;
-
-  for (let i = 0; i < 5; i++) {
-    const y = bottomLineY - i * SCORE.staffGap;
-    svg.appendChild(createSvgElement("line", { x1: startX, y1: y, x2: endX, y2: y, class: "staff-line png-staff-fallback-line" }));
-  }
 
   svg.appendChild(createSvgImage(NOTATION_IMAGES.staff, startX, staffY - 1, staffWidth, staffHeight + 2, "png-notation png-staff", "none"));
   drawClef(svg, bottomLineY, clefType);
@@ -1459,26 +1447,6 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
   // Draw ledger lines after notehead so the C4 ledger line crosses the notehead,
   // matching the cantus behavior.
   drawLedgerLines(svg, x, renderY, bottomLineY);
-
-  const noteClass = [
-    "note-head",
-    "open",
-    "fallback-notehead",
-    isCantus ? "cantus" : "",
-    isCurrentPlayback ? "playing" : "",
-    isSelected ? "selected" : ""
-  ].filter(Boolean).join(" ");
-
-  const rx = isCantus ? 9.5 : 10.3;
-  const ry = isCantus ? 6.2 : 6.3;
-  svg.appendChild(createSvgElement("ellipse", {
-    cx: x,
-    cy: renderY,
-    rx,
-    ry,
-    transform: `rotate(-18 ${x} ${renderY})`,
-    class: noteClass
-  }));
 
   if (isSelected) {
     svg.appendChild(createSvgElement("ellipse", {
