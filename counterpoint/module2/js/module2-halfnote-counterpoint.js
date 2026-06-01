@@ -1203,7 +1203,9 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
   }
 
   if (y > bottomLineY + SCORE.noteStep) {
-    for (let ly = bottomLineY + SCORE.staffGap; ly <= y + 1; ly += SCORE.staffGap) {
+    // Counterpoint noteheads are shifted 2px upward visually.
+    // Add a small tolerance so C4 still gets its ledger line through the notehead.
+    for (let ly = bottomLineY + SCORE.staffGap; ly <= y + 4; ly += SCORE.staffGap) {
       svg.appendChild(createSvgElement("line", {
         x1: x - ledgerHalfWidth,
         y1: ly,
