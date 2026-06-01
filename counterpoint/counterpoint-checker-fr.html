@@ -10,17 +10,10 @@
   <title>Module 1 — Contrepoint à deux voix</title>
   <meta name="description" content="第一種2声対位法の協和notes程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-language-switch-button" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-header-select-active" />
 </head>
 
 <body>
-  <div class="language-switch-button-wrap">
-    <a class="language-switch-button" href="counterpoint-checker.html" aria-label="Change language">
-      <span class="language-switch-main">日本語</span>
-      <span class="language-switch-sub">言語を切り替える</span>
-    </a>
-  </div>
-
 <main class="page">
     <header class="checker-header">
       <div class="top-controls">
@@ -36,10 +29,10 @@
         </div>
 
         <label class="language-control" for="languageSelect">
-          <span data-i18n="languageLabel">言語</span>
-          <select id="languageSelect" onchange="setLanguage(this.value)">
-            <option value="ja">日本語</option>
-            <option value="fr">Français</option>
+          <span data-i18n="languageLabel">Langue</span>
+          <select id="languageSelect" onchange="if(this.value) window.location.href=this.value">
+            <option value="counterpoint-checker-fr.html" selected>Français</option>
+            <option value="counterpoint-checker.html">日本語</option>
           </select>
         </label>
       </div>
@@ -126,6 +119,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint-fr.js?v=20260601-module1-language-switch-button"></script>
+  <script src="js/counterpoint-fr.js?v=20260601-module1-header-select-active"></script>
 </body>
 </html>

@@ -2062,3 +2062,70 @@ input {
     display: none;
   }
 }
+
+
+/* 2026-06-01 use header language select, not page-edge button */
+.language-switch-button-wrap,
+.module1-language-switch {
+  display: none !important;
+}
+
+.header-language-select {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(20,20,20,0.74);
+  white-space: nowrap;
+}
+
+.header-language-select select {
+  appearance: auto;
+  min-width: 96px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(20,20,20,0.14);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.82);
+  color: rgba(20,20,20,0.88);
+  font: inherit;
+  cursor: pointer;
+}
+
+.header-language-select select:focus {
+  outline: none;
+  border-color: rgba(20,20,20,0.38);
+}
+
+@media (max-width: 720px) {
+  .header-language-select {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 14px;
+  }
+
+  .header-language-select select {
+    min-width: 112px;
+  }
+}
+
+.hero-top,
+.page-top,
+.topbar,
+.site-header-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+
+/* 2026-06-01 header language control behavior */
+.language-switch-button-wrap,
+.module1-language-switch {
+  display: none !important;
+}
+
+.language-control select {
+  cursor: pointer;
+}
