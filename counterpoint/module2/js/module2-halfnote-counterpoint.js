@@ -283,6 +283,40 @@ let isCounterpointMuted = false;
 let isCantusMuted = false;
 let audioContext = null;
 
+
+const undoStack = [];
+
+function getEditorStateSnapshot() {
+  return {
+    counterpoint: getNotesFromTextarea("counterpoint"),
+    selectedIndex,
+    playbackIndex
+  };
+}
+
+function pushUndoState() {
+  undoStack.push(getEditorStateSnapshot());
+  if (undoStack.length > 100) undoStack.shift();
+}
+
+function restoreEditorState(state) {
+  if (!state) return;
+  stopPlayback(false);
+  setNotesToTextarea("counterpoint", state.counterpoint || []);
+  selectedIndex = Number.isInteger(state.selectedIndex) ? state.selectedIndex : 0;
+  playbackIndex = Number.isInteger(state.playbackIndex) ? state.playbackIndex : 0;
+  renderScore();
+  updateDisplays();
+}
+
+function undoLastEdit() {
+  if (isPlaying) return;
+  const state = undoStack.pop();
+  if (!state) return;
+  restoreEditorState(state);
+}
+
+
 function t(key) {
   return I18N[currentLanguage][key];
 }
@@ -1111,6 +1145,7 @@ function moveSelection(delta) {
 
 function deleteSelectedNote() {
   if (isPlaying) return;
+  pushUndoState();
 
   const required = getRequiredHalfCount();
   let counterpoint = getNotesFromTextarea("counterpoint");
@@ -1312,7 +1347,13 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
       `png-notation png-notehead half-note ${stemDirection}`
     ));
 
-    if (stemDirection === "down") {
+    if (duration === "whole") {
+
+
+      // Whole note: no stem.
+
+
+    } else if (stemDirection === "down") {
       svg.appendChild(createSvgElement("line", {
         x1: x - 8,
         y1: renderY - 1,
@@ -1496,6 +1537,7 @@ function handleScoreClick(event) {
   });
 
   const clickedNote = yToNaturalNote(viewY);
+  pushUndoState();
   while (counterpoint.length < required) counterpoint.push("");
 
   selectedIndex = nearestIndex;
@@ -1510,6 +1552,7 @@ function handleScoreClick(event) {
 
 function undoCounterpointNote() {
   if (isPlaying) return;
+  pushUndoState();
   const counterpoint = getNotesFromTextarea("counterpoint");
   counterpoint.pop();
 
@@ -1520,6 +1563,7 @@ function undoCounterpointNote() {
 }
 
 function clearCounterpoint() {
+  pushUndoState();
   stopPlayback(true);
   selectedIndex = 0;
   playbackIndex = 0;
@@ -1607,6 +1651,7 @@ function inputLetterNote(letter) {
 
   const octave = ["A", "B"].includes(normalized) ? 4 : 4;
   const note = `${normalized}${octave}`;
+  pushUndoState();
   counterpoint[selectedIndex] = note;
 
   setNotesToTextarea("counterpoint", counterpoint);
@@ -1758,3 +1803,5 @@ window.addEventListener("DOMContentLoaded", () => {
 
 window.toggleCounterpointMute = toggleCounterpointMute;
 window.toggleCantusMute = toggleCantusMute;
+
+window.undoLastEdit = undoLastEdit;
