@@ -109,23 +109,49 @@
     return `${names[pc]}${octave}`;
   }
 
-  function moveNoteChromatic(note, semitone) {
+  
+  function diatonicStepIndex(note) {
+    const parsed = parseNote(note);
+    if (!parsed) return null;
+    const steps = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
+    return parsed.octave * 7 + steps[parsed.letter];
+  }
+
+  function noteFromDiatonicStep(stepIndex) {
+    const letters = ["C", "D", "E", "F", "G", "A", "B"];
+    const octave = Math.floor(stepIndex / 7);
+    const letter = letters[((stepIndex % 7) + 7) % 7];
+    return `${letter}${octave}`;
+  }
+
+  function getBottomLineReference(bottomLineY) {
+    return Math.abs(bottomLineY - SCORE.cantusBottomLineY) < 10 ? "G2" : "E4";
+  }
+
+function moveNoteChromatic(note, semitone) {
     const midi = noteToMidi(note);
     if (midi === null) return note;
     return midiToNote(midi + semitone);
   }
 
   function noteToY(note, bottomLineY) {
-    const midi = noteToMidi(note);
-    const e4 = noteToMidi("E4");
-    if (midi === null || e4 === null) return null;
-    return bottomLineY - ((midi - e4) * (SCORE.noteStep / 1));
+    const noteStep = diatonicStepIndex(note);
+    if (noteStep === null) return null;
+
+    const referenceNote = getBottomLineReference(bottomLineY);
+    const referenceStep = diatonicStepIndex(referenceNote);
+    if (referenceStep === null) return null;
+
+    const diatonicDistance = noteStep - referenceStep;
+    return bottomLineY - (diatonicDistance * (SCORE.staffGap / 2));
   }
 
   function yToNaturalNote(y) {
-    const bottom = SCORE.counterpointBottomLineY;
-    const midi = noteToMidi("E4") + Math.round((bottom - y) / SCORE.noteStep);
-    return midiToNote(midi);
+    const referenceStep = diatonicStepIndex("E4");
+    const diatonicDistance = Math.round((SCORE.counterpointBottomLineY - y) / (SCORE.staffGap / 2));
+    const targetStep = referenceStep + diatonicDistance;
+
+    return noteFromDiatonicStep(targetStep);
   }
 
   function getNotesFromTextarea(id) {
@@ -316,8 +342,33 @@
     return "";
   }
 
-  function drawLedgerLines() {
-    // minimal stable version
+  function drawLedgerLines(svg, x, y, bottomLineY) {
+    const topLineY = bottomLineY - SCORE.staffGap * 4;
+    const halfGap = SCORE.staffGap / 2;
+
+    if (y > bottomLineY + halfGap) {
+      for (let ly = bottomLineY + SCORE.staffGap; ly <= y + 0.1; ly += SCORE.staffGap) {
+        svg.appendChild(svgEl("line", {
+          x1: x - 23,
+          y1: ly,
+          x2: x + 23,
+          y2: ly,
+          class: "ledger-line"
+        }));
+      }
+    }
+
+    if (y < topLineY - halfGap) {
+      for (let ly = topLineY - SCORE.staffGap; ly >= y - 0.1; ly -= SCORE.staffGap) {
+        svg.appendChild(svgEl("line", {
+          x1: x - 23,
+          y1: ly,
+          x2: x + 23,
+          y2: ly,
+          class: "ledger-line"
+        }));
+      }
+    }
   }
 
   function drawIssueRing() {
@@ -339,6 +390,7 @@
     const isCurrentPlayback = index === playbackIndex && isPlaying;
     const noteDrawY = y + (isCantus ? -2 : -0.5);
 
+    drawLedgerLines(svg, x, y, bottomLineY);
     drawAccidental(svg, parsed, x, y, [
       isCantus ? "cantus" : "",
       muted ? "muted-voice" : "",

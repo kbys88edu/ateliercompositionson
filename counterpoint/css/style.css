@@ -1792,3 +1792,10 @@ input {
   stroke-width: 1.6;
   pointer-events: none;
 }
+
+
+/* 2026-06-01 clef-aware pitch positioning */
+.ledger-line {
+  stroke: rgba(20,20,20,0.72);
+  stroke-width: 1.15;
+}
