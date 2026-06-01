@@ -175,6 +175,7 @@ function setLanguage(lang) {
   });
 
   populateExercises();
+  setupModule1KeyboardControls();
   updateExerciseDescription();
   updatePlayPauseButton();
 }
@@ -452,10 +453,55 @@ function playFallbackVoice(midi, duration = 0.45, gainScale = 1) {
 
   osc.connect(filter);
   filter.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect(getModule1AudioDestination());
 
   osc.start(now);
   osc.stop(now + duration + 0.1);
+}
+
+async 
+let module1ReverbNodes = null;
+
+function getModule1ReverbNodes() {
+  const context = getAudioContext();
+  if (!context) return null;
+
+  if (module1ReverbNodes && module1ReverbNodes.context === context) {
+    return module1ReverbNodes;
+  }
+
+  const input = context.createGain();
+  const dry = context.createGain();
+  const wet = context.createGain();
+  const delay = context.createDelay(0.25);
+  const feedback = context.createGain();
+  const filter = context.createBiquadFilter();
+
+  dry.gain.value = 0.86;
+  wet.gain.value = 0.14;
+  delay.delayTime.value = 0.038;
+  feedback.gain.value = 0.18;
+  filter.type = "lowpass";
+  filter.frequency.value = 4200;
+
+  input.connect(dry);
+  dry.connect(context.destination);
+
+  input.connect(wet);
+  wet.connect(delay);
+  delay.connect(filter);
+  filter.connect(context.destination);
+  filter.connect(feedback);
+  feedback.connect(delay);
+
+  module1ReverbNodes = { context, input, dry, wet, delay, feedback, filter };
+  return module1ReverbNodes;
+}
+
+function getModule1AudioDestination() {
+  const reverb = getModule1ReverbNodes();
+  const context = getAudioContext();
+  return reverb ? reverb.input : context.destination;
 }
 
 async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1) {
@@ -495,7 +541,7 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
   gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
 
   source.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect(getModule1AudioDestination());
 
   source.start(now);
   source.stop(now + duration + 0.12);
@@ -818,13 +864,15 @@ function syncVoiceMuteButtons() {
   const cantusButton = document.getElementById("muteCantusButton");
 
   if (counterpointButton) {
-    counterpointButton.classList.toggle("muted", isVoiceMuted("counterpoint"));
-    counterpointButton.setAttribute("aria-pressed", isVoiceMuted("counterpoint") ? "true" : "false");
+    const muted = isVoiceMuted("counterpoint");
+    counterpointButton.classList.toggle("muted", muted);
+    counterpointButton.setAttribute("aria-pressed", muted ? "true" : "false");
   }
 
   if (cantusButton) {
-    cantusButton.classList.toggle("muted", isVoiceMuted("cantus"));
-    cantusButton.setAttribute("aria-pressed", isVoiceMuted("cantus") ? "true" : "false");
+    const muted = isVoiceMuted("cantus");
+    cantusButton.classList.toggle("muted", muted);
+    cantusButton.setAttribute("aria-pressed", muted ? "true" : "false");
   }
 }
 
@@ -1273,6 +1321,54 @@ function handleScoreClick(event) {
   setNotesToTextarea("counterpoint", counterpoint);
   renderScore();
   playNoteName(clickedNote, 0.45, 1, "femaleSample");
+}
+
+
+function handleModule1Keyboard(event) {
+  const tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
+  const isEditable = tag === "input" || tag === "textarea" || tag === "select" || (event.target && event.target.isContentEditable);
+  if (isEditable) return;
+
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    moveSelection(-1);
+    return;
+  }
+
+  if (event.key === "ArrowRight") {
+    event.preventDefault();
+    moveSelection(1);
+    return;
+  }
+
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    moveSelectedNote(1);
+    return;
+  }
+
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    moveSelectedNote(-1);
+    return;
+  }
+
+  if (event.key === " " || event.code === "Space") {
+    event.preventDefault();
+    togglePlayback();
+    return;
+  }
+
+  if (event.key === "Backspace" || event.key === "Delete") {
+    event.preventDefault();
+    deleteSelectedNote();
+  }
+}
+
+function setupModule1KeyboardControls() {
+  if (window.module1KeyboardControlsReady) return;
+  window.module1KeyboardControlsReady = true;
+  window.addEventListener("keydown", handleModule1Keyboard);
 }
 
 function updateDisplays() {

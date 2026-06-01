@@ -10,7 +10,7 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-exercise-html-mute-fix" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-reverb-arrows-staff-mute" />
 </head>
 
 <body>
@@ -109,29 +109,11 @@
   </div>
 </div>
 
-<div class="html-voice-mute-panel" aria-label="Voice mute controls">
-  <button id="muteCounterpointButton" class="html-mute-button" type="button" onclick="toggleVoiceMuteFromButton('counterpoint')">
-    <span class="mute-label">Counterpoint</span><span class="mute-key">M</span>
-  </button>
-  <button id="muteCantusButton" class="html-mute-button" type="button" onclick="toggleVoiceMuteFromButton('cantus')">
-    <span class="mute-label">Cantus</span><span class="mute-key">M</span>
-  </button>
+<div class="staff-mute-overlay" aria-label="Voice mute controls">
+  <button id="muteCounterpointButton" class="staff-mute-button counterpoint" type="button" onclick="toggleVoiceMuteFromButton('counterpoint')" aria-pressed="false">M</button>
+  <button id="muteCantusButton" class="staff-mute-button cantus" type="button" onclick="toggleVoiceMuteFromButton('cantus')" aria-pressed="false">M</button>
 </div>
-
-<div class="score-box">
-        <div class="score-head">
-          <div>
-            <h2 data-i18n="scoreInputTitle">五線入力</h2>
-            <p data-i18n="scoreInputHelp">
-              五線をクリックして音を置きます。置いた音は青色で選択され、↑↓で半音移動、←→で前後の音へ移動できます。
-            </p>
-          </div>
-          <div class="score-status" id="scoreStatus">
-            対旋律：0音
-          </div>
-        </div>
-
-        <svg
+<svg
           id="scoreEditor"
           class="score-editor"
           viewBox="0 0 1480 430"
@@ -161,6 +143,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-module1-exercise-html-mute-fix"></script>
+  <script src="js/counterpoint.js?v=20260601-module1-reverb-arrows-staff-mute"></script>
 </body>
 </html>

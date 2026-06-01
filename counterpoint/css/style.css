@@ -1050,3 +1050,64 @@ input {
     flex-wrap: wrap;
   }
 }
+
+
+/* 2026-06-01 light reverb / arrow restore / staff-left square mute buttons */
+.score-box {
+  position: relative;
+}
+
+.staff-mute-overlay {
+  position: absolute;
+  left: 74px;
+  top: 156px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.staff-mute-button {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1.4px solid rgba(20,20,20,0.72);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.95);
+  color: rgba(20,20,20,0.88);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.staff-mute-button.counterpoint {
+  top: 0;
+  left: 0;
+}
+
+.staff-mute-button.cantus {
+  top: 170px;
+  left: 0;
+}
+
+.staff-mute-button:hover {
+  border-color: #ff4f8b;
+  background: rgba(255,79,139,0.08);
+}
+
+.staff-mute-button.muted {
+  border-color: #ff4f8b;
+  background: #ff4f8b;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .staff-mute-overlay {
+    left: 70px;
+  }
+}
