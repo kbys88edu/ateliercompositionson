@@ -9,7 +9,7 @@ const NOTE_LETTER_STEPS = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 const SCORE = {
-  width: 2560,
+  width: 1792,
   height: 360,
   left: 105,
   right: 55,
