@@ -333,6 +333,11 @@ function toggleTieAtSelected() {
   const required = getRequiredHalfCount();
   if (!required || selectedIndex >= required - 1) return;
 
+  // In this module, ties are only allowed across the barline.
+  // With two half notes per cantus measure, this means: second half -> next measure.
+  // First half -> second half in the same measure is disabled.
+  if (selectedIndex % SCORE.halfsPerCantus !== SCORE.halfsPerCantus - 1) return;
+
   const counterpoint = getNotesFromTextarea("counterpoint");
   while (counterpoint.length < required) counterpoint.push("");
 
@@ -1380,14 +1385,6 @@ function drawAccidental(svg, parsedOrAccidental, x, y, isCantus = false) {
     height,
     `png-notation png-accidental ${isCantus ? "cantus" : "counterpoint"} accidental-${accidental === "#" ? "sharp" : accidental === "b" ? "flat" : "natural"}`
   ));
-
-  const fallback = createSvgElement("text", {
-    x: x - 18,
-    y: y + 4,
-    class: "accidental accidental-fallback"
-  });
-  fallback.textContent = accidental;
-  svg.appendChild(fallback);
 }
 
 function drawHalfFlag(svg, x, y, isSelected, isCurrentPlayback) {
