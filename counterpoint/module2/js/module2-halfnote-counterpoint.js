@@ -37,16 +37,16 @@ function createSvgImage(href, x, y, width, height, className = "", preserveAspec
 
 
 const SCORE = {
-  width: 1120,
-  height: 360,
-  left: 105,
-  right: 55,
-  staffGap: 10,
-  noteStep: 5,
-  bottomLineY: 145,
-  cantusBottomLineY: 260,
-  playheadTop: 55,
-  playheadBottom: 308,
+  width: 1240,
+  height: 392,
+  left: 118,
+  right: 60,
+  staffGap: 11,
+  noteStep: 5.5,
+  bottomLineY: 152,
+  cantusBottomLineY: 277,
+  playheadTop: 58,
+  playheadBottom: 328,
   halfsPerCantus: 2
 };
 
@@ -1065,14 +1065,14 @@ function deleteSelectedNote() {
 function drawClef(svg, bottomLineY, clefType = "treble") {
   const isBass = clefType === "bass";
   const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
-  const width = isBass ? 58 : 60;
-  const height = isBass ? 74 : 112;
-  const x = SCORE.left - 76;
-  const y = isBass ? bottomLineY - 62 : bottomLineY - 100;
+  const width = isBass ? 62 : 64;
+  const height = isBass ? 78 : 118;
+  const x = SCORE.left - 80;
+  const y = isBass ? bottomLineY - 49 : bottomLineY - 86;
 
   const fallback = createSvgElement("text", {
     x: 52,
-    y: isBass ? bottomLineY - 20 : bottomLineY - 10,
+    y: isBass ? bottomLineY - 18 : bottomLineY - 4,
     class: `clef-symbol ${isBass ? "bass" : "treble"} clef-fallback`
   });
   fallback.textContent = isBass ? "𝄢" : "𝄞";
@@ -1082,8 +1082,8 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
-  const startX = SCORE.left - 30;
-  const endX = SCORE.width - SCORE.right + 10;
+  const startX = SCORE.left - 24;
+  const endX = SCORE.width - SCORE.right + 6;
   const staffY = bottomLineY - SCORE.staffGap * 4;
   const staffWidth = endX - startX;
   const staffHeight = SCORE.staffGap * 4 + 2;
@@ -1182,13 +1182,13 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   drawAccidental(svg, parsed, x, y);
 
   if (isCantus) {
-    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 14, y - 9, 28, 18, "png-notation png-notehead whole-note"));
+    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 16, y - 10, 32, 20, "png-notation png-notehead whole-note"));
   } else {
     const stemDirection = y < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
     const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
-    const imgX = x - 14;
-    const imgY = stemDirection === "down" ? y - 11 : y - 36;
-    svg.appendChild(createSvgImage(image, imgX, imgY, 28, 48, `png-notation png-notehead half-note ${stemDirection}`));
+    const imgX = x - 16;
+    const imgY = stemDirection === "down" ? y - 12 : y - 40;
+    svg.appendChild(createSvgImage(image, imgX, imgY, 32, 54, `png-notation png-notehead half-note ${stemDirection}`));
   }
 
   const noteClass = [
@@ -1203,8 +1203,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: y,
-    rx: 10,
-    ry: 6.6,
+    rx: 11.2,
+    ry: 7.2,
     transform: `rotate(-18 ${x} ${y})`,
     class: noteClass
   }));
@@ -1213,15 +1213,15 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     svg.appendChild(createSvgElement("ellipse", {
       cx: x,
       cy: y,
-      rx: 15.5,
-      ry: 11.5,
+      rx: 17,
+      ry: 12.8,
       class: "selected-note-ring"
     }));
   }
 
   svg.appendChild(createSvgElement("text", {
     x: x - 12,
-    y: isCantus ? bottomLineY + 52 : bottomLineY - 66,
+    y: isCantus ? bottomLineY + 56 : bottomLineY - 70,
     class: isCurrentPlayback ? "note-label playing" : isSelected ? "note-label selected" : "note-label"
   })).textContent = note;
 }
