@@ -18,8 +18,7 @@ const NOTATION_IMAGES = {
   wholeNote: `${NOTATION_IMAGE_BASE}whole-note.png`,
   sharp: `${NOTATION_IMAGE_BASE}sharp.png`,
   flat: `${NOTATION_IMAGE_BASE}flat.png`,
-  natural: `${NOTATION_IMAGE_BASE}natural.png`,
-  tie: `${NOTATION_IMAGE_BASE}tie.png`
+  natural: `${NOTATION_IMAGE_BASE}natural.png`
 };
 
 function createSvgImage(href, x, y, width, height, className = "", preserveAspectRatio = "xMidYMid meet") {
@@ -55,8 +54,8 @@ const I18N = {
   ja: {
     backLink: "← トップへ戻る",
     languageLabel: "言語",
-    title: "Module 2.5｜タイを使ったリズム対位法チェッカー",
-    lead: "全音符の定旋律に対して、対旋律を二分音符とタイで入力します。五線譜をクリックして音を置き、↑↓で半音移動、←→で前後の二分音符へ移動できます。Tキーまたはボタンでタイを切り替えます。",
+    title: "Module 2.5｜タイ付きリズム対位法チェッカー",
+    lead: "全音符の定旋律に対して、対旋律を二分音符とタイで入力します。Tキーまたはボタンで、選択音から次の音へタイを付けられます。",
     levelFilterLabel: "レベル",
     levelAll: "すべて",
     levelBeginner: "初級",
@@ -82,9 +81,9 @@ const I18N = {
     timbreSaw: "Sawtooth / 明るい",
     timbreOrgan: "Organ / オルガン風",
     timbreBell: "Bell / ベル風",
-    playbackHint: "Space：再生 / 停止　｜　← / →：前後の二分音符へ移動　｜　T：タイ切替",
+    playbackHint: "Space：再生 / 停止　｜　← / →：前後の二分音符へ移動　｜　T：タイ切り替え",
     scoreInputTitle: "五線入力",
-    scoreInputHelp: "上段に二分音符とタイを使う対旋律、下段に全音符の定旋律を表示します。選択中の音で T キーまたはボタンを押すと、次の音へタイを付けられます。",
+    scoreInputHelp: "上段に二分音符とタイを使った対旋律、下段に全音符の定旋律を表示します。",
     currentInput: "現在の入力",
     cantusLabel: "定旋律：",
     counterpointLabel: "対旋律：",
@@ -113,7 +112,7 @@ const I18N = {
     offbeatBad: (q, name) => `${q}番目の二分音符：${name}。弱拍の不協和ですが、順次進行による経過音・補助音として説明しにくい形です。`,
     parallelFifth: (a, b) => `${a}番目 → ${b}番目：連続5度があります。`,
     parallelOctave: (a, b) => `${a}番目 → ${b}番目：連続8度または連続1度があります。`,
-    noTies: "タイは同じ高さの次の二分音符へ接続されます。",
+    noTies: "タイでつながれた音は、同じ高さの持続音として扱います。",
     intervals: {
       perfectUnison: "完全1度",
       perfectOctave: "完全8度",
@@ -135,8 +134,8 @@ const I18N = {
   fr: {
     backLink: "← Retour à l’accueil",
     languageLabel: "Langue",
-    title: "Module 2 — Contrepoint à deux voix en blanches",
-    lead: "Pour chaque ronde du cantus, saisissez deux blanches dans le contrepoint. Ce module n’utilise pas de notes liées. Cliquez sur la portée pour placer une note, ↑↓ déplacent par demi-ton, ←→ changent de blanche.",
+    title: "Module 2.5 — Contrepoint rythmique avec liaisons",
+    lead: "Saisissez un contrepoint en blanches avec liaisons. La touche T ou le bouton ajoutent une liaison vers la note suivante.",
     levelFilterLabel: "Niveau",
     levelAll: "Tous",
     levelBeginner: "Débutant",
@@ -145,6 +144,7 @@ const I18N = {
     exerciseLabel: "Exercice",
     loadExercise: "Charger l’exercice",
     loadExample: "Charger l’exemple",
+    toggleTie: "Basculer la liaison",
     deleteLast: "Supprimer la dernière note",
     clearCounterpoint: "Effacer le contrepoint",
     refreshScore: "Actualiser la partition",
@@ -161,9 +161,9 @@ const I18N = {
     timbreSaw: "Sawtooth / brillant",
     timbreOrgan: "Organ / orgue",
     timbreBell: "Bell / cloche",
-    playbackHint: "Espace : lecture / arrêt　｜　← / → : blanche précédente / suivante",
+    playbackHint: "Espace : lecture / arrêt　｜　← / → : blanche précédente / suivante　｜　T : liaison",
     scoreInputTitle: "Saisie sur portée",
-    scoreInputHelp: "La portée supérieure montre le contrepoint en blanches ; la portée inférieure montre le cantus en rondes. Il n’y a pas de liaison.",
+    scoreInputHelp: "La portée supérieure montre le contrepoint en blanches avec liaisons ; la portée inférieure montre le cantus en rondes.",
     currentInput: "Saisie actuelle",
     cantusLabel: "Cantus :",
     counterpointLabel: "Contrepoint :",
@@ -192,7 +192,7 @@ const I18N = {
     offbeatBad: (q, name) => `Noire ${q} : ${name}. Dissonance faible, mais elle n’est pas clairement justifiée par mouvement conjoint.`,
     parallelFifth: (a, b) => `Noire ${a} → ${b} : quintes parallèles.`,
     parallelOctave: (a, b) => `Noire ${a} → ${b} : octaves ou unissons parallèles.`,
-    noTies: "Ce module n’utilise pas de notes liées : chaque note est traitée comme une blanche indépendante.",
+    noTies: "Les notes liées sont traitées comme une tenue de même hauteur.",
     intervals: {
       perfectUnison: "unisson juste",
       perfectOctave: "octave juste",
@@ -263,17 +263,17 @@ const EXERCISES = [
     level: "beginner",
     title: { ja: "入力例つき", fr: "Exemple rempli" },
     description: {
-      ja: "動作確認用。タイを含む例題です。",
+      ja: "動作確認用。二分音符の対旋律が入っています。",
       fr: "Exemple de démonstration avec un contrepoint en blanches."
     },
     cantus: ["C4", "D4", "E4", "F4"],
     counterpoint: [
       "G4", "G4",
       "A4", "A4",
-      "B4", "A4",
-      "G4", "G4"
+      "G4", "B4",
+      "A4", "C5"
     ],
-    ties: [true, false, true, false, false, false, true, false]
+    ties: [true, false, true, false, false, false, false, false]
   }
 ];
 
@@ -301,23 +301,29 @@ function setTieStates(states) {
 }
 
 function normalizeTieStates(states, required) {
-  const out = Array(required).fill(false);
-  for (let i = 0; i < Math.min(required, states.length); i += 1) out[i] = !!states[i];
+  const out = Array(Math.max(0, required)).fill(false);
+  for (let i = 0; i < Math.min(out.length, states.length); i += 1) {
+    out[i] = !!states[i];
+  }
   if (out.length) out[out.length - 1] = false;
   return out;
 }
 
-function syncTiedPitch(counterpoint, ties, index) {
+function syncTiePitch(counterpoint, ties, index) {
   if (!counterpoint[index]) return;
   const pitch = counterpoint[index];
-  let i = index;
-  while (i > 0 && ties[i - 1]) {
-    i -= 1;
-    counterpoint[i] = pitch;
+
+  let left = index;
+  while (left > 0 && ties[left - 1]) {
+    left -= 1;
   }
-  i = index;
-  while (i < counterpoint.length - 1 && ties[i]) {
-    i += 1;
+
+  let right = index;
+  while (right < counterpoint.length - 1 && ties[right]) {
+    right += 1;
+  }
+
+  for (let i = left; i <= right; i += 1) {
     counterpoint[i] = pitch;
   }
 }
@@ -329,17 +335,15 @@ function toggleTieAtSelected() {
 
   const counterpoint = getNotesFromTextarea("counterpoint");
   while (counterpoint.length < required) counterpoint.push("");
-  const ties = normalizeTieStates(getTieStates(), required);
 
+  const ties = normalizeTieStates(getTieStates(), required);
   if (!counterpoint[selectedIndex]) counterpoint[selectedIndex] = "G4";
 
+  ties[selectedIndex] = !ties[selectedIndex];
+
   if (ties[selectedIndex]) {
-    ties[selectedIndex] = false;
-  } else {
-    ties[selectedIndex] = true;
     counterpoint[selectedIndex + 1] = counterpoint[selectedIndex];
-    syncTiedPitch(counterpoint, ties, selectedIndex);
-    syncTiedPitch(counterpoint, ties, selectedIndex + 1);
+    syncTiePitch(counterpoint, ties, selectedIndex);
   }
 
   setNotesToTextarea("counterpoint", counterpoint);
@@ -347,18 +351,54 @@ function toggleTieAtSelected() {
   renderScore();
 }
 
+function isTiedFromPrevious(counterpoint, ties, index) {
+  return index > 0 && ties[index - 1] && counterpoint[index] && counterpoint[index] === counterpoint[index - 1];
+}
+
 function getTieSpan(counterpoint, ties, index) {
+  if (!counterpoint[index]) return 1;
   let span = 1;
-  while (index + span - 1 < ties.length && ties[index + span - 1] && counterpoint[index + span] === counterpoint[index]) {
+  while (
+    index + span < counterpoint.length &&
+    ties[index + span - 1] &&
+    counterpoint[index + span] === counterpoint[index]
+  ) {
     span += 1;
-    if (index + span >= counterpoint.length) break;
   }
   return span;
 }
 
-function isTiedFromPrevious(counterpoint, ties, index) {
-  return index > 0 && !!ties[index - 1] && counterpoint[index - 1] && counterpoint[index - 1] === counterpoint[index];
+function drawTiePath(svg, x1, x2, y) {
+  const start = x1 + 14;
+  const end = x2 - 14;
+  if (end <= start) return;
+
+  const mid = (start + end) / 2;
+  const tieY = y - 25;
+  const d = `M ${start} ${tieY} C ${mid - 18} ${tieY - 10}, ${mid + 18} ${tieY - 10}, ${end} ${tieY}`;
+  svg.appendChild(createSvgElement("path", {
+    d,
+    fill: "none",
+    stroke: "#181818",
+    "stroke-width": 2,
+    "stroke-linecap": "round",
+    class: "tie-curve"
+  }));
 }
+
+function drawCounterpointTies(svg, positions, counterpoint) {
+  const ties = normalizeTieStates(getTieStates(), Math.max(positions.length, counterpoint.length));
+  ties.forEach((isTied, i) => {
+    if (!isTied || !counterpoint[i] || !counterpoint[i + 1]) return;
+    if (counterpoint[i] !== counterpoint[i + 1]) return;
+
+    const y = noteToY(counterpoint[i], SCORE.bottomLineY, "treble");
+    if (y === null || positions[i] === undefined || positions[i + 1] === undefined) return;
+
+    drawTiePath(svg, positions[i], positions[i + 1], y - 2);
+  });
+}
+
 
 function t(key) {
   return I18N[currentLanguage][key];
@@ -1163,7 +1203,7 @@ function moveSelectedNote(semitone) {
     counterpoint[selectedIndex] = moveNoteChromatic(currentNote, semitone);
   }
 
-  syncTiedPitch(counterpoint, ties, selectedIndex);
+  syncTiePitch(counterpoint, ties, selectedIndex);
   setNotesToTextarea("counterpoint", counterpoint);
   setTieStates(ties);
   renderScore();
@@ -1503,35 +1543,6 @@ function drawSvgMuteButton(svg, x, y, label, muted, onToggle) {
   svg.appendChild(group);
 }
 
-function drawTie(svg, startX, endX, y) {
-  const width = Math.max(36, endX - startX - 18);
-  const x = startX + 9;
-  const tieY = y - 28;
-  svg.appendChild(createSvgImage(
-    NOTATION_IMAGES.tie,
-    x,
-    tieY,
-    width,
-    14,
-    "png-notation png-tie",
-    "none"
-  ));
-}
-
-function drawCounterpointTies(svg, positions, counterpoint) {
-  const ties = normalizeTieStates(getTieStates(), Math.max(counterpoint.length, positions.length));
-  ties.forEach((isTied, i) => {
-    if (!isTied) return;
-    const a = counterpoint[i];
-    const b = counterpoint[i + 1];
-    if (!a || !b || a !== b) return;
-    const y = noteToY(a, SCORE.bottomLineY, "treble");
-    if (y === null) return;
-    const renderY = y - 2;
-    drawTie(svg, positions[i], positions[i + 1], renderY);
-  });
-}
-
 function drawMuteButtons(svg) {
   drawSvgMuteButton(svg, 10, SCORE.bottomLineY - 54, "counterpoint", isCounterpointMuted, toggleCounterpointMute);
   drawSvgMuteButton(svg, 10, SCORE.cantusBottomLineY - 54, "cantus", isCantusMuted, toggleCantusMute);
@@ -1609,7 +1620,7 @@ function handleScoreClick(event) {
 
   selectedIndex = nearestIndex;
   counterpoint[nearestIndex] = clickedNote;
-  syncTiedPitch(counterpoint, ties, nearestIndex);
+  syncTiePitch(counterpoint, ties, nearestIndex);
 
   setNotesToTextarea("counterpoint", counterpoint);
   setTieStates(ties);
@@ -1721,7 +1732,7 @@ function inputLetterNote(letter) {
   const octave = ["A", "B"].includes(normalized) ? 4 : 4;
   const note = `${normalized}${octave}`;
   counterpoint[selectedIndex] = note;
-  syncTiedPitch(counterpoint, ties, selectedIndex);
+  syncTiePitch(counterpoint, ties, selectedIndex);
 
   setNotesToTextarea("counterpoint", counterpoint);
   setTieStates(ties);
