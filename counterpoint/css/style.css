@@ -1857,3 +1857,34 @@ input {
   color: rgba(20,20,20,0.78);
   line-height: 1.8;
 }
+
+
+/* 2026-06-01 remove lower analysis + letter input */
+.analysis-card,
+#analysisResults {
+  display: none !important;
+}
+
+.analysis-inline-result {
+  margin: 14px 0 0;
+  padding: 0;
+  color: rgba(20,20,20,0.78);
+  line-height: 1.8;
+}
+
+
+/* 2026-06-01 mute buttons under voice labels */
+.staff-mute-overlay {
+  left: 22px !important;
+  top: 84px !important;
+}
+
+.staff-mute-button.counterpoint {
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.staff-mute-button.cantus {
+  top: 170px !important;
+  left: 0 !important;
+}

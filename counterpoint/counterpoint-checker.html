@@ -10,7 +10,7 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-analysis-inline-accidental-rule" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-mute-under-labels" />
 </head>
 
 <body>
@@ -81,7 +81,7 @@
           Tempo
           <input id="tempoInput" type="number" min="40" max="180" value="72" />
         </label>
-        <p class="playback-hint">Space：再生 / 停止　｜　← / →：前後の音へ移動　｜　↑ / ↓：半音移動</p>
+        <p class="playback-hint">Space：再生 / 停止　｜　← / →：前後の音へ移動　｜　↑ / ↓：半音移動　｜　A〜G / H：音名入力</p>
       </div>
 
       <div class="score-box">
@@ -112,16 +112,8 @@
       <button class="button primary" type="button" id="analyzeButton">解析する</button>
       <div id="analysisInlineResult" class="analysis-inline-result" aria-live="polite">まだ解析していません。</div>
 </section>
+</main>
 
-    <section class="result-section">
-      <h2 data-i18n="analysisResult">解析結果</h2>
-      <div id="summary" class="summary-box" data-i18n="notAnalyzed">
-        まだ解析していません。
-      </div>
-      <div id="result" class="result-list"></div>
-    </section>
-  </main>
-
-  <script src="js/counterpoint.js?v=20260601-module1-analysis-inline-accidental-rule"></script>
+  <script src="js/counterpoint.js?v=20260601-module1-mute-under-labels"></script>
 </body>
 </html>

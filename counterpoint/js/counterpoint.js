@@ -876,7 +876,7 @@ function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSa
   }
 
   function analyzeCounterpoint() {
-    const result = $("analysisInlineResult") || $("analysisSummary");
+    const result = $("analysisInlineResult");
     const cantus = getNotesFromTextarea("cantus");
     const counterpoint = getNotesFromTextarea("counterpoint").filter(Boolean);
 
@@ -920,31 +920,82 @@ function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSa
     alert("MIDI書き出しは次の段階で再接続します。現在は表示・入力・再生の安定化を優先しています。");
   }
 
-  function handleKeyboard(event) {
+  
+  function normalizeLetterInput(letter) {
+    const upper = String(letter || "").toUpperCase();
+    if (upper === "H") return "B";
+    if (["A", "B", "C", "D", "E", "F", "G"].includes(upper)) return upper;
+    return "";
+  }
+
+  function octaveForLetterInput(letter) {
+    const upper = normalizeLetterInput(letter);
+    // Keep first-species counterpoint in a comfortable upper-staff range.
+    if (["A", "B"].includes(upper)) return 4;
+    return 4;
+  }
+
+  function inputLetterNote(letter) {
+    const normalized = normalizeLetterInput(letter);
+    if (!normalized) return;
+
+    const cantus = getNotesFromTextarea("cantus");
+    const counterpoint = getNotesFromTextarea("counterpoint");
+    const length = Math.max(cantus.length, counterpoint.length, 1);
+
+    while (counterpoint.length < length) counterpoint.push("");
+
+    selectedIndex = Math.max(0, Math.min(length - 1, selectedIndex));
+
+    const note = `${normalized}${octaveForLetterInput(normalized)}`;
+    counterpoint[selectedIndex] = note;
+
+    setNotesToTextarea("counterpoint", counterpoint);
+    renderScore();
+    updateDisplays();
+    playNoteName(note, 0.28, 1, "femaleSample");
+
+    if (selectedIndex < length - 1) {
+      selectedIndex += 1;
+      renderScore();
+      updateDisplays();
+    }
+  }
+
+function handleKeyboard(event) {
     const tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
     if (tag === "input" || tag === "textarea") return;
 
-    if (event.key === "ArrowLeft") {
+    const key = event.key;
+
+    if (/^[a-hA to H]$/.test(key)) {
+      event.preventDefault();
+      event.stopPropagation();
+      inputLetterNote(key);
+      return;
+    }
+
+    if (key === "ArrowLeft") {
       event.preventDefault();
       event.stopPropagation();
       moveSelection(-1);
-    } else if (event.key === "ArrowRight") {
+    } else if (key === "ArrowRight") {
       event.preventDefault();
       event.stopPropagation();
       moveSelection(1);
-    } else if (event.key === "ArrowUp") {
+    } else if (key === "ArrowUp") {
       event.preventDefault();
       event.stopPropagation();
       moveSelectedNote(1);
-    } else if (event.key === "ArrowDown") {
+    } else if (key === "ArrowDown") {
       event.preventDefault();
       event.stopPropagation();
       moveSelectedNote(-1);
-    } else if (event.key === " " || event.code === "Space") {
+    } else if (key === " " || event.code === "Space") {
       event.preventDefault();
       event.stopPropagation();
       togglePlayback();
-    } else if (event.key === "Delete" || event.key === "Backspace") {
+    } else if (key === "Delete" || key === "Backspace") {
       event.preventDefault();
       event.stopPropagation();
       deleteSelectedNote();
