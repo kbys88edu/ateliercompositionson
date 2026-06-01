@@ -22,7 +22,7 @@
       background: radial-gradient(circle at 12% 0%, #fff, transparent 34%), var(--bg);
     }
     .page {
-      width: min(1180px, calc(100% - 32px));
+      width: min(1260px, calc(100% - 32px));
       margin: 0 auto;
       padding: 28px 0 64px;
     }
@@ -93,7 +93,7 @@
     }
     .modules {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 14px;
     }
     .card {
@@ -120,15 +120,15 @@
     }
     h2 {
       margin: 0;
-      font-size: clamp(1.25rem, 2.4vw, 2rem);
-      line-height: 1.03;
+      font-size: clamp(1.1rem, 1.9vw, 1.75rem);
+      line-height: 1.06;
       letter-spacing: -0.055em;
     }
     .card p {
       margin: 16px 0 0;
       color: var(--muted);
       line-height: 1.55;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
     .open {
       margin-top: 28px;
@@ -137,7 +137,7 @@
       justify-content: space-between;
       font-weight: 700;
     }
-    @media (max-width: 1080px) {
+    @media (max-width: 1180px) {
       .modules { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
     @media (max-width: 760px) {
@@ -192,29 +192,38 @@
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
-      <a class="card" href="/counterpoint/module3/module3-quarter-counterpoint.html">
+      <a class="card" href="/counterpoint/module2_5/module2-5-tied-counterpoint.html">
         <div>
           <div class="num">Module 3</div>
-          <h2 data-i18n="m3Title">四分音符対位法</h2>
-          <p data-i18n="m3Desc">経過音や刺繍音を含む、より細かい動きを練習します。</p>
+          <h2 data-i18n="m3Title">タイ付きリズム</h2>
+          <p data-i18n="m3Desc">二分音符とタイを使い、持続音やシンコペーションを練習します。</p>
+        </div>
+        <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
+      </a>
+
+      <a class="card" href="/counterpoint/module3/module3-quarter-counterpoint.html">
+        <div>
+          <div class="num">Module 4</div>
+          <h2 data-i18n="m4Title">四分音符対位法</h2>
+          <p data-i18n="m4Desc">経過音や刺繍音を含む、より細かい動きを練習します。</p>
         </div>
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
       <a class="card" href="/counterpoint/module4/module4-mixed-counterpoint.html">
         <div>
-          <div class="num">Module 4</div>
-          <h2 data-i18n="m4Title">混合リズム</h2>
-          <p data-i18n="m4Desc">二分音符・四分音符などを組み合わせて対旋律を作ります。</p>
+          <div class="num">Module 5</div>
+          <h2 data-i18n="m5Title">混合リズム</h2>
+          <p data-i18n="m5Desc">二分音符・四分音符などを組み合わせて対旋律を作ります。</p>
         </div>
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
       <a class="card" href="/counterpoint/three-voice/three-voice-counterpoint.html">
         <div>
-          <div class="num">Module 5</div>
-          <h2 data-i18n="m5Title">3声対位法</h2>
-          <p data-i18n="m5Desc">定旋律に対して、2つの対旋律を組み合わせます。</p>
+          <div class="num">Module 6</div>
+          <h2 data-i18n="m6Title">3声対位法</h2>
+          <p data-i18n="m6Desc">定旋律に対して、2つの対旋律を組み合わせます。</p>
         </div>
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
@@ -231,12 +240,14 @@
         m1Desc: "全音符の定旋律に対して、全音符の対旋律を作ります。",
         m2Title: "二分音符対位法",
         m2Desc: "全音符の定旋律に対して、二分音符で対旋律を作ります。",
-        m3Title: "四分音符対位法",
-        m3Desc: "経過音や刺繍音を含む、より細かい動きを練習します。",
-        m4Title: "混合リズム",
-        m4Desc: "二分音符・四分音符などを組み合わせて対旋律を作ります。",
-        m5Title: "3声対位法",
-        m5Desc: "定旋律に対して、2つの対旋律を組み合わせます。",
+        m3Title: "タイ付きリズム",
+        m3Desc: "二分音符とタイを使い、持続音やシンコペーションを練習します。",
+        m4Title: "四分音符対位法",
+        m4Desc: "経過音や刺繍音を含む、より細かい動きを練習します。",
+        m5Title: "混合リズム",
+        m5Desc: "二分音符・四分音符などを組み合わせて対旋律を作ります。",
+        m6Title: "3声対位法",
+        m6Desc: "定旋律に対して、2つの対旋律を組み合わせます。",
         open: "開く"
       },
       fr: {
@@ -247,12 +258,14 @@
         m1Desc: "Écrire une voix en rondes contre un cantus en rondes.",
         m2Title: "Contrepoint en blanches",
         m2Desc: "Écrire deux notes contre une note longue du cantus.",
-        m3Title: "Contrepoint en noires",
-        m3Desc: "Travailler les notes de passage et les broderies.",
-        m4Title: "Rythmes mixtes",
-        m4Desc: "Combiner blanches, noires et rythmes plus variés.",
-        m5Title: "Contrepoint à 3 voix",
-        m5Desc: "Combiner deux voix de contrepoint autour d’un cantus.",
+        m3Title: "Rythme avec liaisons",
+        m3Desc: "Travailler les tenues et syncopes avec des blanches liées.",
+        m4Title: "Contrepoint en noires",
+        m4Desc: "Travailler les notes de passage et les broderies.",
+        m5Title: "Rythmes mixtes",
+        m5Desc: "Combiner blanches, noires et rythmes plus variés.",
+        m6Title: "Contrepoint à 3 voix",
+        m6Desc: "Combiner deux voix de contrepoint autour d’un cantus.",
         open: "Ouvrir"
       }
     };
