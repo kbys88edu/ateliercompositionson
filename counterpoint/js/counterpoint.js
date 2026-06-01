@@ -12,8 +12,8 @@ const SCORE = {
   cantusBottomLineY: 320,
   playheadTop: 56,
   playheadBottom: 400,
-  noteImageWidth: 32.3,
-  noteImageHeight: 19,
+  noteImageWidth: 31.3,
+  noteImageHeight: 18.4,
   accidentalWidth: 19,
   accidentalHeight: 52
 };
@@ -181,43 +181,47 @@ function setLanguage(lang) {
 
 function populateExercises() {
   const select = document.getElementById("exerciseSelect");
-  if (!select) return;
+  if (!select) {
+    updateExerciseDescription();
+    return;
+  }
 
-  const current = select.value;
   select.innerHTML = "";
-
   EXERCISES.forEach((exercise) => {
     const option = document.createElement("option");
     option.value = exercise.id;
-    option.textContent = currentLanguage === "fr" ? exercise.titleFr : exercise.titleJa;
+    option.textContent = exercise.title[currentLanguage] || exercise.title.ja || exercise.id;
     select.appendChild(option);
   });
 
-  if (EXERCISES.some((ex) => ex.id === current)) {
-    select.value = current;
-  }
+  updateExerciseDescription();
 }
 
 function updateExerciseDescription() {
-  const select = document.getElementById("exerciseSelect");
   const description = document.getElementById("exerciseDescription");
-  if (!select || !description) return;
+  if (!description) return;
 
-  const exercise = EXERCISES.find((item) => item.id === select.value) || EXERCISES[0];
-  description.textContent = currentLanguage === "fr" ? exercise.descriptionFr : exercise.descriptionJa;
+  const select = document.getElementById("exerciseSelect");
+  const id = select ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
+  const exercise = EXERCISES.find((item) => item.id === id) || EXERCISES[0];
+
+  description.textContent = exercise && exercise.description
+    ? (exercise.description[currentLanguage] || exercise.description.ja || "")
+    : "";
 }
 
 function loadSelectedExercise() {
   const select = document.getElementById("exerciseSelect");
-  const exercise = EXERCISES.find((item) => item.id === select?.value) || EXERCISES[0];
+  const id = select ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
+  const exercise = EXERCISES.find((item) => item.id === id) || EXERCISES[0];
+  if (!exercise) return;
 
-  setNotesToTextarea("cantus", exercise.cantus);
-  setNotesToTextarea("counterpoint", []);
+  setNotesToTextarea("cantus", exercise.cantus || []);
+  setNotesToTextarea("counterpoint", exercise.counterpoint || []);
   selectedIndex = 0;
   playbackIndex = 0;
-  lastIssues = [];
-  renderResults([]);
-  renderSummary("");
+  stopPlayback(true);
+  updateExerciseDescription();
   renderScore();
 }
 
@@ -824,16 +828,16 @@ function drawVoiceMuteButton(svg, voice, x, y) {
   group.appendChild(createSvgElement("rect", {
     x,
     y,
-    width: 38,
-    height: 26,
-    rx: 8,
-    ry: 8,
+    width: 44,
+    height: 28,
+    rx: 9,
+    ry: 9,
     class: "voice-mute-button-bg"
   }));
 
   const label = createSvgElement("text", {
-    x: x + 19,
-    y: y + 13.8,
+    x: x + 22,
+    y: y + 14.7,
     class: "voice-mute-button-label"
   });
   label.textContent = "M";
@@ -857,20 +861,21 @@ function drawVoiceMuteButton(svg, voice, x, y) {
 
 function drawSenzokuSystemLabels(svg) {
   svg.appendChild(createSvgElement("text", {
-    x: 18,
+    x: 22,
     y: SCORE.counterpointBottomLineY - 76,
     class: "voice-label senzoku-label"
   })).textContent = "Counterpoint";
 
-  drawVoiceMuteButton(svg, "counterpoint", 18, SCORE.counterpointBottomLineY - 62);
+  // Place M button inside the visible score area, before the clef/staff.
+  drawVoiceMuteButton(svg, "counterpoint", SCORE.left - 118, SCORE.counterpointBottomLineY - 43);
 
   svg.appendChild(createSvgElement("text", {
-    x: 18,
+    x: 22,
     y: SCORE.cantusBottomLineY - 76,
     class: "voice-label senzoku-label"
   })).textContent = "Cantus";
 
-  drawVoiceMuteButton(svg, "cantus", 18, SCORE.cantusBottomLineY - 62);
+  drawVoiceMuteButton(svg, "cantus", SCORE.left - 118, SCORE.cantusBottomLineY - 43);
 }
 
 
