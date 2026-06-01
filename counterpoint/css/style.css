@@ -2141,7 +2141,7 @@ input {
   overflow: visible;
 }
 
-/* Module 1: fit score without vertical or horizontal scrollbars. */
+/* Module 1: no scrollbars, scalable score. */
 html,
 body {
   overflow-x: hidden !important;
@@ -2157,54 +2157,40 @@ body {
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
-  height: clamp(260px, 46vh, 390px) !important;
+  min-width: 0 !important;
+  height: clamp(230px, 42vh, 360px) !important;
   min-height: 0 !important;
   overflow: visible !important;
 }
 
-@media (max-height: 780px) {
+@media (max-height: 760px) {
   .page {
-    padding-top: 14px !important;
-    padding-bottom: 22px !important;
+    padding-top: 10px !important;
+    padding-bottom: 16px !important;
   }
 
-  .checker-header {
-    margin-bottom: 12px !important;
-  }
-
-  .checker-header h1 {
-    margin-bottom: 8px !important;
+  .checker-header,
+  .hero {
+    margin-bottom: 10px !important;
   }
 
   .checker-panel {
-    gap: 10px !important;
+    gap: 8px !important;
   }
 
   .score-box {
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
+    padding: 10px !important;
   }
 
   .score-editor,
   #scoreEditor {
-    height: clamp(235px, 42vh, 340px) !important;
+    height: clamp(210px, 38vh, 320px) !important;
   }
 }
 
 @media (max-width: 760px) {
   .score-editor,
   #scoreEditor {
-    height: clamp(240px, 38vh, 330px) !important;
-  }
-
-  .score-box {
-    padding: 10px !important;
-  }
-}
-
-@media (max-width: 520px) {
-  .score-editor,
-  #scoreEditor {
-    height: clamp(220px, 34vh, 300px) !important;
+    height: clamp(210px, 34vh, 300px) !important;
   }
 }

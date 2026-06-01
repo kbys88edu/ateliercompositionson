@@ -53,6 +53,40 @@
   let reverbNodes = null;
   let lastIssues = [];
 
+
+const undoStack = [];
+
+function getEditorStateSnapshot() {
+  return {
+    counterpoint: getNotesFromTextarea("counterpoint"),
+    selectedIndex,
+    playbackIndex
+  };
+}
+
+function pushUndoState() {
+  undoStack.push(getEditorStateSnapshot());
+  if (undoStack.length > 100) undoStack.shift();
+}
+
+function restoreEditorState(state) {
+  if (!state) return;
+  stopPlayback(false);
+  setNotesToTextarea("counterpoint", state.counterpoint || []);
+  selectedIndex = Number.isInteger(state.selectedIndex) ? state.selectedIndex : 0;
+  playbackIndex = Number.isInteger(state.playbackIndex) ? state.playbackIndex : 0;
+  renderScore();
+  updateDisplays();
+}
+
+function undoLastEdit() {
+  if (isPlaying) return;
+  const state = undoStack.pop();
+  if (!state) return;
+  restoreEditorState(state);
+}
+
+
   const voiceMuteState = {
     counterpoint: false,
     cantus: false
@@ -268,11 +302,14 @@ function moveNoteChromatic(note, semitone) {
     return note;
   }
 
-  function noteToY(note, bottomLineY) {
+  function noteToY(note, bottomLineY, clefType = null) {
     const noteStep = diatonicStepIndex(note);
     if (noteStep === null) return null;
 
-    const referenceNote = getBottomLineReference(bottomLineY);
+    const referenceNote = clefType
+      ? (clefType === "bass" ? "G2" : "E4")
+      : getBottomLineReference(bottomLineY);
+
     const referenceStep = diatonicStepIndex(referenceNote);
     if (referenceStep === null) return null;
 
@@ -396,6 +433,15 @@ function moveNoteChromatic(note, semitone) {
     }));
   }
 
+  function getCantusClefType(cantusNotes = null) {
+    const notes = Array.isArray(cantusNotes) ? cantusNotes : getNotesFromTextarea("cantus");
+    const threshold = noteToMidi("F4");
+    return notes.some((note) => {
+      const midi = noteToMidi(note);
+      return midi !== null && midi >= threshold;
+    }) ? "treble" : "bass";
+  }
+
   function drawClef(svg, bottomLineY, clefType = "treble") {
     const isBass = clefType === "bass";
     const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
@@ -513,8 +559,8 @@ function moveNoteChromatic(note, semitone) {
     return !!voiceMuteState[voice];
   }
 
-  function drawNote(svg, note, x, voice, index, bottomLineY) {
-    const y = noteToY(note, bottomLineY);
+  function drawNote(svg, note, x, voice, index, bottomLineY, clefType = null) {
+    const y = noteToY(note, bottomLineY, clefType);
     const parsed = parseNote(note);
     if (y === null || !parsed) return;
 
@@ -558,27 +604,23 @@ function moveNoteChromatic(note, semitone) {
     const positions = getScorePositions(noteCount);
 
     svg.setAttribute("viewBox", `0 0 ${scoreWidth} ${SCORE.height}`);
-    svg.setAttribute("width", String(scoreWidth));
-    svg.setAttribute("height", String(SCORE.height));
-    svg.style.width = `${scoreWidth}px`;
-    svg.style.minWidth = `${scoreWidth}px`;
-    svg.style.height = `${SCORE.height}px`;
 
     selectedIndex = Math.max(0, Math.min(noteCount - 1, selectedIndex));
     playbackIndex = Math.max(0, Math.min(noteCount - 1, playbackIndex));
 
     drawSenzokuMeasureHighlight(svg);
     drawStaff(svg, SCORE.counterpointBottomLineY, noteCount, "treble");
-    drawStaff(svg, SCORE.cantusBottomLineY, noteCount, "bass");
+    const cantusClefType = getCantusClefType(cantus);
+    drawStaff(svg, SCORE.cantusBottomLineY, noteCount, cantusClefType);
     drawBarlines(svg, noteCount);
     drawVoiceLabels(svg);
 
     counterpoint.forEach((note, i) => {
-      if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.counterpointBottomLineY);
+      if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.counterpointBottomLineY, "treble");
     });
 
     cantus.forEach((note, i) => {
-      if (note) drawNote(svg, note, positions[i], "cantus", i, SCORE.cantusBottomLineY);
+      if (note) drawNote(svg, note, positions[i], "cantus", i, SCORE.cantusBottomLineY, cantusClefType);
     });
 
     updateDisplays();
@@ -615,7 +657,7 @@ function moveNoteChromatic(note, semitone) {
 
     const existing = counterpoint[index];
     const noteX = getMeasureNoteX(index);
-    const existingY = existing ? noteToY(existing, SCORE.counterpointBottomLineY) : null;
+    const existingY = existing ? noteToY(existing, SCORE.counterpointBottomLineY, "treble") : null;
 
     selectedIndex = index;
 
@@ -627,6 +669,7 @@ function moveNoteChromatic(note, semitone) {
     }
 
     const newNote = yToNaturalNote(point.viewY);
+    pushUndoState();
     counterpoint[index] = newNote;
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
@@ -660,6 +703,7 @@ function moveNoteChromatic(note, semitone) {
   }
 
   function undoCounterpointNote() {
+    pushUndoState();
     const counterpoint = getNotesFromTextarea("counterpoint");
     counterpoint.pop();
     selectedIndex = Math.max(0, counterpoint.length - 1);
@@ -668,6 +712,7 @@ function moveNoteChromatic(note, semitone) {
   }
 
   function clearCounterpoint() {
+    pushUndoState();
     setNotesToTextarea("counterpoint", []);
     selectedIndex = 0;
     renderScore();
@@ -676,6 +721,7 @@ function moveNoteChromatic(note, semitone) {
   function deleteSelectedNote() {
     const counterpoint = getNotesFromTextarea("counterpoint");
     if (selectedIndex >= 0 && selectedIndex < counterpoint.length) {
+      pushUndoState();
       counterpoint[selectedIndex] = "";
       setNotesToTextarea("counterpoint", counterpoint);
       renderScore();
@@ -761,7 +807,7 @@ function moveNoteChromatic(note, semitone) {
     const filter = ctx.createBiquadFilter();
 
     osc1.type = "triangle";
-    osc2.type = "femaleSample";
+    osc2.type = "triangle";
     osc1.frequency.setValueAtTime(freq, now);
     osc2.frequency.setValueAtTime(freq * 2, now);
     filter.type = "lowpass";
@@ -787,45 +833,39 @@ function moveNoteChromatic(note, semitone) {
     osc2.stop(now + duration + release + 0.04);
   }
 
-function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSample") {
-  const timbre = getTimbre();
-
-  if (timbre === "humanVoice") {
-    const promise = playSampleVoiceNote(voiceSet, midi, duration, gainScale);
-    if (promise && typeof promise.catch === "function") {
-      promise.catch(() => playVoiceLikeNote(midi, duration, gainScale));
-    }
-    return;
-  }
-
-  if (timbre === "voice") {
-    playVoiceLikeNote(midi, duration, gainScale);
-    return;
-  }
-
+function playFallbackVoice(midi, duration = 0.75, gainScale = 1) {
   const ctx = getAudioContext();
   const now = ctx.currentTime;
-  const config = getTimbreConfig(timbre);
-  const frequency = midiToFrequency(midi);
+  const freq = midiToFrequency(midi);
 
-  const mainOsc = ctx.createOscillator();
-  const mainGain = ctx.createGain();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
 
-  mainOsc.type = config.waveform;
-  mainOsc.frequency.setValueAtTime(frequency, now);
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(freq, now);
 
-  mainGain.gain.setValueAtTime(0.0001, now);
-  mainGain.gain.exponentialRampToValueAtTime(config.gain * gainScale, now + 0.02);
-  mainGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(1400, now);
 
-  mainOsc.connect(mainGain);
-  mainGain.connect(getReverbDestination());
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.22 * gainScale, now + 0.03);
+  gain.gain.setValueAtTime(Math.max(0.0001, 0.20 * gainScale), now + Math.max(0.04, duration - 0.08));
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
 
-  mainOsc.start(now);
-  mainOsc.stop(now + duration + 0.05);
+  osc.connect(filter);
+  filter.connect(gain);
+  gain.connect(getReverbDestination());
+
+  osc.start(now);
+  osc.stop(now + duration + 0.12);
 }
 
-  function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
+function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSample") {
+  playFallbackVoice(midi, duration, gainScale);
+}
+
+  function playNoteName(note, duration = 0.75, gainScale = 1, voiceSet = "femaleSample") {
   const midi = noteToMidi(note);
   if (midi === null) return;
   playMidiNote(midi, duration, gainScale, voiceSet);
@@ -989,6 +1029,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
     selectedIndex = Math.max(0, Math.min(length - 1, selectedIndex));
 
     const note = `${normalized}${octaveForLetterInput(normalized)}`;
+    pushUndoState();
     counterpoint[selectedIndex] = note;
 
     setNotesToTextarea("counterpoint", counterpoint);
@@ -1005,6 +1046,14 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
 
 function handleKeyboard(event) {
     const tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
+
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
+      event.preventDefault();
+      event.stopPropagation();
+      undoLastEdit();
+      return;
+    }
+
     if (tag === "input" || tag === "textarea") return;
 
     const key = event.key;
@@ -1081,6 +1130,7 @@ function handleKeyboard(event) {
   window.loadExample = loadExample;
   window.setExample = loadExample;
   window.renderScore = renderScore;
+  window.undoLastEdit = undoLastEdit;
   window.undoCounterpointNote = undoCounterpointNote;
   window.clearCounterpoint = clearCounterpoint;
   window.playSelectedNote = playSelectedNote;
