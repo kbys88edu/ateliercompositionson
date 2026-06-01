@@ -8,7 +8,7 @@
     height: 430,
     left: 128,
     right: 64,
-    measureWidth: 118,
+    measureWidth: 94.4,
     staffGap: 14,
     noteStep: 7,
     counterpointBottomLineY: 150,
