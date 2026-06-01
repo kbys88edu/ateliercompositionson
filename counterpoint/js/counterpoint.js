@@ -33,14 +33,14 @@
   };
 
   const EXERCISES = [
-    { id: "c-major-arch", title: "C major / アーチ型", desc: "Cから上行し、中央で頂点を作って戻る基本課題です。", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
+    { id: "c-major-arch", title: "C major / アーチ型", desc: "Cから上行し、中央で頂点を作って戻る基本Exerciceです。", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
     { id: "d-minor-step", title: "D minor / 順次進行", desc: "短調の感覚を保ちながら順次進行を練習します。", cantus: ["D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4"] },
-    { id: "g-major-low", title: "G major / 低めの音域", desc: "やや低い音域で、安定した協和音程を作る課題です。", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
+    { id: "g-major-low", title: "G major / 低めの音域", desc: "やや低い音域で、安定した協和音程を作るExerciceです。", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
     { id: "f-major-small-peak", title: "F major / 小さな頂点", desc: "短い上行と下行を含む、まとまりやすい定旋律です。", cantus: ["F3", "G3", "A3", "C4", "B3", "A3", "G3", "F3"] },
-    { id: "a-minor-return", title: "A minor / 回帰", desc: "開始音へ自然に戻ることを意識する課題です。", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
+    { id: "a-minor-return", title: "A minor / 回帰", desc: "開始音へ自然に戻ることを意識するExerciceです。", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
     { id: "c-major-leap", title: "C major / 小さな跳躍", desc: "小さな跳躍を含む定旋律に対して対旋律を作ります。", cantus: ["C4", "E4", "D4", "F4", "G4", "E4", "F4", "D4", "C4"] },
-    { id: "e-minor-middle", title: "E minor / 中音域", desc: "中音域で対旋律の輪郭を整える課題です。", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
-    { id: "g-major-long", title: "G major / 長め", desc: "少し長い定旋律で、連続5度・8度を避ける練習です。", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
+    { id: "e-minor-middle", title: "E minor / 中音域", desc: "中音域で対旋律の輪郭を整えるExerciceです。", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
+    { id: "g-major-long", title: "G major / 長め", desc: "少し長い定旋律で、quintes parallèles・8度を避ける練習です。", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
     { id: "f-major-descend", title: "F major / 下降中心", desc: "下降形を中心にした定旋律です。", cantus: ["F4", "E4", "D4", "C4", "B3", "C4", "D4", "C4", "F3"] },
     { id: "c-major-extended", title: "C major / 拡張", desc: "やや長めの総合練習です。", cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "F4", "E4", "D4", "C4"] }
   ];
@@ -65,7 +65,7 @@
   }
 
   function getVoiceSampleCandidates(voiceSet, midi) {
-    const folder = voiceSet === "maleSample" ? "male" : "female";
+    const folder = voiceSet === "sine" ? "male" : "female";
 
     const anchors = [
       { midi: 55, name: "G3" },
@@ -120,53 +120,10 @@
     return sampleVoiceCache[cacheKey];
   }
 
-  async function playSampleVoiceNote(voiceSet, midi, duration = 0.75, gainScale = 1) {
-    const ctx = ensureAudioReady();
-    const candidates = getVoiceSampleCandidates(voiceSet, midi);
-
-    let sample = null;
-
-    for (const candidate of candidates) {
-      try {
-        sample = await loadVoiceSample(candidate);
-        break;
-      } catch (error) {
-        // Try next candidate.
-      }
-    }
-
-    if (!sample) {
-      playFallbackMidiNote(midi, duration, gainScale);
-      return;
-    }
-
-    const now = ctx.currentTime;
-    const source = ctx.createBufferSource();
-    const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-
-    source.buffer = sample.buffer;
-    source.playbackRate.setValueAtTime(Math.pow(2, (midi - sample.rootMidi) / 12), now);
-
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(6200, now);
-
-    const attack = 0.018;
-    const release = 0.30;
-    const targetGain = 0.72 * gainScale;
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, targetGain), now + attack);
-    gain.gain.setValueAtTime(Math.max(0.0001, targetGain), now + Math.max(attack + 0.02, duration - release));
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + release);
-
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(getReverbDestination());
-
-    source.start(now);
-    source.stop(now + duration + release + 0.04);
-  }
+  async function playSampleVoiceNote(voiceSet, midi, duration = 0.5, gainScale = 1) {
+  playMidiNote(midi, duration, gainScale, "sine");
+  return null;
+}
 
 
 
@@ -347,7 +304,7 @@ function moveNoteChromatic(note, semitone) {
   function updateExerciseDescription() {
     const desc = $("exerciseDescription");
     const exercise = getSelectedExercise();
-    if (desc) desc.textContent = exercise ? exercise.desc : "課題を選択してください。";
+    if (desc) desc.textContent = exercise ? exercise.desc : "Exerciceを選択してください。";
   }
 
   function loadSelectedExercise() {
@@ -625,7 +582,7 @@ function moveNoteChromatic(note, semitone) {
     if (existing && existingY !== null && Math.abs(point.viewX - noteX) < 28 && Math.abs(point.viewY - existingY) < 24) {
       setNotesToTextarea("counterpoint", counterpoint);
       renderScore();
-      playNoteName(existing, 0.65, 1.15, "femaleSample");
+      playNoteName(existing, 0.65, 1.15, "sine");
       return;
     }
 
@@ -633,7 +590,7 @@ function moveNoteChromatic(note, semitone) {
     counterpoint[index] = newNote;
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
-    playNoteName(newNote, 0.65, 1.15, "femaleSample");
+    playNoteName(newNote, 0.65, 1.15, "sine");
   }
 
   function moveSelection(delta) {
@@ -642,7 +599,7 @@ function moveNoteChromatic(note, semitone) {
     renderScore();
 
     const note = getNotesFromTextarea("counterpoint")[selectedIndex];
-    if (note) playNoteName(note, 0.55, 1.1, "femaleSample");
+    if (note) playNoteName(note, 0.55, 1.1, "sine");
   }
 
   function moveSelectedNote(semitone) {
@@ -659,7 +616,7 @@ function moveNoteChromatic(note, semitone) {
     counterpoint[selectedIndex] = next;
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
-    playNoteName(next, 0.55, 1.1, "femaleSample");
+    playNoteName(next, 0.55, 1.1, "sine");
   }
 
   function undoCounterpointNote() {
@@ -687,7 +644,7 @@ function moveNoteChromatic(note, semitone) {
 
   function playSelectedNote() {
     const note = getNotesFromTextarea("counterpoint")[selectedIndex];
-    if (note) playNoteName(note, 0.75, 1.15, "femaleSample");
+    if (note) playNoteName(note, 0.75, 1.15, "sine");
   }
 
   function getPlaybackLength() {
@@ -789,7 +746,7 @@ function moveNoteChromatic(note, semitone) {
     osc2.stop(now + duration + release + 0.04);
   }
 
-function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSample") {
+function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "sine") {
     ensureAudioReady();
 
     const promise = playSampleVoiceNote(voiceSet, midi, duration, gainScale);
@@ -801,7 +758,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
     }
   }
 
-  function playNoteName(note, duration = 0.75, gainScale = 1, voiceSet = "femaleSample") {
+  function playNoteName(note, duration = 0.75, gainScale = 1, voiceSet = "sine") {
     const midi = noteToMidi(note);
     if (midi !== null) {
       playMidiNote(midi, duration, gainScale, voiceSet);
@@ -810,7 +767,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
 
   function updatePlayPauseButton() {
     const btn = $("playPauseButton");
-    if (btn) btn.textContent = isPlaying ? "停止" : "再生";
+    if (btn) btn.textContent = isPlaying ? "Arrêter" : "Lecture";
   }
 
   function startPlayback() {
@@ -838,8 +795,8 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
 
     renderScore();
 
-    if (!voiceMuteState.cantus && cantus[playbackIndex]) playNoteName(cantus[playbackIndex], duration * 1.05, 0.95, "maleSample");
-    if (!voiceMuteState.counterpoint && counterpoint[playbackIndex]) playNoteName(counterpoint[playbackIndex], duration * 1.05, 1.15, "femaleSample");
+    if (!voiceMuteState.cantus && cantus[playbackIndex]) playNoteName(cantus[playbackIndex], duration * 1.05, 0.95, "sine");
+    if (!voiceMuteState.counterpoint && counterpoint[playbackIndex]) playNoteName(counterpoint[playbackIndex], duration * 1.05, 1.15, "sine");
 
     playbackTimerId = window.setTimeout(() => {
       playbackIndex += 1;
@@ -906,7 +863,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
     }
 
     if (!counterpoint.length) {
-      result.innerHTML = "対旋律が未入力です。";
+      result.innerHTML = "対旋律がNon saisiです。";
       return;
     }
 
@@ -927,7 +884,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
     }
 
     if (!issues.length) {
-      result.innerHTML = "大きな問題は見つかりませんでした。";
+      result.innerHTML = "Aucun problème majeur détecté.";
       return;
     }
 
@@ -935,7 +892,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
   }
 
   function exportMidi() {
-    alert("MIDI書き出しは次の段階で再接続します。現在は表示・入力・再生の安定化を優先しています。");
+    alert("MIDI書き出しは次の段階で再接続します。現在は表示・入力・Lectureの安定化を優先しています。");
   }
 
   
@@ -971,7 +928,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
     updateDisplays();
-    playNoteName(note, 0.65, 1.15, "femaleSample");
+    playNoteName(note, 0.65, 1.15, "sine");
 
     if (selectedIndex < length - 1) {
       selectedIndex += 1;

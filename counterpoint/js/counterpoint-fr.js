@@ -65,7 +65,7 @@
   }
 
   function getVoiceSampleCandidates(voiceSet, midi) {
-    const folder = voiceSet === "maleSample" ? "male" : "female";
+    const folder = voiceSet === "sine" ? "male" : "female";
 
     const anchors = [
       { midi: 55, name: "G3" },
@@ -120,53 +120,10 @@
     return sampleVoiceCache[cacheKey];
   }
 
-  async function playSampleVoiceNote(voiceSet, midi, duration = 0.75, gainScale = 1) {
-    const ctx = ensureAudioReady();
-    const candidates = getVoiceSampleCandidates(voiceSet, midi);
-
-    let sample = null;
-
-    for (const candidate of candidates) {
-      try {
-        sample = await loadVoiceSample(candidate);
-        break;
-      } catch (error) {
-        // Try next candidate.
-      }
-    }
-
-    if (!sample) {
-      playFallbackMidiNote(midi, duration, gainScale);
-      return;
-    }
-
-    const now = ctx.currentTime;
-    const source = ctx.createBufferSource();
-    const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-
-    source.buffer = sample.buffer;
-    source.playbackRate.setValueAtTime(Math.pow(2, (midi - sample.rootMidi) / 12), now);
-
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(6200, now);
-
-    const attack = 0.018;
-    const release = 0.30;
-    const targetGain = 0.72 * gainScale;
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, targetGain), now + attack);
-    gain.gain.setValueAtTime(Math.max(0.0001, targetGain), now + Math.max(attack + 0.02, duration - release));
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + release);
-
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(getReverbDestination());
-
-    source.start(now);
-    source.stop(now + duration + release + 0.04);
-  }
+  async function playSampleVoiceNote(voiceSet, midi, duration = 0.5, gainScale = 1) {
+  playMidiNote(midi, duration, gainScale, "sine");
+  return null;
+}
 
 
 
@@ -625,7 +582,7 @@ function moveNoteChromatic(note, semitone) {
     if (existing && existingY !== null && Math.abs(point.viewX - noteX) < 28 && Math.abs(point.viewY - existingY) < 24) {
       setNotesToTextarea("counterpoint", counterpoint);
       renderScore();
-      playNoteName(existing, 0.65, 1.15, "femaleSample");
+      playNoteName(existing, 0.65, 1.15, "sine");
       return;
     }
 
@@ -633,7 +590,7 @@ function moveNoteChromatic(note, semitone) {
     counterpoint[index] = newNote;
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
-    playNoteName(newNote, 0.65, 1.15, "femaleSample");
+    playNoteName(newNote, 0.65, 1.15, "sine");
   }
 
   function moveSelection(delta) {
@@ -642,7 +599,7 @@ function moveNoteChromatic(note, semitone) {
     renderScore();
 
     const note = getNotesFromTextarea("counterpoint")[selectedIndex];
-    if (note) playNoteName(note, 0.55, 1.1, "femaleSample");
+    if (note) playNoteName(note, 0.55, 1.1, "sine");
   }
 
   function moveSelectedNote(semitone) {
@@ -659,7 +616,7 @@ function moveNoteChromatic(note, semitone) {
     counterpoint[selectedIndex] = next;
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
-    playNoteName(next, 0.55, 1.1, "femaleSample");
+    playNoteName(next, 0.55, 1.1, "sine");
   }
 
   function undoCounterpointNote() {
@@ -687,7 +644,7 @@ function moveNoteChromatic(note, semitone) {
 
   function playSelectedNote() {
     const note = getNotesFromTextarea("counterpoint")[selectedIndex];
-    if (note) playNoteName(note, 0.75, 1.15, "femaleSample");
+    if (note) playNoteName(note, 0.75, 1.15, "sine");
   }
 
   function getPlaybackLength() {
@@ -789,7 +746,7 @@ function moveNoteChromatic(note, semitone) {
     osc2.stop(now + duration + release + 0.04);
   }
 
-function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSample") {
+function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "sine") {
     ensureAudioReady();
 
     const promise = playSampleVoiceNote(voiceSet, midi, duration, gainScale);
@@ -801,7 +758,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
     }
   }
 
-  function playNoteName(note, duration = 0.75, gainScale = 1, voiceSet = "femaleSample") {
+  function playNoteName(note, duration = 0.75, gainScale = 1, voiceSet = "sine") {
     const midi = noteToMidi(note);
     if (midi !== null) {
       playMidiNote(midi, duration, gainScale, voiceSet);
@@ -838,8 +795,8 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
 
     renderScore();
 
-    if (!voiceMuteState.cantus && cantus[playbackIndex]) playNoteName(cantus[playbackIndex], duration * 1.05, 0.95, "maleSample");
-    if (!voiceMuteState.counterpoint && counterpoint[playbackIndex]) playNoteName(counterpoint[playbackIndex], duration * 1.05, 1.15, "femaleSample");
+    if (!voiceMuteState.cantus && cantus[playbackIndex]) playNoteName(cantus[playbackIndex], duration * 1.05, 0.95, "sine");
+    if (!voiceMuteState.counterpoint && counterpoint[playbackIndex]) playNoteName(counterpoint[playbackIndex], duration * 1.05, 1.15, "sine");
 
     playbackTimerId = window.setTimeout(() => {
       playbackIndex += 1;
@@ -971,7 +928,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
     updateDisplays();
-    playNoteName(note, 0.65, 1.15, "femaleSample");
+    playNoteName(note, 0.65, 1.15, "sine");
 
     if (selectedIndex < length - 1) {
       selectedIndex += 1;
