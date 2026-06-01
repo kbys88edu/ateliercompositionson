@@ -58,6 +58,91 @@
     cantus: false
   };
 
+  const sampleVoiceCache = {};
+
+  function getSampleVoiceBasePath() {
+    return "audio/voice";
+  }
+
+  function getVoiceSampleCandidates(voiceSet, midi) {
+    const set = voiceSet || "femaleSample";
+    const folder = set === "maleSample" ? "male" : "female";
+
+    const anchors = [
+      { midi: 55, name: "G3" },
+      { midi: 60, name: "C4" },
+      { midi: 67, name: "G4" },
+      { midi: 72, name: "C5" },
+      { midi: 79, name: "G5" }
+    ];
+
+    let best = anchors[0];
+    anchors.forEach((anchor) => {
+      if (Math.abs(anchor.midi - midi) < Math.abs(best.midi - midi)) best = anchor;
+    });
+
+    const base = `${getSampleVoiceBasePath()}/${folder}/${best.name}`;
+    return [
+      `${base}.wav`,
+      `${base}.mp3`,
+      `${getSampleVoiceBasePath()}/${folder.toUpperCase()}/${best.name}.wav`,
+      `${getSampleVoiceBasePath()}/${folder}_${best.name}.wav`
+    ].map((url) => ({ url, rootMidi: best.midi }));
+  }
+
+  async function loadVoiceSample(candidate) {
+    const ctx = ensureAudioReady();
+    const cacheKey = candidate.url;
+    if (sampleVoiceCache[cacheKey]) return sampleVoiceCache[cacheKey];
+
+    const response = await fetch(candidate.url);
+    if (!response.ok) throw new Error(`Sample not found: ${candidate.url}`);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+
+    sampleVoiceCache[cacheKey] = { buffer: audioBuffer, rootMidi: candidate.rootMidi };
+    return sampleVoiceCache[cacheKey];
+  }
+
+  async function playSampleVoiceNote(voiceSet, midi, duration = 0.38, gainScale = 1) {
+    const ctx = ensureAudioReady();
+    const candidates = getVoiceSampleCandidates(voiceSet, midi);
+
+    let sample = null;
+    for (const candidate of candidates) {
+      try {
+        sample = await loadVoiceSample(candidate);
+        break;
+      } catch (error) {
+        // try next candidate
+      }
+    }
+
+    if (!sample) {
+      playFallbackMidiNote(midi, duration, gainScale);
+      return;
+    }
+
+    const now = ctx.currentTime;
+    const source = ctx.createBufferSource();
+    const gain = ctx.createGain();
+
+    source.buffer = sample.buffer;
+    source.playbackRate.value = Math.pow(2, (midi - sample.rootMidi) / 12);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.22 * gainScale, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.12);
+
+    source.connect(gain);
+    gain.connect(getReverbDestination());
+
+    source.start(now);
+    source.stop(now + duration + 0.18);
+  }
+
+
+
   function $(id) {
     return document.getElementById(id);
   }
@@ -397,17 +482,6 @@ function moveNoteChromatic(note, semitone) {
       isSelected ? "selected" : "",
       isCurrentPlayback ? "playing" : ""
     ].filter(Boolean).join(" "));
-
-    // fallback visible notehead first
-    svg.appendChild(svgEl("ellipse", {
-      cx: x,
-      cy: noteDrawY,
-      rx: SCORE.noteImageWidth / 2,
-      ry: SCORE.noteImageHeight / 2,
-      transform: `rotate(-18 ${x} ${noteDrawY})`,
-      class: ["stable-notehead", isCantus ? "cantus" : "", muted ? "muted-voice" : "", isSelected ? "selected" : "", isCurrentPlayback ? "playing" : ""].filter(Boolean).join(" ")
-    }));
-
     svg.appendChild(createSvgImage(
       NOTATION_IMAGES.wholeNote,
       x - SCORE.noteImageWidth / 2,
@@ -616,7 +690,7 @@ function moveNoteChromatic(note, semitone) {
     return input;
   }
 
-  function playMidiNote(midi, duration = 0.38, gainScale = 1) {
+  function playFallbackMidiNote(midi, duration = 0.38, gainScale = 1) {
     const ctx = ensureAudioReady();
     const now = ctx.currentTime;
     const freq = midiToFrequency(midi);
@@ -634,7 +708,7 @@ function moveNoteChromatic(note, semitone) {
     filter.frequency.setValueAtTime(1500, now);
 
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.20 * gainScale, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.18 * gainScale, now + 0.025);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.12);
 
     osc1.connect(filter);
@@ -648,9 +722,23 @@ function moveNoteChromatic(note, semitone) {
     osc2.stop(now + duration + 0.14);
   }
 
-  function playNoteName(note, duration = 0.38, gainScale = 1) {
+function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
+    ensureAudioReady();
+
+    if (typeof playSampleVoiceNote === "function") {
+      const promise = playSampleVoiceNote(voiceSet, midi, duration, gainScale);
+      if (promise && typeof promise.catch === "function") {
+        promise.catch(() => playFallbackMidiNote(midi, duration, gainScale));
+      }
+      return;
+    }
+
+    playFallbackMidiNote(midi, duration, gainScale);
+  }
+
+  function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
     const midi = noteToMidi(note);
-    if (midi !== null) playMidiNote(midi, duration, gainScale);
+    if (midi !== null) playMidiNote(midi, duration, gainScale, voiceSet);
   }
 
   function updatePlayPauseButton() {
@@ -683,8 +771,8 @@ function moveNoteChromatic(note, semitone) {
 
     renderScore();
 
-    if (!voiceMuteState.cantus && cantus[playbackIndex]) playNoteName(cantus[playbackIndex], duration * 0.88, 0.72);
-    if (!voiceMuteState.counterpoint && counterpoint[playbackIndex]) playNoteName(counterpoint[playbackIndex], duration * 0.88, 1);
+    if (!voiceMuteState.cantus && cantus[playbackIndex]) playNoteName(cantus[playbackIndex], duration * 0.88, 0.72, "maleSample");
+    if (!voiceMuteState.counterpoint && counterpoint[playbackIndex]) playNoteName(counterpoint[playbackIndex], duration * 0.88, 1, "femaleSample");
 
     playbackTimerId = window.setTimeout(() => {
       playbackIndex += 1;
@@ -816,6 +904,7 @@ function moveNoteChromatic(note, semitone) {
     $("muteCounterpointButton")?.addEventListener("click", () => toggleVoiceMute("counterpoint"));
     $("muteCantusButton")?.addEventListener("click", () => toggleVoiceMute("cantus"));
     $("scoreEditor")?.addEventListener("click", handleScoreClick);
+    $("analyzeButton")?.addEventListener("click", analyzeCounterpoint);
 
     window.addEventListener("keydown", handleKeyboard, { capture: true });
     document.addEventListener("keydown", handleKeyboard, { capture: true });

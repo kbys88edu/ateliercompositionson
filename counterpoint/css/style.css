@@ -1799,3 +1799,22 @@ input {
   stroke: rgba(20,20,20,0.72);
   stroke-width: 1.15;
 }
+
+
+/* 2026-06-01 PNG only notes + voice sample restore */
+.stable-notehead {
+  display: none !important;
+}
+
+.png-notehead {
+  display: block;
+  opacity: 1;
+}
+
+.png-notehead.cantus {
+  opacity: 0.70;
+}
+
+.analysis-summary {
+  margin-top: 16px;
+}
