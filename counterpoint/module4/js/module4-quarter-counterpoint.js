@@ -9,7 +9,7 @@ const NOTE_LETTER_STEPS = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 const SCORE = {
-  width: 1280,
+  width: 3840,
   height: 360,
   left: 105,
   right: 55,
@@ -1253,7 +1253,7 @@ function drawClef(svg, bottomLineY, clefType) {
   const width = isBass ? 66 : 70;
   const height = isBass ? 84 : 132;
   const x = SCORE.left - 78;
-  const y = isBass ? bottomLineY - 68 : bottomLineY - 100;
+  const y = isBass ? bottomLineY - 62 : bottomLineY - 100;
 
   svg.appendChild(createSvgImage(
     href,
@@ -1413,8 +1413,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter")
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
 
-  const headW = isCantus || duration === "whole" ? 30.4 : 20.7;
-  const headH = isCantus || duration === "whole" ? 17.8 : 14.1;
+  const headW = isCantus || duration === "whole" ? 30.4 : 20.1;
+  const headH = isCantus || duration === "whole" ? 17.8 : 13.6;
 
   svg.appendChild(createSvgImage(
     isCantus || duration === "whole" ? NOTATION_IMAGES.wholeNote : NOTATION_IMAGES.quarterNoteHead,
