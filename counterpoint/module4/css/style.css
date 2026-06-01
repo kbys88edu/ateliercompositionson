@@ -574,3 +574,44 @@ button[onclick="stopPlayback(true)"] {
   letter-spacing: 0;
   text-align: center;
 }
+
+/* Module 4 PNG notation and keyboard-input refinement. */
+.png-notation {
+  pointer-events: none;
+  user-select: none;
+}
+
+.png-staff {
+  opacity: 0.95;
+}
+
+.png-staff-fallback-line {
+  opacity: 0 !important;
+}
+
+.png-clef {
+  opacity: 0.96;
+}
+
+.png-notehead.selected {
+  filter: invert(32%) sepia(62%) saturate(1169%) hue-rotate(192deg) brightness(84%) contrast(93%);
+}
+
+.png-notehead.playing {
+  filter: invert(19%) sepia(86%) saturate(2042%) hue-rotate(344deg) brightness(92%) contrast(95%);
+}
+
+.png-notehead.error,
+.png-accidental.error {
+  filter: invert(16%) sepia(90%) saturate(2900%) hue-rotate(345deg) brightness(90%) contrast(96%);
+}
+
+.png-notehead.warn,
+.png-accidental.warn {
+  filter: invert(53%) sepia(72%) saturate(850%) hue-rotate(5deg) brightness(92%) contrast(93%);
+}
+
+.clef-symbol,
+.accidental {
+  display: none !important;
+}
