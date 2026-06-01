@@ -237,10 +237,35 @@
     return Math.abs(bottomLineY - SCORE.cantusBottomLineY) < 10 ? "G2" : "E4";
   }
 
+
+  function midiToNoteSharp(midi) {
+    const names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const pc = ((midi % 12) + 12) % 12;
+    const octave = Math.floor(midi / 12) - 1;
+    return `${names[pc]}${octave}`;
+  }
+
+  function midiToNoteFlat(midi) {
+    const names = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+    const pc = ((midi % 12) + 12) % 12;
+    const octave = Math.floor(midi / 12) - 1;
+    return `${names[pc]}${octave}`;
+  }
+
 function moveNoteChromatic(note, semitone) {
     const midi = noteToMidi(note);
     if (midi === null) return note;
-    return midiToNote(midi + semitone);
+
+    const nextMidi = midi + semitone;
+    if (semitone > 0) {
+      return midiToNoteSharp(nextMidi);
+    }
+
+    if (semitone < 0) {
+      return midiToNoteFlat(nextMidi);
+    }
+
+    return note;
   }
 
   function noteToY(note, bottomLineY) {
@@ -851,19 +876,19 @@ function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSa
   }
 
   function analyzeCounterpoint() {
-    const results = $("analysisResults");
+    const result = $("analysisInlineResult") || $("analysisSummary");
     const cantus = getNotesFromTextarea("cantus");
     const counterpoint = getNotesFromTextarea("counterpoint").filter(Boolean);
 
-    if (!results) return;
+    if (!result) return;
 
     if (!cantus.length) {
-      results.innerHTML = '<p class="analysis-empty">定旋律が読み込まれていません。</p>';
+      result.innerHTML = "定旋律が読み込まれていません。";
       return;
     }
 
     if (!counterpoint.length) {
-      results.innerHTML = '<p class="analysis-empty">対旋律が未入力です。</p>';
+      result.innerHTML = "対旋律が未入力です。";
       return;
     }
 
@@ -879,24 +904,16 @@ function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSa
       const allowed = [0, 3, 4, 7, 8, 9].includes(interval);
 
       if (!allowed) {
-        issues.push({
-          index: i + 1,
-          message: `${i + 1}音目：不協和音程の可能性`
-        });
+        issues.push(`${i + 1}音目：不協和音程の可能性`);
       }
     }
 
     if (!issues.length) {
-      results.innerHTML = '<p class="analysis-ok">大きな問題は見つかりませんでした。</p>';
+      result.innerHTML = "大きな問題は見つかりませんでした。";
       return;
     }
 
-    results.innerHTML = `
-      <p class="analysis-count">${issues.length} 件の指摘があります。</p>
-      <ul class="analysis-list">
-        ${issues.map((issue) => `<li>${issue.message}</li>`).join("")}
-      </ul>
-    `;
+    result.innerHTML = `${issues.length} 件の指摘があります。<br>${issues.join("<br>")}`;
   }
 
   function exportMidi() {

@@ -1843,3 +1843,17 @@ input {
 .analysis-list li {
   margin: 4px 0;
 }
+
+
+/* 2026-06-01 inline analysis only + accidental spelling rule */
+.analysis-card,
+.analysis-results {
+  display: none !important;
+}
+
+.analysis-inline-result {
+  margin: 14px 0 0;
+  padding: 0;
+  color: rgba(20,20,20,0.78);
+  line-height: 1.8;
+}
