@@ -410,7 +410,7 @@ h2 {
   h1 { letter-spacing: -0.045em; }
 }
 
-/* Module 2.5 selection fix: no large black dot; selected note changes color only. */
+/* Module 3 selection fix: no large black dot; selected note changes color only. */
 .png-notehead.selected {
   filter: invert(32%) sepia(62%) saturate(1169%) hue-rotate(192deg) brightness(84%) contrast(93%);
 }
@@ -438,7 +438,7 @@ h2 {
   stroke-width: 2.3;
 }
 
-/* Module 2.5 accidental and tie rule fix. */
+/* Module 3 accidental and tie rule fix. */
 .accidental-fallback,
 .clef-fallback,
 .png-staff-fallback-line {
@@ -458,7 +458,7 @@ h2 {
   text-align: center;
 }
 
-/* Module 2.5 playback icon buttons. */
+/* Module 3 playback icon buttons. */
 #playPauseButton,
 button[onclick="stopPlayback(true)"] {
   min-width: 2.45rem;
