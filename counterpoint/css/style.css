@@ -661,3 +661,30 @@ input {
   letter-spacing: 0.02em;
   fill: rgba(20, 20, 20, 0.55);
 }
+
+
+/* Bigger staff tuning for Module 1 PNG notation */
+.png-staff {
+  opacity: 0.9;
+}
+
+.png-clef {
+  opacity: 0.94;
+}
+
+.note-label {
+  font-size: 13px;
+}
+
+
+/* Wider horizontal spacing for Module 1 PNG notation */
+.score-editor {
+  min-width: 1480px;
+}
+
+.score-shell,
+.score-card,
+.score-panel,
+.editor-panel {
+  overflow-x: auto;
+}

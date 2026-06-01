@@ -1,21 +1,21 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 const SCORE = {
-  width: 1180,
-  height: 360,
-  left: 118,
-  right: 48,
-  measureWidth: 88,
-  staffGap: 10,
-  noteStep: 5,
-  counterpointBottomLineY: 128,
-  cantusBottomLineY: 260,
-  playheadTop: 54,
-  playheadBottom: 330,
-  noteImageWidth: 30,
-  noteImageHeight: 17,
-  accidentalWidth: 17,
-  accidentalHeight: 45
+  width: 1480,
+  height: 430,
+  left: 128,
+  right: 64,
+  measureWidth: 118,
+  staffGap: 14,
+  noteStep: 7,
+  counterpointBottomLineY: 150,
+  cantusBottomLineY: 320,
+  playheadTop: 56,
+  playheadBottom: 400,
+  noteImageWidth: 34,
+  noteImageHeight: 20,
+  accidentalWidth: 19,
+  accidentalHeight: 52
 };
 
 const NOTE_LETTER_STEPS = {
@@ -692,7 +692,7 @@ function clearSvg(svg) {
 
 function getSenzokuScoreWidth(noteCount) {
   const count = Math.max(noteCount, 1);
-  return Math.max(SCORE.width, SCORE.left + count * SCORE.measureWidth + SCORE.right + 24);
+  return Math.max(SCORE.width, SCORE.left + count * SCORE.measureWidth + SCORE.right + 48);
 }
 
 function getMeasureStartX(index) {
@@ -700,7 +700,7 @@ function getMeasureStartX(index) {
 }
 
 function getMeasureNoteX(index) {
-  return getMeasureStartX(index) + SCORE.measureWidth * 0.52;
+  return getMeasureStartX(index) + SCORE.measureWidth * 0.54;
 }
 
 function getMeasureIndexFromX(x, noteCount) {
@@ -759,29 +759,29 @@ function drawSenzokuMeasureHighlight(svg, noteCount) {
   const x = getMeasureStartX(selectedIndex);
   svg.appendChild(createSvgElement("rect", {
     x,
-    y: SCORE.counterpointBottomLineY - 92,
+    y: SCORE.counterpointBottomLineY - 112,
     width: SCORE.measureWidth,
-    height: 132,
+    height: 156,
     class: "senzoku-input-highlight"
   }));
 
   svg.appendChild(createSvgElement("line", {
     x1: x,
-    y1: SCORE.counterpointBottomLineY - 98,
+    y1: SCORE.counterpointBottomLineY - 118,
     x2: x,
-    y2: SCORE.counterpointBottomLineY + 52,
+    y2: SCORE.counterpointBottomLineY + 66,
     class: "senzoku-cursor-line"
   }));
 
   svg.appendChild(createSvgElement("path", {
-    d: `M ${x - 5} ${SCORE.counterpointBottomLineY - 96} L ${x + 5} ${SCORE.counterpointBottomLineY - 96} L ${x} ${SCORE.counterpointBottomLineY - 86} Z`,
+    d: `M ${x - 5} ${SCORE.counterpointBottomLineY - 116} L ${x + 5} ${SCORE.counterpointBottomLineY - 116} L ${x} ${SCORE.counterpointBottomLineY - 106} Z`,
     class: "senzoku-cursor-triangle"
   }));
 }
 
-function drawSenzokuBarlines(svg, noteCount, scoreWidth) {
-  const top = SCORE.counterpointBottomLineY - 74;
-  const bottom = SCORE.cantusBottomLineY + 42;
+function drawSenzokuBarlines(svg, noteCount) {
+  const top = SCORE.counterpointBottomLineY - 96;
+  const bottom = SCORE.cantusBottomLineY + 56;
 
   for (let i = 0; i <= noteCount; i += 1) {
     const x = getMeasureStartX(i);
@@ -793,30 +793,18 @@ function drawSenzokuBarlines(svg, noteCount, scoreWidth) {
       class: i % 4 === 0 ? "senzoku-measure-line strong" : "senzoku-measure-line"
     }));
   }
-
-  // Final edge if score is wider than the last calculated barline.
-  const endX = getMeasureStartX(noteCount);
-  if (endX < scoreWidth - SCORE.right) {
-    svg.appendChild(createSvgElement("line", {
-      x1: endX,
-      y1: top,
-      x2: endX,
-      y2: bottom,
-      class: "senzoku-measure-line strong"
-    }));
-  }
 }
 
 function drawSenzokuSystemLabels(svg) {
   svg.appendChild(createSvgElement("text", {
     x: 24,
-    y: SCORE.counterpointBottomLineY - 56,
+    y: SCORE.counterpointBottomLineY - 70,
     class: "voice-label senzoku-label"
   })).textContent = "Counterpoint";
 
   svg.appendChild(createSvgElement("text", {
     x: 24,
-    y: SCORE.cantusBottomLineY - 56,
+    y: SCORE.cantusBottomLineY - 70,
     class: "voice-label senzoku-label"
   })).textContent = "Cantus";
 }
@@ -968,10 +956,10 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
   const isBass = clefType === "bass";
   const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
 
-  const width = isBass ? 58 : 60;
-  const height = isBass ? 74 : 118;
-  const x = SCORE.left - 82;
-  const y = isBass ? bottomLineY - 64 : bottomLineY - 104;
+  const width = isBass ? 68 : 72;
+  const height = isBass ? 88 : 136;
+  const x = SCORE.left - 96;
+  const y = isBass ? bottomLineY - 76 : bottomLineY - 120;
 
   svg.appendChild(createSvgImage(href, x, y, width, height, [
     "png-notation",
@@ -984,7 +972,7 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const endX = getMeasureStartX(noteCount);
   const staffX = SCORE.left;
   const staffY = bottomLineY - SCORE.staffGap * 4;
-  const staffWidth = Math.max(1, endX - SCORE.left);
+  const staffWidth = Math.max(SCORE.measureWidth, endX - SCORE.left);
   const staffHeight = SCORE.staffGap * 4 + 2;
 
   svg.appendChild(createSvgImage(
