@@ -928,3 +928,7 @@ input {
     margin-left: 0;
   }
 }
+
+
+/* 2026-06-01 repaired removal:
+   Keep exercise selector, remove level selector, nudge treble noteheads down slightly. */
