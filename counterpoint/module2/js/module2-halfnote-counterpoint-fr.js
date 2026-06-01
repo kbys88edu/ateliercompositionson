@@ -246,7 +246,7 @@ const EXERCISES = [
   }
 ];
 
-let currentLanguage = "ja";
+let currentLanguage = "fr";
 let selectedIndex = 0;
 let playbackIndex = 0;
 let isPlaying = false;
