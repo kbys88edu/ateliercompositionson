@@ -47,7 +47,7 @@ const SCORE = {
   cantusBottomLineY: 260,
   playheadTop: 55,
   playheadBottom: 308,
-  halfsPerCantus: 4
+  halfsPerCantus: 2
 };
 
 const I18N = {
@@ -972,6 +972,41 @@ function getScorePositions(noteCount) {
   return Array.from({ length: count }, (_, i) => SCORE.left + spacing * i + spacing / 2);
 }
 
+
+
+function getHalfSpacing(positions) {
+  if (!positions || positions.length < 2) return (SCORE.width - SCORE.left - SCORE.right);
+  return positions[1] - positions[0];
+}
+
+function drawMeasureBarlines(svg, positions, noteCount) {
+  if (!positions || !positions.length) return;
+
+  const spacing = getHalfSpacing(positions);
+  const staffStartX = positions[0] - spacing / 2;
+  const staffEndX = positions[positions.length - 1] + spacing / 2;
+  const topY = SCORE.bottomLineY - SCORE.staffGap * 4;
+  const bottomY = SCORE.cantusBottomLineY;
+
+  // start barline
+  svg.appendChild(createSvgElement("line", {
+    x1: staffStartX, y1: topY, x2: staffStartX, y2: bottomY, class: "measure-barline start"
+  }));
+
+  // internal measure barlines: one whole-note cantus = one measure = two half notes
+  for (let i = SCORE.halfsPerCantus; i < noteCount; i += SCORE.halfsPerCantus) {
+    const x = (positions[i - 1] + positions[i]) / 2;
+    svg.appendChild(createSvgElement("line", {
+      x1: x, y1: topY, x2: x, y2: bottomY, class: "measure-barline"
+    }));
+  }
+
+  // final barline
+  svg.appendChild(createSvgElement("line", {
+    x1: staffEndX, y1: topY, x2: staffEndX, y2: bottomY, class: "measure-barline end"
+  }));
+}
+
 function moveNoteChromatic(note, semitone) {
   const midi = noteToMidi(note);
   if (midi === null) return note;
@@ -1215,6 +1250,7 @@ function renderScore() {
 
   drawStaff(svg, SCORE.bottomLineY, "Counterpoint", halfCount, "treble");
   drawStaff(svg, SCORE.cantusBottomLineY, "Cantus", halfCount, "bass");
+  drawMeasureBarlines(svg, positions, halfCount);
   drawPlayhead(svg, positions, halfCount);
 
   counterpoint.forEach((note, i) => {

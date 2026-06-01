@@ -632,3 +632,14 @@ h2 {
   stroke-width: 1.6;
   pointer-events: none;
 }
+
+
+/* Module 2 measure barlines */
+.measure-barline {
+  stroke: #1d1d1d;
+  stroke-width: 1.2;
+  opacity: 0.85;
+}
+.measure-barline.end {
+  stroke-width: 1.6;
+}
