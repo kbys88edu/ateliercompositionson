@@ -69,7 +69,6 @@ const I18N = {
     clearVoice: "選択声部をクリア",
     refreshScore: "楽譜を更新",
     playSelected: "選択音を鳴らす",
-    exportMidi: "MIDIを書き出す",
     resetStart: "最初に戻す",
     playbackModeLabel: "再生対象",
     playAll: "3声すべて",
@@ -83,7 +82,6 @@ const I18N = {
     timbreSaw: "Sawtooth / 明るい",
     timbreOrgan: "Organ / オルガン風",
     timbreBell: "Bell / ベル風",
-    timbreHumanVoice: "人の声",
     playbackHint: "Space：再生 / 停止　｜　← / →：前後の音へ移動",
     scoreInputTitle: "五線入力",
     scoreInputHelp: "第1対旋律・第2対旋律・定旋律を、それぞれ別の楽譜に表示します。第1対旋律と第2対旋律の楽譜をクリックして入力できます。",
@@ -153,7 +151,6 @@ const I18N = {
     clearVoice: "Effacer la voix sélectionnée",
     refreshScore: "Actualiser la partition",
     playSelected: "Jouer la note sélectionnée",
-    exportMidi: "Exporter MIDI",
     resetStart: "Revenir au début",
     playbackModeLabel: "Lecture",
     playAll: "Les trois voix",
@@ -167,7 +164,6 @@ const I18N = {
     timbreSaw: "Sawtooth / brillant",
     timbreOrgan: "Organ / orgue",
     timbreBell: "Bell / cloche",
-    timbreHumanVoice: "Voix humaine",
     playbackHint: "Espace : lecture / arrêt　｜　← / → : note précédente / suivante",
     scoreInputTitle: "Saisie sur portée",
     scoreInputHelp: "Chaque voix est affichée sur une portée séparée. Cliquez sur la portée du 1er ou du 2e contrepoint pour saisir les notes.",
@@ -357,277 +353,10 @@ function midiToFrequency(midi) {
   return 440 * Math.pow(2, (midi - 69) / 12);
 }
 
-function createVoiceFormant(ctx, source, destination, now, duration, gainScale) {
-  const inputGain = ctx.createGain();
-  inputGain.gain.setValueAtTime(0.0001, now);
-  inputGain.gain.exponentialRampToValueAtTime(0.16 * gainScale, now + 0.055);
-  inputGain.gain.setValueAtTime(0.13 * gainScale, now + Math.max(0.06, duration * 0.72));
-  inputGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.16);
-
-  const formants = [
-    { frequency: 750, q: 7.5, gain: 0.9 },
-    { frequency: 1150, q: 9.0, gain: 0.55 },
-    { frequency: 2450, q: 11.0, gain: 0.35 }
-  ];
-
-  source.connect(inputGain);
-
-  formants.forEach((formant) => {
-    const filter = ctx.createBiquadFilter();
-    const gain = ctx.createGain();
-
-    filter.type = "bandpass";
-    filter.frequency.setValueAtTime(formant.frequency, now);
-    filter.Q.setValueAtTime(formant.q, now);
-
-    gain.gain.setValueAtTime(formant.gain, now);
-
-    inputGain.connect(filter);
-    filter.connect(gain);
-    gain.connect(destination);
-  });
-}
-
-function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
+function playMidiNote(midi, duration = 0.55, gainScale = 1) {
   const ctx = getAudioContext();
   const now = ctx.currentTime;
-  const frequency = midiToFrequency(midi);
-
-  const output = ctx.createGain();
-  output.gain.setValueAtTime(0.85, now);
-  output.connect(ctx.destination);
-
-  const vibrato = ctx.createOscillator();
-  const vibratoGain = ctx.createGain();
-  vibrato.type = "sine";
-  vibrato.frequency.setValueAtTime(5.4, now);
-  vibratoGain.gain.setValueAtTime(Math.max(1.0, frequency * 0.006), now);
-  vibrato.connect(vibratoGain);
-
-  const osc1 = ctx.createOscillator();
-  osc1.type = "sawtooth";
-  osc1.frequency.setValueAtTime(frequency, now);
-  vibratoGain.connect(osc1.frequency);
-
-  const osc2 = ctx.createOscillator();
-  osc2.type = "triangle";
-  osc2.frequency.setValueAtTime(frequency * 0.997, now);
-  vibratoGain.connect(osc2.frequency);
-
-  const osc3 = ctx.createOscillator();
-  osc3.type = "sine";
-  osc3.frequency.setValueAtTime(frequency * 2.005, now);
-  vibratoGain.connect(osc3.frequency);
-
-  createVoiceFormant(ctx, osc1, output, now, duration, gainScale * 0.85);
-  createVoiceFormant(ctx, osc2, output, now, duration, gainScale * 0.45);
-  createVoiceFormant(ctx, osc3, output, now, duration, gainScale * 0.18);
-
-  const noiseBuffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * (duration + 0.18)), ctx.sampleRate);
-  const data = noiseBuffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) {
-    data[i] = (Math.random() * 2 - 1) * 0.018;
-  }
-
-  const noise = ctx.createBufferSource();
-  noise.buffer = noiseBuffer;
-
-  const noiseFilter = ctx.createBiquadFilter();
-  noiseFilter.type = "bandpass";
-  noiseFilter.frequency.setValueAtTime(3200, now);
-  noiseFilter.Q.setValueAtTime(0.9, now);
-
-  const noiseGain = ctx.createGain();
-  noiseGain.gain.setValueAtTime(0.0001, now);
-  noiseGain.gain.exponentialRampToValueAtTime(0.018 * gainScale, now + 0.035);
-  noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
-
-  noise.connect(noiseFilter);
-  noiseFilter.connect(noiseGain);
-  noiseGain.connect(output);
-
-  vibrato.start(now);
-  osc1.start(now);
-  osc2.start(now);
-  osc3.start(now);
-  noise.start(now);
-
-  const stopAt = now + duration + 0.25;
-  vibrato.stop(stopAt);
-  osc1.stop(stopAt);
-  osc2.stop(stopAt);
-  osc3.stop(stopAt);
-  noise.stop(stopAt);
-}
-
-
-
-const SAMPLE_VOICE_SETS = {
-  femaleSample: {
-    folder: "female",
-    // Required female files:
-    // C4.wav, G4.wav, C5.wav, G5.wav
-    // These files are played at their written sample octave.
-    notes: ["C4", "G4", "C5", "G5"],
-    transposeSemitones: 0
-  },
-  maleSample: {
-    folder: "male",
-    // Required male files:
-    // C2.wav, G2.wav, C3.wav, G3.wav, C4.wav, G4.wav
-    notes: ["C2", "G2", "C3", "G3", "C4", "G4"],
-    transposeSemitones: 0
-  }
-};
-
-const sampleVoiceCache = {};
-
-function getSampleVoiceBasePath() {
-  const path = window.location.pathname;
-  if (
-    path.includes("/module2/") ||
-    path.includes("/module3/") ||
-    path.includes("/module4/") ||
-    path.includes("/three-voice/")
-  ) {
-    return "../audio/voice";
-  }
-  return "audio/voice";
-}
-
-function midiToSampleNoteName(midi) {
-  const names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-  const pitch = ((midi % 12) + 12) % 12;
-  const octave = Math.floor(midi / 12) - 1;
-  return `${names[pitch]}${octave}`;
-}
-
-function getNearestSampleNote(targetMidi, sampleNotes, setName = "") {
-  const exactName = typeof midiToSampleNoteName === "function"
-    ? midiToSampleNoteName(targetMidi)
-    : midiToNote(targetMidi, "sharp");
-
-  if (sampleNotes.includes(exactName)) {
-    return exactName;
-  }
-
-  // Female / soprano correction:
-  // Keep A4 and B4 in the G4 sample region instead of jumping to the C5 sample.
-  // This avoids the previous A4+ area sounding an octave too high.
-  let candidates = sampleNotes;
-
-  if (setName === "femaleSample") {
-    const c5Midi = noteToMidi("C5");
-    candidates = targetMidi < c5Midi
-      ? sampleNotes.filter((note) => ["C4", "G4"].includes(note))
-      : sampleNotes.filter((note) => ["C5", "G5"].includes(note));
-
-    if (!candidates.length) candidates = sampleNotes;
-  }
-
-  let nearest = candidates[0];
-  let nearestDistance = Infinity;
-
-  candidates.forEach((note) => {
-    const midi = noteToMidi(note);
-    if (midi === null) return;
-
-    const distance = Math.abs(midi - targetMidi);
-    if (distance < nearestDistance) {
-      nearest = note;
-      nearestDistance = distance;
-    }
-  });
-
-  return nearest;
-}
-
-async function loadSampleVoiceBuffer(setName, note) {
-  const set = SAMPLE_VOICE_SETS[setName];
-  if (!set) return null;
-
-  const cacheKey = `${setName}:${note}`;
-  if (sampleVoiceCache[cacheKey]) return sampleVoiceCache[cacheKey];
-
-  const ctx = getAudioContext();
-  const url = `${getSampleVoiceBasePath()}/${set.folder}/${note}.wav`;
-
-  try {
-    const response = await fetch(url, { cache: "force-cache" });
-    if (!response.ok) throw new Error(`Sample not found: ${url}`);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
-    sampleVoiceCache[cacheKey] = audioBuffer;
-    return audioBuffer;
-  } catch (error) {
-    console.warn(error);
-    return null;
-  }
-}
-
-async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1) {
-  const set = SAMPLE_VOICE_SETS[setName];
-  if (!set) return;
-
-  const nearestNote = getNearestSampleNote(midi, set.notes, setName);
-  const sourceMidi = noteToMidi(nearestNote);
-  if (sourceMidi === null) return;
-
-  const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
-  if (!buffer) {
-    if (typeof playFallbackVoice === "function") {
-      playFallbackVoice(midi, duration, gainScale);
-    } else if (typeof playVoiceLikeNote === "function") {
-      playVoiceLikeNote(midi, duration, gainScale);
-    }
-    return;
-  }
-
-  const ctx = getAudioContext();
-  const now = ctx.currentTime;
-
-  const source = ctx.createBufferSource();
-  source.buffer = buffer;
-
-  // No global octave transposition.
-  // Exact G4 plays female/G4.wav at playbackRate 1.0.
-  // A4/B4 use the G4 region instead of jumping to C5.
-  const semitoneShift = midi - sourceMidi + (set.transposeSemitones || 0);
-  source.playbackRate.setValueAtTime(Math.pow(2, semitoneShift / 12), now);
-
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.78 * gainScale, now + 0.025);
-  gain.gain.setValueAtTime(0.68 * gainScale, now + Math.max(0.03, duration * 0.74));
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
-
-  source.connect(gain);
-  gain.connect(ctx.destination);
-
-  source.start(now);
-  source.stop(now + duration + 0.12);
-}
-
-
-
-
-
-function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
-  const timbre = getTimbre();
-
-  if (timbre === "humanVoice") {
-    playSampleVoiceNote(voiceSet, midi, duration, gainScale);
-    return;
-  }
-
-  if (timbre === "voice") {
-    playVoiceLikeNote(midi, duration, gainScale);
-    return;
-  }
-
-  const ctx = getAudioContext();
-  const now = ctx.currentTime;
-  const config = getTimbreConfig(timbre);
+  const config = getTimbreConfig();
   const frequency = midiToFrequency(midi);
 
   const mainOsc = ctx.createOscillator();
@@ -659,15 +388,16 @@ function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSa
 
     secondOsc.connect(secondGain);
     secondGain.connect(ctx.destination);
+
     secondOsc.start(now);
     secondOsc.stop(now + duration + config.release + 0.05);
   }
 }
 
-function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
+function playNoteName(note, duration = 0.55, gainScale = 1) {
   const midi = noteToMidi(note);
   if (midi === null) return;
-  playMidiNote(midi, duration, gainScale, voiceSet);
+  playMidiNote(midi, duration, gainScale);
 }
 
 function getPlaybackMode() {
@@ -707,15 +437,15 @@ function playVerticalSonority(index) {
   const noteDuration = Math.max(0.28, stepDuration * 0.95);
 
   if ((mode === "all" || mode === "cantus") && notes.cantus) {
-    playNoteName(notes.cantus, noteDuration, mode === "cantus" ? 1 : 0.58, "maleSample");
+    playNoteName(notes.cantus, noteDuration, mode === "cantus" ? 1 : 0.58);
   }
 
   if ((mode === "all" || mode === "counterpoint2") && notes.counterpoint2) {
-    playNoteName(notes.counterpoint2, noteDuration, mode === "counterpoint2" ? 1 : 0.72, "femaleSample");
+    playNoteName(notes.counterpoint2, noteDuration, mode === "counterpoint2" ? 1 : 0.72);
   }
 
   if ((mode === "all" || mode === "counterpoint1") && notes.counterpoint1) {
-    playNoteName(notes.counterpoint1, noteDuration, 1, "femaleSample");
+    playNoteName(notes.counterpoint1, noteDuration, 1);
   }
 }
 
@@ -1082,22 +812,21 @@ function clearSvg(svg) {
   while (svg.firstChild) svg.removeChild(svg.firstChild);
 }
 
-function noteToY(note, voice = editVoice) {
-  const staff = SCORE.staves[voice] || SCORE.staves.counterpoint1;
+function noteToY(note, voice = "counterpoint1") {
   const noteStep = getDiatonicStep(note);
-  const referenceNote = voice === "cantus" ? "G2" : "E4";
-  const referenceStep = getDiatonicStep(referenceNote);
+  const e4Step = getDiatonicStep("E4");
+  const staff = SCORE.staves[voice] || SCORE.staves.counterpoint1;
 
-  if (noteStep === null || referenceStep === null) return null;
-  return staff.bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
+  if (noteStep === null || e4Step === null) return null;
+
+  return staff.bottomLineY - (noteStep - e4Step) * SCORE.noteStep;
 }
 
 function yToNaturalNote(y, voice = editVoice) {
   const staff = SCORE.staves[voice] || SCORE.staves.counterpoint1;
-  const referenceNote = voice === "cantus" ? "G2" : "E4";
-  const referenceStep = getDiatonicStep(referenceNote);
+  const e4Step = getDiatonicStep("E4");
   const rawStep = Math.round((staff.bottomLineY - y) / SCORE.noteStep);
-  const targetStep = referenceStep + rawStep;
+  const targetStep = e4Step + rawStep;
 
   let closest = NATURAL_NOTES[0];
   let closestDistance = Infinity;
@@ -1184,7 +913,7 @@ function moveSelection(delta) {
   renderScore();
 
   const note = getCurrentVoiceNotes()[selectedIndex];
-  if (note) playNoteName(note, 0.35, 0.8, "femaleSample");
+  if (note) playNoteName(note, 0.35, 0.8);
 }
 
 function deleteSelectedNote() {
@@ -1205,51 +934,63 @@ function deleteSelectedNote() {
 function playSelectedNote() {
   const note = getCurrentVoiceNotes()[selectedIndex];
   if (!note) return;
-  playNoteName(note, 0.55, 1, "femaleSample");
+  playNoteName(note, 0.55, 1);
 }
 
 function previewTimbre() {
   const note = getCurrentVoiceNotes()[selectedIndex] || getNotesFromTextarea("cantus")[selectedIndex] || "C4";
-  playNoteName(note, 0.5, 1, "femaleSample");
+  playNoteName(note, 0.5, 1);
 }
 
-function drawClef(svg, bottomLineY, clefType) {
-  const clef = clefType === "bass" ? "𝄢" : "𝄞";
-  const className = clefType === "bass" ? "clef-symbol bass" : "clef-symbol treble";
-  svg.appendChild(createSvgElement("text", { x: 52, y: bottomLineY - 20, class: className })).textContent = clef;
-}
-
-function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
+function drawStaff(svg, noteCount) {
   const startX = SCORE.left - 30;
   const endX = SCORE.width - SCORE.right + 10;
-
-  for (let i = 0; i < 5; i++) {
-    const y = bottomLineY - i * SCORE.staffGap;
-    svg.appendChild(createSvgElement("line", { x1: startX, y1: y, x2: endX, y2: y, class: "staff-line" }));
-  }
-
-  drawClef(svg, bottomLineY, clefType);
-  svg.appendChild(createSvgElement("text", { x: 22, y: bottomLineY - 58, class: "voice-label" })).textContent = label;
-
   const positions = getScorePositions(noteCount);
 
+  Object.entries(SCORE.staves).forEach(([voice, staff]) => {
+    for (let i = 0; i < 5; i++) {
+      const y = staff.bottomLineY - i * SCORE.staffGap;
+      svg.appendChild(createSvgElement("line", {
+        x1: startX,
+        y1: y,
+        x2: endX,
+        y2: y,
+        class: "staff-line"
+      }));
+    }
+
+    svg.appendChild(createSvgElement("text", {
+      x: 22,
+      y: staff.labelY,
+      class: "voice-label"
+    })).textContent = staff.label;
+
+    if (voice === "cantus") {
+      positions.forEach((x, i) => {
+        svg.appendChild(createSvgElement("circle", {
+          cx: x,
+          cy: staff.bottomLineY + 72,
+          r: 2.8,
+          class: "slot-marker"
+        }));
+
+        svg.appendChild(createSvgElement("text", {
+          x: x - 4,
+          y: staff.bottomLineY + 100,
+          class: "note-label"
+        })).textContent = i + 1;
+      });
+    }
+  });
+
   positions.forEach((x, i) => {
-    svg.appendChild(createSvgElement("circle", {
-      cx: x,
-      cy: bottomLineY + 56,
-      r: 2.6,
-      class: "slot-marker"
-    }));
-
-    svg.appendChild(createSvgElement("text", { x: x - 4, y: bottomLineY + 82, class: "note-label" })).textContent = i + 1;
-
     if (i > 0) {
       const midX = (positions[i - 1] + x) / 2;
       svg.appendChild(createSvgElement("line", {
         x1: midX,
-        y1: bottomLineY - 50,
+        y1: SCORE.playheadTop,
         x2: midX,
-        y2: bottomLineY + 66,
+        y2: SCORE.playheadBottom,
         class: "measure-line"
       }));
     }
@@ -1420,7 +1161,7 @@ function handleScoreClick(event) {
 
   setCurrentVoiceNotes(notes);
   renderScore();
-  playNoteName(clickedNote, 0.55, 1, "femaleSample");
+  playNoteName(clickedNote, 0.55, 1);
 
   svg.focus();
 }
@@ -1535,7 +1276,6 @@ function drawStaffForVoice(svg, noteCount, voice) {
   const endX = SCORE.width - SCORE.right + 10;
   const positions = getScorePositions(noteCount);
   const staff = SCORE.staves[voice] || SCORE.staves.counterpoint1;
-  const clefType = voice === "cantus" ? "bass" : "treble";
 
   for (let i = 0; i < 5; i++) {
     const y = staff.bottomLineY - i * SCORE.staffGap;
@@ -1548,13 +1288,11 @@ function drawStaffForVoice(svg, noteCount, voice) {
     }));
   }
 
-  drawClef(svg, staff.bottomLineY, clefType);
-
   svg.appendChild(createSvgElement("text", {
     x: 22,
     y: staff.labelY,
     class: "voice-label"
-  })).textContent = voice === "cantus" ? "Cantus / bass clef" : `${staff.label} / treble clef`;
+  })).textContent = staff.label;
 
   positions.forEach((x, i) => {
     svg.appendChild(createSvgElement("circle", {
@@ -1663,7 +1401,7 @@ function handleVoiceScoreClick(event) {
 
   setNotesToTextarea(targetVoice, notes);
   renderScore();
-  playNoteName(clickedNote, 0.55, 1, "femaleSample");
+  playNoteName(clickedNote, 0.55, 1);
 
   svg.focus();
 }
@@ -1746,131 +1484,3 @@ window.addEventListener("DOMContentLoaded", () => {
   renderScore();
   updatePlayPauseButton();
 });
-
-
-
-function midiEncodeVariableLength(value) {
-  let buffer = value & 0x7f;
-  const bytes = [];
-
-  while ((value >>= 7)) {
-    buffer <<= 8;
-    buffer |= ((value & 0x7f) | 0x80);
-  }
-
-  while (true) {
-    bytes.push(buffer & 0xff);
-    if (buffer & 0x80) buffer >>= 8;
-    else break;
-  }
-
-  return bytes;
-}
-
-function midiTextBytes(text) {
-  return Array.from(text).map((char) => char.charCodeAt(0) & 0xff);
-}
-
-function midiNumberToBytes(value, length) {
-  const bytes = [];
-  for (let i = length - 1; i >= 0; i--) {
-    bytes.push((value >> (i * 8)) & 0xff);
-  }
-  return bytes;
-}
-
-function midiTrackChunk(events) {
-  const data = [];
-  events.forEach((event) => data.push(...event));
-
-  const header = midiTextBytes("MTrk");
-  const length = midiNumberToBytes(data.length, 4);
-  return [...header, ...length, ...data];
-}
-
-function midiNoteEvent(delta, status, note, velocity) {
-  return [...midiEncodeVariableLength(delta), status, note, velocity];
-}
-
-function midiMetaEvent(delta, type, data) {
-  return [...midiEncodeVariableLength(delta), 0xff, type, data.length, ...data];
-}
-
-function midiCreateFile(tracks, ticksPerQuarter = 480) {
-  const header = [
-    ...midiTextBytes("MThd"),
-    0x00, 0x00, 0x00, 0x06,
-    0x00, 0x01,
-    ...midiNumberToBytes(tracks.length, 2),
-    ...midiNumberToBytes(ticksPerQuarter, 2)
-  ];
-
-  return new Uint8Array([...header, ...tracks.flat()]);
-}
-
-function midiDownload(bytes, filename) {
-  const blob = new Blob([bytes], { type: "audio/midi" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-function midiBuildNoteTrack(trackName, notes, channel, ticksPerNote, velocity = 84) {
-  const events = [];
-  events.push(midiMetaEvent(0, 0x03, midiTextBytes(trackName)));
-
-  let pendingDelta = 0;
-
-  notes.forEach((note) => {
-    const midi = noteToMidi(note);
-
-    if (midi === null) {
-      pendingDelta += ticksPerNote;
-      return;
-    }
-
-    events.push(midiNoteEvent(pendingDelta, 0x90 + channel, midi, velocity));
-    events.push(midiNoteEvent(ticksPerNote, 0x80 + channel, midi, 0));
-    pendingDelta = 0;
-  });
-
-  events.push(midiMetaEvent(pendingDelta, 0x2f, []));
-  return midiTrackChunk(events);
-}
-
-function exportMidi() {
-  const ticksPerQuarter = 480;
-  const wholeTicks = ticksPerQuarter * 4;
-
-  const cantus = getNotesFromTextarea("cantus");
-  const counterpoint1 = getNotesFromTextarea("counterpoint1");
-  const counterpoint2 = getNotesFromTextarea("counterpoint2");
-
-  if (!cantus.length && !counterpoint1.length && !counterpoint2.length) {
-    alert(currentLanguage === "fr" ? "Aucune note à exporter." : "書き出す音がありません。");
-    return;
-  }
-
-  const conductorEvents = [
-    midiMetaEvent(0, 0x03, midiTextBytes("Tempo / Meter")),
-    midiMetaEvent(0, 0x51, [0x0f, 0x42, 0x40]),
-    midiMetaEvent(0, 0x58, [0x04, 0x02, 0x18, 0x08]),
-    midiMetaEvent(0, 0x2f, [])
-  ];
-
-  const tracks = [
-    midiTrackChunk(conductorEvents),
-    midiBuildNoteTrack("Cantus", cantus, 0, wholeTicks, 72),
-    midiBuildNoteTrack("Counterpoint 1", counterpoint1, 1, wholeTicks, 86),
-    midiBuildNoteTrack("Counterpoint 2", counterpoint2, 2, wholeTicks, 82)
-  ];
-
-  const bytes = midiCreateFile(tracks, ticksPerQuarter);
-  midiDownload(bytes, "three_voice_counterpoint_tempo60_4-4.mid");
-}
-

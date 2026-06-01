@@ -652,60 +652,15 @@ h2 {
   background: rgba(255, 255, 255, 0.78);
 }
 
-
-.brand-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--muted);
-  text-decoration: none;
+/* Icon controls for playback buttons. */
+#playPauseButton,
+#resetStartButton,
+#resetPlaybackButton,
+#backToStartButton,
+#restartButton {
+  min-width: 2.45rem;
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
 }
-
-.brand-logo {
-  display: block;
-  width: 42px;
-  height: auto;
-  object-fit: contain;
-}
-
-.brand-text {
-  color: var(--muted);
-  font-size: 0.92rem;
-  letter-spacing: 0.02em;
-}
-
-@media (max-width: 520px) {
-  .brand-logo {
-    width: 38px;
-  }
-}
-
-
-.brand-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-
-/* ACS logo display safeguard */
-.brand-logo,
-.logo {
-  display: block;
-  width: 48px;
-  max-width: 48px;
-  height: auto;
-  object-fit: contain;
-}
-
-
-.clef-symbol {
-  font-family: "Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", serif;
-  fill: rgba(0, 0, 0, 0.72);
-  dominant-baseline: middle;
-  pointer-events: none;
-}
-
-.clef-symbol.treble { font-size: 58px; }
-.clef-symbol.bass { font-size: 48px; }

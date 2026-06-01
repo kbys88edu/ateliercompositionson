@@ -3,33 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-
-  <script src="/counterpoint/auth.js"></script>
 
   <title>第一種3声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種3声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-soprano-no-global-octave" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-icons-finalbarline" />
 </head>
 
 <body>
   <main class="page">
     <header class="checker-header">
       <div class="top-controls">
-        <div class="brand-row">
-
-          <a class="brand-link" href="/counterpoint/index.html" aria-label="Atelier Composition Son">
-
-            <img class="brand-logo" src="/counterpoint/images/acs-logo.png?v=logo-20260601" alt="Atelier Composition Son" />
-
-            <span class="brand-text">Atelier Composition Son</span>
-
-          </a>
-
-          <a class="back-link" href="/counterpoint/index.html" data-i18n="backLink">← トップへ戻る</a>
-
-        </div>
+        <a class="back-link" href="index.html" data-i18n="backLink">← トップへ戻る</a>
 
         <label class="language-control" for="languageSelect">
           <span data-i18n="languageLabel">言語</span>
@@ -112,16 +97,10 @@
         <button class="button small" type="button" onclick="playSelectedNote()" data-i18n="playSelected">
           選択音を鳴らす
         </button>
-        <button class="button small" type="button" onclick="exportMidi()" data-i18n="exportMidi">
-          MIDIを書き出す
-        </button>
-
       </div>
 
       <div class="playback-tools">
-        <button id="playPauseButton" class="button primary" type="button" onclick="togglePlayback()">
-          再生
-        </button>
+        <button id="playPauseButton" class="button primary" type="button" onclick="togglePlayback()" aria-label="再生 / 停止" title="再生 / 停止">▶</button>
 
         <button class="button small" type="button" onclick="stopPlayback(true)" data-i18n="resetStart">
           最初に戻す
@@ -145,7 +124,12 @@
         <label class="timbre-control" for="timbreSelect">
           <span data-i18n="timbreLabel">音色</span>
           <select id="timbreSelect" onchange="previewTimbre()">
-            <option value="humanVoice" selected data-i18n="timbreHumanVoice">人の声</option>
+            <option value="sine" data-i18n="timbreSine">Sine / 柔らかい</option>
+            <option value="triangle" selected data-i18n="timbreTriangle">Triangle / 素直</option>
+            <option value="square" data-i18n="timbreSquare">Square / 電子的</option>
+            <option value="sawtooth" data-i18n="timbreSaw">Sawtooth / 明るい</option>
+            <option value="organ" data-i18n="timbreOrgan">Organ / オルガン風</option>
+            <option value="bell" data-i18n="timbreBell">Bell / ベル風</option>
           </select>
         </label>
 
@@ -239,6 +223,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint-three-voice.js?v=20260601-soprano-no-global-octave"></script>
+  <script src="js/counterpoint-three-voice.js?v=20260601-icons-finalbarline"></script>
 </body>
 </html>

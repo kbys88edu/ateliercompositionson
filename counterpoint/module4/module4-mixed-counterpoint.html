@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <script src="../auth.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.8.9/build/opensheetmusicdisplay.min.js"></script>
 
   <title>Module 4｜2声混合対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="全音符の定旋律に対して、全音符・二分音符・四分音符を混合して置く2声混合対位法の練習ページです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module4-osmd-note-cursor" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-icons-finalbarline" />
 </head>
 
 <body>
@@ -75,7 +74,7 @@
       </div>
 
       <div class="playback-tools">
-        <button id="playPauseButton" class="button primary" type="button" onclick="togglePlayback()">再生</button>
+        <button id="playPauseButton" class="button primary" type="button" onclick="togglePlayback()" aria-label="再生 / 停止" title="再生 / 停止">▶</button>
         <button class="button small" type="button" onclick="stopPlayback(true)" data-i18n="resetStart">最初に戻す</button>
 
         <label class="tempo-control" for="tempoInput">
@@ -95,12 +94,18 @@
         <label class="timbre-control" for="timbreSelect">
           <span data-i18n="timbreLabel">音色</span>
           <select id="timbreSelect" onchange="previewTimbre()">
-            <option value="humanVoice" selected data-i18n="timbreHumanVoice">人の声</option>
+            <option value="sine" data-i18n="timbreSine">Sine / 柔らかい</option>
+            <option value="triangle" selected data-i18n="timbreTriangle">Triangle / 素直</option>
+            <option value="organ" data-i18n="timbreOrgan">Organ / オルガン風</option>
+            <option value="bell" data-i18n="timbreBell">Bell / ベル風</option>
+            <option value="voice" data-i18n="timbreVoice">Voice / 声風</option>
+            <option value="femaleSample" data-i18n="timbreFemaleSample">Female Sample / 女声サンプル</option>
+            <option value="maleSample" data-i18n="timbreMaleSample">Male Sample / 男声サンプル</option>
           </select>
         </label>
 
         <p class="playback-hint" data-i18n="playbackHint">
-          クリック：音を入力　｜　← / →：拍移動　｜　↑ / ↓：選択音を上下移動　｜　Space：再生 / 停止
+          クリック：音を入力　｜　← / →：選択移動　｜　↑ / ↓：半音移動　｜　Space：再生 / 停止
         </p>
       </div>
 
@@ -113,11 +118,7 @@
           <div class="score-status" id="scoreStatus">対旋律：0音</div>
         </div>
 
-        <div id="musicXmlWrapper" class="musicxml-wrapper">
-          <div id="musicXmlDisplay" class="musicxml-display" aria-label="MusicXML score display"></div>
-          <svg id="musicXmlOverlay" class="musicxml-overlay" aria-label="MusicXML input overlay"></svg>
-        </div>
-        <svg id="scoreEditor" class="legacy-score-editor" class="score-editor" viewBox="0 0 1280 360" role="img" aria-label="2声混合対位法入力用五線譜" tabindex="0"></svg>
+        <svg id="scoreEditor" class="score-editor" viewBox="0 0 1280 360" role="img" aria-label="2声混合対位法入力用五線譜" tabindex="0"></svg>
       </div>
 
       <div class="current-notes">
@@ -136,6 +137,6 @@
     </section>
   </main>
 
-  <script src="js/module4-mixed-counterpoint.js?v=20260601-module4-osmd-note-cursor"></script>
+  <script src="js/module4-mixed-counterpoint.js?v=20260601-icons-finalbarline"></script>
 </body>
 </html>

@@ -489,9 +489,35 @@ function moveNoteChromatic(note, semitone) {
   function drawBarlines(svg, noteCount) {
     const top = SCORE.counterpointBottomLineY - 96;
     const bottom = SCORE.cantusBottomLineY + 56;
+
     for (let i = 0; i <= noteCount; i += 1) {
       const x = getMeasureStartX(i);
-      svg.appendChild(svgEl("line", { x1: x, y1: top, x2: x, y2: bottom, class: i % 4 === 0 ? "senzoku-measure-line strong" : "senzoku-measure-line" }));
+
+      if (i === noteCount) {
+        svg.appendChild(svgEl("line", {
+          x1: x - 4,
+          y1: top,
+          x2: x - 4,
+          y2: bottom,
+          class: "senzoku-measure-line final-thin"
+        }));
+        svg.appendChild(svgEl("line", {
+          x1: x,
+          y1: top,
+          x2: x,
+          y2: bottom,
+          class: "senzoku-measure-line final-thick"
+        }));
+        continue;
+      }
+
+      svg.appendChild(svgEl("line", {
+        x1: x,
+        y1: top,
+        x2: x,
+        y2: bottom,
+        class: i % 4 === 0 ? "senzoku-measure-line strong" : "senzoku-measure-line"
+      }));
     }
   }
 
@@ -873,7 +899,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
 
   function updatePlayPauseButton() {
     const btn = $("playPauseButton");
-    if (btn) btn.textContent = isPlaying ? "Arrêter" : "Lecture";
+    if (btn) btn.textContent = isPlaying ? "■" : "▶";
   }
 
   function startPlayback() {

@@ -2194,3 +2194,25 @@ body {
     height: clamp(210px, 34vh, 300px) !important;
   }
 }
+
+/* Icon controls for playback buttons. */
+#playPauseButton,
+#resetStartButton,
+#resetPlaybackButton,
+#backToStartButton,
+#restartButton {
+  min-width: 2.45rem;
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+/* Module 1 final double barline. */
+.senzoku-measure-line.final-thin {
+  stroke-width: 1.2 !important;
+}
+
+.senzoku-measure-line.final-thick {
+  stroke-width: 2.7 !important;
+}

@@ -444,3 +444,16 @@ h2 {
 .png-staff-fallback-line {
   display: none !important;
 }
+
+/* Icon controls for playback buttons. */
+#playPauseButton,
+#resetStartButton,
+#resetPlaybackButton,
+#backToStartButton,
+#restartButton {
+  min-width: 2.45rem;
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+}

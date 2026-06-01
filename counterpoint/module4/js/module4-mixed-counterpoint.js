@@ -57,7 +57,9 @@ const I18N = {
     timbreTriangle: "Triangle / 素直",
     timbreOrgan: "Organ / オルガン風",
     timbreBell: "Bell / ベル風",
-    timbreHumanVoice: "人の声",
+    timbreVoice: "Voice / 声風",
+    timbreFemaleSample: "Female Sample / 女声サンプル",
+    timbreMaleSample: "Male Sample / 男声サンプル",
     playbackHint: "クリック：音を入力　｜　← / →：選択移動　｜　↑ / ↓：半音移動　｜　Space：再生 / 停止",
     scoreInputTitle: "五線入力",
     scoreInputHelp: "上段はト音記号の混合対旋律、下段はヘ音記号の全音符定旋律です。",
@@ -135,7 +137,9 @@ const I18N = {
     timbreTriangle: "Triangle / simple",
     timbreOrgan: "Organ / orgue",
     timbreBell: "Bell / cloche",
-    timbreHumanVoice: "Voix humaine",
+    timbreVoice: "Voice / voix",
+    timbreFemaleSample: "Female Sample / voix féminine",
+    timbreMaleSample: "Male Sample / voix masculine",
     playbackHint: "Clic : saisir une note　｜　← / → : déplacer la sélection　｜　↑ / ↓ : demi-ton　｜　Espace : lecture / arrêt",
     scoreInputTitle: "Saisie sur portée",
     scoreInputHelp: "La portée supérieure montre le contrepoint mixte en clé de sol ; la portée inférieure montre le cantus en rondes en clé de fa.",
@@ -222,17 +226,6 @@ let playbackTimerId = null;
 let audioContext = null;
 let analysisIssues = [];
 
-const MUSICXML_INPUT = {
-  cursorColor: "#ff4f8b",
-  fallbackWidth: 1200,
-  fallbackHeight: 360,
-  paddingLeftRatio: 0.075,
-  paddingRightRatio: 0.035,
-  topStaffRatio: 0.34,
-  noteStepRatio: 0.021
-};
-
-
 function t(key) { return I18N[currentLanguage][key]; }
 
 function setLanguage(lang) {
@@ -305,13 +298,6 @@ function createVoiceFormant(ctx, source, destination, now, duration, gainScale) 
   });
 }
 
-function getRealEventsForMidiExport() {
-  // Dummy sharp spacing notes are generated only inside MusicXML.
-  // They are never stored in JSON. This guard also excludes them if future code adds voices/channels.
-  return getCounterpointEvents()
-    .filter((event) => event && !event.dummy && event.voice !== 9 && event.channel !== 9 && event.note && !isRestEvent(event));
-}
-
 function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
   const ctx = getAudioContext();
   const now = ctx.currentTime;
@@ -349,22 +335,14 @@ function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
 }
 
 
-
 const SAMPLE_VOICE_SETS = {
   femaleSample: {
     folder: "female",
-    // Required female files:
-    // C4.wav, G4.wav, C5.wav, G5.wav
-    // These files are played at their written sample octave.
-    notes: ["C4", "G4", "C5", "G5"],
-    transposeSemitones: 0
+    notes: ["C3", "G3", "C4", "G4"]
   },
   maleSample: {
     folder: "male",
-    // Required male files:
-    // C2.wav, G2.wav, C3.wav, G3.wav, C4.wav, G4.wav
-    notes: ["C2", "G2", "C3", "G3", "C4", "G4"],
-    transposeSemitones: 0
+    notes: ["C2", "G2", "C3", "G3"]
   }
 };
 
@@ -383,43 +361,13 @@ function getSampleVoiceBasePath() {
   return "audio/voice";
 }
 
-function midiToSampleNoteName(midi) {
-  const names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-  const pitch = ((midi % 12) + 12) % 12;
-  const octave = Math.floor(midi / 12) - 1;
-  return `${names[pitch]}${octave}`;
-}
-
-function getNearestSampleNote(targetMidi, sampleNotes, setName = "") {
-  const exactName = typeof midiToSampleNoteName === "function"
-    ? midiToSampleNoteName(targetMidi)
-    : midiToNote(targetMidi, "sharp");
-
-  if (sampleNotes.includes(exactName)) {
-    return exactName;
-  }
-
-  // Female / soprano correction:
-  // Keep A4 and B4 in the G4 sample region instead of jumping to the C5 sample.
-  // This avoids the previous A4+ area sounding an octave too high.
-  let candidates = sampleNotes;
-
-  if (setName === "femaleSample") {
-    const c5Midi = noteToMidi("C5");
-    candidates = targetMidi < c5Midi
-      ? sampleNotes.filter((note) => ["C4", "G4"].includes(note))
-      : sampleNotes.filter((note) => ["C5", "G5"].includes(note));
-
-    if (!candidates.length) candidates = sampleNotes;
-  }
-
-  let nearest = candidates[0];
+function getNearestSampleNote(targetMidi, sampleNotes) {
+  let nearest = sampleNotes[0];
   let nearestDistance = Infinity;
 
-  candidates.forEach((note) => {
+  sampleNotes.forEach((note) => {
     const midi = noteToMidi(note);
     if (midi === null) return;
-
     const distance = Math.abs(midi - targetMidi);
     if (distance < nearestDistance) {
       nearest = note;
@@ -457,17 +405,17 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
   const set = SAMPLE_VOICE_SETS[setName];
   if (!set) return;
 
-  const nearestNote = getNearestSampleNote(midi, set.notes, setName);
+  const targetMidi = midi;
+  const nearestNote = getNearestSampleNote(targetMidi, set.notes);
   const sourceMidi = noteToMidi(nearestNote);
+
   if (sourceMidi === null) return;
 
   const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
+
   if (!buffer) {
-    if (typeof playFallbackVoice === "function") {
-      playFallbackVoice(midi, duration, gainScale);
-    } else if (typeof playVoiceLikeNote === "function") {
-      playVoiceLikeNote(midi, duration, gainScale);
-    }
+    // Fallback to synthetic voice if sample files are missing.
+    playVoiceLikeNote(midi, duration, gainScale);
     return;
   }
 
@@ -476,17 +424,12 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 
   const source = ctx.createBufferSource();
   source.buffer = buffer;
-
-  // No global octave transposition.
-  // Exact G4 plays female/G4.wav at playbackRate 1.0.
-  // A4/B4 use the G4 region instead of jumping to C5.
-  const semitoneShift = midi - sourceMidi + (set.transposeSemitones || 0);
-  source.playbackRate.setValueAtTime(Math.pow(2, semitoneShift / 12), now);
+  source.playbackRate.setValueAtTime(Math.pow(2, (targetMidi - sourceMidi) / 12), now);
 
   const gain = ctx.createGain();
   gain.gain.setValueAtTime(0.0001, now);
   gain.gain.exponentialRampToValueAtTime(0.78 * gainScale, now + 0.025);
-  gain.gain.setValueAtTime(0.68 * gainScale, now + Math.max(0.03, duration * 0.74));
+  gain.gain.setValueAtTime(0.70 * gainScale, now + Math.max(0.03, duration * 0.72));
   gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
 
   source.connect(gain);
@@ -497,14 +440,11 @@ async function playSampleVoiceNote(setName, midi, duration = 0.45, gainScale = 1
 }
 
 
-
-
-
-function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
+function playMidiNote(midi, duration = 0.38, gainScale = 1) {
   const timbre = getTimbre();
 
-  if (timbre === "humanVoice") {
-    playSampleVoiceNote(voiceSet, midi, duration, gainScale);
+  if (timbre === "femaleSample" || timbre === "maleSample") {
+    playSampleVoiceNote(timbre, midi, duration, gainScale);
     return;
   }
 
@@ -622,80 +562,12 @@ function getNotesFromTextarea(id) {
   return value.split(/\s+/).filter(Boolean);
 }
 
-function isRestEvent(event) {
-  return !event || event.rest === true || event.note === "REST";
-}
-
-function normalizeCounterpointEvents(events) {
-  const total = getTotalQuarterSlots();
-  const cleaned = [];
-
-  (events || []).forEach((event) => {
-    if (!event || typeof event.start !== "number") return;
-    const duration = DURATIONS[event.duration] ? event.duration : "q";
-    const length = getDurationQuarters(duration);
-    if (event.start < 0 || event.start >= total) return;
-    if (event.start + length > total) return;
-    cleaned.push({
-      start: event.start,
-      duration,
-      note: isRestEvent(event) ? "REST" : event.note,
-      rest: isRestEvent(event)
-    });
-  });
-
-  cleaned.sort((a, b) => a.start - b.start);
-  return cleaned;
-}
-
-function fillRests(events) {
-  const total = getTotalQuarterSlots();
-  const source = normalizeCounterpointEvents(events).sort((a, b) => a.start - b.start);
-  const result = [];
-
-  let slot = 0;
-
-  source.forEach((event) => {
-    const eventStart = event.start;
-    const eventLength = getDurationQuarters(event.duration);
-
-    while (slot < eventStart) {
-      result.push({ start: slot, duration: "q", note: "REST", rest: true });
-      slot += 1;
-    }
-
-    if (eventStart >= slot) {
-      result.push(event);
-      slot = eventStart + eventLength;
-    }
-  });
-
-  while (slot < total) {
-    result.push({ start: slot, duration: "q", note: "REST", rest: true });
-    slot += 1;
-  }
-
-  return result.sort((a, b) => a.start - b.start);
-}
-
 function getCounterpointEvents() {
   const el = document.getElementById("counterpoint");
   if (!el || !el.value.trim()) return [];
-
   try {
     const parsed = JSON.parse(el.value);
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed
-      .filter((event) => event && typeof event.start === "number" && event.note && !isRestEvent(event))
-      .filter((event) => event.voice !== 9 && event.channel !== 9 && event.dummy !== true)
-      .map((event) => ({
-        start: event.start,
-        duration: DURATIONS[event.duration] ? event.duration : "q",
-        note: event.note,
-        rest: false
-      }))
-      .sort((a, b) => a.start - b.start);
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
@@ -704,24 +576,7 @@ function getCounterpointEvents() {
 function setCounterpointEvents(events) {
   const el = document.getElementById("counterpoint");
   if (!el) return;
-
-  const total = getTotalQuarterSlots();
-  const cleaned = (events || [])
-    .filter((event) => event && typeof event.start === "number" && event.note && !isRestEvent(event))
-    .filter((event) => event.voice !== 9 && event.channel !== 9 && event.dummy !== true)
-    .map((event) => ({
-      start: event.start,
-      duration: DURATIONS[event.duration] ? event.duration : "q",
-      note: event.note,
-      rest: false
-    }))
-    .filter((event) => {
-      const length = getDurationQuarters(event.duration);
-      return event.start >= 0 && event.start + length <= total && event.start % 4 + length <= 4;
-    })
-    .sort((a, b) => a.start - b.start);
-
-  el.value = JSON.stringify(cleaned);
+  el.value = JSON.stringify(events);
 }
 
 function setCantus(notes) {
@@ -742,10 +597,7 @@ function getEventAtSlot(slot) {
 }
 
 function getEventCoveringSlot(slot) {
-  return getCounterpointEvents().find((event) => {
-    const length = getDurationQuarters(event.duration);
-    return slot >= event.start && slot < event.start + length;
-  }) || null;
+  return getCounterpointEvents().find((event) => slot >= event.start && slot < event.start + getDurationQuarters(event.duration)) || null;
 }
 
 function isSlotAvailable(start, duration, ignoreStart = null) {
@@ -757,7 +609,6 @@ function isSlotAvailable(start, duration, ignoreStart = null) {
   const events = getCounterpointEvents();
   return !events.some((event) => {
     if (ignoreStart !== null && event.start === ignoreStart) return false;
-
     const a1 = start;
     const a2 = start + length;
     const b1 = event.start;
@@ -766,121 +617,116 @@ function isSlotAvailable(start, duration, ignoreStart = null) {
   });
 }
 
-function syncRhythmButtons(duration = inputDuration) {
+function setInputDuration(duration) {
+  inputDuration = duration;
+
   document.querySelectorAll(".rhythm-button").forEach((button) => {
     button.classList.toggle("active", button.getAttribute("data-duration") === duration);
   });
-}
 
-function changeSelectedNoteDuration(duration) {
-  if (!DURATIONS[duration]) return false;
-
+  // If a note is selected, change that note's duration immediately.
+  const events = getCounterpointEvents();
   const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (!selectedEvent) return false;
 
-  const start = selectedEvent.start;
-  const newLength = getDurationQuarters(duration);
-  const total = getTotalQuarterSlots();
+  if (selectedEvent) {
+    const originalStart = selectedEvent.start;
+    const updatedEvents = events.map((event) => {
+      if (event.start === selectedEvent.start) {
+        return { ...event, duration };
+      }
+      return event;
+    });
 
-  if (start % 4 + newLength > 4 || start + newLength > total) {
-    return false;
+    const length = getDurationQuarters(duration);
+    const total = getTotalQuarterSlots();
+
+    const crossesMeasure = originalStart % 4 + length > 4;
+    const exceedsTotal = originalStart + length > total;
+    const overlaps = updatedEvents.some((event) => {
+      if (event.start === originalStart) return false;
+      const a1 = originalStart;
+      const a2 = originalStart + length;
+      const b1 = event.start;
+      const b2 = event.start + getDurationQuarters(event.duration);
+      return a1 < b2 && b1 < a2;
+    });
+
+    if (!crossesMeasure && !exceedsTotal && !overlaps) {
+      selectedIndex = originalStart;
+      setCounterpointEvents(updatedEvents);
+      renderScore();
+      return;
+    }
   }
 
-  const newEnd = start + newLength;
-
-  const updatedEvents = getCounterpointEvents()
-    .filter((event) => {
-      if (event.start === start) return false;
-
-      const eventStart = event.start;
-      const eventEnd = event.start + getDurationQuarters(event.duration);
-      return !(start < eventEnd && eventStart < newEnd);
-    })
-    .concat([{ ...selectedEvent, start, duration, rest: false }])
-    .sort((a, b) => a.start - b.start);
-
-  selectedIndex = start;
-  inputDuration = duration;
-  setCounterpointEvents(updatedEvents);
-  syncRhythmButtons(duration);
-  setupMusicXmlInput();
-  setupModule4KeyboardInput();
   renderScore();
-  updateDisplays();
-  return true;
-}
-
-function setInputDuration(duration) {
-  if (!DURATIONS[duration]) return;
-
-  inputDuration = duration;
-  syncRhythmButtons(duration);
-
-  const changed = changeSelectedNoteDuration(duration);
-  if (!changed) {
-    renderScore();
-  }
-}
-
-function selectCounterpointEventAtSlot(slot, playPreview = true) {
-  const event = getEventAtSlot(slot) || getEventCoveringSlot(slot);
-  if (!event) return null;
-
-  selectedIndex = event.start;
-  inputDuration = event.duration;
-  syncRhythmButtons(event.duration);
-  renderScore();
-
-  if (playPreview && event.note) {
-    playNoteName(event.note, 0.25, 0.8, "femaleSample");
-  }
-
-  return event;
 }
 
 function moveSelection(delta) {
   const total = getTotalQuarterSlots();
+  const events = getCounterpointEvents().sort((a, b) => a.start - b.start);
+
   if (!total) return;
 
-  selectedIndex = Math.max(0, Math.min(total - 1, selectedIndex + delta));
+  // When notes exist, left/right moves between existing notes, not empty quarter slots.
+  if (events.length) {
+    const currentEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
+    const currentStart = currentEvent ? currentEvent.start : selectedIndex;
 
-  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (selectedEvent) {
-    inputDuration = selectedEvent.duration;
-    syncRhythmButtons(inputDuration);
+    let currentPosition = events.findIndex((event) => event.start === currentStart);
+
+    if (currentPosition === -1) {
+      if (delta > 0) {
+        currentPosition = events.findIndex((event) => event.start > selectedIndex);
+        if (currentPosition === -1) currentPosition = 0;
+      } else {
+        for (let i = events.length - 1; i >= 0; i--) {
+          if (events[i].start < selectedIndex) {
+            currentPosition = i;
+            break;
+          }
+        }
+        if (currentPosition === -1) currentPosition = events.length - 1;
+      }
+
+      selectedIndex = events[currentPosition].start;
+      renderScore();
+      const note = events[currentPosition].note;
+      if (note) playNoteName(note, 0.25, 0.75);
+      return;
+    }
+
+    const nextPosition = (currentPosition + delta + events.length) % events.length;
+    selectedIndex = events[nextPosition].start;
+    renderScore();
+
+    const note = events[nextPosition].note;
+    if (note) playNoteName(note, 0.25, 0.75);
+    return;
   }
 
+  selectedIndex += delta;
+  if (selectedIndex < 0) selectedIndex = total - 1;
+  if (selectedIndex >= total) selectedIndex = 0;
   renderScore();
 }
 
-function moveSelectedNote(delta) {
-  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (!selectedEvent) return;
-
-  const midi = noteToMidi(selectedEvent.note);
+function moveSelectedNote(semitone) {
+  const events = getCounterpointEvents();
+  const event = getEventAtSlot(selectedIndex);
+  if (!event) return;
+  const midi = noteToMidi(event.note);
   if (midi === null) return;
-
-  const updatedNote = midiToNote(midi + delta);
-  const events = getCounterpointEvents().map((event) =>
-    event.start === selectedEvent.start ? { ...event, note: updatedNote, rest: false } : event
-  );
-
-  selectedIndex = selectedEvent.start;
+  event.note = midiToNote(midi + semitone, semitone > 0 ? "sharp" : "flat");
   setCounterpointEvents(events);
   renderScore();
-  updateDisplays();
-  playNoteName(updatedNote, 0.25, 1, "femaleSample");
+  playNoteName(event.note, 0.45, 1);
 }
 
 function deleteSelectedNote() {
-  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (!selectedEvent) return;
-
-  const events = getCounterpointEvents().filter((event) => event.start !== selectedEvent.start);
-  selectedIndex = selectedEvent.start;
+  const events = getCounterpointEvents().filter((event) => event.start !== selectedIndex);
   setCounterpointEvents(events);
   renderScore();
-  updateDisplays();
 }
 
 function clearCounterpoint() {
@@ -909,16 +755,10 @@ function clearSvg(svg) {
   while (svg.firstChild) svg.removeChild(svg.firstChild);
 }
 
-function drawClef(svg, bottomLineY, clef = "treble") {
-  const symbol = clef === "bass" ? "𝄢" : "𝄞";
-  const x = clef === "bass" ? 30 : 28;
-  const y = clef === "bass" ? bottomLineY - SCORE.lineGap * 1.45 : bottomLineY + SCORE.lineGap * 0.15;
-
-  svg.appendChild(createSvgElement("text", {
-    x,
-    y,
-    class: "music-symbol clef-symbol"
-  })).textContent = symbol;
+function drawClef(svg, bottomLineY, clefType) {
+  const clef = clefType === "bass" ? "𝄢" : "𝄞";
+  const className = clefType === "bass" ? "clef-symbol bass" : "clef-symbol treble";
+  svg.appendChild(createSvgElement("text", { x: 52, y: bottomLineY - 20, class: className })).textContent = clef;
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
@@ -1011,40 +851,6 @@ function drawIssueRing(svg, x, y, issueClass) {
   svg.appendChild(createSvgElement("circle", { cx: x, cy: y, r: 15, class: issueClass === "warn" ? "issue-ring warn" : "issue-ring" }));
 }
 
-function supportsMusicFontGlyph() {
-  if (typeof document === "undefined") return false;
-
-  // Prefer the browser Font Loading API when available.
-  if (document.fonts && typeof document.fonts.check === "function") {
-    const candidates = [
-      "28px Bravura",
-      "28px Noto Music",
-      "28px Finale Maestro",
-      "28px Petaluma",
-      "28px Maestro",
-      "28px Opus"
-    ];
-
-    if (candidates.some((font) => document.fonts.check(font, "𝄽"))) {
-      return true;
-    }
-  }
-
-  // Conservative fallback: use SVG if support cannot be confirmed.
-  return false;
-}
-
-function getRestGlyph(duration = "q") {
-  if (duration === "w") return "𝄻";
-  if (duration === "h") return "𝄼";
-  return "𝄽";
-}
-
-function drawRest(svg, x, voice, index, bottomLineY, duration = "q") {
-  // Stable version: do not draw generated rests.
-  // Empty beats remain empty and clickable.
-}
-
 function drawNote(svg, note, x, voice, index, bottomLineY, duration = "q") {
   const y = noteToY(note, bottomLineY);
   const parsed = parseNote(note);
@@ -1106,778 +912,6 @@ function drawPlayhead(svg, positions, noteCount) {
   svg.appendChild(createSvgElement("line", { x1: x, y1: SCORE.playheadTop, x2: x, y2: SCORE.playheadBottom, class: "playhead-line" }));
 }
 
-function xmlEscape(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function noteNameToMusicXmlPitch(noteName) {
-  const parsed = parseNote(noteName);
-  if (!parsed) return null;
-
-  const step = parsed.letter.toUpperCase();
-  let alter = 0;
-  if (parsed.accidental === "#") alter = 1;
-  if (parsed.accidental === "b") alter = -1;
-
-  return { step, alter, octave: parsed.octave };
-}
-
-function durationToMusicXmlType(duration) {
-  if (duration === "w") return "whole";
-  if (duration === "h") return "half";
-  return "quarter";
-}
-
-function durationToDivisions(duration) {
-  return getDurationQuarters(duration) * 4;
-}
-
-function createMusicXmlNote(noteName, duration, staff = 1, voice = 1, isRest = false) {
-  const xmlDuration = durationToDivisions(duration);
-  const type = durationToMusicXmlType(duration);
-
-  if (isRest || !noteName) {
-    return `
-        <note>
-          <rest/>
-          <duration>${xmlDuration}</duration>
-          <voice>${voice}</voice>
-          <type>${type}</type>
-          <staff>${staff}</staff>
-        </note>`;
-  }
-
-  const pitch = noteNameToMusicXmlPitch(noteName);
-  if (!pitch) return createMusicXmlNote(null, duration, staff, voice, true);
-
-  const alter = pitch.alter ? `<alter>${pitch.alter}</alter>` : "";
-
-  return `
-        <note>
-          <pitch>
-            <step>${pitch.step}</step>
-            ${alter}
-            <octave>${pitch.octave}</octave>
-          </pitch>
-          <duration>${xmlDuration}</duration>
-          <voice>${voice}</voice>
-          <type>${type}</type>
-          <staff>${staff}</staff>
-        </note>`;
-}
-
-function createInvisibleDummyAccidentalNoteXml(step = "C", octave = 5, isChord = false) {
-  const chordTag = isChord ? "<chord/>" : "";
-
-  return `
-        <note print-object="no" print-spacing="yes">
-          ${chordTag}
-          <pitch>
-            <step>${step}</step>
-            <alter>1</alter>
-            <octave>${octave}</octave>
-          </pitch>
-          <duration>4</duration>
-          <voice>9</voice>
-          <type>quarter</type>
-          <staff>1</staff>
-          <accidental>sharp</accidental>
-          <notehead>none</notehead>
-        </note>`;
-}
-
-function createInvisibleDummyAccidentalClusterXml() {
-  const dummyNotes = [
-    { step: "C", octave: 5 },
-    { step: "D", octave: 5 },
-    { step: "E", octave: 5 },
-    { step: "F", octave: 5 },
-    { step: "G", octave: 5 },
-    { step: "A", octave: 5 },
-    { step: "B", octave: 5 }
-  ];
-
-  return dummyNotes
-    .map((item, index) => createInvisibleDummyAccidentalNoteXml(item.step, item.octave, index > 0))
-    .join("");
-}
-
-function createInvisibleDummyQuarterNoteXml(step = "C", octave = 5) {
-  return `
-        <note print-object="no" print-spacing="yes">
-          <pitch>
-            <step>${step}</step>
-            <alter>1</alter>
-            <octave>${octave}</octave>
-          </pitch>
-          <duration>4</duration>
-          <voice>9</voice>
-          <type>quarter</type>
-          <staff>1</staff>
-          <accidental>sharp</accidental>
-          <notehead>none</notehead>
-        </note>`;
-}
-
-function createInvisibleDummyGridVoiceXml() {
-  let xml = "";
-
-  for (let beat = 0; beat < 4; beat += 1) {
-    xml += createInvisibleDummyAccidentalClusterXml();
-  }
-
-  return xml;
-}
-
-function createMeasureCounterpointXml(measureIndex, events) {
-  const measureStart = measureIndex * 4;
-  const measureEnd = measureStart + 4;
-  let slot = measureStart;
-  let xml = "";
-
-  const localEvents = events
-    .filter((event) => event.start >= measureStart && event.start < measureEnd)
-    .sort((a, b) => a.start - b.start);
-
-  localEvents.forEach((event) => {
-    while (slot < event.start) {
-      xml += createMusicXmlNote(null, "q", 1, 1, true);
-      slot += 1;
-    }
-
-    xml += createMusicXmlNote(event.note, event.duration, 1, 1, false);
-    slot = event.start + getDurationQuarters(event.duration);
-  });
-
-  while (slot < measureEnd) {
-    xml += createMusicXmlNote(null, "q", 1, 1, true);
-    slot += 1;
-  }
-
-  // Invisible accidental spacing voice.
-  // It reserves accidental space for every beat but is not user data.
-  xml += `<backup><duration>16</duration></backup>`;
-  xml += createInvisibleDummyGridVoiceXml();
-
-  return xml;
-}
-
-function buildModule4MusicXml() {
-  const cantus = getNotesFromTextarea("cantus");
-  const events = getCounterpointEvents();
-  const measures = Math.max(cantus.length, 1);
-
-  let measureXml = "";
-
-  for (let i = 0; i < measures; i += 1) {
-    const attributes = i === 0 ? `
-      <attributes>
-        <divisions>4</divisions>
-        <key><fifths>0</fifths></key>
-        <time><beats>4</beats><beat-type>4</beat-type></time>
-        <staves>2</staves>
-        <clef number="1"><sign>G</sign><line>2</line></clef>
-        <clef number="2"><sign>F</sign><line>4</line></clef>
-      </attributes>` : "";
-
-    const counterpointXml = createMeasureCounterpointXml(i, events);
-
-    // Back up after dummy sharp voice before writing the cantus staff.
-    const backupToCantus = `<backup><duration>16</duration></backup>`;
-    const cantusNote = cantus[i] || null;
-    const cantusXml = createMusicXmlNote(cantusNote, "w", 2, 2, !cantusNote);
-
-    measureXml += `
-      <measure number="${i + 1}">
-        ${attributes}
-        ${counterpointXml}
-        ${backupToCantus}
-        ${cantusXml}
-      </measure>`;
-  }
-
-  return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
-<score-partwise version="3.1">
-  <part-list>
-    <score-part id="P1">
-      <part-name>Two-Voice Mixed Counterpoint</part-name>
-    </score-part>
-  </part-list>
-  <part id="P1">
-    ${measureXml}
-  </part>
-</score-partwise>`;
-}
-
-function getOsmdInstance() {
-  const container = document.getElementById("musicXmlDisplay");
-  if (!container || typeof opensheetmusicdisplay === "undefined") {
-    return null;
-  }
-
-  if (!window.module4OSMD) {
-    window.module4OSMD = new opensheetmusicdisplay.OpenSheetMusicDisplay(container, {
-      autoResize: false,
-      backend: "svg",
-      drawTitle: false,
-      drawComposer: false,
-      drawingParameters: "compacttight",
-      disableCursor: false,
-      renderSingleHorizontalStaffline: true
-    });
-
-    if (window.module4OSMD.EngravingRules) {
-      window.module4OSMD.EngravingRules.RenderXMeasuresPerLine = 4;
-      window.module4OSMD.EngravingRules.MinimumDistanceBetweenNotes = 1.0;
-      window.module4OSMD.EngravingRules.MinimumDistanceBetweenGraphicalObjects = 1.0;
-    }
-  }
-
-  return window.module4OSMD;
-}
-
-async function renderMusicXmlScore() {
-  const container = document.getElementById("musicXmlDisplay");
-  const legacySvg = document.getElementById("scoreEditor");
-
-  if (!container) return false;
-
-  if (typeof opensheetmusicdisplay === "undefined") {
-    if (legacySvg) legacySvg.classList.remove("is-hidden");
-    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML viewer could not be loaded. Using fallback SVG editor.</div>`;
-    clearOsmdSlotCache();
-    renderMusicXmlOverlay();
-    return false;
-  }
-
-  try {
-    const osmd = getOsmdInstance();
-    if (!osmd) return false;
-
-    const xml = buildModule4MusicXml();
-    await osmd.load(xml);
-    osmd.render();
-
-    clearOsmdSlotCache();
-
-    container.dataset.ready = "true";
-    setupMusicXmlInput();
-
-    requestAnimationFrame(() => {
-      clearOsmdSlotCache();
-      renderMusicXmlOverlay();
-      requestAnimationFrame(() => {
-        clearOsmdSlotCache();
-        renderMusicXmlOverlay();
-      });
-    });
-
-    if (legacySvg) legacySvg.classList.add("is-hidden");
-    return true;
-  } catch (error) {
-    console.error("MusicXML render failed:", error);
-    if (legacySvg) legacySvg.classList.remove("is-hidden");
-    container.innerHTML = `<div class="musicxml-fallback-message">MusicXML display error. Using fallback SVG editor.</div>`;
-    clearOsmdSlotCache();
-    renderMusicXmlOverlay();
-    return false;
-  }
-}
-
-function musicXmlClickToSlotAndNote(event) {
-  const overlay = document.getElementById("musicXmlOverlay");
-  if (!overlay) return null;
-
-  const rect = overlay.getBoundingClientRect();
-  if (!rect.width || !rect.height) return null;
-
-  const box = getOsmdSvgBox();
-  const metrics = getMusicXmlOverlayMetrics();
-  const width = box ? box.width : metrics.width;
-  const height = box ? box.height : metrics.height;
-
-  const localX = ((event.clientX - rect.left) / rect.width) * width;
-  const localY = ((event.clientY - rect.top) / rect.height) * height;
-
-  const slot = getMusicXmlSlotFromX(localX);
-  const note = getMusicXmlNoteFromY(localY);
-
-  return { slot, note };
-}
-
-function handleMusicXmlClick(event) {
-  if (isPlaying) return;
-
-  const mapped = musicXmlClickToSlotAndNote(event);
-  if (!mapped) return;
-
-  const { slot, note } = mapped;
-  selectedIndex = slot;
-
-  const coveringEvent = getEventCoveringSlot(slot);
-  if (coveringEvent) {
-    selectedIndex = coveringEvent.start;
-    inputDuration = coveringEvent.duration;
-    syncRhythmButtons(inputDuration);
-
-    const events = getCounterpointEvents().map((item) =>
-      item.start === coveringEvent.start ? { ...item, note, rest: false } : item
-    );
-
-    setCounterpointEvents(events);
-    renderScore();
-    updateDisplays();
-    playNoteName(note, 0.35, 1, "femaleSample");
-    return;
-  }
-
-  insertNoteAtSelectedIndex(note);
-}
-
-function setupMusicXmlInput() {
-  const overlay = document.getElementById("musicXmlOverlay");
-  if (!overlay || overlay.dataset.inputReady === "true") return;
-
-  overlay.addEventListener("click", handleMusicXmlClick);
-  overlay.dataset.inputReady = "true";
-
-  window.addEventListener("resize", () => requestAnimationFrame(renderMusicXmlOverlay));
-
-  const wrapper = document.getElementById("musicXmlWrapper");
-  if (wrapper && wrapper.dataset.overlayScrollReady !== "true") {
-    wrapper.addEventListener("scroll", () => requestAnimationFrame(renderMusicXmlOverlay));
-    wrapper.dataset.overlayScrollReady = "true";
-  }
-}
-
-function getMusicXmlSlotX(slot) {
-  const xs = getOsmdSlotXs();
-  const total = Math.max(1, getTotalQuarterSlots());
-  const clamped = Math.max(0, Math.min(total - 1, slot));
-  return xs[clamped] ?? 0;
-}
-
-function getMusicXmlSlotFromX(x) {
-  const xs = getOsmdSlotXs();
-  if (!xs.length) return 0;
-
-  let bestIndex = 0;
-  let bestDistance = Infinity;
-
-  xs.forEach((slotX, index) => {
-    const distance = Math.abs(slotX - x);
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      bestIndex = index;
-    }
-  });
-
-  return bestIndex;
-}
-
-function getMusicXmlNoteFromY(y) {
-  const metrics = getMusicXmlOverlayMetrics();
-  const baseMidi = noteToMidi("E4");
-  const diff = Math.round((metrics.topStaffCenterY - y) / metrics.noteStep);
-  return midiToNote(baseMidi + diff);
-}
-
-function createOverlaySvgElement(tag, attrs = {}) {
-  const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
-  Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
-  return element;
-}
-
-function getOsmdSvgElement() {
-  const container = document.getElementById("musicXmlDisplay");
-  if (!container) return null;
-  return container.querySelector("svg");
-}
-
-function getOsmdSvgBox() {
-  const svg = getOsmdSvgElement();
-  if (!svg) return null;
-
-  const rect = svg.getBoundingClientRect();
-  return {
-    width: Math.max(rect.width, svg.scrollWidth || 0, 1),
-    height: Math.max(rect.height, svg.scrollHeight || 0, 1)
-  };
-}
-
-function collectOsmdCandidateNoteXs() {
-  const svg = getOsmdSvgElement();
-  if (!svg) return [];
-
-  const svgRect = svg.getBoundingClientRect();
-  const nodes = Array.from(svg.querySelectorAll("path, ellipse, circle"));
-
-  const candidates = [];
-
-  nodes.forEach((node) => {
-    if (!node || node.classList.contains("osmd-dummy-accidental-hidden")) return;
-
-    let box = null;
-    try {
-      if (typeof node.getBBox === "function") box = node.getBBox();
-    } catch {
-      box = null;
-    }
-    if (!box) return;
-
-    // Noteheads are compact, not huge staff/beam/barline paths.
-    // We keep a deliberately broad filter because OSMD's internal SVG structure varies.
-    const compact =
-      box.width >= 4 &&
-      box.width <= 32 &&
-      box.height >= 3 &&
-      box.height <= 28;
-
-    if (!compact) return;
-
-    // Focus on the upper staff region where counterpoint input lives.
-    // This avoids bass cantus whole notes and most staff-line fragments.
-    const y = box.y + box.height / 2;
-    const upperStaff = y > 35 && y < Math.max(180, svgRect.height * 0.55);
-    if (!upperStaff) return;
-
-    const x = box.x + box.width / 2;
-    if (Number.isFinite(x)) candidates.push(x);
-  });
-
-  // Deduplicate close x positions.
-  const sorted = candidates.sort((a, b) => a - b);
-  const unique = [];
-  sorted.forEach((x) => {
-    if (!unique.length || Math.abs(unique[unique.length - 1] - x) > 8) {
-      unique.push(x);
-    }
-  });
-
-  return unique;
-}
-
-function getOsmdSlotXs() {
-  const total = Math.max(1, getTotalQuarterSlots());
-  const cached = window.module4OsmdSlotXs;
-
-  if (Array.isArray(cached) && cached.length === total) {
-    return cached;
-  }
-
-  const candidates = collectOsmdCandidateNoteXs();
-
-  // If OSMD candidate extraction works, use actual rendered note/rest positions.
-  if (candidates.length >= Math.min(total, 4)) {
-    const minX = Math.min(...candidates);
-    const maxX = Math.max(...candidates);
-    const xs = [];
-
-    // Use candidate note x positions where possible.
-    // For missing empty slots, interpolate between available rendered positions.
-    for (let i = 0; i < total; i += 1) {
-      if (candidates[i] !== undefined) {
-        xs.push(candidates[i]);
-      } else {
-        const ratio = total <= 1 ? 0 : i / (total - 1);
-        xs.push(minX + ratio * (maxX - minX));
-      }
-    }
-
-    window.module4OsmdSlotXs = xs;
-    return xs;
-  }
-
-  // Fallback: stable proportional placement inside the rendered SVG.
-  const box = getOsmdSvgBox();
-  const width = box ? box.width : 1100;
-  const left = width * 0.08;
-  const right = width * 0.965;
-  const xs = [];
-
-  for (let i = 0; i < total; i += 1) {
-    const ratio = total <= 1 ? 0 : i / (total - 1);
-    xs.push(left + ratio * (right - left));
-  }
-
-  window.module4OsmdSlotXs = xs;
-  return xs;
-}
-
-function clearOsmdSlotCache() {
-  window.module4OsmdSlotXs = null;
-}
-
-function renderMusicXmlOverlay() {
-  const overlay = document.getElementById("musicXmlOverlay");
-  if (!overlay) return;
-
-  const total = getTotalQuarterSlots();
-  const box = getOsmdSvgBox();
-  const metrics = getMusicXmlOverlayMetrics();
-  const width = box ? box.width : metrics.width;
-  const height = box ? box.height : metrics.height;
-  const slotWidth = getMusicXmlSlotWidth();
-
-  overlay.setAttribute("viewBox", `0 0 ${width} ${height}`);
-  overlay.style.width = `${width}px`;
-  overlay.style.height = `${height}px`;
-  overlay.innerHTML = "";
-
-  if (!total) return;
-
-  const cursorX = getMusicXmlSlotX(selectedIndex);
-  const topY = Math.max(0, metrics.topStaffCenterY - 96);
-  const bottomY = Math.min(height, metrics.topStaffCenterY + 174);
-  const highlightY = Math.max(0, metrics.topStaffCenterY - 78);
-  const highlightHeight = Math.min(height - highlightY, 150);
-
-  // Target highlight is centered on the actual OSMD note x-position, not an independent grid.
-  overlay.appendChild(createOverlaySvgElement("rect", {
-    x: cursorX - slotWidth * 0.5,
-    y: highlightY,
-    width: slotWidth,
-    height: highlightHeight,
-    class: "musicxml-input-slot-highlight"
-  }));
-
-  // Cursor is placed directly above the note's rendered x-position.
-  overlay.appendChild(createOverlaySvgElement("line", {
-    x1: cursorX,
-    y1: topY,
-    x2: cursorX,
-    y2: bottomY,
-    class: "musicxml-cursor-line"
-  }));
-
-  overlay.appendChild(createOverlaySvgElement("path", {
-    d: `M ${cursorX - 5} ${topY + 2} L ${cursorX + 5} ${topY + 2} L ${cursorX} ${topY + 11} Z`,
-    class: "musicxml-cursor-triangle"
-  }));
-
-  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (selectedEvent && selectedEvent.note && !isRestEvent(selectedEvent)) {
-    const midi = noteToMidi(selectedEvent.note);
-    const baseMidi = noteToMidi("E4");
-
-    if (midi !== null && baseMidi !== null) {
-      const y = metrics.topStaffCenterY - (midi - baseMidi) * metrics.noteStep;
-      overlay.appendChild(createOverlaySvgElement("circle", {
-        cx: getMusicXmlSlotX(selectedEvent.start),
-        cy: y,
-        r: 8,
-        class: "musicxml-selected-note"
-      }));
-    }
-  }
-}
-
-function getMusicXmlOverlayMetrics() {
-  const wrapper = document.getElementById("musicXmlWrapper");
-  const display = document.getElementById("musicXmlDisplay");
-  const overlay = document.getElementById("musicXmlOverlay");
-  const displaySvg = display ? display.querySelector("svg") : null;
-
-  const svgRect = displaySvg ? displaySvg.getBoundingClientRect() : null;
-
-  const width = Math.max(
-    displaySvg ? Math.ceil(displaySvg.scrollWidth || svgRect.width) : 0,
-    display ? display.scrollWidth : 0,
-    wrapper ? wrapper.scrollWidth : 0,
-    MUSICXML_INPUT.fallbackWidth || 1200
-  );
-
-  const height = Math.max(
-    displaySvg ? Math.ceil(displaySvg.scrollHeight || svgRect.height) : 0,
-    display ? display.scrollHeight : 0,
-    wrapper ? wrapper.clientHeight : 0,
-    MUSICXML_INPUT.fallbackHeight || 360
-  );
-
-  // Cursor is an insertion cursor, so it uses beat boundaries.
-  // The left edge is intentionally placed a little before the first notehead,
-  // like Sibelius' caret before the note.
-  const left = width * 0.075;
-  const right = width * 0.965;
-  const topStaffCenterY = height * 0.34;
-  const noteStep = Math.max(6, height * 0.021);
-
-  if (overlay) {
-    overlay.setAttribute("viewBox", `0 0 ${width} ${height}`);
-    overlay.style.width = `${width}px`;
-    overlay.style.height = `${height}px`;
-  }
-
-  return { width, height, left, right, topStaffCenterY, noteStep };
-}
-
-function getKeyboardInputOctave(letter) {
-  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (selectedEvent && selectedEvent.note) {
-    const parsed = parseNote(selectedEvent.note);
-    if (parsed && typeof parsed.octave === "number") return parsed.octave;
-  }
-
-  const events = getCounterpointEvents().filter((event) => event.note && !isRestEvent(event));
-  if (events.length) {
-    const nearest = events.reduce((best, event) => {
-      const bestDistance = Math.abs(best.start - selectedIndex);
-      const distance = Math.abs(event.start - selectedIndex);
-      return distance < bestDistance ? event : best;
-    }, events[0]);
-    const parsed = parseNote(nearest.note);
-    if (parsed && typeof parsed.octave === "number") return parsed.octave;
-  }
-
-  return 4;
-}
-
-function normalizeKeyboardNoteRegister(letter, octave) {
-  const note = `${letter.toUpperCase()}${octave}`;
-  const midi = noteToMidi(note);
-  if (midi === null) return note;
-
-  if (midi < noteToMidi("C4")) return `${letter.toUpperCase()}${octave + 1}`;
-  if (midi > noteToMidi("G5")) return `${letter.toUpperCase()}${octave - 1}`;
-  return note;
-}
-
-function insertNoteAtSelectedIndex(note) {
-  const total = getTotalQuarterSlots();
-  if (!total) return;
-
-  const start = Math.max(0, Math.min(total - 1, selectedIndex));
-  const coveringEvent = getEventCoveringSlot(start);
-
-  // If cursor is inside an existing note, replace its pitch.
-  if (coveringEvent) {
-    selectedIndex = coveringEvent.start;
-    inputDuration = coveringEvent.duration;
-    syncRhythmButtons(inputDuration);
-
-    const events = getCounterpointEvents().map((event) =>
-      event.start === coveringEvent.start ? { ...event, note, rest: false } : event
-    );
-
-    setCounterpointEvents(events);
-    renderScore();
-    updateDisplays();
-    playNoteName(note, 0.35, 1, "femaleSample");
-    return;
-  }
-
-  if (!isSlotAvailable(start, inputDuration, null)) {
-    renderScore();
-    return;
-  }
-
-  const length = getDurationQuarters(inputDuration);
-  const end = start + length;
-
-  const events = getCounterpointEvents()
-    .filter((event) => {
-      const eventStart = event.start;
-      const eventEnd = event.start + getDurationQuarters(event.duration);
-      return !(start < eventEnd && eventStart < end);
-    });
-
-  events.push({ start, duration: inputDuration, note, rest: false });
-  events.sort((a, b) => a.start - b.start);
-
-  selectedIndex = start;
-  setCounterpointEvents(events);
-  renderScore();
-  updateDisplays();
-  playNoteName(note, 0.35, 1, "femaleSample");
-}
-
-function handleKeyboardPitchInput(letter) {
-  const octave = getKeyboardInputOctave(letter);
-  const note = normalizeKeyboardNoteRegister(letter, octave);
-  insertNoteAtSelectedIndex(note);
-}
-
-function setupModule4KeyboardInput() {
-  if (window.module4KeyboardInputReady) return;
-  window.module4KeyboardInputReady = true;
-
-  document.addEventListener("keydown", (event) => {
-    const active = document.activeElement;
-    const tag = active ? active.tagName : "";
-    const isTyping = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (active && active.isContentEditable);
-    if (isTyping) return;
-
-    const key = event.key;
-
-    if (/^[a-gA-G]$/.test(key)) {
-      event.preventDefault();
-      handleKeyboardPitchInput(key.toUpperCase());
-      return;
-    }
-
-    if (key === "1") {
-      event.preventDefault();
-      setInputDuration("q");
-      return;
-    }
-
-    if (key === "2") {
-      event.preventDefault();
-      setInputDuration("h");
-      return;
-    }
-
-    if (key === "4") {
-      event.preventDefault();
-      setInputDuration("w");
-      return;
-    }
-
-    if (key === "ArrowLeft") {
-      event.preventDefault();
-      moveSelection(-1);
-      return;
-    }
-
-    if (key === "ArrowRight") {
-      event.preventDefault();
-      moveSelection(1);
-      return;
-    }
-
-    if (key === "ArrowUp") {
-      event.preventDefault();
-      moveSelectedNote(1);
-      return;
-    }
-
-    if (key === "ArrowDown") {
-      event.preventDefault();
-      moveSelectedNote(-1);
-      return;
-    }
-
-    if (key === "Backspace" || key === "Delete") {
-      event.preventDefault();
-      deleteSelectedNote();
-    }
-  });
-}
-
-function getMusicXmlSlotWidth() {
-  const xs = getOsmdSlotXs();
-  const total = Math.max(1, getTotalQuarterSlots());
-  if (total <= 1 || xs.length < 2) return 48;
-
-  const index = Math.max(0, Math.min(total - 2, selectedIndex));
-  return Math.max(24, Math.abs(xs[index + 1] - xs[index]));
-}
-
 function renderScore() {
   const svg = document.getElementById("scoreEditor");
   if (!svg) return;
@@ -1900,9 +934,7 @@ function renderScore() {
 
   events.forEach((event) => {
     const x = positions[event.start];
-    if (x !== undefined && event.note && !isRestEvent(event)) {
-      drawNote(svg, event.note, x, "counterpoint", event.start, SCORE.topBottomLineY, event.duration);
-    }
+    if (x !== undefined) drawNote(svg, event.note, x, "counterpoint", event.start, SCORE.topBottomLineY, event.duration);
   });
 
   cantus.forEach((note, i) => {
@@ -1911,8 +943,6 @@ function renderScore() {
   });
 
   updateDisplays();
-  renderMusicXmlOverlay();
-  renderMusicXmlScore();
 }
 
 function handleScoreClick(event) {
@@ -1942,69 +972,48 @@ function handleScoreClick(event) {
 
   const clickedNote = yToNaturalNote(viewY);
   const coveringEvent = getEventCoveringSlot(nearestIndex);
+  const start = coveringEvent ? coveringEvent.start : nearestIndex;
+  const old = getEventAtSlot(start);
 
-  if (coveringEvent) {
-    selectedIndex = coveringEvent.start;
-    inputDuration = coveringEvent.duration;
-    syncRhythmButtons(inputDuration);
-
-    const headX = positions[coveringEvent.start];
-    const closeToHead = headX !== undefined && Math.abs(viewX - headX) < 20;
-
-    if (closeToHead) {
-      const events = getCounterpointEvents().map((event) =>
-        event.start === coveringEvent.start ? { ...event, note: clickedNote, rest: false } : event
-      );
-      setCounterpointEvents(events);
+  if (!isSlotAvailable(start, inputDuration, old ? old.start : null)) {
+    // If the slot is covered by an existing note, select it rather than doing nothing.
+    if (coveringEvent) {
+      selectedIndex = coveringEvent.start;
       renderScore();
-      updateDisplays();
-      playNoteName(clickedNote, 0.45, 1, "femaleSample");
-      return;
+      if (coveringEvent.note) playNoteName(coveringEvent.note, 0.35, 0.8);
     }
-
-    renderScore();
-    if (coveringEvent.note) playNoteName(coveringEvent.note, 0.25, 0.8, "femaleSample");
     return;
   }
 
-  const start = nearestIndex;
-  if (!isSlotAvailable(start, inputDuration, null)) {
-    selectedIndex = start;
-    renderScore();
-    return;
-  }
-
-  const events = getCounterpointEvents();
-  events.push({ start, duration: inputDuration, note: clickedNote, rest: false });
+  const events = getCounterpointEvents().filter((event) => event.start !== start);
+  events.push({ start, duration: inputDuration, note: clickedNote });
   events.sort((a, b) => a.start - b.start);
 
   selectedIndex = start;
   setCounterpointEvents(events);
-  syncRhythmButtons(inputDuration);
   renderScore();
-  updateDisplays();
-  playNoteName(clickedNote, 0.45, 1, "femaleSample");
+  playNoteName(clickedNote, 0.45, 1);
+  svg.focus();
 }
 
 function updateDisplays() {
+  const cantus = getNotesFromTextarea("cantus");
+  const events = getCounterpointEvents();
   const cantusDisplay = document.getElementById("cantusDisplay");
   const counterpointDisplay = document.getElementById("counterpointDisplay");
-  const scoreMeta = document.getElementById("scoreMeta");
+  const scoreStatus = document.getElementById("scoreStatus");
 
-  if (cantusDisplay) {
-    cantusDisplay.textContent = getNotesFromTextarea("cantus").join(" ");
-  }
+  if (cantusDisplay) cantusDisplay.textContent = cantus.join(" ");
 
   if (counterpointDisplay) {
-    const events = getCounterpointEvents()
-      .filter((event) => event.note && !isRestEvent(event))
-      .map((event) => `${event.note}:${event.duration}@${event.start}`);
-    counterpointDisplay.textContent = events.length ? events.join(" ") : "—";
+    counterpointDisplay.textContent = events.length
+      ? events.map((event) => `${event.note}:${event.duration}@${event.start + 1}`).join(" ")
+      : t("noInput");
   }
 
-  if (scoreMeta) {
-    const totalNotes = getNotesFromTextarea("cantus").length;
-    scoreMeta.textContent = `${t("counterpointCount")}: ${getCounterpointEvents().length}${currentLanguage === "ja" ? "音" : " notes"} / ${t("beats")}: ${getTotalQuarterSlots()} / ${t("playbackPosition")}: ${playbackIndex + 1}`;
+  if (scoreStatus) {
+    const used = events.reduce((sum, event) => sum + getDurationQuarters(event.duration), 0);
+    scoreStatus.textContent = t("status")(events.length, used);
   }
 }
 
@@ -2229,10 +1238,10 @@ function analyzeCounterpoint() {
   renderScore();
 }
 
-function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
+function playNoteName(note, duration = 0.38, gainScale = 1) {
   const midi = noteToMidi(note);
   if (midi === null) return;
-  playMidiNote(midi, duration, gainScale, voiceSet);
+  playMidiNote(midi, duration, gainScale);
 }
 
 function getTempo() {
@@ -2252,16 +1261,14 @@ function getPlaybackMode() {
 }
 
 function playSelectedNote() {
-  const selectedEvent = getEventAtSlot(selectedIndex) || getEventCoveringSlot(selectedIndex);
-  if (selectedEvent && selectedEvent.note && !isRestEvent(selectedEvent)) {
-    playNoteName(selectedEvent.note, 0.45, 1, "femaleSample");
-  }
+  const event = getEventAtSlot(selectedIndex);
+  if (event) playNoteName(event.note, 0.45, 1);
 }
 
 function previewTimbre() {
   const event = getEventAtSlot(selectedIndex) || getCounterpointEvents()[0];
   const note = event?.note || "C4";
-  playNoteName(note, 0.5, 1, "femaleSample");
+  playNoteName(note, 0.5, 1);
 }
 
 function updatePlayPauseButton() {
@@ -2322,7 +1329,7 @@ function playCurrentStep() {
   const event = getEventAtSlot(playbackIndex);
 
   if ((mode === "both" || mode === "cantus") && playbackIndex % 4 === 0 && cantus[cantusIndex]) {
-    playNoteName(cantus[cantusIndex], qDuration * 3.85, mode === "both" ? 0.62 : 1, "maleSample", "maleSample");
+    playNoteName(cantus[cantusIndex], qDuration * 3.85, mode === "both" ? 0.62 : 1);
   }
 
   if ((mode === "both" || mode === "counterpoint") && event) {
@@ -2555,9 +1562,4 @@ window.addEventListener("DOMContentLoaded", () => {
   setInputDuration(inputDuration);
   loadSelectedExercise();
   updatePlayPauseButton();
-});
-
-
-window.addEventListener("DOMContentLoaded", () => {
-  setupMusicXmlInput();
 });
