@@ -94,7 +94,7 @@ const I18N = {
     stop: "停止",
     noInput: "未入力",
     emptySlot: "未入力",
-    status: (cp, cf, pos, len) => `対旋律：${cp}音 / 必要：${cf * 2}音 / 再生位置：${pos}/${len}`,
+    status: (cp, cf, pos, len) => `対旋律：${cp}音 / 必要：${Math.max(1, (cf - 1) * 2 + 1)}音 / 再生位置：${pos}/${len}`,
     summaryOk: (ok) => `大きな問題は見つかりませんでした。OK項目：${ok}件`,
     summaryCounts: (e, w, ok) => `禁止：${e}件 / 注意：${w}件 / OK：${ok}件`,
     labelOk: "OK",
@@ -174,7 +174,7 @@ const I18N = {
     stop: "Arrêter",
     noInput: "Non saisi",
     emptySlot: "vide",
-    status: (cp, cf, pos, len) => `Contrepoint : ${cp} notes / requis : ${cf * 4} / Position : ${pos}/${len}`,
+    status: (cp, cf, pos, len) => `Contrepoint : ${cp} notes / requis : ${Math.max(1, (cf - 1) * 2 + 1)} / Position : ${pos}/${len}`,
     summaryOk: (ok) => `Aucun problème majeur détecté. Éléments OK : ${ok}`,
     summaryCounts: (e, w, ok) => `Interdits : ${e} / Attention : ${w} / OK : ${ok}`,
     labelOk: "OK",
@@ -271,9 +271,9 @@ const EXERCISES = [
       "G4", "G4",
       "A4", "A4",
       "G4", "B4",
-      "A4", "C5"
+      "C5"
     ],
-    ties: [true, false, true, false, false, false, false, false]
+    ties: [true, false, true, false, false, false, false]
   }
 ];
 
@@ -285,6 +285,41 @@ let playbackTimerId = null;
 let isCounterpointMuted = false;
 let isCantusMuted = false;
 let audioContext = null;
+
+const undoStack = [];
+
+function getEditorStateSnapshot() {
+  return {
+    counterpoint: getNotesFromTextarea("counterpoint"),
+    ties: getTieStates(),
+    selectedIndex,
+    playbackIndex
+  };
+}
+
+function pushUndoState() {
+  undoStack.push(getEditorStateSnapshot());
+  if (undoStack.length > 100) undoStack.shift();
+}
+
+function restoreEditorState(state) {
+  if (!state) return;
+  stopPlayback(false);
+  setNotesToTextarea("counterpoint", state.counterpoint || []);
+  setTieStates(state.ties || []);
+  selectedIndex = Number.isInteger(state.selectedIndex) ? state.selectedIndex : 0;
+  playbackIndex = Number.isInteger(state.playbackIndex) ? state.playbackIndex : 0;
+  renderScore();
+  updateDisplays();
+}
+
+function undoLastEdit() {
+  if (isPlaying) return;
+  const state = undoStack.pop();
+  if (!state) return;
+  restoreEditorState(state);
+}
+
 
 function getTieStates() {
   const area = document.getElementById("counterpointTies");
@@ -338,6 +373,7 @@ function toggleTieAtSelected() {
   // First half -> second half in the same measure is disabled.
   if (selectedIndex % SCORE.halfsPerCantus !== SCORE.halfsPerCantus - 1) return;
 
+  pushUndoState();
   const counterpoint = getNotesFromTextarea("counterpoint");
   while (counterpoint.length < required) counterpoint.push("");
 
@@ -711,11 +747,16 @@ function getStepDurationSeconds() {
 }
 
 function getRequiredHalfCount() {
-  return getNotesFromTextarea("cantus").length * SCORE.halfsPerCantus;
+  const cantusLength = getNotesFromTextarea("cantus").length;
+  if (!cantusLength) return 0;
+
+  // Module 2.5: all measures use two half-note slots,
+  // but the final counterpoint measure closes with one whole note.
+  return Math.max(1, (cantusLength - 1) * SCORE.halfsPerCantus + 1);
 }
 
 function getPlaybackLength() {
-  return Math.max(getRequiredHalfCount(), getNotesFromTextarea("counterpoint").length, 0);
+  return getRequiredHalfCount();
 }
 
 function playVerticalSonority(index) {
@@ -741,7 +782,9 @@ function playVerticalSonority(index) {
     const ties = normalizeTieStates(getTieStates(), Math.max(counterpoint.length, getRequiredHalfCount()));
     if (!isTiedFromPrevious(counterpoint, ties, index)) {
       const span = getTieSpan(counterpoint, ties, index);
-      playNoteName(counterpointNote, Math.max(noteDuration, noteDuration * span * 0.98), 1.15, "femaleSample");
+      const isFinalCounterpointWhole = index === getRequiredHalfCount() - 1;
+      const counterpointDuration = isFinalCounterpointWhole ? Math.max(noteDuration, qDuration * 2.05) : noteDuration;
+      playNoteName(counterpointNote, Math.max(counterpointDuration, counterpointDuration * span * 0.98), 1.15, "femaleSample");
     }
   }
 }
@@ -1223,6 +1266,7 @@ function moveSelectedNote(semitone) {
   if (selectedIndex < 0) selectedIndex = 0;
   if (selectedIndex >= required) selectedIndex = required - 1;
 
+  pushUndoState();
   const ties = normalizeTieStates(getTieStates(), required);
   const currentNote = counterpoint[selectedIndex];
   if (!currentNote) {
@@ -1261,6 +1305,7 @@ function deleteSelectedNote() {
   let counterpoint = getNotesFromTextarea("counterpoint");
   if (!required) return;
 
+  pushUndoState();
   while (counterpoint.length < required) counterpoint.push("");
   const ties = normalizeTieStates(getTieStates(), required);
   counterpoint[selectedIndex] = "";
@@ -1346,7 +1391,9 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
   }
 
   if (y > bottomLineY + SCORE.noteStep) {
-    for (let ly = bottomLineY + SCORE.staffGap; ly <= y + 1; ly += SCORE.staffGap) {
+    // Counterpoint noteheads are shifted 2px upward visually.
+    // Add a small tolerance so C4 still gets its ledger line through the notehead.
+    for (let ly = bottomLineY + SCORE.staffGap; ly <= y + 4; ly += SCORE.staffGap) {
       svg.appendChild(createSvgElement("line", {
         x1: x - ledgerHalfWidth,
         y1: ly,
@@ -1375,7 +1422,7 @@ function drawAccidental(svg, parsedOrAccidental, x, y, isCantus = false) {
     ? (accidental === "#" ? 40 : 39)
     : (accidental === "#" ? 30 : 29);
 
-  const accidentalYOffset = isCantus && accidental === "b" ? -14 : 0;
+  const accidentalYOffset = accidental === "b" ? (isCantus ? -14 : -4) : 0;
 
   svg.appendChild(createSvgImage(
     href,
@@ -1423,11 +1470,12 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
       `png-notation png-notehead whole-note${isCurrentPlayback ? " playing" : ""}`
     ));
   } else {
-    // Counterpoint notehead is rendered in the same centered way as cantus,
-    // with a smaller head and an added stem for half-note notation.
+    // Counterpoint notehead is rendered in the same centered way as cantus.
+    // The final counterpoint measure uses a whole note, so it has no stem.
     const noteheadWidth = 29.1;
     const noteheadHeight = 17.1;
     const stemDirection = renderY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
+    const noteTypeClass = duration === "whole" ? "whole-note" : `half-note ${stemDirection}`;
 
     svg.appendChild(createSvgImage(
       NOTATION_IMAGES.wholeNote,
@@ -1435,10 +1483,12 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
       renderY - noteheadHeight / 2,
       noteheadWidth,
       noteheadHeight,
-      `png-notation png-notehead half-note ${stemDirection}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}`
+      `png-notation png-notehead ${noteTypeClass}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}`
     ));
 
-    if (stemDirection === "down") {
+    if (duration === "whole") {
+      // no stem
+    } else if (stemDirection === "down") {
       svg.appendChild(createSvgElement("line", {
         x1: x - 8,
         y1: renderY - 1,
@@ -1532,8 +1582,9 @@ function renderScore() {
   clearSvg(svg);
 
   const cantus = getNotesFromTextarea("cantus");
-  const counterpoint = getNotesFromTextarea("counterpoint");
-  const halfCount = Math.max(cantus.length * SCORE.halfsPerCantus, counterpoint.length, 1);
+  const requiredHalfCount = getRequiredHalfCount();
+  const counterpoint = getNotesFromTextarea("counterpoint").slice(0, requiredHalfCount);
+  const halfCount = Math.max(requiredHalfCount, 1);
   const positions = getScorePositions(halfCount);
 
   if (selectedIndex >= halfCount) selectedIndex = halfCount - 1;
@@ -1549,7 +1600,8 @@ function renderScore() {
   drawPlayhead(svg, positions, halfCount);
 
   counterpoint.forEach((note, i) => {
-    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, "half", "treble");
+    const durationType = i === halfCount - 1 ? "whole" : "half";
+    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, durationType, "treble");
   });
 
   drawCounterpointTies(svg, positions, counterpoint);
@@ -1592,6 +1644,7 @@ function handleScoreClick(event) {
   });
 
   const clickedNote = yToNaturalNote(viewY);
+  pushUndoState();
   while (counterpoint.length < required) counterpoint.push("");
   const ties = normalizeTieStates(getTieStates(), required);
 
@@ -1609,6 +1662,7 @@ function handleScoreClick(event) {
 
 function undoCounterpointNote() {
   if (isPlaying) return;
+  pushUndoState();
   const counterpoint = getNotesFromTextarea("counterpoint");
   counterpoint.pop();
 
@@ -1619,6 +1673,7 @@ function undoCounterpointNote() {
 }
 
 function clearCounterpoint() {
+  pushUndoState();
   stopPlayback(true);
   selectedIndex = 0;
   playbackIndex = 0;
@@ -1677,8 +1732,9 @@ function loadSelectedExercise() {
 
   stopPlayback(true);
   setNotesToTextarea("cantus", exercise.cantus);
-  setNotesToTextarea("counterpoint", exercise.counterpoint || []);
-  setTieStates(normalizeTieStates(exercise.ties || [], (exercise.cantus || []).length * SCORE.halfsPerCantus));
+  const required = Math.max(1, ((exercise.cantus || []).length - 1) * SCORE.halfsPerCantus + 1);
+  setNotesToTextarea("counterpoint", (exercise.counterpoint || []).slice(0, required));
+  setTieStates(normalizeTieStates(exercise.ties || [], required));
 
   selectedIndex = 0;
   playbackIndex = 0;
@@ -1706,6 +1762,7 @@ function inputLetterNote(letter) {
 
   selectedIndex = Math.max(0, Math.min(required - 1, selectedIndex));
 
+  pushUndoState();
   const octave = ["A", "B"].includes(normalized) ? 4 : 4;
   const note = `${normalized}${octave}`;
   counterpoint[selectedIndex] = note;
@@ -1760,6 +1817,12 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (event) => {
     const activeTag = document.activeElement?.tagName?.toLowerCase();
     const isTextInput = activeTag === "textarea" || activeTag === "input" || activeTag === "select";
+
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
+      event.preventDefault();
+      undoLastEdit();
+      return;
+    }
 
     if (event.code === "Space") {
       event.preventDefault();
@@ -1869,3 +1932,5 @@ window.toggleCounterpointMute = toggleCounterpointMute;
 window.toggleCantusMute = toggleCantusMute;
 
 window.toggleTieAtSelected = toggleTieAtSelected;
+
+window.undoLastEdit = undoLastEdit;
