@@ -1267,3 +1267,9 @@ input {
 #exerciseSelect {
   min-width: 260px;
 }
+
+
+/* 2026-06-01 load/render hardfix */
+#exerciseSelect {
+  min-width: 260px;
+}

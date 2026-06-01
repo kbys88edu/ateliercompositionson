@@ -246,11 +246,24 @@ function setLanguage(lang) {
   updatePlayPauseButton();
 }
 
+
+function getSelectedExercise() {
+  const select = document.getElementById("exerciseSelect");
+  const selectedId = select && select.value ? select.value : "";
+  return EXERCISES.find((exercise) => exercise.id === selectedId) || EXERCISES[0] || null;
+}
+
+function forceRenderAfterDataChange() {
+  updateDisplays();
+  renderScore();
+  syncVoiceMuteButtons();
+}
+
 function populateExercises() {
   const select = document.getElementById("exerciseSelect");
   if (!select) return;
 
-  const currentValue = select.value;
+  const previousValue = select.value;
   select.innerHTML = "";
 
   EXERCISES.forEach((exercise) => {
@@ -262,8 +275,8 @@ function populateExercises() {
     select.appendChild(option);
   });
 
-  if (currentValue && EXERCISES.some((exercise) => exercise.id === currentValue)) {
-    select.value = currentValue;
+  if (previousValue && EXERCISES.some((exercise) => exercise.id === previousValue)) {
+    select.value = previousValue;
   } else if (EXERCISES[0]) {
     select.value = EXERCISES[0].id;
   }
@@ -275,30 +288,35 @@ function updateExerciseDescription() {
   const description = document.getElementById("exerciseDescription");
   if (!description) return;
 
-  const select = document.getElementById("exerciseSelect");
-  const id = select && select.value ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
-  const exercise = EXERCISES.find((item) => item.id === id) || EXERCISES[0];
+  const exercise = getSelectedExercise();
 
   description.textContent = exercise
     ? (currentLanguage === "fr"
         ? (exercise.descriptionFr || exercise.descriptionJa || "")
         : (exercise.descriptionJa || exercise.descriptionFr || ""))
-    : "";
+    : "課題を選択してください。";
 }
 
 function loadSelectedExercise() {
-  const select = document.getElementById("exerciseSelect");
-  const id = select && select.value ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
-  const exercise = EXERCISES.find((item) => item.id === id) || EXERCISES[0];
+  const exercise = getSelectedExercise();
   if (!exercise) return;
 
-  setNotesToTextarea("cantus", exercise.cantus || []);
+  const cantus = Array.isArray(exercise.cantus) ? exercise.cantus.slice() : [];
+  setNotesToTextarea("cantus", cantus);
   setNotesToTextarea("counterpoint", []);
+
   selectedIndex = 0;
   playbackIndex = 0;
-  stopPlayback(true);
+  isPlaying = false;
+
+  if (playbackTimerId) {
+    window.clearTimeout(playbackTimerId);
+    playbackTimerId = null;
+  }
+
   updateExerciseDescription();
-  renderScore();
+  updatePlayPauseButton();
+  forceRenderAfterDataChange();
 }
 
 function setExample() {
@@ -647,7 +665,13 @@ function getNotesFromTextarea(id) {
 function setNotesToTextarea(id, notes) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.value = notes.filter(Boolean).join(" ");
+
+  const value = Array.isArray(notes) ? notes.filter(Boolean).join(" ") : String(notes || "");
+  el.value = value;
+  el.textContent = value;
+
+  el.dispatchEvent(new Event("input", { bubbles: true }));
+  el.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
 function getPlaybackMode() {
@@ -1672,7 +1696,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const exerciseSelect = document.getElementById("exerciseSelect");
   if (exerciseSelect) {
     exerciseSelect.addEventListener("change", () => {
-      updateExerciseDescription();
       loadSelectedExercise();
     });
   }
@@ -1684,13 +1707,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   setupModule1KeyboardControls();
 
-  if (EXERCISES[0]) {
-    loadSelectedExercise();
-  } else {
-    renderScore();
-  }
-
-  applyLanguage();
+  loadSelectedExercise();
   updatePlayPauseButton();
   syncVoiceMuteButtons();
 });
