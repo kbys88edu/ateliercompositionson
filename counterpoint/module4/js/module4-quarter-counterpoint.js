@@ -31,6 +31,7 @@ const NOTATION_IMAGES = {
   wholeNote: `${NOTATION_IMAGE_BASE}whole-note.png`,
   quarterNoteUp: `${NOTATION_IMAGE_BASE}quarter-note-up.png`,
   quarterNoteDown: `${NOTATION_IMAGE_BASE}quarter-note-down.png`,
+  quarterNoteHead: `${NOTATION_IMAGE_BASE}quarter-note-head.png`,
   sharp: `${NOTATION_IMAGE_BASE}sharp.png`,
   flat: `${NOTATION_IMAGE_BASE}flat.png`,
   natural: `${NOTATION_IMAGE_BASE}natural.png`
@@ -1412,11 +1413,11 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter")
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
 
-  const headW = isCantus || duration === "whole" ? 30.4 : 28.4;
-  const headH = isCantus || duration === "whole" ? 17.8 : 17.0;
+  const headW = isCantus || duration === "whole" ? 30.4 : 29.5;
+  const headH = isCantus || duration === "whole" ? 17.8 : 20.2;
 
   svg.appendChild(createSvgImage(
-    NOTATION_IMAGES.wholeNote,
+    isCantus || duration === "whole" ? NOTATION_IMAGES.wholeNote : NOTATION_IMAGES.quarterNoteHead,
     x - headW / 2,
     y - headH / 2,
     headW,
