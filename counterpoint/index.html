@@ -126,6 +126,10 @@
       box-shadow: none;
       border-color: rgba(23,23,23,0.18);
     }
+    .card.is-disabled {
+      pointer-events: none;
+      cursor: default;
+    }
     .num {
       color: var(--muted);
       font-size: 0.78rem;
@@ -171,6 +175,46 @@
       justify-content: space-between;
       font-weight: 700;
     }
+    
+    .guide-wrap {
+      margin-top: 18px;
+    }
+    .guide-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.07);
+      padding: 22px;
+      overflow: hidden;
+    }
+    .guide-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .guide-title {
+      margin: 0;
+      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+      letter-spacing: -0.03em;
+    }
+    .guide-caption {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+    .guide-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
     @media (max-width: 1180px) {
       .modules { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
@@ -232,7 +276,7 @@
           <h2 data-i18n="m1Title">第一種 2声</h2>
           <p data-i18n="m1Desc">全音符の定旋律に対して、全音符の対旋律を作ります。</p>
         </div>
-        <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
+        <div class="open"><span data-i18n="preparingBadge">準備中</span><span>—</span></div>
       </a>
 
       <a class="card" href="/counterpoint/module2/module2-halfnote-counterpoint.html">
@@ -241,7 +285,7 @@
           <h2 data-i18n="m2Title">二分音符対位法</h2>
           <p data-i18n="m2Desc">全音符の定旋律に対して、二分音符で対旋律を作ります。</p>
         </div>
-        <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
+        <div class="open"><span data-i18n="preparingBadge">準備中</span><span>—</span></div>
       </a>
 
       <a class="card" href="/counterpoint/module3/module3-tied-counterpoint.html">
@@ -253,36 +297,46 @@
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
-      <a class="card is-test" href="/counterpoint/module4/module4-quarter-counterpoint.html">
+      <a class="card" href="/counterpoint/module4/module4-quarter-counterpoint.html">
         <div>
           <div class="num">Module 4</div>
-          <div class="badge" data-i18n="testBadge">テスト段階</div>
           <h2 data-i18n="m4Title">四分音符対位法</h2>
           <p data-i18n="m4Desc">経過音や刺繍音を含む、より細かい動きを練習します。</p>
         </div>
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
       </a>
 
-      <a class="card is-test" href="/counterpoint/module5/module5-mixed-counterpoint.html">
+      <div class="card is-test is-disabled" aria-disabled="true">
         <div>
           <div class="num">Module 5</div>
-          <div class="badge" data-i18n="testBadge">テスト段階</div>
+          <div class="badge" data-i18n="preparingBadge">準備中</div>
           <h2 data-i18n="m5Title">混合リズム</h2>
           <p data-i18n="m5Desc">二分音符・四分音符などを組み合わせて対旋律を作ります。</p>
         </div>
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
-      </a>
+      </div>
 
-      <a class="card is-test" href="/counterpoint/module6/module6-three-voice-counterpoint.html">
+      <div class="card is-test is-disabled" aria-disabled="true">
         <div>
           <div class="num">Module 6</div>
-          <div class="badge" data-i18n="testBadge">テスト段階</div>
+          <div class="badge" data-i18n="preparingBadge">準備中</div>
           <h2 data-i18n="m6Title">3声対位法</h2>
           <p data-i18n="m6Desc">定旋律に対して、2つの対旋律を組み合わせます。</p>
         </div>
         <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
-      </a>
+      </div>
     </section>
+
+    <section class="guide-wrap" aria-label="Usage guide">
+      <div class="guide-card">
+        <div class="guide-head">
+          <h2 class="guide-title" data-i18n="guideTitle">使い方ガイド</h2>
+          <p class="guide-caption" data-i18n="guideCaption">キーボード入力、ショートカット、再生操作を1枚で確認できます。</p>
+        </div>
+        <img class="guide-image" src="./images/counterpoint-usage-guide.png" alt="Counterpoint usage guide with keyboard shortcuts and playback controls" />
+      </div>
+    </section>
+
   </main>
 
   <script>
@@ -304,6 +358,7 @@
         m6Title: "3声対位法",
         m6Desc: "定旋律に対して、2つの対旋律を組み合わせます。",
         testBadge: "テスト段階",
+        preparingBadge: "準備中",
         open: "開く"
       },
       fr: {
@@ -323,6 +378,7 @@
         m6Title: "Contrepoint à 3 voix",
         m6Desc: "Combiner deux voix de contrepoint autour d’un cantus.",
         testBadge: "En test",
+        preparingBadge: "En préparation",
         open: "Ouvrir"
       }
     };
