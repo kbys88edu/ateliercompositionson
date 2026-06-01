@@ -600,14 +600,14 @@ function playSelectedNote() {
   const counterpoint = getNotesFromTextarea("counterpoint");
   const note = counterpoint[selectedIndex];
   if (!note) return;
-  playNoteName(note, 0.45, 1);
+  playNoteName(note, 0.85, 1);
 }
 
 function previewTimbre() {
   const counterpoint = getNotesFromTextarea("counterpoint");
   const cantus = getNotesFromTextarea("cantus");
   const note = counterpoint[selectedIndex] || cantus[Math.floor(selectedIndex / 4)] || "C4";
-  playNoteName(note, 0.5, 1);
+  playNoteName(note, 0.85, 1);
 }
 
 function getTempo() {
@@ -640,14 +640,14 @@ function playVerticalSonority(index) {
   const mode = getPlaybackMode();
 
   const qDuration = getStepDurationSeconds();
-  const noteDuration = Math.max(0.65, qDuration * 1.05);
+  const noteDuration = Math.max(0.9, qDuration * 1.45);
   const cantusIndex = Math.floor(index / SCORE.halfsPerCantus);
 
   const cantusNote = cantus[cantusIndex];
   const counterpointNote = counterpoint[index];
 
   if (!isCantusMuted && (mode === "both" || mode === "cantus") && cantusNote) {
-    const cantusDuration = index % SCORE.halfsPerCantus === 0 ? Math.max(0.75, qDuration * 3.85) : noteDuration;
+    const cantusDuration = index % SCORE.halfsPerCantus === 0 ? Math.max(1.15, qDuration * 4.25) : noteDuration;
     if (mode === "cantus" || index % SCORE.halfsPerCantus === 0) {
       playNoteName(cantusNote, cantusDuration, mode === "cantus" ? 1 : 0.95, "maleSample");
     }
@@ -655,7 +655,7 @@ function playVerticalSonority(index) {
 
   if (!isCounterpointMuted && (mode === "both" || mode === "counterpoint") && counterpointNote) {
     const isFinalCounterpointWhole = index === getRequiredHalfCount() - 1;
-    const counterpointDuration = isFinalCounterpointWhole ? Math.max(noteDuration, qDuration * 2.05) : noteDuration;
+    const counterpointDuration = isFinalCounterpointWhole ? Math.max(noteDuration, qDuration * 2.75) : noteDuration;
     playNoteName(counterpointNote, counterpointDuration, 1.15, "femaleSample");
   }
 }
@@ -663,7 +663,7 @@ function playVerticalSonority(index) {
 function updatePlayPauseButton() {
   const button = document.getElementById("playPauseButton");
   if (!button) return;
-  button.textContent = isPlaying ? t("stop") : t("play");
+  button.textContent = isPlaying ? "■" : "▶";
 }
 
 function togglePlayback() {
@@ -1545,7 +1545,7 @@ function handleScoreClick(event) {
 
   setNotesToTextarea("counterpoint", counterpoint);
   renderScore();
-  playNoteName(clickedNote, 0.45, 1);
+  playNoteName(clickedNote, 0.85, 1);
 
   svg.focus();
 }
