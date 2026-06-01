@@ -367,11 +367,30 @@ function getSampleVoiceBasePath() {
   return "audio/voice";
 }
 
-function getNearestSampleNote(targetMidi, sampleNotes) {
-  let nearest = sampleNotes[0];
+function getNearestSampleNote(targetMidi, sampleNotes, setName = "") {
+  const exactName = typeof midiToSampleNoteName === "function"
+    ? midiToSampleNoteName(targetMidi)
+    : midiToNote(targetMidi, "sharp");
+
+  if (sampleNotes.includes(exactName)) {
+    return exactName;
+  }
+
+  let candidates = sampleNotes;
+
+  if (setName === "femaleSample") {
+    const c5Midi = noteToMidi("C5");
+    candidates = targetMidi < c5Midi
+      ? sampleNotes.filter((note) => ["C4", "G4"].includes(note))
+      : sampleNotes.filter((note) => ["C5", "G5"].includes(note));
+
+    if (!candidates.length) candidates = sampleNotes;
+  }
+
+  let nearest = candidates[0];
   let nearestDistance = Infinity;
 
-  sampleNotes.forEach((note) => {
+  candidates.forEach((note) => {
     const midi = noteToMidi(note);
     if (midi === null) return;
     const distance = Math.abs(midi - targetMidi);
@@ -418,18 +437,48 @@ async function loadSampleVoiceBuffer(setName, note) {
   return null;
 }
 
+function playFallbackVoice(midi, duration = 0.45, gainScale = 1) {
+  const ctx = getAudioContext();
+  const now = ctx.currentTime;
+  const freq = midiToFrequency(midi);
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
+
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(freq, now);
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(1400, now);
+
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.22 * gainScale, now + 0.03);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.08);
+
+  osc.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start(now);
+  osc.stop(now + duration + 0.1);
+}
+
+function playVoiceLikeNote(midi, duration = 0.45, gainScale = 1) {
+  playFallbackVoice(midi, duration, gainScale);
+}
+
 async function playSampleVoiceNote(setName, midi, duration = 0.75, gainScale = 1) {
   const set = SAMPLE_VOICE_SETS[setName];
   if (!set) return;
 
-  const nearestNote = getNearestSampleNote(midi, set.notes);
+  const nearestNote = getNearestSampleNote(midi, set.notes, setName);
   const sourceMidi = noteToMidi(nearestNote);
   if (sourceMidi === null) return;
 
   const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
 
   if (!buffer) {
-    playVoiceLikeNote(midi, duration, gainScale);
+    playFallbackVoice(midi, duration, gainScale);
     return;
   }
 
@@ -938,10 +987,10 @@ function clearSvg(svg) {
   while (svg.firstChild) svg.removeChild(svg.firstChild);
 }
 
-function noteToY(note, bottomLineY = SCORE.bottomLineY) {
+function noteToY(note, bottomLineY = SCORE.bottomLineY, clefType = null) {
   const noteStep = getDiatonicStep(note);
-  const isCantusStaff = bottomLineY === SCORE.cantusBottomLineY;
-  const referenceNote = isCantusStaff ? "G2" : "E4";
+  const resolvedClef = clefType || (bottomLineY === SCORE.cantusBottomLineY ? "bass" : "treble");
+  const referenceNote = resolvedClef === "bass" ? "G2" : "E4";
   const referenceStep = getDiatonicStep(referenceNote);
   if (noteStep === null || referenceStep === null) return null;
 
@@ -1066,6 +1115,15 @@ function deleteSelectedNote() {
   renderScore();
 }
 
+function getCantusClefType(cantusNotes = null) {
+  const notes = Array.isArray(cantusNotes) ? cantusNotes : getNotesFromTextarea("cantus");
+  const threshold = noteToMidi("F4");
+  return notes.some((note) => {
+    const midi = noteToMidi(note);
+    return midi !== null && midi >= threshold;
+  }) ? "treble" : "bass";
+}
+
 function drawClef(svg, bottomLineY, clefType = "treble") {
   const isBass = clefType === "bass";
   const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
@@ -1130,30 +1188,16 @@ function drawPlayhead(svg, positions, noteCount) {
 
 function drawLedgerLines(svg, x, y, bottomLineY) {
   const topLineY = bottomLineY - 4 * SCORE.staffGap;
-  const halfGap = SCORE.staffGap / 2;
-  const ledgerHalfWidth = 22;
 
-  if (y < topLineY - halfGap) {
-    for (let ly = topLineY - SCORE.staffGap; ly >= y - 1; ly -= SCORE.staffGap) {
-      svg.appendChild(createSvgElement("line", {
-        x1: x - ledgerHalfWidth,
-        y1: ly,
-        x2: x + ledgerHalfWidth,
-        y2: ly,
-        class: "ledger-line"
-      }));
+  if (y < topLineY - SCORE.noteStep) {
+    for (let ly = topLineY - 2 * SCORE.noteStep; ly >= y - 1; ly -= 2 * SCORE.noteStep) {
+      svg.appendChild(createSvgElement("line", { x1: x - 14, y1: ly, x2: x + 14, y2: ly, class: "ledger-line" }));
     }
   }
 
-  if (y > bottomLineY + halfGap) {
-    for (let ly = bottomLineY + SCORE.staffGap; ly <= y + 1; ly += SCORE.staffGap) {
-      svg.appendChild(createSvgElement("line", {
-        x1: x - ledgerHalfWidth,
-        y1: ly,
-        x2: x + ledgerHalfWidth,
-        y2: ly,
-        class: "ledger-line"
-      }));
+  if (y > bottomLineY + SCORE.noteStep) {
+    for (let ly = bottomLineY + 2 * SCORE.noteStep; ly <= y + 1; ly += 2 * SCORE.noteStep) {
+      svg.appendChild(createSvgElement("line", { x1: x - 14, y1: ly, x2: x + 14, y2: ly, class: "ledger-line" }));
     }
   }
 }
@@ -1201,8 +1245,8 @@ function drawHalfFlag(svg, x, y, isSelected, isCurrentPlayback) {
   }));
 }
 
-function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
-  const y = noteToY(note, bottomLineY);
+function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", clefType = null) {
+  const y = noteToY(note, bottomLineY, clefType);
   const parsed = parseNote(note);
   if (y === null || !parsed) return;
 
@@ -1210,66 +1254,26 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
 
-  const renderY = y;
+  const counterpointScale = 1.14;
+  const renderY = isCantus ? y : y + 1.5;
 
+  drawLedgerLines(svg, x, renderY, bottomLineY);
   drawAccidental(svg, parsed, x, renderY, isCantus);
 
   if (isCantus) {
     const cantusScale = 0.95;
     const cantusWidth = 30 * cantusScale;
     const cantusHeight = 18 * cantusScale;
-    svg.appendChild(createSvgImage(
-      NOTATION_IMAGES.wholeNote,
-      x - cantusWidth / 2,
-      renderY - cantusHeight / 2,
-      cantusWidth,
-      cantusHeight,
-      "png-notation png-notehead whole-note"
-    ));
+    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - cantusWidth / 2, renderY - cantusHeight / 2, cantusWidth, cantusHeight, "png-notation png-notehead whole-note"));
   } else {
-    // Use a stable notehead centered exactly on the pitch Y.
-    // The previous half-note PNG placed the head differently from the pitch center,
-    // causing B4/C5 to look one step too high.
-    const noteheadWidth = 34;
-    const noteheadHeight = 20;
     const stemDirection = renderY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
-
-    svg.appendChild(createSvgImage(
-      NOTATION_IMAGES.wholeNote,
-      x - noteheadWidth / 2,
-      renderY - noteheadHeight / 2,
-      noteheadWidth,
-      noteheadHeight,
-      `png-notation png-notehead half-note ${stemDirection}`
-    ));
-
-    if (stemDirection === "down") {
-      svg.appendChild(createSvgElement("line", {
-        x1: x - 8,
-        y1: renderY - 1,
-        x2: x - 8,
-        y2: renderY + 54,
-        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem",
-        stroke: "#181818",
-        "stroke-width": 2.2,
-        "stroke-linecap": "round"
-      }));
-    } else {
-      svg.appendChild(createSvgElement("line", {
-        x1: x + 12,
-        y1: renderY + 1,
-        x2: x + 12,
-        y2: renderY - 54,
-        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem",
-        stroke: "#181818",
-        "stroke-width": 2.2,
-        "stroke-linecap": "round"
-      }));
-    }
+    const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
+    const width = 30 * counterpointScale;
+    const height = 51 * counterpointScale;
+    const imgX = x - width / 2;
+    const imgY = stemDirection === "down" ? renderY - (11 * counterpointScale) : renderY - (38 * counterpointScale);
+    svg.appendChild(createSvgImage(image, imgX, imgY, width, height, `png-notation png-notehead half-note ${stemDirection}`));
   }
-
-  // Draw ledger lines after the notehead so C4 ledger lines remain visible.
-  drawLedgerLines(svg, x, renderY, bottomLineY);
 
   const noteClass = [
     "note-head",
@@ -1280,8 +1284,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     isSelected ? "selected" : ""
   ].filter(Boolean).join(" ");
 
-  const rx = isCantus ? 9.5 : 12;
-  const ry = isCantus ? 6.2 : 7.4;
+  const rx = isCantus ? 10 : 12;
+  const ry = isCantus ? 6.5 : 7.8;
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: renderY,
@@ -1295,8 +1299,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     svg.appendChild(createSvgElement("ellipse", {
       cx: x,
       cy: renderY,
-      rx: isCantus ? 15 : 18,
-      ry: isCantus ? 11 : 13,
+      rx: isCantus ? 16 : 18,
+      ry: isCantus ? 11.5 : 13.5,
       class: "selected-note-ring"
     }));
   }
@@ -1375,19 +1379,20 @@ function renderScore() {
   if (playbackIndex >= halfCount) playbackIndex = 0;
   if (playbackIndex < 0) playbackIndex = 0;
 
+  const cantusClefType = getCantusClefType(cantus);
   drawStaff(svg, SCORE.bottomLineY, "Counterpoint", halfCount, "treble");
-  drawStaff(svg, SCORE.cantusBottomLineY, "Cantus", halfCount, "bass");
+  drawStaff(svg, SCORE.cantusBottomLineY, "Cantus", halfCount, cantusClefType);
   drawMuteButtons(svg);
   drawMeasureBarlines(svg, positions, halfCount);
   drawPlayhead(svg, positions, halfCount);
 
   counterpoint.forEach((note, i) => {
-    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, "half");
+    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, "half", "treble");
   });
 
   cantus.forEach((note, i) => {
     const x = positions[i * SCORE.halfsPerCantus];
-    if (note && x !== undefined) drawNote(svg, note, x, "cantus", i * SCORE.halfsPerCantus, SCORE.cantusBottomLineY, "whole");
+    if (note && x !== undefined) drawNote(svg, note, x, "cantus", i * SCORE.halfsPerCantus, SCORE.cantusBottomLineY, "whole", cantusClefType);
   });
 
   updateDisplays();
