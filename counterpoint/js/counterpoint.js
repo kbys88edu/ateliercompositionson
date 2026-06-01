@@ -12,8 +12,10 @@ const SCORE = {
   cantusBottomLineY: 260,
   playheadTop: 54,
   playheadBottom: 330,
-  noteRadiusX: 9,
-  noteRadiusY: 6
+  noteImageWidth: 30,
+  noteImageHeight: 17,
+  accidentalWidth: 17,
+  accidentalHeight: 45
 };
 
 const NOTE_LETTER_STEPS = {
@@ -707,6 +709,45 @@ function getMeasureIndexFromX(x, noteCount) {
   return Math.max(0, Math.min(count - 1, raw));
 }
 
+
+function supportsMusicNotationGlyph(glyph) {
+  const canvas = supportsMusicNotationGlyph.canvas || (supportsMusicNotationGlyph.canvas = document.createElement("canvas"));
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return false;
+
+  ctx.font = '32px "Bravura", "Petaluma", "Noto Music", "Segoe UI Symbol", serif';
+  const musicWidth = ctx.measureText(glyph).width;
+
+  ctx.font = "32px monospace";
+  const fallbackWidth = ctx.measureText(glyph).width;
+
+  return Math.abs(musicWidth - fallbackWidth) > 0.5 || musicWidth > 12;
+}
+
+function getWholeNoteGlyph() {
+  // SMuFL noteheadWhole. Bravura / Petaluma / many modern notation fonts support this.
+  return "\uE0A2";
+}
+
+function getFallbackWholeNoteGlyph() {
+  // Unicode musical symbol whole note. Used only if SMuFL glyph is unavailable.
+  return "𝅝";
+}
+
+function getAccidentalGlyph(parsed) {
+  if (!parsed) return "";
+  if (parsed.accidental === "#") return "\uE262"; // SMuFL accidentalSharp
+  if (parsed.accidental === "b") return "\uE260"; // SMuFL accidentalFlat
+  return "";
+}
+
+function getFallbackAccidentalGlyph(parsed) {
+  if (!parsed) return "";
+  if (parsed.accidental === "#") return "♯";
+  if (parsed.accidental === "b") return "♭";
+  return "";
+}
+
 function getAccidentalSymbol(parsed) {
   if (!parsed) return "";
   if (parsed.accidental === "#") return "♯";
@@ -780,6 +821,114 @@ function drawSenzokuSystemLabels(svg) {
   })).textContent = "Cantus";
 }
 
+
+const NOTATION_IMAGE_BASE = "images/notation/";
+
+const NOTATION_IMAGES = {
+  staff: `${NOTATION_IMAGE_BASE}staff-5lines.png`,
+  trebleClef: `${NOTATION_IMAGE_BASE}treble-clef.png`,
+  bassClef: `${NOTATION_IMAGE_BASE}bass-clef.png`,
+  wholeNote: `${NOTATION_IMAGE_BASE}whole-note.png`,
+  sharp: `${NOTATION_IMAGE_BASE}sharp.png`,
+  flat: `${NOTATION_IMAGE_BASE}flat.png`,
+  natural: `${NOTATION_IMAGE_BASE}natural.png`
+};
+
+function createSvgImage(href, x, y, width, height, className = "") {
+  const image = createSvgElement("image", {
+    x,
+    y,
+    width,
+    height,
+    href,
+    class: className,
+    preserveAspectRatio: "xMidYMid meet"
+  });
+
+  image.setAttributeNS("http://www.w3.org/1999/xlink", "href", href);
+  return image;
+}
+
+function getSenzokuScoreWidth(noteCount) {
+  const count = Math.max(noteCount, 1);
+  return Math.max(SCORE.width, SCORE.left + count * SCORE.measureWidth + SCORE.right + 24);
+}
+
+function getMeasureStartX(index) {
+  return SCORE.left + index * SCORE.measureWidth;
+}
+
+function getMeasureNoteX(index) {
+  return getMeasureStartX(index) + SCORE.measureWidth * 0.52;
+}
+
+function getMeasureIndexFromX(x, noteCount) {
+  const count = Math.max(noteCount, 1);
+  const raw = Math.floor((x - SCORE.left) / SCORE.measureWidth);
+  return Math.max(0, Math.min(count - 1, raw));
+}
+
+function getAccidentalImage(parsed) {
+  if (!parsed || !parsed.accidental) return "";
+  if (parsed.accidental === "#") return NOTATION_IMAGES.sharp;
+  if (parsed.accidental === "b") return NOTATION_IMAGES.flat;
+  return "";
+}
+
+function drawSenzokuMeasureHighlight(svg, noteCount) {
+  const x = getMeasureStartX(selectedIndex);
+  svg.appendChild(createSvgElement("rect", {
+    x,
+    y: SCORE.counterpointBottomLineY - 92,
+    width: SCORE.measureWidth,
+    height: 132,
+    class: "senzoku-input-highlight"
+  }));
+
+  svg.appendChild(createSvgElement("line", {
+    x1: x,
+    y1: SCORE.counterpointBottomLineY - 98,
+    x2: x,
+    y2: SCORE.counterpointBottomLineY + 52,
+    class: "senzoku-cursor-line"
+  }));
+
+  svg.appendChild(createSvgElement("path", {
+    d: `M ${x - 5} ${SCORE.counterpointBottomLineY - 96} L ${x + 5} ${SCORE.counterpointBottomLineY - 96} L ${x} ${SCORE.counterpointBottomLineY - 86} Z`,
+    class: "senzoku-cursor-triangle"
+  }));
+}
+
+function drawSenzokuBarlines(svg, noteCount) {
+  const top = SCORE.counterpointBottomLineY - 74;
+  const bottom = SCORE.cantusBottomLineY + 42;
+
+  for (let i = 0; i <= noteCount; i += 1) {
+    const x = getMeasureStartX(i);
+    svg.appendChild(createSvgElement("line", {
+      x1: x,
+      y1: top,
+      x2: x,
+      y2: bottom,
+      class: i % 4 === 0 ? "senzoku-measure-line strong" : "senzoku-measure-line"
+    }));
+  }
+}
+
+function drawSenzokuSystemLabels(svg) {
+  svg.appendChild(createSvgElement("text", {
+    x: 24,
+    y: SCORE.counterpointBottomLineY - 56,
+    class: "voice-label senzoku-label"
+  })).textContent = "Counterpoint";
+
+  svg.appendChild(createSvgElement("text", {
+    x: 24,
+    y: SCORE.cantusBottomLineY - 56,
+    class: "voice-label senzoku-label"
+  })).textContent = "Cantus";
+}
+
 function noteToY(note, bottomLineY = SCORE.counterpointBottomLineY) {
   const noteStep = getDiatonicStep(note);
   const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
@@ -816,30 +965,36 @@ function getScorePositions(noteCount) {
 }
 
 function drawClef(svg, bottomLineY, clefType = "treble") {
-  const clef = clefType === "bass" ? "𝄢" : "𝄞";
-  const className = clefType === "bass" ? "clef-symbol bass" : "clef-symbol treble";
-  svg.appendChild(createSvgElement("text", {
-    x: 52,
-    y: bottomLineY - 20,
-    class: className
-  })).textContent = clef;
+  const isBass = clefType === "bass";
+  const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
+
+  const width = isBass ? 58 : 60;
+  const height = isBass ? 74 : 118;
+  const x = SCORE.left - 82;
+  const y = isBass ? bottomLineY - 64 : bottomLineY - 104;
+
+  svg.appendChild(createSvgImage(href, x, y, width, height, [
+    "png-notation",
+    "png-clef",
+    isBass ? "bass" : "treble"
+  ].join(" ")));
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
-  const scoreWidth = getSenzokuScoreWidth(noteCount);
-  const startX = SCORE.left;
   const endX = getMeasureStartX(noteCount);
+  const staffX = SCORE.left;
+  const staffY = bottomLineY - SCORE.staffGap * 4;
+  const staffWidth = Math.max(1, endX - SCORE.left);
+  const staffHeight = SCORE.staffGap * 4 + 2;
 
-  for (let i = 0; i < 5; i += 1) {
-    const y = bottomLineY - i * SCORE.staffGap;
-    svg.appendChild(createSvgElement("line", {
-      x1: startX,
-      y1: y,
-      x2: endX,
-      y2: y,
-      class: "staff-line senzoku-staff-line"
-    }));
-  }
+  svg.appendChild(createSvgImage(
+    NOTATION_IMAGES.staff,
+    staffX,
+    staffY - 1,
+    staffWidth,
+    staffHeight + 2,
+    "png-notation png-staff"
+  ));
 
   drawClef(svg, bottomLineY, clefType);
 
@@ -884,12 +1039,25 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
 }
 
 function drawAccidental(svg, parsed, x, y, className = "") {
-  if (!parsed.accidental) return;
-  svg.appendChild(createSvgElement("text", {
-    x: x - 30,
-    y: y + 1,
-    class: `accidental ${className}`
-  })).textContent = parsed.accidental === "#" ? "♯" : "♭";
+  const href = getAccidentalImage(parsed);
+  if (!href) return;
+
+  let width = SCORE.accidentalWidth;
+  let height = SCORE.accidentalHeight;
+
+  if (parsed.accidental === "b") {
+    width = 18;
+    height = 46;
+  }
+
+  svg.appendChild(createSvgImage(
+    href,
+    x - 34,
+    y - height * 0.53,
+    width,
+    height,
+    ["png-notation", "png-accidental", className].filter(Boolean).join(" ")
+  ));
 }
 
 function getIssueClass(voice, index) {
@@ -910,34 +1078,34 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
   const issueClass = getIssueClass(voice, index);
-  const className = [
-    "note-head",
-    "senzoku-whole-note",
-    isCantus ? "cantus" : "",
-    isSelected ? "selected" : "",
-    isCurrentPlayback ? "playing" : "",
-    issueClass
-  ].filter(Boolean).join(" ");
 
   drawLedgerLines(svg, x, y, bottomLineY);
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, [
-    "senzoku-accidental",
     isCantus ? "cantus" : "",
     isSelected ? "selected" : "",
     isCurrentPlayback ? "playing" : "",
     issueClass
   ].filter(Boolean).join(" "));
 
-  // Whole note only: no stem in Module 1.
-  svg.appendChild(createSvgElement("ellipse", {
-    cx: x,
-    cy: y,
-    rx: SCORE.noteRadiusX,
-    ry: SCORE.noteRadiusY,
-    transform: `rotate(-18 ${x} ${y})`,
-    class: className
-  }));
+  const imageClass = [
+    "png-notation",
+    "png-notehead",
+    "png-whole-note",
+    isCantus ? "cantus" : "",
+    isSelected ? "selected" : "",
+    isCurrentPlayback ? "playing" : "",
+    issueClass
+  ].filter(Boolean).join(" ");
+
+  svg.appendChild(createSvgImage(
+    NOTATION_IMAGES.wholeNote,
+    x - SCORE.noteImageWidth / 2,
+    y - SCORE.noteImageHeight / 2,
+    SCORE.noteImageWidth,
+    SCORE.noteImageHeight,
+    imageClass
+  ));
 
   if (!isCantus && isSelected) {
     svg.appendChild(createSvgElement("circle", {
@@ -972,7 +1140,7 @@ function renderScore() {
   drawSenzokuMeasureHighlight(svg, noteCount);
   drawStaff(svg, SCORE.counterpointBottomLineY, "Counterpoint / treble clef", noteCount, "treble");
   drawStaff(svg, SCORE.cantusBottomLineY, "Cantus / bass clef", noteCount, "bass");
-  drawSenzokuBarlines(svg, noteCount, scoreWidth);
+  drawSenzokuBarlines(svg, noteCount);
   drawSenzokuSystemLabels(svg);
   drawPlayhead(svg, positions, noteCount);
 
