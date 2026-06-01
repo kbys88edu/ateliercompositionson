@@ -770,34 +770,6 @@ function clearSvg(svg) {
 }
 
 
-
-const NOTATION_IMAGE_BASE = "images/notation/";
-
-const NOTATION_IMAGES = {
-  staff: `${NOTATION_IMAGE_BASE}staff-5lines.png`,
-  trebleClef: `${NOTATION_IMAGE_BASE}treble-clef.png`,
-  bassClef: `${NOTATION_IMAGE_BASE}bass-clef.png`,
-  wholeNote: `${NOTATION_IMAGE_BASE}whole-note.png`,
-  sharp: `${NOTATION_IMAGE_BASE}sharp.png`,
-  flat: `${NOTATION_IMAGE_BASE}flat.png`,
-  natural: `${NOTATION_IMAGE_BASE}natural.png`
-};
-
-function createSvgImage(href, x, y, width, height, className = "", preserveAspectRatio = "xMidYMid meet") {
-  const image = createSvgElement("image", {
-    x,
-    y,
-    width,
-    height,
-    href,
-    class: className,
-    preserveAspectRatio
-  });
-  image.setAttributeNS("http://www.w3.org/1999/xlink", "href", href);
-  return image;
-}
-
-
 function getSenzokuScoreWidth(noteCount) {
   const count = Math.max(noteCount, 1);
   return Math.max(SCORE.width, SCORE.left + count * SCORE.measureWidth + SCORE.right + 48);
@@ -1001,7 +973,32 @@ function drawSenzokuSystemLabels(svg) {
 }
 
 
+const NOTATION_IMAGE_BASE = "images/notation/";
 
+const NOTATION_IMAGES = {
+  staff: `${NOTATION_IMAGE_BASE}staff-5lines.png`,
+  trebleClef: `${NOTATION_IMAGE_BASE}treble-clef.png`,
+  bassClef: `${NOTATION_IMAGE_BASE}bass-clef.png`,
+  wholeNote: `${NOTATION_IMAGE_BASE}whole-note.png`,
+  sharp: `${NOTATION_IMAGE_BASE}sharp.png`,
+  flat: `${NOTATION_IMAGE_BASE}flat.png`,
+  natural: `${NOTATION_IMAGE_BASE}natural.png`
+};
+
+function createSvgImage(href, x, y, width, height, className = "", preserveAspectRatio = "xMidYMid meet") {
+  const image = createSvgElement("image", {
+    x,
+    y,
+    width,
+    height,
+    href,
+    class: className,
+    preserveAspectRatio
+  });
+
+  image.setAttributeNS("http://www.w3.org/1999/xlink", "href", href);
+  return image;
+}
 
 function getSenzokuScoreWidth(noteCount) {
   const count = Math.max(noteCount, 1);
@@ -1120,29 +1117,20 @@ function getScorePositions(noteCount) {
 
 function drawClef(svg, bottomLineY, clefType = "treble") {
   const isBass = clefType === "bass";
-  const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
-
-  const width = isBass ? 68 : 72;
-  const height = isBass ? 88 : 136;
-  const x = SCORE.left - 60;
-  const y = isBass ? bottomLineY - 76 : bottomLineY - 117;
-
-  svg.appendChild(createSvgImage(href, x, y, width, height, [
-    "png-notation",
-    "png-clef",
-    isBass ? "bass" : "treble"
-  ].join(" ")));
+  const clef = createSvgElement("text", {
+    x: SCORE.left - 54,
+    y: isBass ? bottomLineY - 20 : bottomLineY - 25,
+    class: ["stable-clef", isBass ? "bass" : "treble"].join(" ")
+  });
+  clef.textContent = isBass ? "𝄢" : "𝄞";
+  svg.appendChild(clef);
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const endX = getMeasureStartX(noteCount);
   const staffX = SCORE.left - 18;
   const staffEndX = Math.max(staffX + SCORE.measureWidth, endX);
-  const staffY = bottomLineY - SCORE.staffGap * 4;
-  const staffWidth = Math.max(SCORE.measureWidth, staffEndX - staffX);
-  const staffHeight = SCORE.staffGap * 4 + 2;
 
-  // SVG safety staff lines behind the PNG. If PNG fails, the staff is still visible.
   for (let i = 0; i < 5; i += 1) {
     const y = bottomLineY - SCORE.staffGap * i;
     svg.appendChild(createSvgElement("line", {
@@ -1150,20 +1138,9 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
       y1: y,
       x2: staffEndX,
       y2: y,
-      class: "stable-staff-line png-staff-fallback-line"
+      class: "stable-staff-line"
     }));
   }
-
-  // PNG staff, stretched horizontally.
-  svg.appendChild(createSvgImage(
-    NOTATION_IMAGES.staff,
-    staffX,
-    staffY - 1,
-    staffWidth,
-    staffHeight + 2,
-    "png-notation png-staff",
-    "none"
-  ));
 
   drawClef(svg, bottomLineY, clefType);
 
@@ -1210,18 +1187,13 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
 function drawAccidental(svg, parsed, x, y, className = "") {
   if (!parsed || !parsed.accidental) return;
 
-  const href = parsed.accidental === "#" ? NOTATION_IMAGES.sharp : NOTATION_IMAGES.flat;
-  const width = parsed.accidental === "#" ? SCORE.accidentalWidth : 18;
-  const height = parsed.accidental === "#" ? SCORE.accidentalHeight : 46;
-
-  svg.appendChild(createSvgImage(
-    href,
-    x - 34,
-    y - height * 0.53,
-    width,
-    height,
-    ["png-notation", "png-accidental", className].filter(Boolean).join(" ")
-  ));
+  const accidental = createSvgElement("text", {
+    x: x - 28,
+    y: y + 1,
+    class: ["stable-accidental", className].filter(Boolean).join(" ")
+  });
+  accidental.textContent = parsed.accidental === "#" ? "♯" : "♭";
+  svg.appendChild(accidental);
 }
 
 function getIssueClass(voice, index) {
@@ -1243,7 +1215,6 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   const isCurrentPlayback = index === playbackIndex && isPlaying;
   const issueClass = getIssueClass(voice, index);
   const muted = isVoiceMuted(isCantus ? "cantus" : "counterpoint");
-
   const noteImageYOffset = isCantus ? -2 : -0.5;
   const noteDrawY = y + noteImageYOffset;
 
@@ -1257,25 +1228,21 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
     issueClass
   ].filter(Boolean).join(" "));
 
-  const imageClass = [
-    "png-notation",
-    "png-notehead",
-    "png-whole-note",
-    isCantus ? "cantus" : "",
-    muted ? "muted-voice" : "",
-    isSelected ? "selected" : "",
-    isCurrentPlayback ? "playing" : "",
-    issueClass
-  ].filter(Boolean).join(" ");
-
-  svg.appendChild(createSvgImage(
-    NOTATION_IMAGES.wholeNote,
-    x - SCORE.noteImageWidth / 2,
-    noteDrawY - SCORE.noteImageHeight / 2,
-    SCORE.noteImageWidth,
-    SCORE.noteImageHeight,
-    imageClass
-  ));
+  svg.appendChild(createSvgElement("ellipse", {
+    cx: x,
+    cy: noteDrawY,
+    rx: SCORE.noteImageWidth / 2,
+    ry: SCORE.noteImageHeight / 2,
+    transform: `rotate(-18 ${x} ${noteDrawY})`,
+    class: [
+      "stable-notehead",
+      isCantus ? "cantus" : "",
+      muted ? "muted-voice" : "",
+      isSelected ? "selected" : "",
+      isCurrentPlayback ? "playing" : "",
+      issueClass
+    ].filter(Boolean).join(" ")
+  }));
 
   if (!isCantus && isSelected) {
     svg.appendChild(createSvgElement("circle", {
@@ -1620,21 +1587,16 @@ function exportMidi() {
   URL.revokeObjectURL(url);
 }
 
-function initializeModule1() {
-  if (window.module1Initialized) return;
-  window.module1Initialized = true;
-
+window.addEventListener("DOMContentLoaded", () => {
   populateExercises();
 
   const exerciseSelect = document.getElementById("exerciseSelect");
   if (exerciseSelect) {
-    exerciseSelect.removeEventListener("change", loadSelectedExercise);
     exerciseSelect.addEventListener("change", loadSelectedExercise);
   }
 
   const svg = document.getElementById("scoreEditor");
-  if (svg && !svg.dataset.boundClick) {
-    svg.dataset.boundClick = "true";
+  if (svg) {
     svg.addEventListener("click", handleScoreClick);
   }
 
@@ -1642,30 +1604,354 @@ function initializeModule1() {
   loadSelectedExercise();
   updatePlayPauseButton();
   syncVoiceMuteButtons();
-}
-
-function forceInitializeModule1() {
-  window.module1Initialized = false;
-  initializeModule1();
-}
-
-
-
-
-
-window.addEventListener("DOMContentLoaded", initializeModule1);
-window.addEventListener("load", () => {
-  if (!getNotesFromTextarea("cantus").length) {
-    forceInitializeModule1();
-  } else {
-    renderScore();
-    updateDisplays();
-  }
 });
-window.setTimeout(() => {
-  const svg = document.getElementById("scoreEditor");
-  if (svg && !svg.children.length) {
-    forceInitializeModule1();
+
+
+
+/* ===== Module 1 stable render override: 2026-06-01 ===== */
+(function () {
+  const STABLE_SCORE = {
+    width: 1480,
+    height: 430,
+    left: 128,
+    right: 64,
+    measureWidth: 118,
+    staffGap: 14,
+    noteStep: 7,
+    counterpointBottomLineY: 150,
+    cantusBottomLineY: 320,
+    playheadTop: 56,
+    playheadBottom: 400,
+    noteImageWidth: 31.3,
+    noteImageHeight: 18.4
+  };
+
+  function svgEl(tag, attrs = {}) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+    return el;
   }
-}, 120);
+
+  function safeClearSvg(svg) {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+  }
+
+  window.getSenzokuScoreWidth = function getSenzokuScoreWidth(noteCount) {
+    const count = Math.max(noteCount, 1);
+    return Math.max(STABLE_SCORE.width, STABLE_SCORE.left + count * STABLE_SCORE.measureWidth + STABLE_SCORE.right + 48);
+  };
+
+  window.getMeasureStartX = function getMeasureStartX(index) {
+    return STABLE_SCORE.left + index * STABLE_SCORE.measureWidth;
+  };
+
+  window.getMeasureNoteX = function getMeasureNoteX(index) {
+    return getMeasureStartX(index) + STABLE_SCORE.measureWidth * 0.54;
+  };
+
+  window.getScorePositions = function getScorePositions(noteCount) {
+    const count = Math.max(noteCount, 1);
+    return Array.from({ length: count }, (_, i) => getMeasureNoteX(i));
+  };
+
+  window.getMeasureIndexFromX = function getMeasureIndexFromX(x, noteCount) {
+    const count = Math.max(noteCount, 1);
+    const raw = Math.floor((x - STABLE_SCORE.left) / STABLE_SCORE.measureWidth);
+    return Math.max(0, Math.min(count - 1, raw));
+  };
+
+  function stableParseNote(note) {
+    if (typeof parseNote === "function") return parseNote(note);
+    const match = String(note || "").trim().match(/^([A-Ga-g])(#|b)?(-?\d)$/);
+    if (!match) return null;
+    return { letter: match[1].toUpperCase(), accidental: match[2] || "", octave: Number(match[3]) };
+  }
+
+  function stableNoteToMidi(note) {
+    if (typeof noteToMidi === "function") return noteToMidi(note);
+    const parsed = stableParseNote(note);
+    if (!parsed) return null;
+    const pcs = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+    let pc = pcs[parsed.letter];
+    if (parsed.accidental === "#") pc += 1;
+    if (parsed.accidental === "b") pc -= 1;
+    return (parsed.octave + 1) * 12 + pc;
+  }
+
+  function stableNoteToY(note, bottomLineY) {
+    if (typeof noteToY === "function") return noteToY(note, bottomLineY);
+    const midi = stableNoteToMidi(note);
+    const e4 = stableNoteToMidi("E4");
+    if (midi === null || e4 === null) return null;
+    return bottomLineY - ((midi - e4) * (STABLE_SCORE.noteStep / 1));
+  }
+
+  function drawStableClef(svg, bottomLineY, clefType) {
+    const isBass = clefType === "bass";
+    const clef = svgEl("text", {
+      x: STABLE_SCORE.left - 54,
+      y: isBass ? bottomLineY - 20 : bottomLineY - 25,
+      class: ["stable-clef", isBass ? "bass" : "treble"].join(" ")
+    });
+    clef.textContent = isBass ? "𝄢" : "𝄞";
+    svg.appendChild(clef);
+  }
+
+  function drawStableStaff(svg, bottomLineY, noteCount, clefType) {
+    const staffX = STABLE_SCORE.left - 18;
+    const staffEndX = Math.max(staffX + STABLE_SCORE.measureWidth, getMeasureStartX(noteCount));
+
+    for (let i = 0; i < 5; i += 1) {
+      const y = bottomLineY - STABLE_SCORE.staffGap * i;
+      svg.appendChild(svgEl("line", {
+        x1: staffX,
+        y1: y,
+        x2: staffEndX,
+        y2: y,
+        class: "stable-staff-line"
+      }));
+    }
+
+    drawStableClef(svg, bottomLineY, clefType);
+
+    if (clefType === "bass") {
+      getScorePositions(noteCount).forEach((x, i) => {
+        const label = svgEl("text", { x: x - 4, y: bottomLineY + 78, class: "note-label" });
+        label.textContent = String(i + 1);
+        svg.appendChild(label);
+      });
+    }
+  }
+
+  function drawStableBarlines(svg, noteCount) {
+    const top = STABLE_SCORE.counterpointBottomLineY - 96;
+    const bottom = STABLE_SCORE.cantusBottomLineY + 56;
+
+    for (let i = 0; i <= noteCount; i += 1) {
+      const x = getMeasureStartX(i);
+      svg.appendChild(svgEl("line", {
+        x1: x,
+        y1: top,
+        x2: x,
+        y2: bottom,
+        class: i % 4 === 0 ? "senzoku-measure-line strong" : "senzoku-measure-line"
+      }));
+    }
+  }
+
+  function drawStableHighlight(svg) {
+    const x = getMeasureStartX(selectedIndex || 0);
+
+    svg.appendChild(svgEl("rect", {
+      x,
+      y: STABLE_SCORE.counterpointBottomLineY - 112,
+      width: STABLE_SCORE.measureWidth,
+      height: 156,
+      class: "senzoku-input-highlight"
+    }));
+
+    svg.appendChild(svgEl("line", {
+      x1: x,
+      y1: STABLE_SCORE.counterpointBottomLineY - 118,
+      x2: x,
+      y2: STABLE_SCORE.counterpointBottomLineY + 66,
+      class: "senzoku-cursor-line"
+    }));
+
+    svg.appendChild(svgEl("path", {
+      d: `M ${x - 5} ${STABLE_SCORE.counterpointBottomLineY - 116} L ${x + 5} ${STABLE_SCORE.counterpointBottomLineY - 116} L ${x} ${STABLE_SCORE.counterpointBottomLineY - 106} Z`,
+      class: "senzoku-cursor-triangle"
+    }));
+  }
+
+  function drawStableLabels(svg) {
+    const cp = svgEl("text", { x: 22, y: STABLE_SCORE.counterpointBottomLineY - 76, class: "voice-label senzoku-label" });
+    cp.textContent = "Counterpoint";
+    svg.appendChild(cp);
+
+    const cf = svgEl("text", { x: 22, y: STABLE_SCORE.cantusBottomLineY - 76, class: "voice-label senzoku-label" });
+    cf.textContent = "Cantus";
+    svg.appendChild(cf);
+  }
+
+  function drawStableAccidental(svg, parsed, x, y, className = "") {
+    if (!parsed || !parsed.accidental) return;
+    const accidental = svgEl("text", {
+      x: x - 27,
+      y: y + 1,
+      class: ["stable-accidental", className].filter(Boolean).join(" ")
+    });
+    accidental.textContent = parsed.accidental === "#" ? "♯" : "♭";
+    svg.appendChild(accidental);
+  }
+
+  function drawStableNote(svg, note, x, voice, index, bottomLineY) {
+    const y = stableNoteToY(note, bottomLineY);
+    const parsed = stableParseNote(note);
+    if (y === null || !parsed) return;
+
+    const isCantus = voice === "cantus";
+    const muted = typeof isVoiceMuted === "function" ? isVoiceMuted(isCantus ? "cantus" : "counterpoint") : false;
+    const isSelected = !isCantus && index === selectedIndex && !isPlaying;
+    const isCurrentPlayback = index === playbackIndex && isPlaying;
+    const issueClass = typeof getIssueClass === "function" ? getIssueClass(voice, index) : "";
+    const noteDrawY = y + (isCantus ? -2 : -0.5);
+
+    if (typeof drawLedgerLines === "function") drawLedgerLines(svg, x, y, bottomLineY);
+    if (typeof drawIssueRing === "function") drawIssueRing(svg, x, y, issueClass);
+
+    drawStableAccidental(svg, parsed, x, y, [
+      isCantus ? "cantus" : "",
+      muted ? "muted-voice" : "",
+      isSelected ? "selected" : "",
+      isCurrentPlayback ? "playing" : "",
+      issueClass
+    ].filter(Boolean).join(" "));
+
+    svg.appendChild(svgEl("ellipse", {
+      cx: x,
+      cy: noteDrawY,
+      rx: STABLE_SCORE.noteImageWidth / 2,
+      ry: STABLE_SCORE.noteImageHeight / 2,
+      transform: `rotate(-18 ${x} ${noteDrawY})`,
+      class: [
+        "stable-notehead",
+        isCantus ? "cantus" : "",
+        muted ? "muted-voice" : "",
+        isSelected ? "selected" : "",
+        isCurrentPlayback ? "playing" : "",
+        issueClass
+      ].filter(Boolean).join(" ")
+    }));
+
+    if (!isCantus && isSelected) {
+      svg.appendChild(svgEl("circle", { cx: x, cy: y, r: 13, class: "senzoku-selected-ring" }));
+    }
+  }
+
+  window.renderScore = function renderScore() {
+    const svg = document.getElementById("scoreEditor");
+    if (!svg) return;
+
+    safeClearSvg(svg);
+
+    const cantus = typeof getNotesFromTextarea === "function" ? getNotesFromTextarea("cantus") : [];
+    const counterpoint = typeof getNotesFromTextarea === "function" ? getNotesFromTextarea("counterpoint") : [];
+    const noteCount = Math.max(cantus.length, counterpoint.length, 1);
+    const scoreWidth = getSenzokuScoreWidth(noteCount);
+    const positions = getScorePositions(noteCount);
+
+    svg.setAttribute("viewBox", `0 0 ${scoreWidth} ${STABLE_SCORE.height}`);
+    svg.setAttribute("width", String(scoreWidth));
+    svg.setAttribute("height", String(STABLE_SCORE.height));
+    svg.style.width = `${scoreWidth}px`;
+    svg.style.minWidth = `${scoreWidth}px`;
+    svg.style.height = `${STABLE_SCORE.height}px`;
+
+    if (selectedIndex >= noteCount) selectedIndex = noteCount - 1;
+    if (selectedIndex < 0) selectedIndex = 0;
+    if (playbackIndex >= noteCount) playbackIndex = 0;
+    if (playbackIndex < 0) playbackIndex = 0;
+
+    drawStableHighlight(svg);
+    drawStableStaff(svg, STABLE_SCORE.counterpointBottomLineY, noteCount, "treble");
+    drawStableStaff(svg, STABLE_SCORE.cantusBottomLineY, noteCount, "bass");
+    drawStableBarlines(svg, noteCount);
+    drawStableLabels(svg);
+
+    counterpoint.forEach((note, i) => {
+      if (note) drawStableNote(svg, note, positions[i], "counterpoint", i, STABLE_SCORE.counterpointBottomLineY);
+    });
+
+    cantus.forEach((note, i) => {
+      if (note) drawStableNote(svg, note, positions[i], "cantus", i, STABLE_SCORE.cantusBottomLineY);
+    });
+
+    if (typeof updateDisplays === "function") updateDisplays();
+    if (typeof syncVoiceMuteButtons === "function") syncVoiceMuteButtons();
+  };
+
+  window.handleModule1Keyboard = function handleModule1Keyboard(event) {
+    const tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
+    const isTextEntry = tag === "input" || tag === "textarea";
+    if (isTextEntry) return;
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      moveSelection(-1);
+      return;
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      moveSelection(1);
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      moveSelectedNote(1);
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      moveSelectedNote(-1);
+      return;
+    }
+    if (event.key === " " || event.code === "Space") {
+      event.preventDefault();
+      togglePlayback();
+    }
+  };
+
+  window.setupModule1KeyboardControls = function setupModule1KeyboardControls() {
+    if (window.module1KeyboardControlsReady) return;
+    window.module1KeyboardControlsReady = true;
+    window.addEventListener("keydown", window.handleModule1Keyboard, { capture: true });
+  };
+
+  window.initializeModule1 = function initializeModule1() {
+    if (window.module1Initialized) return;
+    window.module1Initialized = true;
+
+    if (typeof populateExercises === "function") populateExercises();
+
+    const select = document.getElementById("exerciseSelect");
+    if (select) {
+      select.addEventListener("change", loadSelectedExercise);
+    }
+
+    const svg = document.getElementById("scoreEditor");
+    if (svg && !svg.dataset.boundClick) {
+      svg.dataset.boundClick = "true";
+      svg.addEventListener("click", handleScoreClick);
+    }
+
+    setupModule1KeyboardControls();
+
+    if (typeof getNotesFromTextarea === "function" && !getNotesFromTextarea("cantus").length) {
+      loadSelectedExercise();
+    } else {
+      renderScore();
+    }
+
+    if (typeof updatePlayPauseButton === "function") updatePlayPauseButton();
+    if (typeof syncVoiceMuteButtons === "function") syncVoiceMuteButtons();
+  };
+
+  window.forceInitializeModule1 = function forceInitializeModule1() {
+    window.module1Initialized = false;
+    initializeModule1();
+  };
+
+  window.addEventListener("DOMContentLoaded", window.initializeModule1);
+  window.addEventListener("load", function () {
+    if (!document.getElementById("scoreEditor")?.children.length) {
+      window.forceInitializeModule1();
+    }
+  });
+  window.setTimeout(function () {
+    if (!document.getElementById("scoreEditor")?.children.length) {
+      window.forceInitializeModule1();
+    }
+  }, 180);
+})();
 

@@ -1534,66 +1534,86 @@ input {
 .staff-mute-button.muted { border-color: #ff4f8b; background: #ff4f8b; color: #fff; }
 
 
-/* 2026-06-01 PNG return with robust initial rendering */
-.png-notation {
-  pointer-events: none;
-  user-select: none;
+/* 2026-06-01 stable render override fixes */
+.score-stage {
+  position: relative !important;
+  min-width: 1480px !important;
+  width: 1480px !important;
+  height: 430px !important;
+  max-width: none !important;
 }
 
-.png-staff {
-  opacity: 0.94;
+.score-editor {
+  display: block !important;
+  width: 1480px !important;
+  min-width: 1480px !important;
+  height: 430px !important;
+  min-height: 430px !important;
+  max-width: none !important;
+  overflow: visible !important;
 }
 
-.png-staff-fallback-line {
-  opacity: 0.22;
+.stable-staff-line {
+  stroke: rgba(20,20,20,0.74);
+  stroke-width: 1.15;
 }
 
-.png-clef {
-  opacity: 0.94;
+.stable-clef {
+  font-family: "Segoe UI Symbol", "Apple Symbols", "Noto Music", serif;
+  fill: rgba(20,20,20,0.82);
+  dominant-baseline: middle;
+  text-anchor: middle;
 }
 
-.png-notehead {
-  opacity: 1;
+.stable-clef.treble {
+  font-size: 92px;
 }
 
-.png-notehead.cantus {
-  opacity: 0.70;
+.stable-clef.bass {
+  font-size: 78px;
 }
 
-.png-notehead.selected {
-  filter:
-    invert(41%)
-    sepia(84%)
-    saturate(2534%)
-    hue-rotate(313deg)
-    brightness(103%)
-    contrast(102%);
+.stable-accidental {
+  font-family: "Segoe UI Symbol", "Apple Symbols", serif;
+  font-size: 26px;
+  fill: #171717;
+  dominant-baseline: middle;
+  text-anchor: middle;
 }
 
-.png-notehead.playing,
-.png-notehead.error,
-.png-accidental.playing,
-.png-accidental.error {
-  filter:
-    invert(31%)
-    sepia(88%)
-    saturate(2604%)
-    hue-rotate(340deg)
-    brightness(95%)
-    contrast(92%);
+.stable-notehead {
+  fill: #fff;
+  stroke: #171717;
+  stroke-width: 2.1;
 }
 
-.png-notehead.muted-voice,
-.png-accidental.muted-voice {
+.stable-notehead.cantus {
+  stroke: rgba(20,20,20,0.62);
+}
+
+.stable-notehead.selected {
+  stroke: #ff4f8b;
+  stroke-width: 2.5;
+}
+
+.stable-notehead.playing,
+.stable-notehead.error {
+  stroke: var(--danger);
+}
+
+.stable-notehead.muted-voice,
+.stable-accidental.muted-voice {
   opacity: 0.32;
 }
 
-.png-accidental.selected {
-  filter:
-    invert(41%)
-    sepia(84%)
-    saturate(2534%)
-    hue-rotate(313deg)
-    brightness(103%)
-    contrast(102%);
+.staff-mute-overlay {
+  position: absolute !important;
+  left: 72px !important;
+  top: 132px !important;
+  z-index: 30 !important;
+  pointer-events: none !important;
+}
+
+.staff-mute-button {
+  pointer-events: auto !important;
 }
