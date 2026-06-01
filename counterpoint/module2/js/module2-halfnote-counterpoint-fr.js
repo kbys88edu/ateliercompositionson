@@ -940,9 +940,10 @@ function clearSvg(svg) {
 
 function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const noteStep = getDiatonicStep(note);
-  const e4Step = getDiatonicStep("E4");
-  if (noteStep === null || e4Step === null) return null;
-  return bottomLineY - (noteStep - e4Step) * SCORE.noteStep;
+  const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
+  const referenceStep = getDiatonicStep(referenceNote);
+  if (noteStep === null || referenceStep === null) return null;
+  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
 }
 
 function yToNaturalNote(y) {

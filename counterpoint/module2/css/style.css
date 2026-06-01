@@ -771,3 +771,24 @@ h2 {
     top: 124px;
   }
 }
+
+
+/* Final override: move M buttons to the left of clefs */
+.staff-mute-overlay {
+  left: 6px !important;
+  top: 168px !important;
+}
+.staff-mute-button.counterpoint {
+  top: 0 !important;
+}
+.staff-mute-button.cantus {
+  top: 128px !important;
+}
+@media (max-width: 820px) {
+  .staff-mute-overlay { left: 4px !important; top: 170px !important; }
+  .staff-mute-button.cantus { top: 128px !important; }
+}
+@media (max-width: 520px) {
+  .staff-mute-overlay { left: 2px !important; top: 182px !important; }
+  .staff-mute-button.cantus { top: 124px !important; }
+}
