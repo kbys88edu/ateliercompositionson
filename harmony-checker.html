@@ -58,6 +58,22 @@
       border-color: #1f1f1f;
     }
 
+    .hero-image-wrap {
+      max-width: 1080px;
+      margin: 0 auto 24px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #ddd5c7;
+      background: #ffffff;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+    }
+
+    .hero-image {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
     h1 {
       font-size: 34px;
       margin: 0 0 8px;
@@ -144,6 +160,24 @@
       color: #666;
       margin-top: 14px;
     }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 24px 14px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .topbar {
+        justify-content: flex-start;
+      }
+    }
   </style>
 </head>
 
@@ -166,6 +200,14 @@
   </div>
 
   <main id="app" style="display: none;">
+    <div class="hero-image-wrap">
+      <img
+        src="satb-header.png"
+        alt="SATB 4-part only: Soprano, Alto, Tenor, Bass. Use 4-part MusicXML files only."
+        class="hero-image"
+      />
+    </div>
+
     <section class="card">
       <h1>Harmony Checker</h1>
       <p id="intro1">
@@ -199,7 +241,7 @@
   </main>
 
   <script>
-    const ACCESS_PASSWORD = "2026";
+    const ACCESS_PASSWORD = "advanced2026";
     const API_URL = "https://harmony-checker-backend.onrender.com/analyze";
 
     const TEXT = {
@@ -349,10 +391,7 @@
       if (!lastResults.length) {
         statusDiv.textContent = t("chooseFile");
       } else {
-        statusDiv.textContent =
-          currentLang === "ja"
-            ? `${lastResults.length} ${t("found")}`
-            : `${lastResults.length} ${t("found")}`;
+        statusDiv.textContent = `${lastResults.length} ${t("found")}`;
         renderResults(lastResults);
       }
     }
@@ -694,11 +733,7 @@
       if (data.count === 0) {
         statusDiv.textContent = t("noIssues");
       } else {
-        statusDiv.textContent =
-          currentLang === "ja"
-            ? `${data.count} ${t("found")}`
-            : `${data.count} ${t("found")}`;
-
+        statusDiv.textContent = `${data.count} ${t("found")}`;
         renderResults(lastResults);
       }
 
