@@ -8,6 +8,34 @@ const NATURAL_NOTES = [
 const NOTE_LETTER_STEPS = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
 const SVG_NS = "http://www.w3.org/2000/svg";
 
+const NOTATION_IMAGE_BASE = "images/notation/";
+const NOTATION_IMAGES = {
+  staff: `${NOTATION_IMAGE_BASE}staff-5lines.png`,
+  trebleClef: `${NOTATION_IMAGE_BASE}treble-clef.png`,
+  bassClef: `${NOTATION_IMAGE_BASE}bass-clef.png`,
+  halfNoteUp: `${NOTATION_IMAGE_BASE}half-note-up.png`,
+  halfNoteDown: `${NOTATION_IMAGE_BASE}half-note-down.png`,
+  wholeNote: `${NOTATION_IMAGE_BASE}whole-note.png`,
+  sharp: `${NOTATION_IMAGE_BASE}sharp.png`,
+  flat: `${NOTATION_IMAGE_BASE}flat.png`,
+  natural: `${NOTATION_IMAGE_BASE}natural.png`
+};
+
+function createSvgImage(href, x, y, width, height, className = "", preserveAspectRatio = "xMidYMid meet") {
+  const image = createSvgElement("image", {
+    href,
+    x,
+    y,
+    width,
+    height,
+    class: className,
+    preserveAspectRatio
+  });
+  image.setAttributeNS("http://www.w3.org/1999/xlink", "href", href);
+  return image;
+}
+
+
 const SCORE = {
   width: 1120,
   height: 360,
@@ -1005,48 +1033,41 @@ function deleteSelectedNote() {
   renderScore();
 }
 
-function drawStaff(svg, bottomLineY, label, noteCount) {
+function drawClef(svg, bottomLineY, clefType = "treble") {
+  const isBass = clefType === "bass";
+  const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
+  const width = isBass ? 58 : 60;
+  const height = isBass ? 74 : 112;
+  const x = SCORE.left - 76;
+  const y = isBass ? bottomLineY - 62 : bottomLineY - 90;
+
+  const fallback = createSvgElement("text", {
+    x: 52,
+    y: isBass ? bottomLineY - 20 : bottomLineY - 10,
+    class: `clef-symbol ${isBass ? "bass" : "treble"} clef-fallback`
+  });
+  fallback.textContent = isBass ? "𝄢" : "𝄞";
+  svg.appendChild(fallback);
+
+  svg.appendChild(createSvgImage(href, x, y, width, height, `png-notation png-clef ${isBass ? "bass" : "treble"}`));
+}
+
+function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const startX = SCORE.left - 30;
   const endX = SCORE.width - SCORE.right + 10;
+  const staffY = bottomLineY - SCORE.staffGap * 4;
+  const staffWidth = endX - startX;
+  const staffHeight = SCORE.staffGap * 4 + 2;
 
   for (let i = 0; i < 5; i++) {
     const y = bottomLineY - i * SCORE.staffGap;
-    svg.appendChild(createSvgElement("line", { x1: startX, y1: y, x2: endX, y2: y, class: "staff-line" }));
+    svg.appendChild(createSvgElement("line", { x1: startX, y1: y, x2: endX, y2: y, class: "staff-line png-staff-fallback-line" }));
   }
 
-  svg.appendChild(createSvgElement("text", { x: 22, y: bottomLineY - 22, class: "voice-label" })).textContent = label;
+  svg.appendChild(createSvgImage(NOTATION_IMAGES.staff, startX, staffY - 1, staffWidth, staffHeight + 2, "png-notation png-staff", "none"));
+  drawClef(svg, bottomLineY, clefType);
 
-  const positions = getScorePositions(noteCount);
-
-  positions.forEach((x, i) => {
-    const isDownbeat = i % SCORE.halfsPerCantus === 0;
-
-    svg.appendChild(createSvgElement("circle", {
-      cx: x,
-      cy: bottomLineY + 56,
-      r: isDownbeat ? 3.4 : 2.2,
-      class: isDownbeat ? "downbeat-marker" : "slot-marker"
-    }));
-
-    if (bottomLineY === SCORE.cantusBottomLineY && isDownbeat) {
-      svg.appendChild(createSvgElement("text", {
-        x: x - 4,
-        y: bottomLineY + 82,
-        class: "note-label"
-      })).textContent = Math.floor(i / SCORE.halfsPerCantus) + 1;
-    }
-
-    if (i > 0) {
-      const midX = (positions[i - 1] + x) / 2;
-      svg.appendChild(createSvgElement("line", {
-        x1: midX,
-        y1: bottomLineY - 50,
-        x2: midX,
-        y2: bottomLineY + 66,
-        class: isDownbeat ? "measure-line" : "subdivision-line"
-      }));
-    }
-  });
+  svg.appendChild(createSvgElement("text", { x: 22, y: bottomLineY - 58, class: "voice-label" })).textContent = label;
 }
 
 function drawPlayhead(svg, positions, noteCount) {
@@ -1089,15 +1110,26 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
   }
 }
 
-function drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback) {
-  if (!parsed.accidental) return;
-  const symbol = parsed.accidental === "#" ? "♯" : "♭";
+function drawAccidental(svg, parsedOrAccidental, x, y) {
+  const accidental = typeof parsedOrAccidental === "string"
+    ? parsedOrAccidental
+    : parsedOrAccidental && parsedOrAccidental.accidental;
 
-  svg.appendChild(createSvgElement("text", {
-    x: x - 30,
-    y: y + 1,
-    class: `accidental${isCantus ? " cantus" : ""}${isSelected ? " selected" : ""}${isCurrentPlayback ? " playing" : ""}`
-  })).textContent = symbol;
+  if (!accidental) return;
+
+  const href = accidental === "#" ? NOTATION_IMAGES.sharp : accidental === "b" ? NOTATION_IMAGES.flat : NOTATION_IMAGES.natural;
+  const width = accidental === "#" ? 14 : 13;
+  const height = accidental === "#" ? 28 : 27;
+
+  svg.appendChild(createSvgImage(href, x - 25, y - height / 2, width, height, `png-notation png-accidental accidental-${accidental === "#" ? "sharp" : accidental === "b" ? "flat" : "natural"}`));
+
+  const fallback = createSvgElement("text", {
+    x: x - 18,
+    y: y + 4,
+    class: "accidental accidental-fallback"
+  });
+  fallback.textContent = accidental;
+  svg.appendChild(fallback);
 }
 
 function drawHalfFlag(svg, x, y, isSelected, isCurrentPlayback) {
@@ -1118,11 +1150,22 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const isCurrentPlayback = index === playbackIndex && isPlaying;
 
   drawLedgerLines(svg, x, y, bottomLineY);
-  drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback);
+  drawAccidental(svg, parsed, x, y);
+
+  if (isCantus) {
+    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 12, y - 8, 24, 16, "png-notation png-notehead whole-note"));
+  } else {
+    const stemDirection = y < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
+    const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
+    const imgX = x - 12;
+    const imgY = stemDirection === "down" ? y - 10 : y - 32;
+    svg.appendChild(createSvgImage(image, imgX, imgY, 24, 42, `png-notation png-notehead half-note ${stemDirection}`));
+  }
 
   const noteClass = [
     "note-head",
     "open",
+    "fallback-notehead",
     isCantus ? "cantus" : "",
     isCurrentPlayback ? "playing" : "",
     isSelected ? "selected" : ""
@@ -1137,13 +1180,13 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     class: noteClass
   }));
 
-  if (!isCantus) {
-    svg.appendChild(createSvgElement("line", {
-      x1: x + 7,
-      y1: y,
-      x2: x + 7,
-      y2: y - 34,
-      class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem"
+  if (isSelected) {
+    svg.appendChild(createSvgElement("ellipse", {
+      cx: x,
+      cy: y,
+      rx: 14,
+      ry: 10,
+      class: "selected-note-ring"
     }));
   }
 
@@ -1170,8 +1213,8 @@ function renderScore() {
   if (playbackIndex >= halfCount) playbackIndex = 0;
   if (playbackIndex < 0) playbackIndex = 0;
 
-  drawStaff(svg, SCORE.bottomLineY, "Counterpoint", halfCount);
-  drawStaff(svg, SCORE.cantusBottomLineY, "Cantus", halfCount);
+  drawStaff(svg, SCORE.bottomLineY, "Counterpoint", halfCount, "treble");
+  drawStaff(svg, SCORE.cantusBottomLineY, "Cantus", halfCount, "bass");
   drawPlayhead(svg, positions, halfCount);
 
   counterpoint.forEach((note, i) => {

@@ -582,3 +582,53 @@ h2 {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* 2026-06-01 Module 2 image notation display */
+.png-notation {
+  pointer-events: none;
+}
+
+.png-staff {
+  opacity: 1;
+}
+
+.png-staff-fallback-line {
+  opacity: 0;
+}
+
+.png-clef {
+  opacity: 1;
+}
+
+.clef-fallback {
+  opacity: 0;
+}
+
+.png-notehead {
+  opacity: 1;
+}
+
+.whole-note-fallback,
+.accidental-fallback {
+  opacity: 0;
+}
+
+.png-accidental {
+  opacity: 1;
+}
+
+
+/* 2026-06-01 Module 2 PNG notehead cleanup */
+.fallback-notehead,
+.accidental-fallback,
+.clef-fallback {
+  opacity: 0 !important;
+}
+
+.selected-note-ring {
+  fill: none;
+  stroke: #ff4f8b;
+  stroke-width: 1.6;
+  pointer-events: none;
+}
