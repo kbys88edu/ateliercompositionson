@@ -10,15 +10,15 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 
 const SCORE = {
   width: 1792,
-  height: 360,
+  height: 380,
   left: 105,
   right: 55,
   staffGap: 10,
   noteStep: 5,
   bottomLineY: 145,
-  cantusBottomLineY: 260,
+  cantusBottomLineY: 272,
   playheadTop: 55,
-  playheadBottom: 308,
+  playheadBottom: 322,
   quartersPerCantus: 4
 };
 
@@ -1508,7 +1508,6 @@ function renderScore() {
 
   drawStaff(svg, SCORE.bottomLineY, "Counterpoint / quarter notes / treble clef", quarterCount, "treble");
   drawStaff(svg, SCORE.cantusBottomLineY, `Cantus / whole notes / ${cantusClefType} clef`, quarterCount, cantusClefType);
-  drawMeasureBarlines(svg, positions, quarterCount);
   drawPlayhead(svg, positions, quarterCount);
 
   counterpoint.forEach((note, i) => {
@@ -1520,6 +1519,8 @@ function renderScore() {
     const x = positions[i * SCORE.quartersPerCantus];
     if (note && x !== undefined) drawNote(svg, note, x, "cantus", i * SCORE.quartersPerCantus, SCORE.cantusBottomLineY, "whole", cantusClefType);
   });
+
+  drawMeasureBarlines(svg, positions, quarterCount);
 
   updateDisplays();
 }

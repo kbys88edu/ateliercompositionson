@@ -10,7 +10,7 @@
   <title>モジュール3｜2声4分音符対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="定旋律1音に対して4分音符4つを置く、2声4分音符対位法のオンライン練習ページです。タイでつながれた音は扱いません。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module4-custom-quarter-head" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module4-button-layout" />
 </head>
 
 <body>
@@ -68,7 +68,7 @@
           <select id="exerciseSelect"></select>
         </label>
 
-        <button class="button small" type="button" onclick="loadSelectedExercise()" data-i18n="loadExercise">
+        <button class="button small" type="button" onclick="loadSelectedExercise()" data-i18n="loadExercise" class="button small exercise-load-button">
           課題を読み込む
         </button>
 
@@ -97,7 +97,7 @@
         <button class="button small" type="button" onclick="playSelectedNote()" data-i18n="playSelected">
           選択音を鳴らす
         </button>
-        <button class="button small" type="button" onclick="exportMidi()" data-i18n="exportMidi">
+        <button class="button small" type="button" onclick="exportMidi()" data-i18n="exportMidi" class="button small midi-export-button">
           MIDIを書き出す
         </button>
 
@@ -177,6 +177,6 @@
     </section>
   </main>
 
-  <script src="js/module4-quarter-counterpoint.js?v=20260601-cantus-small-finalbar-bigscore"></script>
+  <script src="js/module4-quarter-counterpoint.js?v=20260601-module4-button-layout"></script>
 </body>
 </html>
