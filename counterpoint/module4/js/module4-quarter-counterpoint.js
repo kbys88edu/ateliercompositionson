@@ -497,7 +497,7 @@ const SAMPLE_VOICE_SETS = {
     // C4.wav, G4.wav, C5.wav, G5.wav
     // These files are played at their written sample octave.
     notes: ["C4", "G4", "C5", "G5"],
-    transposeSemitones: -12
+    transposeSemitones: 0
   },
   maleSample: {
     folder: "male",
@@ -1253,7 +1253,7 @@ function drawClef(svg, bottomLineY, clefType) {
   const width = isBass ? 66 : 70;
   const height = isBass ? 84 : 132;
   const x = SCORE.left - 78;
-  const y = isBass ? bottomLineY - 74 : bottomLineY - 100;
+  const y = isBass ? bottomLineY - 68 : bottomLineY - 100;
 
   svg.appendChild(createSvgImage(
     href,
@@ -1413,8 +1413,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter")
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
 
-  const headW = isCantus || duration === "whole" ? 30.4 : 22.1;
-  const headH = isCantus || duration === "whole" ? 17.8 : 15.2;
+  const headW = isCantus || duration === "whole" ? 30.4 : 20.7;
+  const headH = isCantus || duration === "whole" ? 17.8 : 14.1;
 
   svg.appendChild(createSvgImage(
     isCantus || duration === "whole" ? NOTATION_IMAGES.wholeNote : NOTATION_IMAGES.quarterNoteHead,
