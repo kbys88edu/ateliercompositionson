@@ -1075,7 +1075,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
   const width = isBass ? 62 : 64;
   const height = isBass ? 78 : 118;
   const x = SCORE.left - 80;
-  const y = isBass ? bottomLineY - 29 : bottomLineY - 66;
+  const y = isBass ? bottomLineY - 39 : bottomLineY - 76;
 
   const fallback = createSvgElement("text", {
     x: 52,
