@@ -10,7 +10,7 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-remove-level-repair" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-exercise-html-mute-fix" />
 </head>
 
 <body>
@@ -50,30 +50,6 @@
       <textarea id="counterpoint" class="hidden-input"></textarea>
 
       <div class="exercise-tools">
-<label class="exercise-control" for="exerciseSelect">
-          <span data-i18n="exerciseLabel">課題</span>
-          <select id="exerciseSelect"></select>
-        </label>
-
-<div class="module1-toolbar">
-  <div class="module1-toolbar-left">
-    <button class="button small" type="button" onclick="loadSelectedExercise()" data-i18n="loadExercise">
-          課題を読み込む
-        </button>
-    <button class="button secondary" type="button" onclick="loadExample()" data-i18n="loadExample">
-  例題を読み込む
-</button>
-    <button class="button small" type="button" onclick="renderScore()" data-i18n="refreshScore">
-          楽譜を更新
-        </button>
-  </div>
-  <div class="module1-toolbar-right">
-    <button class="button small midi-export-button" type="button" onclick="exportMidi()" data-i18n="exportMidi">
-          MIDIを書き出す
-        </button>
-  </div>
-</div>
-
 <p class="exercise-description" id="exerciseDescription">
           課題を選択してください。
         </p>
@@ -114,7 +90,35 @@
         </p>
       </div>
 
-      <div class="score-box">
+      
+<div class="module1-exercise-row">
+  <label class="exercise-control" for="exerciseSelect">
+    <span data-i18n="exerciseLabel">課題</span>
+    <select id="exerciseSelect" onchange="updateExerciseDescription(); loadSelectedExercise();"></select>
+  </label>
+</div>
+
+<div class="module1-toolbar">
+  <div class="module1-toolbar-left">
+    <button class="button secondary" type="button" onclick="loadSelectedExercise()" data-i18n="loadExercise">課題を読み込む</button>
+    <button class="button secondary" type="button" onclick="loadExample()" data-i18n="loadExample">例題を読み込む</button>
+    <button class="button secondary" type="button" onclick="renderScore()" data-i18n="updateScore">楽譜を更新</button>
+  </div>
+  <div class="module1-toolbar-right">
+    <button class="button secondary midi-export-button" type="button" onclick="exportMidi()" data-i18n="exportMidi">MIDIを書き出す</button>
+  </div>
+</div>
+
+<div class="html-voice-mute-panel" aria-label="Voice mute controls">
+  <button id="muteCounterpointButton" class="html-mute-button" type="button" onclick="toggleVoiceMuteFromButton('counterpoint')">
+    <span class="mute-label">Counterpoint</span><span class="mute-key">M</span>
+  </button>
+  <button id="muteCantusButton" class="html-mute-button" type="button" onclick="toggleVoiceMuteFromButton('cantus')">
+    <span class="mute-label">Cantus</span><span class="mute-key">M</span>
+  </button>
+</div>
+
+<div class="score-box">
         <div class="score-head">
           <div>
             <h2 data-i18n="scoreInputTitle">五線入力</h2>
@@ -157,6 +161,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-module1-remove-level-repair"></script>
+  <script src="js/counterpoint.js?v=20260601-module1-exercise-html-mute-fix"></script>
 </body>
 </html>

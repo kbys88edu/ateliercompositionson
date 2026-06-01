@@ -804,15 +804,40 @@ function drawSenzokuBarlines(svg, noteCount) {
 }
 
 
+
+
+
+
+
+function isVoiceMuted(voice) {
+  return !!voiceMuteState[voice];
+}
+
+function syncVoiceMuteButtons() {
+  const counterpointButton = document.getElementById("muteCounterpointButton");
+  const cantusButton = document.getElementById("muteCantusButton");
+
+  if (counterpointButton) {
+    counterpointButton.classList.toggle("muted", isVoiceMuted("counterpoint"));
+    counterpointButton.setAttribute("aria-pressed", isVoiceMuted("counterpoint") ? "true" : "false");
+  }
+
+  if (cantusButton) {
+    cantusButton.classList.toggle("muted", isVoiceMuted("cantus"));
+    cantusButton.setAttribute("aria-pressed", isVoiceMuted("cantus") ? "true" : "false");
+  }
+}
+
 function toggleVoiceMute(voice) {
   if (!Object.prototype.hasOwnProperty.call(voiceMuteState, voice)) return;
 
   voiceMuteState[voice] = !voiceMuteState[voice];
+  syncVoiceMuteButtons();
   renderScore();
 }
 
-function isVoiceMuted(voice) {
-  return !!voiceMuteState[voice];
+function toggleVoiceMuteFromButton(voice) {
+  toggleVoiceMute(voice);
 }
 
 function drawVoiceMuteButton(svg, voice, x, y) {
@@ -866,16 +891,11 @@ function drawSenzokuSystemLabels(svg) {
     class: "voice-label senzoku-label"
   })).textContent = "Counterpoint";
 
-  // Place M button inside the visible score area, before the clef/staff.
-  drawVoiceMuteButton(svg, "counterpoint", SCORE.left - 118, SCORE.counterpointBottomLineY - 43);
-
   svg.appendChild(createSvgElement("text", {
     x: 22,
     y: SCORE.cantusBottomLineY - 76,
     class: "voice-label senzoku-label"
   })).textContent = "Cantus";
-
-  drawVoiceMuteButton(svg, "cantus", SCORE.left - 118, SCORE.cantusBottomLineY - 43);
 }
 
 
