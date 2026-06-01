@@ -1130,16 +1130,30 @@ function drawPlayhead(svg, positions, noteCount) {
 
 function drawLedgerLines(svg, x, y, bottomLineY) {
   const topLineY = bottomLineY - 4 * SCORE.staffGap;
+  const halfGap = SCORE.staffGap / 2;
+  const ledgerHalfWidth = 22;
 
-  if (y < topLineY - SCORE.noteStep) {
-    for (let ly = topLineY - 2 * SCORE.noteStep; ly >= y - 1; ly -= 2 * SCORE.noteStep) {
-      svg.appendChild(createSvgElement("line", { x1: x - 14, y1: ly, x2: x + 14, y2: ly, class: "ledger-line" }));
+  if (y < topLineY - halfGap) {
+    for (let ly = topLineY - SCORE.staffGap; ly >= y - 1; ly -= SCORE.staffGap) {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - ledgerHalfWidth,
+        y1: ly,
+        x2: x + ledgerHalfWidth,
+        y2: ly,
+        class: "ledger-line"
+      }));
     }
   }
 
-  if (y > bottomLineY + SCORE.noteStep) {
-    for (let ly = bottomLineY + 2 * SCORE.noteStep; ly <= y + 1; ly += 2 * SCORE.noteStep) {
-      svg.appendChild(createSvgElement("line", { x1: x - 14, y1: ly, x2: x + 14, y2: ly, class: "ledger-line" }));
+  if (y > bottomLineY + halfGap) {
+    for (let ly = bottomLineY + SCORE.staffGap; ly <= y + 1; ly += SCORE.staffGap) {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - ledgerHalfWidth,
+        y1: ly,
+        x2: x + ledgerHalfWidth,
+        y2: ly,
+        class: "ledger-line"
+      }));
     }
   }
 }
@@ -1196,26 +1210,60 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
 
-  const counterpointScale = 1.2;
-  const renderY = isCantus ? y : y + 1.5;
+  const renderY = y;
 
-  drawLedgerLines(svg, x, renderY, bottomLineY);
   drawAccidental(svg, parsed, x, renderY, isCantus);
 
   if (isCantus) {
     const cantusScale = 0.95;
     const cantusWidth = 30 * cantusScale;
     const cantusHeight = 18 * cantusScale;
-    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - cantusWidth / 2, renderY - cantusHeight / 2, cantusWidth, cantusHeight, "png-notation png-notehead whole-note"));
+    svg.appendChild(createSvgImage(
+      NOTATION_IMAGES.wholeNote,
+      x - cantusWidth / 2,
+      renderY - cantusHeight / 2,
+      cantusWidth,
+      cantusHeight,
+      "png-notation png-notehead whole-note"
+    ));
   } else {
+    // Use a stable notehead centered exactly on the pitch Y.
+    // The previous half-note PNG placed the head differently from the pitch center,
+    // causing B4/C5 to look one step too high.
+    const noteheadWidth = 34;
+    const noteheadHeight = 20;
     const stemDirection = renderY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
-    const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
-    const width = 30 * counterpointScale;
-    const height = 51 * counterpointScale;
-    const imgX = x - width / 2;
-    const imgY = stemDirection === "down" ? renderY - (11 * counterpointScale) : renderY - (38 * counterpointScale);
-    svg.appendChild(createSvgImage(image, imgX, imgY, width, height, `png-notation png-notehead half-note ${stemDirection}`));
+
+    svg.appendChild(createSvgImage(
+      NOTATION_IMAGES.wholeNote,
+      x - noteheadWidth / 2,
+      renderY - noteheadHeight / 2,
+      noteheadWidth,
+      noteheadHeight,
+      `png-notation png-notehead half-note ${stemDirection}`
+    ));
+
+    if (stemDirection === "down") {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - 10,
+        y1: renderY,
+        x2: x - 10,
+        y2: renderY + 48,
+        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem"
+      }));
+    } else {
+      svg.appendChild(createSvgElement("line", {
+        x1: x + 10,
+        y1: renderY,
+        x2: x + 10,
+        y2: renderY - 48,
+        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem"
+      }));
+    }
   }
+
+  // Draw ledger lines after the notehead so C4 ledger lines remain visible.
+  drawLedgerLines(svg, x, renderY, bottomLineY);
 
   const noteClass = [
     "note-head",
@@ -1226,8 +1274,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     isSelected ? "selected" : ""
   ].filter(Boolean).join(" ");
 
-  const rx = isCantus ? 10 : 12;
-  const ry = isCantus ? 6.5 : 7.8;
+  const rx = isCantus ? 9.5 : 12;
+  const ry = isCantus ? 6.2 : 7.4;
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: renderY,
@@ -1241,8 +1289,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     svg.appendChild(createSvgElement("ellipse", {
       cx: x,
       cy: renderY,
-      rx: isCantus ? 16 : 18,
-      ry: isCantus ? 11.5 : 13.5,
+      rx: isCantus ? 15 : 18,
+      ry: isCantus ? 11 : 13,
       class: "selected-note-ring"
     }));
   }
