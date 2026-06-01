@@ -10,12 +10,18 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-language-final" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-language-switch-button" />
 </head>
 
 <body>
-  <nav class="module1-language-switch" style="position:absolute;right:24px;top:18px;z-index:50;font-size:13px;"><a href="counterpoint-checker-fr.html">Français</a></nav>
-  <main class="page">
+  <div class="language-switch-button-wrap">
+    <a class="language-switch-button" href="counterpoint-checker-fr.html" aria-label="Change language">
+      <span class="language-switch-main">Français</span>
+      <span class="language-switch-sub">Changer de langue</span>
+    </a>
+  </div>
+
+<main class="page">
     <header class="checker-header">
       <div class="top-controls">
         <div class="brand-row">
@@ -120,6 +126,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-module1-language-final"></script>
+  <script src="js/counterpoint.js?v=20260601-module1-language-switch-button"></script>
 </body>
 </html>
