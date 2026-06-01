@@ -1271,7 +1271,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
 
   // Use the same pitch center logic for counterpoint as for cantus.
   // No separate C4 offset or B4 offset.
-  const renderY = y;
+  const renderY = isCantus ? y : y - 2;
 
   drawAccidental(svg, parsed, x, renderY, isCantus);
 
