@@ -1219,7 +1219,7 @@ function drawAccidental(svg, parsedOrAccidental, x, y, isCantus = false) {
     ? (accidental === "#" ? 40 : 39)
     : (accidental === "#" ? 30 : 29);
 
-  const accidentalYOffset = isCantus && accidental === "b" ? -9 : 0;
+  const accidentalYOffset = isCantus && accidental === "b" ? -12 : 0;
 
   svg.appendChild(createSvgImage(
     href,
@@ -1258,22 +1258,26 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
 
   const counterpointScale = 1.14;
   const renderY = isCantus ? y : y + 1.5;
+  const b4Step = getDiatonicStep("B4");
+  const noteStep = getDiatonicStep(note);
+  const counterpointYOffset = (!isCantus && noteStep !== null && b4Step !== null && noteStep <= b4Step) ? -10 : 0;
+  const effectiveY = renderY + counterpointYOffset;
 
-  drawLedgerLines(svg, x, renderY, bottomLineY);
-  drawAccidental(svg, parsed, x, renderY, isCantus);
+  drawLedgerLines(svg, x, effectiveY, bottomLineY);
+  drawAccidental(svg, parsed, x, effectiveY, isCantus);
 
   if (isCantus) {
     const cantusScale = 0.95;
     const cantusWidth = 30 * cantusScale;
     const cantusHeight = 18 * cantusScale;
-    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - cantusWidth / 2, renderY - cantusHeight / 2, cantusWidth, cantusHeight, "png-notation png-notehead whole-note"));
+    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - cantusWidth / 2, effectiveY - cantusHeight / 2, cantusWidth, cantusHeight, "png-notation png-notehead whole-note"));
   } else {
-    const stemDirection = renderY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
+    const stemDirection = effectiveY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
     const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
     const width = 30 * counterpointScale;
     const height = 51 * counterpointScale;
     const imgX = x - width / 2;
-    const imgY = stemDirection === "down" ? renderY - (11 * counterpointScale) : renderY - (38 * counterpointScale);
+    const imgY = stemDirection === "down" ? effectiveY - (11 * counterpointScale) : effectiveY - (38 * counterpointScale);
     svg.appendChild(createSvgImage(image, imgX, imgY, width, height, `png-notation png-notehead half-note ${stemDirection}`));
   }
 
