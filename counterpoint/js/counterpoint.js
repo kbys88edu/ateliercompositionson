@@ -1021,7 +1021,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 
   // Move clefs onto the staff area. Previously they sat too far left and did not overlap the five-line staff.
   const x = SCORE.left - 60;
-  const y = isBass ? bottomLineY - 76 : bottomLineY - 120;
+  const y = isBass ? bottomLineY - 76 : bottomLineY - 115;
 
   svg.appendChild(createSvgImage(href, x, y, width, height, [
     "png-notation",
@@ -1135,7 +1135,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
 
   // The whole-note PNG has a slightly low optical center in the bass staff.
   // Move bass-staff note images slightly upward while keeping pitch logic unchanged.
-  const noteImageYOffset = isCantus ? -3 : 0;
+  const noteImageYOffset = isCantus ? 2 : -5;
   const noteDrawY = y + noteImageYOffset;
 
   drawLedgerLines(svg, x, y, bottomLineY);

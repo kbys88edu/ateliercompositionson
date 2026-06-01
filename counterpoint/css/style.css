@@ -752,3 +752,5 @@ input {
 .png-notehead.cantus {
   opacity: 0.72;
 }
+
+/* 2026-06-01 micro-adjust: treble noteheads up 5px, bass noteheads down ~5px, treble clef down 5px. */
