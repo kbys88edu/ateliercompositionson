@@ -1235,7 +1235,7 @@ function moveSelectedNote(semitone) {
   setNotesToTextarea("counterpoint", counterpoint);
   setTieStates(ties);
   renderScore();
-  playNoteName(counterpoint[selectedIndex], 0.45, 1);
+  playNoteName(counterpoint[selectedIndex], 0.45, 1, "femaleSample");
 }
 
 function moveSelection(delta) {
@@ -1251,7 +1251,7 @@ function moveSelection(delta) {
   renderScore();
 
   const note = getNotesFromTextarea("counterpoint")[selectedIndex];
-  if (note) playNoteName(note, 0.35, 0.8);
+  if (note) playNoteName(note, 0.35, 0.8, "femaleSample");
 }
 
 function deleteSelectedNote() {
@@ -1411,7 +1411,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
   drawAccidental(svg, parsed, x, renderY, isCantus);
 
   if (isCantus) {
-    const cantusScale = 0.95;
+    const cantusScale = 0.9975;
     const cantusWidth = 30 * cantusScale;
     const cantusHeight = 18 * cantusScale;
     svg.appendChild(createSvgImage(
@@ -1602,7 +1602,7 @@ function handleScoreClick(event) {
   setNotesToTextarea("counterpoint", counterpoint);
   setTieStates(ties);
   renderScore();
-  playNoteName(clickedNote, 0.45, 1);
+  playNoteName(clickedNote, 0.45, 1, "femaleSample");
 
   svg.focus();
 }
