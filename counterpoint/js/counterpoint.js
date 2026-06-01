@@ -231,6 +231,16 @@ function setLanguage(lang) {
   });
 
   populateExercises();
+  if (!window.module1InitialExerciseLoaded) {
+    window.module1InitialExerciseLoaded = true;
+    const select = document.getElementById("exerciseSelect");
+    if (select && select.options.length && !select.value) {
+      select.selectedIndex = 0;
+    }
+    if (!getNotesFromTextarea("cantus").length) {
+      loadSelectedExercise();
+    }
+  }
   setupModule1KeyboardControls();
   updateExerciseDescription();
   updatePlayPauseButton();

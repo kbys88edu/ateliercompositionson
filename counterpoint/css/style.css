@@ -1244,3 +1244,20 @@ input {
     margin-left: 0;
   }
 }
+
+
+/* 2026-06-01 final repair:
+   Ensure exercise selector has visible width and notation PNGs are bundled. */
+.exercise-control select,
+#exerciseSelect {
+  min-width: 260px;
+  max-width: 100%;
+}
+
+.module1-exercise-row {
+  align-items: center;
+}
+
+.score-stage {
+  background: rgba(255, 252, 247, 0.55);
+}
