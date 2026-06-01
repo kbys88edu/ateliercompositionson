@@ -1245,19 +1245,25 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
 
     if (stemDirection === "down") {
       svg.appendChild(createSvgElement("line", {
-        x1: x - 10,
-        y1: renderY,
-        x2: x - 10,
-        y2: renderY + 48,
-        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem"
+        x1: x - 8,
+        y1: renderY - 1,
+        x2: x - 8,
+        y2: renderY + 54,
+        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem",
+        stroke: "#181818",
+        "stroke-width": 2.2,
+        "stroke-linecap": "round"
       }));
     } else {
       svg.appendChild(createSvgElement("line", {
-        x1: x + 10,
-        y1: renderY,
-        x2: x + 10,
-        y2: renderY - 48,
-        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem"
+        x1: x + 12,
+        y1: renderY + 1,
+        x2: x + 12,
+        y2: renderY - 54,
+        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem",
+        stroke: "#181818",
+        "stroke-width": 2.2,
+        "stroke-linecap": "round"
       }));
     }
   }
