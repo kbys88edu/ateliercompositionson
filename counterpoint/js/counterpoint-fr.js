@@ -33,16 +33,16 @@
   };
 
   const EXERCISES = [
-    { id: "c-major-arch", title: "C major / アーチ型", desc: "Cから上行し、中央で頂点を作って戻る基本課題です。", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
-    { id: "d-minor-step", title: "D minor / 順次進行", desc: "短調の感覚を保ちながら順次進行を練習します。", cantus: ["D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4"] },
-    { id: "g-major-low", title: "G major / 低めの音域", desc: "やや低い音域で、安定した協和音程を作る課題です。", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
-    { id: "f-major-small-peak", title: "F major / 小さな頂点", desc: "短い上行と下行を含む、まとまりやすい定旋律です。", cantus: ["F3", "G3", "A3", "C4", "B3", "A3", "G3", "F3"] },
-    { id: "a-minor-return", title: "A minor / 回帰", desc: "開始音へ自然に戻ることを意識する課題です。", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
-    { id: "c-major-leap", title: "C major / 小さな跳躍", desc: "小さな跳躍を含む定旋律に対して対旋律を作ります。", cantus: ["C4", "E4", "D4", "F4", "G4", "E4", "F4", "D4", "C4"] },
-    { id: "e-minor-middle", title: "E minor / 中音域", desc: "中音域で対旋律の輪郭を整える課題です。", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
-    { id: "g-major-long", title: "G major / 長め", desc: "少し長い定旋律で、連続5度・8度を避ける練習です。", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
-    { id: "f-major-descend", title: "F major / 下降中心", desc: "下降形を中心にした定旋律です。", cantus: ["F4", "E4", "D4", "C4", "B3", "C4", "D4", "C4", "F3"] },
-    { id: "c-major-extended", title: "C major / 拡張", desc: "やや長めの総合練習です。", cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "F4", "E4", "D4", "C4"] }
+    { id: "c-major-arch", title: "Do majeur / forme en arche", desc: "Exercice de base : la ligne monte depuis do, atteint un sommet central, puis revient.", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
+    { id: "d-minor-step", title: "Ré mineur / mouvement conjoint", desc: "Travail du mouvement conjoint en conservant une couleur mineure.", cantus: ["D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4"] },
+    { id: "g-major-low", title: "Sol majeur / registre grave", desc: "Exercice dans un registre plus grave, pour construire des consonances stables.", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
+    { id: "f-major-small-peak", title: "Fa majeur / petit sommet", desc: "Cantus facile à organiser, avec une courte montée puis une descente.", cantus: ["F3", "G3", "A3", "C4", "B3", "A3", "G3", "F3"] },
+    { id: "a-minor-return", title: "La mineur / retour", desc: "Exercice centré sur le retour naturel vers la note initiale.", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
+    { id: "c-major-leap", title: "Do majeur / petit saut", desc: "Construire un contrepoint sur un cantus contenant un petit saut.", cantus: ["C4", "E4", "D4", "F4", "G4", "E4", "F4", "D4", "C4"] },
+    { id: "e-minor-middle", title: "Mi mineur / registre médian", desc: "Travail du contour mélodique dans le registre médian.", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
+    { id: "g-major-long", title: "Sol majeur / plus long", desc: "Cantus un peu plus long pour éviter les quintes et octaves parallèles.", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
+    { id: "f-major-descend", title: "Fa majeur / ligne descendante", desc: "Cantus principalement fondé sur un mouvement descendant.", cantus: ["F4", "E4", "D4", "C4", "B3", "C4", "D4", "C4", "F3"] },
+    { id: "c-major-extended", title: "Do majeur / exercice étendu", desc: "Exercice de synthèse un peu plus long.", cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "F4", "E4", "D4", "C4"] }
   ];
 
   let selectedIndex = 0;
@@ -347,7 +347,7 @@ function moveNoteChromatic(note, semitone) {
   function updateExerciseDescription() {
     const desc = $("exerciseDescription");
     const exercise = getSelectedExercise();
-    if (desc) desc.textContent = exercise ? exercise.desc : "課題を選択してください。";
+    if (desc) desc.textContent = exercise ? exercise.desc : "Sélectionnez un exercice.";
   }
 
   function loadSelectedExercise() {
@@ -810,7 +810,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
 
   function updatePlayPauseButton() {
     const btn = $("playPauseButton");
-    if (btn) btn.textContent = isPlaying ? "停止" : "再生";
+    if (btn) btn.textContent = isPlaying ? "Arrêt" : "Lecture";
   }
 
   function startPlayback() {
@@ -901,12 +901,12 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
     if (!result) return;
 
     if (!cantus.length) {
-      result.innerHTML = "定旋律が読み込まれていません。";
+      result.innerHTML = "Le cantus firmus n’est pas chargé.";
       return;
     }
 
     if (!counterpoint.length) {
-      result.innerHTML = "対旋律が未入力です。";
+      result.innerHTML = "Le contrepoint n’est pas encore saisi.";
       return;
     }
 
@@ -922,20 +922,20 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
       const allowed = [0, 3, 4, 7, 8, 9].includes(interval);
 
       if (!allowed) {
-        issues.push(`${i + 1}音目：不協和音程の可能性`);
+        issues.push(`${i + 1} : possibilité d’intervalle dissonant`);
       }
     }
 
     if (!issues.length) {
-      result.innerHTML = "大きな問題は見つかりませんでした。";
+      result.innerHTML = "Aucun problème majeur n’a été détecté.";
       return;
     }
 
-    result.innerHTML = `${issues.length} 件の指摘があります。<br>${issues.join("<br>")}`;
+    result.innerHTML = `${issues.length} remarque(s).<br>${issues.join("<br>")}`;
   }
 
   function exportMidi() {
-    alert("MIDI書き出しは次の段階で再接続します。現在は表示・入力・再生の安定化を優先しています。");
+    alert("L’export MIDI sera reconnecté à l’étape suivante. Pour l’instant, la priorité est la stabilité de l’affichage, de la saisie et de la lecture.");
   }
 
   

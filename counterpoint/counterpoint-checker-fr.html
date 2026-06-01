@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,14 +7,14 @@
 
   <script src="auth.js"></script>
 
-  <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
-  <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
+  <title>Module 1 — Contrepoint à deux voix</title>
+  <meta name="description" content="第一種2声対位法の協和notes程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
   <link rel="stylesheet" href="css/style.css?v=20260601-module1-language-final" />
 </head>
 
 <body>
-  <nav class="module1-language-switch" style="position:absolute;right:24px;top:18px;z-index:50;font-size:13px;"><a href="counterpoint-checker-fr.html">Français</a></nav>
+  <nav class="module1-language-switch" style="position:absolute;right:24px;top:18px;z-index:50;font-size:13px;"><a href="counterpoint-checker.html">日本語</a></nav>
   <main class="page">
     <header class="checker-header">
       <div class="top-controls">
@@ -41,8 +41,8 @@
       <p class="eyebrow">First Species Counterpoint</p>
       <h1 data-i18n="title">第一種2声対位法チェッカー</h1>
       <p class="lead" data-i18n="lead">
-        五線譜をクリックして対旋律を入力します。↑で半音上行、↓で半音下行、← / → で前後の音へ移動します。
-        スペースキーで定旋律と対旋律を同時に再生・停止できます。
+        五線譜をクリックして対旋律を入力します。↑で半notes上行、↓で半notes下行、← / → で前後のnotesへ移動します。
+        スペースキーで定旋律と対旋律を同時にLecture・停止できます。
       </p>
     </header>
 
@@ -52,46 +52,46 @@
 
       <div class="module1-exercise-row">
         <label class="exercise-control" for="exerciseSelect">
-          <span>課題</span>
+          <span>Exercice</span>
           <select id="exerciseSelect"></select>
         </label>
-        <p class="exercise-description" id="exerciseDescription">課題を選択してください。</p>
+        <p class="exercise-description" id="exerciseDescription">Exerciceを選択してください。</p>
       </div>
 
       <div class="module1-toolbar">
         <div class="module1-toolbar-left">
-          <button class="button secondary" type="button" id="loadExerciseButton">課題を読み込む</button>
-          <button class="button secondary" type="button" id="loadExampleButton">例題を読み込む</button>
-          <button class="button secondary" type="button" id="refreshScoreButton">楽譜を更新</button>
+          <button class="button secondary" type="button" id="loadExerciseButton">Exerciceを読み込む</button>
+          <button class="button secondary" type="button" id="loadExampleButton">Charger l’exemple</button>
+          <button class="button secondary" type="button" id="refreshScoreButton">Mettre à jour la partition</button>
         </div>
         <div class="module1-toolbar-right">
-          <button class="button secondary midi-export-button" type="button" id="exportMidiButton">MIDIを書き出す</button>
+          <button class="button secondary midi-export-button" type="button" id="exportMidiButton">Exporter MIDI</button>
         </div>
       </div>
 
       <div class="score-tools">
-        <button class="button small" type="button" id="deleteLastButton">最後の音を削除</button>
-        <button class="button small" type="button" id="clearCounterpointButton">対旋律をクリア</button>
-        <button class="button small" type="button" id="playSelectedButton">選択音を鳴らす</button>
+        <button class="button small" type="button" id="deleteLastButton">Supprimer la dernière note</button>
+        <button class="button small" type="button" id="clearCounterpointButton">Effacer le contrepoint</button>
+        <button class="button small" type="button" id="playSelectedButton">Jouer la note sélectionnée</button>
       </div>
 
       <div class="playback-tools">
-        <button id="playPauseButton" class="button primary" type="button">再生</button>
-        <button class="button small" type="button" id="resetStartButton">最初に戻す</button>
+        <button id="playPauseButton" class="button primary" type="button">Lecture</button>
+        <button class="button small" type="button" id="resetStartButton">Revenir au début</button>
         <label class="tempo-control" for="tempoInput">
           Tempo
           <input id="tempoInput" type="number" min="40" max="180" value="72" />
         </label>
-        <p class="playback-hint">Space：再生 / 停止　｜　← / →：前後の音へ移動　｜　↑ / ↓：半音移動　｜　A〜G：音名入力</p>
+        <p class="playback-hint">Space：Lecture / 停止　｜　← / →：前後のnotesへ移動　｜　↑ / ↓：半notes移動　｜　A〜G：notes名入力</p>
       </div>
 
       <div class="score-box">
         <div class="score-head">
           <div>
-            <h2>五線入力</h2>
-            <p>五線をクリックして音を置きます。置いた音はピンクで選択され、↑↓で半音移動、←→で前後の音へ移動できます。</p>
+            <h2>Saisie sur portée</h2>
+            <p>Cliquez sur la portée pour placer une note. La note sélectionnée apparaît en rose. ↑ / ↓ déplacent par demi-ton, ← / → changent de position.</p>
           </div>
-          <span class="counter-badge">対旋律：<span id="counterpointCount">0</span>音</span>
+          <span class="counter-badge">Contrepoint : <span id="counterpointCount">0</span>notes</span>
         </div>
 
         <div class="score-stage">
@@ -105,13 +105,13 @@
       </div>
 
       <div class="current-notes">
-        <h2>現在の入力</h2>
-        <p><strong>定旋律：</strong><span id="cantusDisplay"></span></p>
-        <p><strong>対旋律：</strong><span id="counterpointDisplay"></span></p>
+        <h2>Entrée actuelle</h2>
+        <p><strong>Cantus firmus : </strong><span id="cantusDisplay"></span></p>
+        <p><strong>Contrepoint : </strong><span id="counterpointDisplay"></span></p>
       </div>
 
-      <button class="button primary" type="button" id="analyzeButton">解析する</button>
-      <div id="analysisInlineResult" class="analysis-inline-result" aria-live="polite">まだ解析していません。</div>
+      <button class="button primary" type="button" id="analyzeButton">Analyser</button>
+      <div id="analysisInlineResult" class="analysis-inline-result" aria-live="polite">Pas encore analysé.</div>
 </section>
 
     <section class="result-section">
@@ -120,6 +120,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-module1-language-final"></script>
+  <script src="js/counterpoint-fr.js?v=20260601-module1-language-final"></script>
 </body>
 </html>
