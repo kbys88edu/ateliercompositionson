@@ -10,7 +10,7 @@
   <title>第一種2声対位法チェッカー｜Atelier Composition Son</title>
   <meta name="description" content="第一種2声対位法の協和音程、連続5度、連続8度を確認するオンラインチェッカーです。" />
 
-  <link rel="stylesheet" href="css/style.css?v=20260601-module1-click-arrow-sound-fix" />
+  <link rel="stylesheet" href="css/style.css?v=20260601-module1-clean-reset" />
 </head>
 
 <body>
@@ -51,65 +51,52 @@
 
       <div class="module1-exercise-row">
         <label class="exercise-control" for="exerciseSelect">
-          <span data-i18n="exerciseLabel">課題</span>
-          <select id="exerciseSelect" onchange="loadSelectedExercise()">
-            <option value="c-major-arch">C major / アーチ型</option>
-            <option value="d-minor-step">D minor / 順次進行</option>
-            <option value="g-major-low">G major / 低めの音域</option>
-            <option value="f-major-small-peak">F major / 小さな頂点</option>
-            <option value="a-minor-return">A minor / 回帰</option>
-            <option value="c-major-leap">C major / 小さな跳躍</option>
-            <option value="e-minor-middle">E minor / 中音域</option>
-            <option value="g-major-long">G major / 長め</option>
-            <option value="f-major-descend">F major / 下降中心</option>
-            <option value="c-major-extended">C major / 拡張</option>
-          </select>
+          <span>課題</span>
+          <select id="exerciseSelect"></select>
         </label>
         <p class="exercise-description" id="exerciseDescription">課題を選択してください。</p>
       </div>
 
       <div class="module1-toolbar">
         <div class="module1-toolbar-left">
-          <button class="button secondary" type="button" onclick="loadSelectedExercise()" data-i18n="loadExercise">課題を読み込む</button>
-          <button class="button secondary" type="button" onclick="loadExample()" data-i18n="loadExample">例題を読み込む</button>
-          <button class="button secondary" type="button" onclick="renderScore()" data-i18n="updateScore">楽譜を更新</button>
+          <button class="button secondary" type="button" id="loadExerciseButton">課題を読み込む</button>
+          <button class="button secondary" type="button" id="loadExampleButton">例題を読み込む</button>
+          <button class="button secondary" type="button" id="refreshScoreButton">楽譜を更新</button>
         </div>
         <div class="module1-toolbar-right">
-          <button class="button secondary midi-export-button" type="button" onclick="exportMidi()" data-i18n="exportMidi">MIDIを書き出す</button>
+          <button class="button secondary midi-export-button" type="button" id="exportMidiButton">MIDIを書き出す</button>
         </div>
       </div>
 
       <div class="score-tools">
-        <button class="button small" type="button" onclick="undoCounterpointNote()" data-i18n="deleteLast">最後の音を削除</button>
-        <button class="button small" type="button" onclick="clearCounterpoint()" data-i18n="clearCounterpoint">対旋律をクリア</button>
-        <button class="button small" type="button" onclick="playSelectedNote()" data-i18n="playSelected">選択音を鳴らす</button>
+        <button class="button small" type="button" id="deleteLastButton">最後の音を削除</button>
+        <button class="button small" type="button" id="clearCounterpointButton">対旋律をクリア</button>
+        <button class="button small" type="button" id="playSelectedButton">選択音を鳴らす</button>
       </div>
 
       <div class="playback-tools">
-        <button id="playPauseButton" class="button primary" type="button" onclick="togglePlayback()">再生</button>
-        <button class="button small" type="button" onclick="stopPlayback(true)" data-i18n="resetStart">最初に戻す</button>
+        <button id="playPauseButton" class="button primary" type="button">再生</button>
+        <button class="button small" type="button" id="resetStartButton">最初に戻す</button>
         <label class="tempo-control" for="tempoInput">
           Tempo
           <input id="tempoInput" type="number" min="40" max="180" value="72" />
         </label>
-        <p class="playback-hint" data-i18n="playbackHint">Space：再生 / 停止　｜　← / →：前後の音へ移動　｜　↑ / ↓：半音移動</p>
+        <p class="playback-hint">Space：再生 / 停止　｜　← / →：前後の音へ移動　｜　↑ / ↓：半音移動</p>
       </div>
 
       <div class="score-box">
         <div class="score-head">
           <div>
-            <h2 data-i18n="scoreInputTitle">五線入力</h2>
-            <p data-i18n="scoreInputHelp">五線をクリックして音を置きます。置いた音は青色で選択され、↑↓で半音移動、←→で前後の音へ移動できます。</p>
+            <h2>五線入力</h2>
+            <p>五線をクリックして音を置きます。置いた音はピンクで選択され、↑↓で半音移動、←→で前後の音へ移動できます。</p>
           </div>
-          <span class="counter-badge">
-            <span data-i18n="counterpointLabel">対旋律：</span><span id="counterpointCount">0</span><span data-i18n="notesUnit">音</span>
-          </span>
+          <span class="counter-badge">対旋律：<span id="counterpointCount">0</span>音</span>
         </div>
 
         <div class="score-stage">
           <div class="staff-mute-overlay" aria-label="Voice mute controls">
-            <button id="muteCounterpointButton" class="staff-mute-button counterpoint" type="button" onclick="toggleVoiceMuteFromButton('counterpoint')" aria-pressed="false">M</button>
-            <button id="muteCantusButton" class="staff-mute-button cantus" type="button" onclick="toggleVoiceMuteFromButton('cantus')" aria-pressed="false">M</button>
+            <button id="muteCounterpointButton" class="staff-mute-button counterpoint" type="button" aria-pressed="false">M</button>
+            <button id="muteCantusButton" class="staff-mute-button cantus" type="button" aria-pressed="false">M</button>
           </div>
 
           <svg id="scoreEditor" class="score-editor" viewBox="0 0 1480 430" role="img" aria-label="対位法入力用五線譜" tabindex="0"></svg>
@@ -117,12 +104,12 @@
       </div>
 
       <div class="current-notes">
-        <h2 data-i18n="currentInput">現在の入力</h2>
-        <p><strong data-i18n="cantusLabel">定旋律：</strong><span id="cantusDisplay"></span></p>
-        <p><strong data-i18n="counterpointLabel">対旋律：</strong><span id="counterpointDisplay"></span></p>
+        <h2>現在の入力</h2>
+        <p><strong>定旋律：</strong><span id="cantusDisplay"></span></p>
+        <p><strong>対旋律：</strong><span id="counterpointDisplay"></span></p>
       </div>
 
-      <button class="button primary" onclick="analyzeCounterpoint()" data-i18n="analyze">解析する</button>
+      <button class="button primary" type="button" id="analyzeButton">解析する</button>
 
       <div id="analysisSummary" class="analysis-summary" aria-live="polite"></div>
       <div id="analysisResults" class="analysis-results"></div>
@@ -137,6 +124,6 @@
     </section>
   </main>
 
-  <script src="js/counterpoint.js?v=20260601-module1-click-arrow-sound-fix"></script>
+  <script src="js/counterpoint.js?v=20260601-module1-clean-reset"></script>
 </body>
 </html>

@@ -1619,14 +1619,121 @@ input {
 }
 
 
-/* 2026-06-01 interaction/sound fix */
+/* 2026-06-01 clean reset for Module 1 */
+.module1-exercise-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 8px 0 12px;
+}
+
+#exerciseSelect {
+  min-width: 260px;
+}
+
+.module1-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  margin: 10px 0 12px;
+}
+
+.module1-toolbar-left,
+.module1-toolbar-right,
+.score-tools,
+.playback-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.module1-toolbar-right {
+  margin-left: auto;
+}
+
+.score-box {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+.score-stage {
+  position: relative !important;
+  min-width: 1480px !important;
+  width: 1480px !important;
+  height: 430px !important;
+  max-width: none !important;
+  background: rgba(255, 252, 247, 0.55);
+}
+
 .score-editor {
-  pointer-events: auto !important;
+  display: block !important;
+  width: 1480px !important;
+  min-width: 1480px !important;
+  height: 430px !important;
+  min-height: 430px !important;
+  max-width: none !important;
+  overflow: visible !important;
   cursor: crosshair;
+  pointer-events: auto !important;
+}
+
+.stable-staff-line {
+  stroke: rgba(20,20,20,0.74);
+  stroke-width: 1.15;
+}
+
+.png-staff {
+  opacity: 0.94;
+}
+
+.png-staff-fallback-line {
+  opacity: 0.20;
+}
+
+.clef-fallback {
+  opacity: 0.0;
+}
+
+.png-notation {
+  pointer-events: none;
+  user-select: none;
+}
+
+.png-notehead {
+  opacity: 1;
+}
+
+.png-notehead.cantus {
+  opacity: 0.70;
+}
+
+.png-notehead.selected {
+  filter:
+    invert(41%)
+    sepia(84%)
+    saturate(2534%)
+    hue-rotate(313deg)
+    brightness(103%)
+    contrast(102%);
+}
+
+.png-notehead.muted-voice,
+.png-accidental.muted-voice {
+  opacity: 0.32;
 }
 
 .stable-notehead {
-  pointer-events: auto;
+  fill: #fff;
+  stroke: #171717;
+  stroke-width: 2.1;
+}
+
+.stable-notehead.cantus {
+  stroke: rgba(20,20,20,0.62);
 }
 
 .stable-notehead.selected {
@@ -1635,6 +1742,53 @@ input {
   stroke-width: 2.8 !important;
 }
 
+.stable-notehead.muted-voice {
+  opacity: 0.32;
+}
+
+.stable-accidental {
+  font-family: "Segoe UI Symbol", "Apple Symbols", serif;
+  font-size: 26px;
+  fill: #171717;
+  dominant-baseline: middle;
+  text-anchor: middle;
+  opacity: 0.0;
+}
+
+.staff-mute-overlay {
+  position: absolute !important;
+  left: 72px !important;
+  top: 132px !important;
+  z-index: 30 !important;
+  pointer-events: none !important;
+}
+
+.staff-mute-button {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1.4px solid rgba(20,20,20,0.72);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.96);
+  color: rgba(20,20,20,0.88);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  pointer-events: auto !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.staff-mute-button.counterpoint { top: 0; left: 0; }
+.staff-mute-button.cantus { top: 170px; left: 0; }
+.staff-mute-button.muted { border-color: #ff4f8b; background: #ff4f8b; color: #fff; }
+
 .senzoku-selected-ring {
+  fill: none;
+  stroke: #ff4f8b;
+  stroke-width: 1.6;
   pointer-events: none;
 }
