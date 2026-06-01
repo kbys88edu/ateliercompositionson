@@ -180,7 +180,25 @@
       .modules { grid-template-columns: 1fr; }
       .card { min-height: 190px; border-radius: 18px; }
     }
-  </style>
+  
+.module-card.is-disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+.module-card.is-disabled:hover {
+  transform: none;
+}
+.status-badge.ready {
+  border-color: rgba(31, 122, 63, 0.32);
+  color: #1f7a3f;
+  background: rgba(31, 122, 63, 0.08);
+}
+.status-badge.pending {
+  border-color: rgba(0, 0, 0, 0.18);
+  color: rgba(0, 0, 0, 0.52);
+  background: rgba(0, 0, 0, 0.04);
+}
+</style>
 </head>
 
 <body>
