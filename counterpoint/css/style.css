@@ -2130,43 +2130,6 @@ input {
   cursor: pointer;
 }
 
-/* Module 1 French page: fit score without horizontal scroll. */
-.score-box {
-  overflow-x: hidden !important;
-}
-
-.score-editor,
-#scoreEditor {
-  display: block;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto !important;
-  min-height: 0 !important;
-  aspect-ratio: 1240 / 440;
-}
-
-@media (max-width: 760px) {
-  .score-box {
-    padding: 10px !important;
-  }
-
-  .score-editor,
-  #scoreEditor {
-    aspect-ratio: 1240 / 500;
-  }
-}
-
-@media (max-width: 520px) {
-  .score-head {
-    gap: 8px !important;
-  }
-
-  .score-editor,
-  #scoreEditor {
-    aspect-ratio: 1240 / 540;
-  }
-}
-
 /* Module 1 staff extension and synth playback update. */
 .score-editor,
 #scoreEditor {
@@ -2176,4 +2139,72 @@ input {
 .png-staff,
 .staff-line {
   overflow: visible;
+}
+
+/* Module 1: fit score without vertical or horizontal scrollbars. */
+html,
+body {
+  overflow-x: hidden !important;
+}
+
+.score-box {
+  overflow: hidden !important;
+  max-width: 100% !important;
+}
+
+.score-editor,
+#scoreEditor {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: clamp(260px, 46vh, 390px) !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+@media (max-height: 780px) {
+  .page {
+    padding-top: 14px !important;
+    padding-bottom: 22px !important;
+  }
+
+  .checker-header {
+    margin-bottom: 12px !important;
+  }
+
+  .checker-header h1 {
+    margin-bottom: 8px !important;
+  }
+
+  .checker-panel {
+    gap: 10px !important;
+  }
+
+  .score-box {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .score-editor,
+  #scoreEditor {
+    height: clamp(235px, 42vh, 340px) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .score-editor,
+  #scoreEditor {
+    height: clamp(240px, 38vh, 330px) !important;
+  }
+
+  .score-box {
+    padding: 10px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .score-editor,
+  #scoreEditor {
+    height: clamp(220px, 34vh, 300px) !important;
+  }
 }

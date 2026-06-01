@@ -65,7 +65,7 @@
   }
 
   function getVoiceSampleCandidates(voiceSet, midi) {
-    const folder = voiceSet === "sine" ? "male" : "female";
+    const folder = voiceSet === "femaleSample" ? "male" : "female";
 
     const anchors = [
       { midi: 55, name: "G3" },
@@ -120,9 +120,49 @@
     return sampleVoiceCache[cacheKey];
   }
 
-  async function playSampleVoiceNote(voiceSet, midi, duration = 0.5, gainScale = 1) {
-  playMidiNote(midi, duration, gainScale, "sine");
-  return null;
+  async function playSampleVoiceNote(setName, midi, duration = 0.75, gainScale = 1) {
+  const set = SAMPLE_VOICE_SETS[setName];
+  if (!set) return;
+
+  const nearestNote = getNearestSampleNote(midi, set.notes, setName);
+  const sourceMidi = noteToMidi(nearestNote);
+  if (sourceMidi === null) return;
+
+  const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
+
+  if (!buffer) {
+    playFallbackVoice(midi, duration, gainScale);
+    return;
+  }
+
+  const ctx = getAudioContext();
+  const now = ctx.currentTime;
+
+  const source = ctx.createBufferSource();
+  const gain = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
+
+  source.buffer = buffer;
+  source.playbackRate.setValueAtTime(Math.pow(2, (midi - sourceMidi + set.transposeSemitones) / 12), now);
+
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(6200, now);
+
+  const attack = 0.016;
+  const release = 0.22;
+  const targetGain = 0.95 * gainScale;
+
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, targetGain), now + attack);
+  gain.gain.setValueAtTime(Math.max(0.0001, targetGain), now + Math.max(attack + 0.02, duration - release));
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + release);
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(getReverbDestination());
+
+  source.start(now);
+  source.stop(now + duration + release + 0.04);
 }
 
 
@@ -582,7 +622,7 @@ function moveNoteChromatic(note, semitone) {
     if (existing && existingY !== null && Math.abs(point.viewX - noteX) < 28 && Math.abs(point.viewY - existingY) < 24) {
       setNotesToTextarea("counterpoint", counterpoint);
       renderScore();
-      playNoteName(existing, 0.65, 1.15, "sine");
+      playNoteName(existing, 0.65, 1.15, "femaleSample");
       return;
     }
 
@@ -590,7 +630,7 @@ function moveNoteChromatic(note, semitone) {
     counterpoint[index] = newNote;
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
-    playNoteName(newNote, 0.65, 1.15, "sine");
+    playNoteName(newNote, 0.65, 1.15, "femaleSample");
   }
 
   function moveSelection(delta) {
@@ -599,7 +639,7 @@ function moveNoteChromatic(note, semitone) {
     renderScore();
 
     const note = getNotesFromTextarea("counterpoint")[selectedIndex];
-    if (note) playNoteName(note, 0.55, 1.1, "sine");
+    if (note) playNoteName(note, 0.55, 1.1, "femaleSample");
   }
 
   function moveSelectedNote(semitone) {
@@ -616,7 +656,7 @@ function moveNoteChromatic(note, semitone) {
     counterpoint[selectedIndex] = next;
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
-    playNoteName(next, 0.55, 1.1, "sine");
+    playNoteName(next, 0.55, 1.1, "femaleSample");
   }
 
   function undoCounterpointNote() {
@@ -644,7 +684,7 @@ function moveNoteChromatic(note, semitone) {
 
   function playSelectedNote() {
     const note = getNotesFromTextarea("counterpoint")[selectedIndex];
-    if (note) playNoteName(note, 0.75, 1.15, "sine");
+    if (note) playNoteName(note, 0.75, 1.15, "femaleSample");
   }
 
   function getPlaybackLength() {
@@ -657,9 +697,12 @@ function moveNoteChromatic(note, semitone) {
   }
 
   function getAudioContext() {
-    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    return audioContext;
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
+  if (audioContext.state === "suspended") audioContext.resume();
+  return audioContext;
+}
 
   function ensureAudioReady() {
     const ctx = getAudioContext();
@@ -668,46 +711,44 @@ function moveNoteChromatic(note, semitone) {
   }
 
   function getReverbDestination() {
-    const ctx = ensureAudioReady();
-    if (reverbNodes && reverbNodes.context === ctx) return reverbNodes.input;
-
-    const input = ctx.createGain();
-    const dry = ctx.createGain();
-    const wet = ctx.createGain();
-
-    const preDelay = ctx.createDelay(0.25);
-    const earlyDelay = ctx.createDelay(0.35);
-    const lateDelay = ctx.createDelay(0.55);
-    const feedback = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-
-    dry.gain.value = 0.76;
-    wet.gain.value = 0.24;
-
-    preDelay.delayTime.value = 0.035;
-    earlyDelay.delayTime.value = 0.075;
-    lateDelay.delayTime.value = 0.145;
-    feedback.gain.value = 0.28;
-
-    filter.type = "lowpass";
-    filter.frequency.value = 4300;
-
-    input.connect(dry);
-    dry.connect(ctx.destination);
-
-    input.connect(wet);
-    wet.connect(preDelay);
-    preDelay.connect(earlyDelay);
-    earlyDelay.connect(lateDelay);
-    lateDelay.connect(filter);
-    filter.connect(ctx.destination);
-
-    filter.connect(feedback);
-    feedback.connect(earlyDelay);
-
-    reverbNodes = { context: ctx, input };
-    return input;
+  const ctx = getAudioContext();
+  if (window.__module2ReverbNodes && window.__module2ReverbNodes.context === ctx) {
+    return window.__module2ReverbNodes.input;
   }
+
+  const input = ctx.createGain();
+  const dry = ctx.createGain();
+  const wet = ctx.createGain();
+  const preDelay = ctx.createDelay(0.25);
+  const earlyDelay = ctx.createDelay(0.35);
+  const lateDelay = ctx.createDelay(0.55);
+  const feedback = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
+
+  dry.gain.value = 0.76;
+  wet.gain.value = 0.24;
+  preDelay.delayTime.value = 0.035;
+  earlyDelay.delayTime.value = 0.075;
+  lateDelay.delayTime.value = 0.145;
+  feedback.gain.value = 0.28;
+  filter.type = "lowpass";
+  filter.frequency.value = 4300;
+
+  input.connect(dry);
+  dry.connect(ctx.destination);
+
+  input.connect(wet);
+  wet.connect(preDelay);
+  preDelay.connect(earlyDelay);
+  earlyDelay.connect(lateDelay);
+  lateDelay.connect(filter);
+  filter.connect(ctx.destination);
+  filter.connect(feedback);
+  feedback.connect(earlyDelay);
+
+  window.__module2ReverbNodes = { context: ctx, input };
+  return input;
+}
 
   function playFallbackMidiNote(midi, duration = 0.75, gainScale = 1) {
     const ctx = ensureAudioReady();
@@ -720,7 +761,7 @@ function moveNoteChromatic(note, semitone) {
     const filter = ctx.createBiquadFilter();
 
     osc1.type = "triangle";
-    osc2.type = "sine";
+    osc2.type = "femaleSample";
     osc1.frequency.setValueAtTime(freq, now);
     osc2.frequency.setValueAtTime(freq * 2, now);
     filter.type = "lowpass";
@@ -746,24 +787,49 @@ function moveNoteChromatic(note, semitone) {
     osc2.stop(now + duration + release + 0.04);
   }
 
-function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "sine") {
-    ensureAudioReady();
+function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSample") {
+  const timbre = getTimbre();
 
+  if (timbre === "humanVoice") {
     const promise = playSampleVoiceNote(voiceSet, midi, duration, gainScale);
-
     if (promise && typeof promise.catch === "function") {
-      promise.catch(() => {
-        playFallbackMidiNote(midi, duration, gainScale);
-      });
+      promise.catch(() => playVoiceLikeNote(midi, duration, gainScale));
     }
+    return;
   }
 
-  function playNoteName(note, duration = 0.75, gainScale = 1, voiceSet = "sine") {
-    const midi = noteToMidi(note);
-    if (midi !== null) {
-      playMidiNote(midi, duration, gainScale, voiceSet);
-    }
+  if (timbre === "voice") {
+    playVoiceLikeNote(midi, duration, gainScale);
+    return;
   }
+
+  const ctx = getAudioContext();
+  const now = ctx.currentTime;
+  const config = getTimbreConfig(timbre);
+  const frequency = midiToFrequency(midi);
+
+  const mainOsc = ctx.createOscillator();
+  const mainGain = ctx.createGain();
+
+  mainOsc.type = config.waveform;
+  mainOsc.frequency.setValueAtTime(frequency, now);
+
+  mainGain.gain.setValueAtTime(0.0001, now);
+  mainGain.gain.exponentialRampToValueAtTime(config.gain * gainScale, now + 0.02);
+  mainGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+  mainOsc.connect(mainGain);
+  mainGain.connect(getReverbDestination());
+
+  mainOsc.start(now);
+  mainOsc.stop(now + duration + 0.05);
+}
+
+  function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
+  const midi = noteToMidi(note);
+  if (midi === null) return;
+  playMidiNote(midi, duration, gainScale, voiceSet);
+}
 
   function updatePlayPauseButton() {
     const btn = $("playPauseButton");
@@ -795,8 +861,8 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "sine") {
 
     renderScore();
 
-    if (!voiceMuteState.cantus && cantus[playbackIndex]) playNoteName(cantus[playbackIndex], duration * 1.05, 0.95, "sine");
-    if (!voiceMuteState.counterpoint && counterpoint[playbackIndex]) playNoteName(counterpoint[playbackIndex], duration * 1.05, 1.15, "sine");
+    if (!voiceMuteState.cantus && cantus[playbackIndex]) playNoteName(cantus[playbackIndex], duration * 1.05, 0.95, "maleSample");
+    if (!voiceMuteState.counterpoint && counterpoint[playbackIndex]) playNoteName(counterpoint[playbackIndex], duration * 1.05, 1.15, "femaleSample");
 
     playbackTimerId = window.setTimeout(() => {
       playbackIndex += 1;
@@ -928,7 +994,7 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "sine") {
     setNotesToTextarea("counterpoint", counterpoint);
     renderScore();
     updateDisplays();
-    playNoteName(note, 0.65, 1.15, "sine");
+    playNoteName(note, 0.65, 1.15, "femaleSample");
 
     if (selectedIndex < length - 1) {
       selectedIndex += 1;
