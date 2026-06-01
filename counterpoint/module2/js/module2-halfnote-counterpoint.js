@@ -1188,16 +1188,29 @@ function drawPlayhead(svg, positions, noteCount) {
 
 function drawLedgerLines(svg, x, y, bottomLineY) {
   const topLineY = bottomLineY - 4 * SCORE.staffGap;
+  const ledgerHalfWidth = 22;
 
   if (y < topLineY - SCORE.noteStep) {
-    for (let ly = topLineY - 2 * SCORE.noteStep; ly >= y - 1; ly -= 2 * SCORE.noteStep) {
-      svg.appendChild(createSvgElement("line", { x1: x - 14, y1: ly, x2: x + 14, y2: ly, class: "ledger-line" }));
+    for (let ly = topLineY - SCORE.staffGap; ly >= y - 1; ly -= SCORE.staffGap) {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - ledgerHalfWidth,
+        y1: ly,
+        x2: x + ledgerHalfWidth,
+        y2: ly,
+        class: "ledger-line"
+      }));
     }
   }
 
   if (y > bottomLineY + SCORE.noteStep) {
-    for (let ly = bottomLineY + 2 * SCORE.noteStep; ly <= y + 1; ly += 2 * SCORE.noteStep) {
-      svg.appendChild(createSvgElement("line", { x1: x - 14, y1: ly, x2: x + 14, y2: ly, class: "ledger-line" }));
+    for (let ly = bottomLineY + SCORE.staffGap; ly <= y + 1; ly += SCORE.staffGap) {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - ledgerHalfWidth,
+        y1: ly,
+        x2: x + ledgerHalfWidth,
+        y2: ly,
+        class: "ledger-line"
+      }));
     }
   }
 }
@@ -1219,7 +1232,7 @@ function drawAccidental(svg, parsedOrAccidental, x, y, isCantus = false) {
     ? (accidental === "#" ? 40 : 39)
     : (accidental === "#" ? 30 : 29);
 
-  const accidentalYOffset = isCantus && accidental === "b" ? -12 : 0;
+  const accidentalYOffset = isCantus && accidental === "b" ? -14 : 0;
 
   svg.appendChild(createSvgImage(
     href,
@@ -1256,30 +1269,67 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
 
-  const counterpointScale = 1.14;
-  const renderY = isCantus ? y : y + 1.5;
   const b4Step = getDiatonicStep("B4");
   const noteStep = getDiatonicStep(note);
-  const counterpointYOffset = (!isCantus && noteStep !== null && b4Step !== null && noteStep <= b4Step) ? -10 : 0;
-  const effectiveY = renderY + counterpointYOffset;
+  const counterpointYOffset = (!isCantus && noteStep !== null && b4Step !== null && noteStep <= b4Step) ? -14 : 0;
+  const renderY = isCantus ? y : y + 1.5 + counterpointYOffset;
 
-  drawLedgerLines(svg, x, effectiveY, bottomLineY);
-  drawAccidental(svg, parsed, x, effectiveY, isCantus);
+  drawAccidental(svg, parsed, x, renderY, isCantus);
 
   if (isCantus) {
     const cantusScale = 0.95;
     const cantusWidth = 30 * cantusScale;
     const cantusHeight = 18 * cantusScale;
-    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - cantusWidth / 2, effectiveY - cantusHeight / 2, cantusWidth, cantusHeight, "png-notation png-notehead whole-note"));
+    svg.appendChild(createSvgImage(
+      NOTATION_IMAGES.wholeNote,
+      x - cantusWidth / 2,
+      renderY - cantusHeight / 2,
+      cantusWidth,
+      cantusHeight,
+      "png-notation png-notehead whole-note"
+    ));
   } else {
-    const stemDirection = effectiveY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
-    const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
-    const width = 30 * counterpointScale;
-    const height = 51 * counterpointScale;
-    const imgX = x - width / 2;
-    const imgY = stemDirection === "down" ? effectiveY - (11 * counterpointScale) : effectiveY - (38 * counterpointScale);
-    svg.appendChild(createSvgImage(image, imgX, imgY, width, height, `png-notation png-notehead half-note ${stemDirection}`));
+    // Stable counterpoint notehead: centered exactly on the adjusted visual pitch.
+    const noteheadWidth = 32.3;   // 5% smaller than the repaired 34px head
+    const noteheadHeight = 19.0;  // 5% smaller than the repaired 20px head
+    const stemDirection = renderY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
+
+    svg.appendChild(createSvgImage(
+      NOTATION_IMAGES.wholeNote,
+      x - noteheadWidth / 2,
+      renderY - noteheadHeight / 2,
+      noteheadWidth,
+      noteheadHeight,
+      `png-notation png-notehead half-note ${stemDirection}`
+    ));
+
+    if (stemDirection === "down") {
+      svg.appendChild(createSvgElement("line", {
+        x1: x - 8,
+        y1: renderY - 1,
+        x2: x - 8,
+        y2: renderY + 54,
+        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem",
+        stroke: "#181818",
+        "stroke-width": 2.2,
+        "stroke-linecap": "round"
+      }));
+    } else {
+      svg.appendChild(createSvgElement("line", {
+        x1: x + 12,
+        y1: renderY + 1,
+        x2: x + 12,
+        y2: renderY - 54,
+        class: isCurrentPlayback ? "note-stem playing" : isSelected ? "note-stem selected" : "note-stem",
+        stroke: "#181818",
+        "stroke-width": 2.2,
+        "stroke-linecap": "round"
+      }));
+    }
   }
+
+  // Draw ledger lines after the notehead so C4 remains visible.
+  drawLedgerLines(svg, x, renderY, bottomLineY);
 
   const noteClass = [
     "note-head",
@@ -1290,8 +1340,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
     isSelected ? "selected" : ""
   ].filter(Boolean).join(" ");
 
-  const rx = isCantus ? 10 : 12;
-  const ry = isCantus ? 6.5 : 7.8;
+  const rx = isCantus ? 9.5 : 11.4;
+  const ry = isCantus ? 6.2 : 7.0;
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: renderY,
@@ -1305,8 +1355,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
     svg.appendChild(createSvgElement("ellipse", {
       cx: x,
       cy: renderY,
-      rx: isCantus ? 16 : 18,
-      ry: isCantus ? 11.5 : 13.5,
+      rx: isCantus ? 15 : 17,
+      ry: isCantus ? 11 : 12.5,
       class: "selected-note-ring"
     }));
   }
