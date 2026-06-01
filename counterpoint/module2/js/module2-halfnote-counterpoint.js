@@ -945,8 +945,7 @@ function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const referenceStep = getDiatonicStep(referenceNote);
   if (noteStep === null || referenceStep === null) return null;
 
-  const trebleVisualRaise = isCantusStaff ? 0 : SCORE.noteStep;
-  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep - trebleVisualRaise;
+  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
 }
 
 function yToNaturalNote(y) {
@@ -1302,8 +1301,8 @@ function drawSvgMuteButton(svg, x, y, label, muted, onToggle) {
 }
 
 function drawMuteButtons(svg) {
-  drawSvgMuteButton(svg, 18, SCORE.bottomLineY - 54, "counterpoint", isCounterpointMuted, toggleCounterpointMute);
-  drawSvgMuteButton(svg, 18, SCORE.cantusBottomLineY - 54, "cantus", isCantusMuted, toggleCantusMute);
+  drawSvgMuteButton(svg, 10, SCORE.bottomLineY - 54, "counterpoint", isCounterpointMuted, toggleCounterpointMute);
+  drawSvgMuteButton(svg, 10, SCORE.cantusBottomLineY - 54, "cantus", isCantusMuted, toggleCantusMute);
 }
 
 function renderScore() {
