@@ -1111,3 +1111,136 @@ input {
     left: 70px;
   }
 }
+
+
+/* 2026-06-01 layout repair: clean controls, 10 exercises, score-stage mute overlay */
+.module1-exercise-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 8px 0 12px;
+}
+
+.exercise-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exercise-description {
+  margin: 0;
+  color: rgba(20,20,20,0.62);
+  font-size: 14px;
+}
+
+.module1-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  margin: 10px 0 12px;
+}
+
+.module1-toolbar-left,
+.module1-toolbar-right,
+.score-tools,
+.playback-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.module1-toolbar-right {
+  margin-left: auto;
+}
+
+.midi-export-button {
+  margin-left: 32px;
+}
+
+.score-box {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+.score-stage {
+  position: relative;
+  min-width: 1480px;
+  width: 1480px;
+  max-width: none;
+}
+
+.score-editor {
+  width: 1480px !important;
+  min-width: 1480px !important;
+  max-width: none !important;
+  display: block;
+}
+
+.staff-mute-overlay {
+  position: absolute;
+  left: 72px;
+  top: 132px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.staff-mute-button {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1.4px solid rgba(20,20,20,0.72);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.96);
+  color: rgba(20,20,20,0.88);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.staff-mute-button.counterpoint {
+  top: 0;
+  left: 0;
+}
+
+.staff-mute-button.cantus {
+  top: 170px;
+  left: 0;
+}
+
+.staff-mute-button:hover {
+  border-color: #ff4f8b;
+  background: rgba(255,79,139,0.08);
+}
+
+.staff-mute-button.muted {
+  border-color: #ff4f8b;
+  background: #ff4f8b;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .module1-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .module1-toolbar-right {
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .midi-export-button {
+    margin-left: 0;
+  }
+}

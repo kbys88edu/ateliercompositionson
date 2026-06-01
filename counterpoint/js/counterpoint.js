@@ -118,28 +118,84 @@ const I18N = {
 
 const EXERCISES = [
   {
-    id: "basic-c-major",
-    titleJa: "C major / 基本",
-    titleFr: "Do majeur / base",
-    descriptionJa: "順次進行中心の定旋律です。",
-    descriptionFr: "Cantus principalement conjoint.",
+    id: "c-major-arch",
+    titleJa: "C major / アーチ型",
+    titleFr: "Do majeur / arche",
+    descriptionJa: "Cから上行し、中央で頂点を作って戻る基本課題です。",
+    descriptionFr: "Cantus conjoint en arche depuis do.",
     cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"]
   },
   {
-    id: "g-major",
-    titleJa: "G major / 上行と下行",
-    titleFr: "Sol majeur / montée et descente",
-    descriptionJa: "中音域の定旋律です。",
-    descriptionFr: "Cantus dans le registre médian.",
+    id: "d-minor-step",
+    titleJa: "D minor / 順次進行",
+    titleFr: "Ré mineur / mouvement conjoint",
+    descriptionJa: "短調の感覚を保ちながら順次進行を練習します。",
+    descriptionFr: "Travail conjoint dans une couleur mineure.",
+    cantus: ["D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4"]
+  },
+  {
+    id: "g-major-low",
+    titleJa: "G major / 低めの音域",
+    titleFr: "Sol majeur / registre grave",
+    descriptionJa: "やや低い音域で、安定した協和音程を作る課題です。",
+    descriptionFr: "Cantus dans un registre un peu plus grave.",
     cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"]
   },
   {
-    id: "longer-c-major",
-    titleJa: "C major / 長め",
-    titleFr: "Do majeur / plus long",
-    descriptionJa: "少し長い第一種練習です。",
-    descriptionFr: "Exercice un peu plus long.",
-    cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "C4"]
+    id: "f-major-small-peak",
+    titleJa: "F major / 小さな頂点",
+    titleFr: "Fa majeur / petit sommet",
+    descriptionJa: "短い上行と下行を含む、まとまりやすい定旋律です。",
+    descriptionFr: "Ligne courte avec un petit sommet.",
+    cantus: ["F3", "G3", "A3", "C4", "B3", "A3", "G3", "F3"]
+  },
+  {
+    id: "a-minor-return",
+    titleJa: "A minor / 回帰",
+    titleFr: "La mineur / retour",
+    descriptionJa: "開始音へ自然に戻ることを意識する課題です。",
+    descriptionFr: "Exercice centré sur le retour au son initial.",
+    cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"]
+  },
+  {
+    id: "c-major-leap",
+    titleJa: "C major / 小さな跳躍",
+    titleFr: "Do majeur / petit saut",
+    descriptionJa: "小さな跳躍を含む定旋律に対して対旋律を作ります。",
+    descriptionFr: "Cantus avec un petit saut.",
+    cantus: ["C4", "E4", "D4", "F4", "G4", "E4", "F4", "D4", "C4"]
+  },
+  {
+    id: "e-minor-middle",
+    titleJa: "E minor / 中音域",
+    titleFr: "Mi mineur / registre médian",
+    descriptionJa: "中音域で対旋律の輪郭を整える課題です。",
+    descriptionFr: "Travail de contour dans le registre médian.",
+    cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"]
+  },
+  {
+    id: "g-major-long",
+    titleJa: "G major / 長め",
+    titleFr: "Sol majeur / plus long",
+    descriptionJa: "少し長い定旋律で、連続5度・8度を避ける練習です。",
+    descriptionFr: "Cantus plus long pour éviter les quintes/octaves parallèles.",
+    cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"]
+  },
+  {
+    id: "f-major-descend",
+    titleJa: "F major / 下降中心",
+    titleFr: "Fa majeur / descente",
+    descriptionJa: "下降形を中心にした定旋律です。",
+    descriptionFr: "Cantus principalement descendant.",
+    cantus: ["F4", "E4", "D4", "C4", "B3", "C4", "D4", "C4", "F3"]
+  },
+  {
+    id: "c-major-extended",
+    titleJa: "C major / 拡張",
+    titleFr: "Do majeur / étendu",
+    descriptionJa: "やや長めの総合練習です。",
+    descriptionFr: "Exercice de synthèse un peu plus long.",
+    cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "F4", "E4", "D4", "C4"]
   }
 ];
 
@@ -187,13 +243,21 @@ function populateExercises() {
     return;
   }
 
+  const previousValue = select.value;
   select.innerHTML = "";
+
   EXERCISES.forEach((exercise) => {
     const option = document.createElement("option");
     option.value = exercise.id;
-    option.textContent = exercise.title[currentLanguage] || exercise.title.ja || exercise.id;
+    option.textContent = currentLanguage === "fr"
+      ? (exercise.titleFr || exercise.titleJa || exercise.id)
+      : (exercise.titleJa || exercise.titleFr || exercise.id);
     select.appendChild(option);
   });
+
+  if (previousValue && EXERCISES.some((exercise) => exercise.id === previousValue)) {
+    select.value = previousValue;
+  }
 
   updateExerciseDescription();
 }
@@ -206,9 +270,14 @@ function updateExerciseDescription() {
   const id = select ? select.value : (EXERCISES[0] ? EXERCISES[0].id : null);
   const exercise = EXERCISES.find((item) => item.id === id) || EXERCISES[0];
 
-  description.textContent = exercise && exercise.description
-    ? (exercise.description[currentLanguage] || exercise.description.ja || "")
-    : "";
+  if (!exercise) {
+    description.textContent = "";
+    return;
+  }
+
+  description.textContent = currentLanguage === "fr"
+    ? (exercise.descriptionFr || exercise.descriptionJa || "")
+    : (exercise.descriptionJa || exercise.descriptionFr || "");
 }
 
 function loadSelectedExercise() {
@@ -218,12 +287,16 @@ function loadSelectedExercise() {
   if (!exercise) return;
 
   setNotesToTextarea("cantus", exercise.cantus || []);
-  setNotesToTextarea("counterpoint", exercise.counterpoint || []);
+  setNotesToTextarea("counterpoint", []);
   selectedIndex = 0;
   playbackIndex = 0;
   stopPlayback(true);
   updateExerciseDescription();
   renderScore();
+}
+
+function setExample() {
+  loadExample();
 }
 
 function loadExample() {
