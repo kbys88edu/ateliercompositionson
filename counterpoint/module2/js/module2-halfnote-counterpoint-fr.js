@@ -945,14 +945,12 @@ function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const referenceStep = getDiatonicStep(referenceNote);
   if (noteStep === null || referenceStep === null) return null;
 
-  const trebleVisualOffset = isCantusStaff ? 0 : SCORE.noteStep;
-  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep - trebleVisualOffset;
+  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
 }
 
 function yToNaturalNote(y) {
   const e4Step = getDiatonicStep("E4");
-  const trebleVisualOffset = SCORE.noteStep;
-  const rawStep = Math.round((SCORE.bottomLineY - trebleVisualOffset - y) / SCORE.noteStep);
+  const rawStep = Math.round((SCORE.bottomLineY - y) / SCORE.noteStep);
   const targetStep = e4Step + rawStep;
 
   let closest = NATURAL_NOTES[0];
@@ -1205,7 +1203,10 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   drawAccidental(svg, parsed, x, renderY, isCantus);
 
   if (isCantus) {
-    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 15, renderY - 9, 30, 18, "png-notation png-notehead whole-note"));
+    const cantusScale = 0.95;
+    const cantusWidth = 30 * cantusScale;
+    const cantusHeight = 18 * cantusScale;
+    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - cantusWidth / 2, renderY - cantusHeight / 2, cantusWidth, cantusHeight, "png-notation png-notehead whole-note"));
   } else {
     const stemDirection = renderY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
     const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
@@ -1253,6 +1254,57 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   })).textContent = note;
 }
 
+function drawSvgMuteButton(svg, x, y, label, muted, onToggle) {
+  const group = createSvgElement("g", {
+    class: `svg-mute-button${muted ? " muted" : ""}`,
+    role: "button",
+    tabindex: "0",
+    "aria-label": `${muted ? "Unmute" : "Mute"} ${label}`
+  });
+
+  const rect = createSvgElement("rect", {
+    x,
+    y,
+    width: 40,
+    height: 40,
+    rx: 8,
+    fill: muted ? "#181818" : "#ffffff",
+    stroke: "rgba(0,0,0,0.45)",
+    "stroke-width": 1.4
+  });
+  const textEl = createSvgElement("text", {
+    x: x + 20,
+    y: y + 26,
+    "text-anchor": "middle",
+    "font-size": 22,
+    "font-weight": 800,
+    fill: muted ? "#ffffff" : "#181818",
+    style: "font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; user-select:none;"
+  });
+  textEl.textContent = "M";
+
+  group.appendChild(rect);
+  group.appendChild(textEl);
+  group.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onToggle();
+  });
+  group.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      event.stopPropagation();
+      onToggle();
+    }
+  });
+  svg.appendChild(group);
+}
+
+function drawMuteButtons(svg) {
+  drawSvgMuteButton(svg, 28, SCORE.bottomLineY - 54, "counterpoint", isCounterpointMuted, toggleCounterpointMute);
+  drawSvgMuteButton(svg, 28, SCORE.cantusBottomLineY - 54, "cantus", isCantusMuted, toggleCantusMute);
+}
+
 function renderScore() {
   const svg = document.getElementById("scoreEditor");
   if (!svg) return;
@@ -1271,6 +1323,7 @@ function renderScore() {
 
   drawStaff(svg, SCORE.bottomLineY, "Counterpoint", halfCount, "treble");
   drawStaff(svg, SCORE.cantusBottomLineY, "Cantus", halfCount, "bass");
+  drawMuteButtons(svg);
   drawMeasureBarlines(svg, positions, halfCount);
   drawPlayhead(svg, positions, halfCount);
 
@@ -1450,11 +1503,13 @@ function updateMuteButtons() {
 function toggleCounterpointMute() {
   isCounterpointMuted = !isCounterpointMuted;
   updateMuteButtons();
+  renderScore();
 }
 
 function toggleCantusMute() {
   isCantusMuted = !isCantusMuted;
   updateMuteButtons();
+  renderScore();
 }
 
 
