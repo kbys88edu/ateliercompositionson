@@ -38,15 +38,15 @@ function createSvgImage(href, x, y, width, height, className = "", preserveAspec
 
 const SCORE = {
   width: 1240,
-  height: 392,
-  left: 118,
+  height: 440,
+  left: 124,
   right: 60,
-  staffGap: 11,
-  noteStep: 5.5,
-  bottomLineY: 152,
-  cantusBottomLineY: 277,
-  playheadTop: 58,
-  playheadBottom: 328,
+  staffGap: 14,
+  noteStep: 7,
+  bottomLineY: 172,
+  cantusBottomLineY: 326,
+  playheadTop: 72,
+  playheadBottom: 376,
   halfsPerCantus: 2
 };
 
@@ -943,16 +943,14 @@ function noteToY(note, bottomLineY = SCORE.bottomLineY) {
   const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
   const referenceStep = getDiatonicStep(referenceNote);
   if (noteStep === null || referenceStep === null) return null;
-  // Treble-staff PNG noteheads sit visually one diatonic step low,
-  // so lift only the upper voice by one step to match the printed pitch.
-  const visualCorrection = bottomLineY === SCORE.cantusBottomLineY ? 0 : SCORE.noteStep;
-  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep - visualCorrection;
+
+  return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
 }
 
 function yToNaturalNote(y) {
-  const d4Step = getDiatonicStep("D4");
+  const e4Step = getDiatonicStep("E4");
   const rawStep = Math.round((SCORE.bottomLineY - y) / SCORE.noteStep);
-  const targetStep = d4Step + rawStep;
+  const targetStep = e4Step + rawStep;
 
   let closest = NATURAL_NOTES[0];
   let closestDistance = Infinity;
@@ -991,7 +989,6 @@ function drawMeasureBarlines(svg, positions, noteCount) {
   const topY = SCORE.bottomLineY - SCORE.staffGap * 4;
   const bottomY = SCORE.cantusBottomLineY;
 
-  // internal measure barlines: one whole-note cantus = one measure = two half notes
   for (let i = SCORE.halfsPerCantus; i < noteCount; i += SCORE.halfsPerCantus) {
     const x = (positions[i - 1] + positions[i]) / 2;
     svg.appendChild(createSvgElement("line", {
@@ -999,7 +996,6 @@ function drawMeasureBarlines(svg, positions, noteCount) {
     }));
   }
 
-  // final double barline: thin line + thicker right line
   svg.appendChild(createSvgElement("line", {
     x1: staffEndX - 7, y1: topY, x2: staffEndX - 7, y2: bottomY, class: "measure-barline final-thin"
   }));
@@ -1072,14 +1068,15 @@ function deleteSelectedNote() {
 function drawClef(svg, bottomLineY, clefType = "treble") {
   const isBass = clefType === "bass";
   const href = isBass ? NOTATION_IMAGES.bassClef : NOTATION_IMAGES.trebleClef;
+
   const width = isBass ? 62 : 64;
-  const height = isBass ? 78 : 118;
-  const x = SCORE.left - 80;
-  const y = isBass ? bottomLineY - 39 : bottomLineY - 76;
+  const height = isBass ? 80 : 124;
+  const x = SCORE.left - 82;
+  const y = isBass ? bottomLineY - 70 : bottomLineY - 112;
 
   const fallback = createSvgElement("text", {
-    x: 52,
-    y: isBass ? bottomLineY - 18 : bottomLineY - 4,
+    x: SCORE.left - 70,
+    y: isBass ? bottomLineY - 18 : bottomLineY - 6,
     class: `clef-symbol ${isBass ? "bass" : "treble"} clef-fallback`
   });
   fallback.textContent = isBass ? "𝄢" : "𝄞";
@@ -1089,7 +1086,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
-  const startX = SCORE.left - 62;
+  const startX = SCORE.left - 64;
   const endX = SCORE.width - SCORE.right + 6;
   const staffY = bottomLineY - SCORE.staffGap * 4;
   const staffWidth = endX - startX;
@@ -1103,7 +1100,7 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   svg.appendChild(createSvgImage(NOTATION_IMAGES.staff, startX, staffY - 1, staffWidth, staffHeight + 2, "png-notation png-staff", "none"));
   drawClef(svg, bottomLineY, clefType);
 
-  svg.appendChild(createSvgElement("text", { x: 22, y: bottomLineY - 58, class: "voice-label" })).textContent = label;
+  svg.appendChild(createSvgElement("text", { x: 22, y: bottomLineY - 64, class: "voice-label" })).textContent = label;
 }
 
 function drawPlayhead(svg, positions, noteCount) {
@@ -1146,7 +1143,7 @@ function drawLedgerLines(svg, x, y, bottomLineY) {
   }
 }
 
-function drawAccidental(svg, parsedOrAccidental, x, y) {
+function drawAccidental(svg, parsedOrAccidental, x, y, isCantus = false) {
   const accidental = typeof parsedOrAccidental === "string"
     ? parsedOrAccidental
     : parsedOrAccidental && parsedOrAccidental.accidental;
@@ -1154,10 +1151,23 @@ function drawAccidental(svg, parsedOrAccidental, x, y) {
   if (!accidental) return;
 
   const href = accidental === "#" ? NOTATION_IMAGES.sharp : accidental === "b" ? NOTATION_IMAGES.flat : NOTATION_IMAGES.natural;
-  const width = accidental === "#" ? 14 : 13;
-  const height = accidental === "#" ? 28 : 27;
 
-  svg.appendChild(createSvgImage(href, x - 25, y - height / 2, width, height, `png-notation png-accidental accidental-${accidental === "#" ? "sharp" : accidental === "b" ? "flat" : "natural"}`));
+  const width = isCantus
+    ? (accidental === "#" ? 19 : 18)
+    : (accidental === "#" ? 15 : 14);
+
+  const height = isCantus
+    ? (accidental === "#" ? 40 : 39)
+    : (accidental === "#" ? 30 : 29);
+
+  svg.appendChild(createSvgImage(
+    href,
+    x - (isCantus ? 32 : 27),
+    y - height / 2,
+    width,
+    height,
+    `png-notation png-accidental ${isCantus ? "cantus" : "counterpoint"} accidental-${accidental === "#" ? "sharp" : accidental === "b" ? "flat" : "natural"}`
+  ));
 
   const fallback = createSvgElement("text", {
     x: x - 18,
@@ -1186,16 +1196,16 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const isCurrentPlayback = index === playbackIndex && isPlaying;
 
   drawLedgerLines(svg, x, y, bottomLineY);
-  drawAccidental(svg, parsed, x, y);
+  drawAccidental(svg, parsed, x, y, isCantus);
 
   if (isCantus) {
-    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 16, y - 10, 32, 20, "png-notation png-notehead whole-note"));
+    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 15, y - 9, 30, 18, "png-notation png-notehead whole-note"));
   } else {
     const stemDirection = y < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
     const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
-    const imgX = x - 16;
-    const imgY = stemDirection === "down" ? y - 12 : y - 40;
-    svg.appendChild(createSvgImage(image, imgX, imgY, 32, 54, `png-notation png-notehead half-note ${stemDirection}`));
+    const imgX = x - 15;
+    const imgY = stemDirection === "down" ? y - 11 : y - 38;
+    svg.appendChild(createSvgImage(image, imgX, imgY, 30, 51, `png-notation png-notehead half-note ${stemDirection}`));
   }
 
   const noteClass = [
@@ -1210,8 +1220,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: y,
-    rx: 11.2,
-    ry: 7.2,
+    rx: 10,
+    ry: 6.5,
     transform: `rotate(-18 ${x} ${y})`,
     class: noteClass
   }));
@@ -1220,15 +1230,15 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     svg.appendChild(createSvgElement("ellipse", {
       cx: x,
       cy: y,
-      rx: 17,
-      ry: 12.8,
+      rx: 16,
+      ry: 11.5,
       class: "selected-note-ring"
     }));
   }
 
   svg.appendChild(createSvgElement("text", {
     x: x - 12,
-    y: isCantus ? bottomLineY + 56 : bottomLineY - 70,
+    y: isCantus ? bottomLineY + 62 : bottomLineY - 78,
     class: isCurrentPlayback ? "note-label playing" : isSelected ? "note-label selected" : "note-label"
   })).textContent = note;
 }
