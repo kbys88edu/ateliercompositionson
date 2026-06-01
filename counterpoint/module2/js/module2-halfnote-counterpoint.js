@@ -1269,10 +1269,9 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
 
-  const b4Step = getDiatonicStep("B4");
-  const noteStep = getDiatonicStep(note);
-  const counterpointYOffset = (!isCantus && noteStep !== null && b4Step !== null && noteStep <= b4Step) ? -14 : 0;
-  const renderY = isCantus ? y : y + 1.5 + counterpointYOffset;
+  // Use the same pitch center logic for counterpoint as for cantus.
+  // No separate C4 offset or B4 offset.
+  const renderY = y;
 
   drawAccidental(svg, parsed, x, renderY, isCantus);
 
@@ -1289,9 +1288,10 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
       "png-notation png-notehead whole-note"
     ));
   } else {
-    // Stable counterpoint notehead: centered exactly on the adjusted visual pitch.
-    const noteheadWidth = 32.3;   // 5% smaller than the repaired 34px head
-    const noteheadHeight = 19.0;  // 5% smaller than the repaired 20px head
+    // Counterpoint notehead is rendered in the same centered way as cantus,
+    // with a smaller head and an added stem for half-note notation.
+    const noteheadWidth = 29.1;
+    const noteheadHeight = 17.1;
     const stemDirection = renderY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
 
     svg.appendChild(createSvgImage(
@@ -1328,7 +1328,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
     }
   }
 
-  // Draw ledger lines after the notehead so C4 remains visible.
+  // Draw ledger lines after notehead so the C4 ledger line crosses the notehead,
+  // matching the cantus behavior.
   drawLedgerLines(svg, x, renderY, bottomLineY);
 
   const noteClass = [
@@ -1340,8 +1341,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
     isSelected ? "selected" : ""
   ].filter(Boolean).join(" ");
 
-  const rx = isCantus ? 9.5 : 11.4;
-  const ry = isCantus ? 6.2 : 7.0;
+  const rx = isCantus ? 9.5 : 10.3;
+  const ry = isCantus ? 6.2 : 6.3;
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: renderY,
@@ -1355,8 +1356,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half", cl
     svg.appendChild(createSvgElement("ellipse", {
       cx: x,
       cy: renderY,
-      rx: isCantus ? 15 : 17,
-      ry: isCantus ? 11 : 12.5,
+      rx: isCantus ? 15 : 15.5,
+      ry: isCantus ? 11 : 11.3,
       class: "selected-note-ring"
     }));
   }
