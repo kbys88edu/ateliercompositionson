@@ -1276,7 +1276,7 @@ function drawAccidental(svg, parsedOrAccidental, x, y, isCantus = false) {
     ? (accidental === "#" ? 40 : 39)
     : (accidental === "#" ? 30 : 29);
 
-  const accidentalYOffset = isCantus && accidental === "b" ? -14 : 0;
+  const accidentalYOffset = accidental === "b" ? (isCantus ? -14 : -8) : 0;
 
   svg.appendChild(createSvgImage(
     href,
