@@ -1413,8 +1413,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter")
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
 
-  const headW = isCantus || duration === "whole" ? 30.4 : 29.5;
-  const headH = isCantus || duration === "whole" ? 17.8 : 20.2;
+  const headW = isCantus || duration === "whole" ? 30.4 : 22.1;
+  const headH = isCantus || duration === "whole" ? 17.8 : 15.2;
 
   svg.appendChild(createSvgImage(
     isCantus || duration === "whole" ? NOTATION_IMAGES.wholeNote : NOTATION_IMAGES.quarterNoteHead,
