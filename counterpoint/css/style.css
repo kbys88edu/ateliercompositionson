@@ -1873,10 +1873,19 @@ input {
 }
 
 
-/* 2026-06-01 mute buttons under voice labels */
+/* 2026-06-01 large mute buttons + stronger voice playback */
 .staff-mute-overlay {
-  left: 22px !important;
-  top: 84px !important;
+  left: 18px !important;
+  top: 76px !important;
+}
+
+.staff-mute-button {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 10px !important;
+  font-size: 22px !important;
+  font-weight: 850 !important;
+  border-width: 1.6px !important;
 }
 
 .staff-mute-button.counterpoint {
