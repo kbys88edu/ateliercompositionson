@@ -1,16 +1,19 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 const SCORE = {
-  width: 960,
-  height: 350,
-  left: 105,
-  right: 55,
+  width: 1180,
+  height: 360,
+  left: 118,
+  right: 48,
+  measureWidth: 88,
   staffGap: 10,
   noteStep: 5,
-  counterpointBottomLineY: 120,
-  cantusBottomLineY: 255,
-  playheadTop: 48,
-  playheadBottom: 318
+  counterpointBottomLineY: 128,
+  cantusBottomLineY: 260,
+  playheadTop: 54,
+  playheadBottom: 330,
+  noteRadiusX: 9,
+  noteRadiusY: 6
 };
 
 const NOTE_LETTER_STEPS = {
@@ -218,11 +221,6 @@ function loadExample() {
   lastIssues = [];
   renderScore();
 }
-
-function setExample() {
-  loadExample();
-}
-
 
 function getAudioContext() {
   if (!audioContext) {
@@ -689,6 +687,99 @@ function clearSvg(svg) {
   while (svg.firstChild) svg.removeChild(svg.firstChild);
 }
 
+
+function getSenzokuScoreWidth(noteCount) {
+  const count = Math.max(noteCount, 1);
+  return Math.max(SCORE.width, SCORE.left + count * SCORE.measureWidth + SCORE.right + 24);
+}
+
+function getMeasureStartX(index) {
+  return SCORE.left + index * SCORE.measureWidth;
+}
+
+function getMeasureNoteX(index) {
+  return getMeasureStartX(index) + SCORE.measureWidth * 0.52;
+}
+
+function getMeasureIndexFromX(x, noteCount) {
+  const count = Math.max(noteCount, 1);
+  const raw = Math.floor((x - SCORE.left) / SCORE.measureWidth);
+  return Math.max(0, Math.min(count - 1, raw));
+}
+
+function getAccidentalSymbol(parsed) {
+  if (!parsed) return "";
+  if (parsed.accidental === "#") return "♯";
+  if (parsed.accidental === "b") return "♭";
+  return "";
+}
+
+function drawSenzokuMeasureHighlight(svg, noteCount) {
+  const x = getMeasureStartX(selectedIndex);
+  svg.appendChild(createSvgElement("rect", {
+    x,
+    y: SCORE.counterpointBottomLineY - 92,
+    width: SCORE.measureWidth,
+    height: 132,
+    class: "senzoku-input-highlight"
+  }));
+
+  svg.appendChild(createSvgElement("line", {
+    x1: x,
+    y1: SCORE.counterpointBottomLineY - 98,
+    x2: x,
+    y2: SCORE.counterpointBottomLineY + 52,
+    class: "senzoku-cursor-line"
+  }));
+
+  svg.appendChild(createSvgElement("path", {
+    d: `M ${x - 5} ${SCORE.counterpointBottomLineY - 96} L ${x + 5} ${SCORE.counterpointBottomLineY - 96} L ${x} ${SCORE.counterpointBottomLineY - 86} Z`,
+    class: "senzoku-cursor-triangle"
+  }));
+}
+
+function drawSenzokuBarlines(svg, noteCount, scoreWidth) {
+  const top = SCORE.counterpointBottomLineY - 74;
+  const bottom = SCORE.cantusBottomLineY + 42;
+
+  for (let i = 0; i <= noteCount; i += 1) {
+    const x = getMeasureStartX(i);
+    svg.appendChild(createSvgElement("line", {
+      x1: x,
+      y1: top,
+      x2: x,
+      y2: bottom,
+      class: i % 4 === 0 ? "senzoku-measure-line strong" : "senzoku-measure-line"
+    }));
+  }
+
+  // Final edge if score is wider than the last calculated barline.
+  const endX = getMeasureStartX(noteCount);
+  if (endX < scoreWidth - SCORE.right) {
+    svg.appendChild(createSvgElement("line", {
+      x1: endX,
+      y1: top,
+      x2: endX,
+      y2: bottom,
+      class: "senzoku-measure-line strong"
+    }));
+  }
+}
+
+function drawSenzokuSystemLabels(svg) {
+  svg.appendChild(createSvgElement("text", {
+    x: 24,
+    y: SCORE.counterpointBottomLineY - 56,
+    class: "voice-label senzoku-label"
+  })).textContent = "Counterpoint";
+
+  svg.appendChild(createSvgElement("text", {
+    x: 24,
+    y: SCORE.cantusBottomLineY - 56,
+    class: "voice-label senzoku-label"
+  })).textContent = "Cantus";
+}
+
 function noteToY(note, bottomLineY = SCORE.counterpointBottomLineY) {
   const noteStep = getDiatonicStep(note);
   const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
@@ -720,10 +811,8 @@ function yToNaturalNote(y) {
 }
 
 function getScorePositions(noteCount) {
-  const usableWidth = SCORE.width - SCORE.left - SCORE.right;
   const count = Math.max(noteCount, 1);
-  const spacing = usableWidth / count;
-  return Array.from({ length: count }, (_, i) => SCORE.left + spacing * i + spacing / 2);
+  return Array.from({ length: count }, (_, i) => getMeasureNoteX(i));
 }
 
 function drawClef(svg, bottomLineY, clefType = "treble") {
@@ -737,46 +826,33 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
 }
 
 function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
-  const startX = SCORE.left - 30;
-  const endX = SCORE.width - SCORE.right + 10;
+  const scoreWidth = getSenzokuScoreWidth(noteCount);
+  const startX = SCORE.left;
+  const endX = getMeasureStartX(noteCount);
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i += 1) {
     const y = bottomLineY - i * SCORE.staffGap;
-    svg.appendChild(createSvgElement("line", { x1: startX, y1: y, x2: endX, y2: y, class: "staff-line" }));
+    svg.appendChild(createSvgElement("line", {
+      x1: startX,
+      y1: y,
+      x2: endX,
+      y2: y,
+      class: "staff-line senzoku-staff-line"
+    }));
   }
 
   drawClef(svg, bottomLineY, clefType);
-  svg.appendChild(createSvgElement("text", { x: 22, y: bottomLineY - 58, class: "voice-label" })).textContent = label;
 
-  const positions = getScorePositions(noteCount);
-
-  positions.forEach((x, i) => {
-    svg.appendChild(createSvgElement("circle", {
-      cx: x,
-      cy: bottomLineY + 54,
-      r: 2.6,
-      class: "slot-marker"
-    }));
-
-    if (clefType === "bass") {
+  if (clefType === "bass") {
+    const positions = getScorePositions(noteCount);
+    positions.forEach((x, i) => {
       svg.appendChild(createSvgElement("text", {
         x: x - 4,
         y: bottomLineY + 78,
         class: "note-label"
       })).textContent = i + 1;
-    }
-
-    if (i > 0) {
-      const midX = (positions[i - 1] + x) / 2;
-      svg.appendChild(createSvgElement("line", {
-        x1: midX,
-        y1: bottomLineY - 50,
-        x2: midX,
-        y2: bottomLineY + 64,
-        class: "measure-line"
-      }));
-    }
-  });
+    });
+  }
 }
 
 function drawPlayhead(svg, positions, noteCount) {
@@ -834,51 +910,43 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
   const issueClass = getIssueClass(voice, index);
+  const className = [
+    "note-head",
+    "senzoku-whole-note",
+    isCantus ? "cantus" : "",
+    isSelected ? "selected" : "",
+    isCurrentPlayback ? "playing" : "",
+    issueClass
+  ].filter(Boolean).join(" ");
 
   drawLedgerLines(svg, x, y, bottomLineY);
   drawIssueRing(svg, x, y, issueClass);
-  drawAccidental(svg, parsed, x, y, [isCantus ? "cantus" : "", isSelected ? "selected" : "", isCurrentPlayback ? "playing" : "", issueClass].filter(Boolean).join(" "));
+  drawAccidental(svg, parsed, x, y, [
+    "senzoku-accidental",
+    isCantus ? "cantus" : "",
+    isSelected ? "selected" : "",
+    isCurrentPlayback ? "playing" : "",
+    issueClass
+  ].filter(Boolean).join(" "));
 
+  // Whole note only: no stem in Module 1.
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
     cy: y,
-    rx: 8.5,
-    ry: 5.8,
+    rx: SCORE.noteRadiusX,
+    ry: SCORE.noteRadiusY,
     transform: `rotate(-18 ${x} ${y})`,
-    class: [
-      "note-head",
-      isCantus ? "cantus" : "",
-      isSelected ? "selected" : "",
-      isCurrentPlayback ? "playing" : "",
-      issueClass
-    ].filter(Boolean).join(" ")
+    class: className
   }));
 
-  const stemUp = !isCantus;
-  svg.appendChild(createSvgElement("line", {
-    x1: stemUp ? x + 7 : x - 7,
-    y1: y,
-    x2: stemUp ? x + 7 : x - 7,
-    y2: stemUp ? y - 34 : y + 34,
-    class: [
-      "note-stem",
-      isCantus ? "cantus" : "",
-      isSelected ? "selected" : "",
-      isCurrentPlayback ? "playing" : "",
-      issueClass
-    ].filter(Boolean).join(" ")
-  }));
-
-  svg.appendChild(createSvgElement("text", {
-    x: x - 12,
-    y: isCantus ? bottomLineY + 48 : bottomLineY - 62,
-    class: [
-      "note-label",
-      isSelected ? "selected" : "",
-      isCurrentPlayback ? "playing" : "",
-      issueClass
-    ].filter(Boolean).join(" ")
-  })).textContent = note;
+  if (!isCantus && isSelected) {
+    svg.appendChild(createSvgElement("circle", {
+      cx: x,
+      cy: y,
+      r: 13,
+      class: "senzoku-selected-ring"
+    }));
+  }
 }
 
 function renderScore() {
@@ -890,15 +958,22 @@ function renderScore() {
   const cantus = getNotesFromTextarea("cantus");
   const counterpoint = getNotesFromTextarea("counterpoint");
   const noteCount = Math.max(cantus.length, counterpoint.length, 1);
+  const scoreWidth = getSenzokuScoreWidth(noteCount);
   const positions = getScorePositions(noteCount);
+
+  svg.setAttribute("viewBox", `0 0 ${scoreWidth} ${SCORE.height}`);
+  svg.style.minWidth = `${scoreWidth}px`;
 
   if (selectedIndex >= noteCount) selectedIndex = noteCount - 1;
   if (selectedIndex < 0) selectedIndex = 0;
   if (playbackIndex >= noteCount) playbackIndex = 0;
   if (playbackIndex < 0) playbackIndex = 0;
 
+  drawSenzokuMeasureHighlight(svg, noteCount);
   drawStaff(svg, SCORE.counterpointBottomLineY, "Counterpoint / treble clef", noteCount, "treble");
   drawStaff(svg, SCORE.cantusBottomLineY, "Cantus / bass clef", noteCount, "bass");
+  drawSenzokuBarlines(svg, noteCount, scoreWidth);
+  drawSenzokuSystemLabels(svg);
   drawPlayhead(svg, positions, noteCount);
 
   counterpoint.forEach((note, i) => {
@@ -919,8 +994,9 @@ function handleScoreClick(event) {
   if (!svg) return;
 
   const rect = svg.getBoundingClientRect();
-  const viewX = ((event.clientX - rect.left) / rect.width) * SCORE.width;
-  const viewY = ((event.clientY - rect.top) / rect.height) * SCORE.height;
+  const viewBox = svg.viewBox.baseVal;
+  const viewX = ((event.clientX - rect.left) / rect.width) * viewBox.width;
+  const viewY = ((event.clientY - rect.top) / rect.height) * viewBox.height;
 
   // Edit upper staff only.
   if (viewY > (SCORE.counterpointBottomLineY + SCORE.cantusBottomLineY) / 2) return;
@@ -928,30 +1004,18 @@ function handleScoreClick(event) {
   const cantus = getNotesFromTextarea("cantus");
   let counterpoint = getNotesFromTextarea("counterpoint");
   const noteCount = Math.max(cantus.length, 1);
-  const positions = getScorePositions(noteCount);
 
-  let nearestIndex = 0;
-  let nearestDistance = Infinity;
-
-  positions.forEach((x, i) => {
-    const distance = Math.abs(x - viewX);
-    if (distance < nearestDistance) {
-      nearestIndex = i;
-      nearestDistance = distance;
-    }
-  });
-
+  const clickedIndex = getMeasureIndexFromX(viewX, noteCount);
   const clickedNote = yToNaturalNote(viewY);
 
   while (counterpoint.length < noteCount) counterpoint.push("");
 
-  selectedIndex = nearestIndex;
-  counterpoint[nearestIndex] = clickedNote;
+  selectedIndex = clickedIndex;
+  counterpoint[clickedIndex] = clickedNote;
 
   setNotesToTextarea("counterpoint", counterpoint);
   renderScore();
   playNoteName(clickedNote, 0.45, 1, "femaleSample");
-  svg.focus();
 }
 
 function updateDisplays() {
