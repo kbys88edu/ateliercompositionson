@@ -857,20 +857,20 @@ function drawVoiceMuteButton(svg, voice, x, y) {
 
 function drawSenzokuSystemLabels(svg) {
   svg.appendChild(createSvgElement("text", {
-    x: 24,
-    y: SCORE.counterpointBottomLineY - 70,
+    x: 26,
+    y: SCORE.counterpointBottomLineY - 74,
     class: "voice-label senzoku-label"
   })).textContent = "Counterpoint";
 
-  drawVoiceMuteButton(svg, "counterpoint", 24, SCORE.counterpointBottomLineY - 54);
+  drawVoiceMuteButton(svg, "counterpoint", 78, SCORE.counterpointBottomLineY - 66);
 
   svg.appendChild(createSvgElement("text", {
-    x: 24,
-    y: SCORE.cantusBottomLineY - 70,
+    x: 26,
+    y: SCORE.cantusBottomLineY - 74,
     class: "voice-label senzoku-label"
   })).textContent = "Cantus";
 
-  drawVoiceMuteButton(svg, "cantus", 24, SCORE.cantusBottomLineY - 54);
+  drawVoiceMuteButton(svg, "cantus", 78, SCORE.cantusBottomLineY - 66);
 }
 
 
@@ -1023,7 +1023,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
   const width = isBass ? 68 : 72;
   const height = isBass ? 88 : 136;
 
-  // Move clefs onto the staff area. Previously they sat too far left and did not overlap the five-line staff.
+  // Clefs overlap the staff area.
   const x = SCORE.left - 60;
   const y = isBass ? bottomLineY - 76 : bottomLineY - 117;
 
@@ -1043,7 +1043,6 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
   const staffWidth = Math.max(SCORE.measureWidth, endX - staffX);
   const staffHeight = SCORE.staffGap * 4 + 2;
 
-  // Staff image must be stretched horizontally.
   svg.appendChild(createSvgImage(
     NOTATION_IMAGES.staff,
     staffX,
@@ -1137,9 +1136,9 @@ function drawNote(svg, note, x, voice, index, bottomLineY) {
   const isCurrentPlayback = index === playbackIndex && isPlaying;
   const issueClass = getIssueClass(voice, index);
 
-  // The whole-note PNG has a slightly low optical center in the bass staff.
-  // Move bass-staff note images slightly upward while keeping pitch logic unchanged.
-  const noteImageYOffset = isCantus ? 0 : -3;
+  // Optical correction only; pitch logic remains unchanged.
+  // Bass noteheads were slightly too low/then too high. Set a mild upward correction.
+  const noteImageYOffset = isCantus ? -2 : -3;
   const noteDrawY = y + noteImageYOffset;
 
   drawLedgerLines(svg, x, y, bottomLineY);

@@ -743,18 +743,47 @@ input {
 }
 
 
-/* Module 1 alignment patch:
-   clefs now overlap the staff; bass-staff whole-note PNGs are optically corrected in JS. */
-.png-clef {
-  opacity: 0.96;
+/* 2026-06-01 bass-up / mute-visible / score-scroll patch */
+.score-box {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
 }
 
-.png-notehead.cantus {
-  opacity: 0.72;
+.score-editor {
+  width: max(100%, 1480px) !important;
+  min-width: 1480px !important;
+  max-width: none !important;
 }
 
-/* 2026-06-01 micro-adjust: treble noteheads up 5px, bass noteheads down ~5px, treble clef down 5px. */
+.voice-mute-button {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  cursor: pointer;
+  pointer-events: auto;
+}
 
+.voice-mute-button-bg {
+  fill: rgba(255,255,255,0.94);
+  stroke: rgba(20,20,20,0.38);
+  stroke-width: 1.2;
+}
 
-/* 2026-06-01 position/sound/UI fix:
-   positions slightly returned; playback sample routing restored; sound-selection UI removed. */
+.voice-mute-button-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  fill: rgba(20,20,20,0.76);
+  pointer-events: none;
+  user-select: none;
+}
+
+.voice-mute-button.muted .voice-mute-button-bg {
+  fill: #ff4f8b;
+  stroke: #ff4f8b;
+}
+
+.voice-mute-button.muted .voice-mute-button-label {
+  fill: #fff;
+}
