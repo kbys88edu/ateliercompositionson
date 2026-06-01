@@ -65,8 +65,7 @@
   }
 
   function getVoiceSampleCandidates(voiceSet, midi) {
-    const set = voiceSet || "femaleSample";
-    const folder = set === "maleSample" ? "male" : "female";
+    const folder = voiceSet === "maleSample" ? "male" : "female";
 
     const anchors = [
       { midi: 55, name: "G3" },
@@ -78,29 +77,48 @@
 
     let best = anchors[0];
     anchors.forEach((anchor) => {
-      if (Math.abs(anchor.midi - midi) < Math.abs(best.midi - midi)) best = anchor;
+      if (Math.abs(anchor.midi - midi) < Math.abs(best.midi - midi)) {
+        best = anchor;
+      }
     });
 
-    const base = `${getSampleVoiceBasePath()}/${folder}/${best.name}`;
+    const base = getSampleVoiceBasePath();
+
     return [
-      `${base}.wav`,
-      `${base}.mp3`,
-      `${getSampleVoiceBasePath()}/${folder.toUpperCase()}/${best.name}.wav`,
-      `${getSampleVoiceBasePath()}/${folder}_${best.name}.wav`
-    ].map((url) => ({ url, rootMidi: best.midi }));
+      { url: `${base}/${folder}/${best.name}.wav`, rootMidi: best.midi },
+      { url: `${base}/${folder}/${best.name}.mp3`, rootMidi: best.midi },
+      { url: `${base}/${folder}/${best.name}.ogg`, rootMidi: best.midi },
+
+      // fallback naming variants
+      { url: `${base}/${folder}_${best.name}.wav`, rootMidi: best.midi },
+      { url: `${base}/${folder}_${best.name}.mp3`, rootMidi: best.midi },
+
+      // final emergency fallback, only if it exists
+      { url: `${base}/voice_like_counterpoint_sample.wav`, rootMidi: 67 }
+    ];
   }
 
   async function loadVoiceSample(candidate) {
     const ctx = ensureAudioReady();
     const cacheKey = candidate.url;
-    if (sampleVoiceCache[cacheKey]) return sampleVoiceCache[cacheKey];
 
-    const response = await fetch(candidate.url);
-    if (!response.ok) throw new Error(`Sample not found: ${candidate.url}`);
+    if (sampleVoiceCache[cacheKey]) {
+      return sampleVoiceCache[cacheKey];
+    }
+
+    const response = await fetch(candidate.url, { cache: "force-cache" });
+    if (!response.ok) {
+      throw new Error(`Sample not found: ${candidate.url}`);
+    }
+
     const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+    const audioBuffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
 
-    sampleVoiceCache[cacheKey] = { buffer: audioBuffer, rootMidi: candidate.rootMidi };
+    sampleVoiceCache[cacheKey] = {
+      buffer: audioBuffer,
+      rootMidi: candidate.rootMidi
+    };
+
     return sampleVoiceCache[cacheKey];
   }
 
@@ -109,12 +127,13 @@
     const candidates = getVoiceSampleCandidates(voiceSet, midi);
 
     let sample = null;
+
     for (const candidate of candidates) {
       try {
         sample = await loadVoiceSample(candidate);
         break;
       } catch (error) {
-        // try next candidate
+        // Try next candidate.
       }
     }
 
@@ -126,19 +145,24 @@
     const now = ctx.currentTime;
     const source = ctx.createBufferSource();
     const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
 
     source.buffer = sample.buffer;
-    source.playbackRate.value = Math.pow(2, (midi - sample.rootMidi) / 12);
+    source.playbackRate.setValueAtTime(Math.pow(2, (midi - sample.rootMidi) / 12), now);
+
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(5200, now);
 
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.22 * gainScale, now + 0.025);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.12);
+    gain.gain.exponentialRampToValueAtTime(0.35 * gainScale, now + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.16);
 
-    source.connect(gain);
+    source.connect(filter);
+    filter.connect(gain);
     gain.connect(getReverbDestination());
 
     source.start(now);
-    source.stop(now + duration + 0.18);
+    source.stop(now + duration + 0.22);
   }
 
 
@@ -725,20 +749,20 @@ function moveNoteChromatic(note, semitone) {
 function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
     ensureAudioReady();
 
-    if (typeof playSampleVoiceNote === "function") {
-      const promise = playSampleVoiceNote(voiceSet, midi, duration, gainScale);
-      if (promise && typeof promise.catch === "function") {
-        promise.catch(() => playFallbackMidiNote(midi, duration, gainScale));
-      }
-      return;
-    }
+    const promise = playSampleVoiceNote(voiceSet, midi, duration, gainScale);
 
-    playFallbackMidiNote(midi, duration, gainScale);
+    if (promise && typeof promise.catch === "function") {
+      promise.catch(() => {
+        playFallbackMidiNote(midi, duration, gainScale);
+      });
+    }
   }
 
   function playNoteName(note, duration = 0.38, gainScale = 1, voiceSet = "femaleSample") {
     const midi = noteToMidi(note);
-    if (midi !== null) playMidiNote(midi, duration, gainScale, voiceSet);
+    if (midi !== null) {
+      playMidiNote(midi, duration, gainScale, voiceSet);
+    }
   }
 
   function updatePlayPauseButton() {
@@ -827,32 +851,52 @@ function playMidiNote(midi, duration = 0.38, gainScale = 1, voiceSet = "femaleSa
   }
 
   function analyzeCounterpoint() {
-    const summary = $("analysisSummary");
     const results = $("analysisResults");
     const cantus = getNotesFromTextarea("cantus");
     const counterpoint = getNotesFromTextarea("counterpoint").filter(Boolean);
 
+    if (!results) return;
+
+    if (!cantus.length) {
+      results.innerHTML = '<p class="analysis-empty">定旋律が読み込まれていません。</p>';
+      return;
+    }
+
     if (!counterpoint.length) {
-      if (summary) summary.textContent = "対旋律が未入力です。";
-      if (results) results.innerHTML = "";
+      results.innerHTML = '<p class="analysis-empty">対旋律が未入力です。</p>';
       return;
     }
 
     const issues = [];
     const len = Math.min(cantus.length, counterpoint.length);
+
     for (let i = 0; i < len; i += 1) {
       const cMidi = noteToMidi(cantus[i]);
       const pMidi = noteToMidi(counterpoint[i]);
       if (cMidi === null || pMidi === null) continue;
+
       const interval = Math.abs(pMidi - cMidi) % 12;
       const allowed = [0, 3, 4, 7, 8, 9].includes(interval);
+
       if (!allowed) {
-        issues.push(`${i + 1}音目：不協和音程の可能性`);
+        issues.push({
+          index: i + 1,
+          message: `${i + 1}音目：不協和音程の可能性`
+        });
       }
     }
 
-    if (summary) summary.textContent = issues.length ? `${issues.length} 件の指摘があります。` : "大きな問題は見つかりませんでした。";
-    if (results) results.innerHTML = issues.map((issue) => `<p>${issue}</p>`).join("");
+    if (!issues.length) {
+      results.innerHTML = '<p class="analysis-ok">大きな問題は見つかりませんでした。</p>';
+      return;
+    }
+
+    results.innerHTML = `
+      <p class="analysis-count">${issues.length} 件の指摘があります。</p>
+      <ul class="analysis-list">
+        ${issues.map((issue) => `<li>${issue.message}</li>`).join("")}
+      </ul>
+    `;
   }
 
   function exportMidi() {

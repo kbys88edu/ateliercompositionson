@@ -1818,3 +1818,28 @@ input {
 .analysis-summary {
   margin-top: 16px;
 }
+
+
+/* 2026-06-01 single analysis output */
+.analysis-summary {
+  display: none !important;
+}
+
+.analysis-results {
+  margin-top: 0;
+}
+
+.analysis-results .analysis-count,
+.analysis-results .analysis-ok,
+.analysis-results .analysis-empty {
+  margin: 0 0 10px;
+}
+
+.analysis-list {
+  margin: 8px 0 0;
+  padding-left: 1.4em;
+}
+
+.analysis-list li {
+  margin: 4px 0;
+}
