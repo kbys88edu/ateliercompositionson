@@ -43,7 +43,7 @@ const SCORE = {
   right: 60,
   staffGap: 14,
   noteStep: 7,
-  bottomLineY: 172,
+  bottomLineY: 182,
   cantusBottomLineY: 326,
   playheadTop: 72,
   playheadBottom: 376,
@@ -1198,17 +1198,22 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const isSelected = !isCantus && index === selectedIndex && !isPlaying;
   const isCurrentPlayback = index === playbackIndex && isPlaying;
 
-  drawLedgerLines(svg, x, y, bottomLineY);
-  drawAccidental(svg, parsed, x, y, isCantus);
+  const counterpointScale = 1.2;
+  const renderY = isCantus ? y : y + 3;
+
+  drawLedgerLines(svg, x, renderY, bottomLineY);
+  drawAccidental(svg, parsed, x, renderY, isCantus);
 
   if (isCantus) {
-    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 15, y - 9, 30, 18, "png-notation png-notehead whole-note"));
+    svg.appendChild(createSvgImage(NOTATION_IMAGES.wholeNote, x - 15, renderY - 9, 30, 18, "png-notation png-notehead whole-note"));
   } else {
-    const stemDirection = y < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
+    const stemDirection = renderY < bottomLineY - SCORE.staffGap * 2 ? "down" : "up";
     const image = stemDirection === "down" ? NOTATION_IMAGES.halfNoteDown : NOTATION_IMAGES.halfNoteUp;
-    const imgX = x - 15;
-    const imgY = stemDirection === "down" ? y - 11 : y - 38;
-    svg.appendChild(createSvgImage(image, imgX, imgY, 30, 51, `png-notation png-notehead half-note ${stemDirection}`));
+    const width = 30 * counterpointScale;
+    const height = 51 * counterpointScale;
+    const imgX = x - width / 2;
+    const imgY = stemDirection === "down" ? renderY - (11 * counterpointScale) : renderY - (38 * counterpointScale);
+    svg.appendChild(createSvgImage(image, imgX, imgY, width, height, `png-notation png-notehead half-note ${stemDirection}`));
   }
 
   const noteClass = [
@@ -1220,21 +1225,23 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
     isSelected ? "selected" : ""
   ].filter(Boolean).join(" ");
 
+  const rx = isCantus ? 10 : 12;
+  const ry = isCantus ? 6.5 : 7.8;
   svg.appendChild(createSvgElement("ellipse", {
     cx: x,
-    cy: y,
-    rx: 10,
-    ry: 6.5,
-    transform: `rotate(-18 ${x} ${y})`,
+    cy: renderY,
+    rx,
+    ry,
+    transform: `rotate(-18 ${x} ${renderY})`,
     class: noteClass
   }));
 
   if (isSelected) {
     svg.appendChild(createSvgElement("ellipse", {
       cx: x,
-      cy: y,
-      rx: 16,
-      ry: 11.5,
+      cy: renderY,
+      rx: isCantus ? 16 : 18,
+      ry: isCantus ? 11.5 : 13.5,
       class: "selected-note-ring"
     }));
   }
