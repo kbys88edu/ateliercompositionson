@@ -43,7 +43,7 @@ const SCORE = {
   right: 60,
   staffGap: 14,
   noteStep: 7,
-  bottomLineY: 182,
+  bottomLineY: 177,
   cantusBottomLineY: 326,
   playheadTop: 72,
   playheadBottom: 376,
@@ -1075,7 +1075,7 @@ function drawClef(svg, bottomLineY, clefType = "treble") {
   const width = isBass ? 62 : 64;
   const height = isBass ? 80 : 124;
   const x = SCORE.left - 82;
-  const y = isBass ? bottomLineY - 70 : bottomLineY - 112;
+  const y = isBass ? bottomLineY - 70 : bottomLineY - 102;
 
   const fallback = createSvgElement("text", {
     x: SCORE.left - 70,
@@ -1199,7 +1199,7 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "half") {
   const isCurrentPlayback = index === playbackIndex && isPlaying;
 
   const counterpointScale = 1.2;
-  const renderY = isCantus ? y : y + 3;
+  const renderY = isCantus ? y : y + 1.5;
 
   drawLedgerLines(svg, x, renderY, bottomLineY);
   drawAccidental(svg, parsed, x, renderY, isCantus);
