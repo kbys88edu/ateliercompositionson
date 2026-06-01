@@ -93,7 +93,7 @@ const I18N = {
     stop: "停止",
     noInput: "未入力",
     emptySlot: "未入力",
-    status: (cp, cf, pos, len) => `対旋律：${cp}音 / 必要：${cf * 2}音 / 再生位置：${pos}/${len}`,
+    status: (cp, cf, pos, len) => `対旋律：${cp}音 / 必要：${Math.max(1, (cf - 1) * 2 + 1)}音 / 再生位置：${pos}/${len}`,
     summaryOk: (ok) => `大きな問題は見つかりませんでした。OK項目：${ok}件`,
     summaryCounts: (e, w, ok) => `禁止：${e}件 / 注意：${w}件 / OK：${ok}件`,
     labelOk: "OK",
@@ -172,7 +172,7 @@ const I18N = {
     stop: "Arrêter",
     noInput: "Non saisi",
     emptySlot: "vide",
-    status: (cp, cf, pos, len) => `Contrepoint : ${cp} notes / requis : ${cf * 4} / Position : ${pos}/${len}`,
+    status: (cp, cf, pos, len) => `Contrepoint : ${cp} notes / requis : ${Math.max(1, (cf - 1) * 2 + 1)} / Position : ${pos}/${len}`,
     summaryOk: (ok) => `Aucun problème majeur détecté. Éléments OK : ${ok}`,
     summaryCounts: (e, w, ok) => `Interdits : ${e} / Attention : ${w} / OK : ${ok}`,
     labelOk: "OK",
@@ -269,7 +269,7 @@ const EXERCISES = [
       "G4", "E4",
       "F4", "A4",
       "G4", "B4",
-      "A4", "C5"
+      "C5"
     ]
   }
 ];
@@ -588,11 +588,16 @@ function getStepDurationSeconds() {
 }
 
 function getRequiredHalfCount() {
-  return getNotesFromTextarea("cantus").length * SCORE.halfsPerCantus;
+  const cantusLength = getNotesFromTextarea("cantus").length;
+  if (!cantusLength) return 0;
+
+  // Module 2: all measures use two half-note slots,
+  // but the final counterpoint measure closes with one whole note.
+  return Math.max(1, (cantusLength - 1) * SCORE.halfsPerCantus + 1);
 }
 
 function getPlaybackLength() {
-  return Math.max(getRequiredHalfCount(), getNotesFromTextarea("counterpoint").length, 0);
+  return getRequiredHalfCount();
 }
 
 function playVerticalSonority(index) {
@@ -615,7 +620,9 @@ function playVerticalSonority(index) {
   }
 
   if (!isCounterpointMuted && (mode === "both" || mode === "counterpoint") && counterpointNote) {
-    playNoteName(counterpointNote, noteDuration, 1.15, "femaleSample");
+    const isFinalCounterpointWhole = index === getRequiredHalfCount() - 1;
+    const counterpointDuration = isFinalCounterpointWhole ? Math.max(noteDuration, qDuration * 2.05) : noteDuration;
+    playNoteName(counterpointNote, counterpointDuration, 1.15, "femaleSample");
   }
 }
 
@@ -1429,8 +1436,9 @@ function renderScore() {
   clearSvg(svg);
 
   const cantus = getNotesFromTextarea("cantus");
-  const counterpoint = getNotesFromTextarea("counterpoint");
-  const halfCount = Math.max(cantus.length * SCORE.halfsPerCantus, counterpoint.length, 1);
+  const requiredHalfCount = getRequiredHalfCount();
+  const counterpoint = getNotesFromTextarea("counterpoint").slice(0, requiredHalfCount);
+  const halfCount = Math.max(requiredHalfCount, 1);
   const positions = getScorePositions(halfCount);
 
   if (selectedIndex >= halfCount) selectedIndex = halfCount - 1;
@@ -1446,7 +1454,8 @@ function renderScore() {
   drawPlayhead(svg, positions, halfCount);
 
   counterpoint.forEach((note, i) => {
-    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, "half", "treble");
+    const durationType = i === halfCount - 1 ? "whole" : "half";
+    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, durationType, "treble");
   });
 
   cantus.forEach((note, i) => {
@@ -1568,7 +1577,8 @@ function loadSelectedExercise() {
 
   stopPlayback(true);
   setNotesToTextarea("cantus", exercise.cantus);
-  setNotesToTextarea("counterpoint", exercise.counterpoint || []);
+  const required = Math.max(1, ((exercise.cantus || []).length - 1) * SCORE.halfsPerCantus + 1);
+  setNotesToTextarea("counterpoint", (exercise.counterpoint || []).slice(0, required));
 
   selectedIndex = 0;
   playbackIndex = 0;
