@@ -1143,19 +1143,25 @@ function clearSvg(svg) {
   while (svg.firstChild) svg.removeChild(svg.firstChild);
 }
 
-function noteToY(note, bottomLineY = SCORE.bottomLineY) {
+function noteToY(note, bottomLineY = SCORE.bottomLineY, clefType = null) {
   const noteStep = getDiatonicStep(note);
 
-  // Treble staff:
-  //   bottom line = E4
-  // Bass staff:
-  //   bottom line = G2
-  // This keeps the cantus visually centered in the bass clef.
-  const referenceNote = bottomLineY === SCORE.cantusBottomLineY ? "G2" : "E4";
+  // Treble staff: bottom line = E4
+  // Bass staff:   bottom line = G2
+  const resolvedClef = clefType || (bottomLineY === SCORE.cantusBottomLineY ? "bass" : "treble");
+  const referenceNote = resolvedClef === "bass" ? "G2" : "E4";
   const referenceStep = getDiatonicStep(referenceNote);
 
   if (noteStep === null || referenceStep === null) return null;
   return bottomLineY - (noteStep - referenceStep) * SCORE.noteStep;
+}
+
+function shouldUseTrebleForCantus(cantusNotes = []) {
+  const limit = noteToMidi("F4");
+  return cantusNotes.some((note) => {
+    const midi = noteToMidi(note);
+    return midi !== null && midi > limit;
+  });
 }
 
 function yToNaturalNote(y) {
@@ -1298,18 +1304,6 @@ function drawStaff(svg, bottomLineY, label, noteCount, clefType = "treble") {
 
   svg.appendChild(createSvgElement("text", { x: 22, y: bottomLineY - 58, class: "voice-label" })).textContent = label;
 
-  const positions = getScorePositions(noteCount);
-
-  positions.forEach((x, i) => {
-    const isDownbeat = i % SCORE.quartersPerCantus === 0;
-
-    svg.appendChild(createSvgElement("circle", {
-      cx: x,
-      cy: bottomLineY + 56,
-      r: isDownbeat ? 3.4 : 2.2,
-      class: isDownbeat ? "downbeat-marker" : "beat-marker"
-    }));
-  });
 }
 
 function drawPlayhead(svg, positions, noteCount) {
@@ -1399,8 +1393,8 @@ function drawIssueRing(svg, x, y, issueClass) {
   }));
 }
 
-function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter") {
-  const y = noteToY(note, bottomLineY);
+function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter", clefType = null) {
+  const y = noteToY(note, bottomLineY, clefType);
   const parsed = parseNote(note);
   if (y === null || !parsed) return;
 
@@ -1413,8 +1407,8 @@ function drawNote(svg, note, x, voice, index, bottomLineY, duration = "quarter")
   drawIssueRing(svg, x, y, issueClass);
   drawAccidental(svg, parsed, x, y, isCantus, isSelected, isCurrentPlayback, issueClass);
 
-  const headW = isCantus || duration === "whole" ? 30.4 : 20.1;
-  const headH = isCantus || duration === "whole" ? 17.8 : 13.6;
+  const headW = isCantus ? 28.88 : (duration === "whole" ? 30.4 : 20.1);
+  const headH = isCantus ? 16.91 : (duration === "whole" ? 17.8 : 13.6);
 
   svg.appendChild(createSvgImage(
     isCantus || duration === "whole" ? NOTATION_IMAGES.wholeNote : NOTATION_IMAGES.quarterNoteHead,
@@ -1462,7 +1456,7 @@ function drawMeasureBarlines(svg, positions, quarterCount) {
   const top = SCORE.bottomLineY - SCORE.staffGap * 4;
   const bottom = SCORE.cantusBottomLineY;
 
-  for (let i = 0; i <= quarterCount; i += SCORE.quartersPerCantus) {
+  for (let i = SCORE.quartersPerCantus; i <= quarterCount; i += SCORE.quartersPerCantus) {
     const x = i === quarterCount ? rightEdge : leftEdge + spacing * i;
     const isFinal = i === quarterCount;
 
@@ -1510,19 +1504,21 @@ function renderScore() {
   if (playbackIndex >= quarterCount) playbackIndex = 0;
   if (playbackIndex < 0) playbackIndex = 0;
 
+  const cantusClefType = shouldUseTrebleForCantus(cantus) ? "treble" : "bass";
+
   drawStaff(svg, SCORE.bottomLineY, "Counterpoint / quarter notes / treble clef", quarterCount, "treble");
-  drawStaff(svg, SCORE.cantusBottomLineY, "Cantus / whole notes / bass clef", quarterCount, "bass");
+  drawStaff(svg, SCORE.cantusBottomLineY, `Cantus / whole notes / ${cantusClefType} clef`, quarterCount, cantusClefType);
   drawMeasureBarlines(svg, positions, quarterCount);
   drawPlayhead(svg, positions, quarterCount);
 
   counterpoint.forEach((note, i) => {
     const durationType = i === quarterCount - 1 ? "whole" : "quarter";
-    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, durationType);
+    if (note) drawNote(svg, note, positions[i], "counterpoint", i, SCORE.bottomLineY, durationType, "treble");
   });
 
   cantus.forEach((note, i) => {
     const x = positions[i * SCORE.quartersPerCantus];
-    if (note && x !== undefined) drawNote(svg, note, x, "cantus", i * SCORE.quartersPerCantus, SCORE.cantusBottomLineY, "whole");
+    if (note && x !== undefined) drawNote(svg, note, x, "cantus", i * SCORE.quartersPerCantus, SCORE.cantusBottomLineY, "whole", cantusClefType);
   });
 
   updateDisplays();

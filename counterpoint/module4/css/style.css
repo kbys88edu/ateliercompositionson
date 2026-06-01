@@ -24,13 +24,13 @@ body {
 }
 
 .page {
-  width: min(1180px, calc(100% - 32px));
+  width: min(1416px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 56px 0 80px;
+  padding: 64px 0 88px;
 }
 
 .checker-header {
-  padding: 48px 0 40px;
+  padding: 56px 0 48px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -114,11 +114,11 @@ h2 {
 }
 
 .checker-panel, .result-section {
-  margin-top: 32px;
+  margin-top: 36px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 22px;
-  padding: 24px;
+  padding: 28px;
 }
 
 .hidden-input {
@@ -212,8 +212,8 @@ h2 {
 .button.small { min-height: 38px; padding: 0 16px; font-size: 0.86rem; }
 
 .score-box {
-  margin: 22px 0 26px;
-  padding: 20px;
+  margin: 26px 0 30px;
+  padding: 24px;
   border: 1px solid var(--line);
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.68);
@@ -238,9 +238,9 @@ h2 {
 
 .score-editor {
   width: 100%;
-  min-height: 360px;
+  min-height: 432px;
   display: block;
-  border-radius: 16px;
+  border-radius: 18px;
   background: #ffffff;
   cursor: crosshair;
   user-select: none;
@@ -335,7 +335,7 @@ h2 {
 .summary-box {
   margin-bottom: 18px;
   padding: 16px;
-  border-radius: 16px;
+  border-radius: 18px;
   background: rgba(0, 0, 0, 0.05);
   color: var(--muted);
 }
@@ -344,7 +344,7 @@ h2 {
 
 .result-item {
   padding: 14px 16px;
-  border-radius: 16px;
+  border-radius: 18px;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.62);
 }
