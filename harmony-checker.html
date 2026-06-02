@@ -95,15 +95,6 @@
       margin-bottom: 16px;
     }
 
-    input[type="password"] {
-      width: min(360px, 100%);
-      box-sizing: border-box;
-      padding: 12px 14px;
-      border: 1px solid #d8d0c4;
-      border-radius: 12px;
-      font-size: 15px;
-      background: #fff;
-    }
 
     input[type="file"] {
       font-size: 15px;
@@ -161,6 +152,51 @@
       margin-top: 14px;
     }
 
+    .cta-card {
+      background: #1f1f1f;
+      color: #ffffff;
+      border-color: #1f1f1f;
+    }
+
+    .cta-card h2,
+    .cta-card p {
+      color: #ffffff;
+    }
+
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 12px 20px;
+      font-size: 15px;
+      background: #ffffff;
+      color: #1f1f1f;
+      border: 1px solid #ffffff;
+    }
+
+    .cta-button.secondary {
+      background: transparent;
+      color: #ffffff;
+      border-color: rgba(255,255,255,0.55);
+    }
+
+    .creator-credit {
+      max-width: 1080px;
+      margin: 10px auto 0;
+      text-align: center;
+      font-size: 13px;
+      color: #6f665d;
+    }
+
     @media (max-width: 720px) {
       body {
         padding: 24px 14px;
@@ -187,19 +223,7 @@
     <button class="lang-button" id="langFr">Français</button>
   </div>
 
-  <div id="loginScreen" class="card">
-    <h1>Harmony Checker</h1>
-    <p id="loginText">このページはAdvanced受講者専用です。</p>
-    <input type="password" id="passwordInput" placeholder="パスワード" />
-    <br />
-    <button id="loginButton">入る</button>
-    <p id="loginMessage" class="error"></p>
-    <p class="note" id="loginNote">
-      このパスワード保護は簡易的なものです。本格運用時はCloudflare Accessなどで保護してください。
-    </p>
-  </div>
-
-  <main id="app" style="display: none;">
+  <main id="app">
     <div class="hero-image-wrap">
       <img
         src="satb-header.png"
@@ -217,7 +241,7 @@
         現在は、連続5度・連続8度・隠伏5度・隠伏8度・声部交差・声域・声部間隔・大きすぎる跳躍に対応しています。
       </p>
       <p class="note" id="introNote">
-        このツールは補助的な確認用です。音楽的な判断や例外処理はレッスン内で確認します。
+        このチェッカーは学習補助ツールです。詳細な添削や作曲・和声・対位法の個別指導をご希望の方は、オンラインレッスンをご利用ください。
       </p>
 
       <input type="file" id="fileInput" accept=".xml,.musicxml,.mxl" />
@@ -231,6 +255,20 @@
       <div id="results"></div>
     </section>
 
+    <section class="card cta-card" id="lessonCta">
+      <h2 id="ctaTitle">結果を、実際の書法につなげる</h2>
+      <p id="ctaText1">
+        検出された禁則は、単なるエラーではなく、声部の動き・和声進行・様式感を見直す入口です。
+      </p>
+      <p id="ctaText2">
+        レッスンでは、この結果をもとに、なぜ問題になるのか、どのように自然に書き換えられるのかを一緒に確認できます。
+      </p>
+      <div class="cta-buttons">
+        <a class="cta-button" id="ctaPrimary" href="https://ateliercompositionson.com/ja/">レッスンを相談する</a>
+        <a class="cta-button secondary" id="ctaSecondary" href="https://ateliercompositionson.com/fr/">Français</a>
+      </div>
+    </section>
+
     <section class="card">
       <h2 id="scoreTitle">楽譜表示</h2>
       <div id="score"></div>
@@ -240,8 +278,9 @@
     </section>
   </main>
 
+  <p class="creator-credit" id="creatorCredit">Created by Sachie Kobayashi</p>
+
   <script>
-    const ACCESS_PASSWORD = "2026";
     const API_URL = "https://harmony-checker-backend.onrender.com/analyze";
 
     const TEXT = {
@@ -254,7 +293,7 @@
 
         intro1: "MusicXMLファイルをアップロードすると、四声体和声の基本的な禁則を確認できます。",
         intro2: "現在は、連続5度・連続8度・隠伏5度・隠伏8度・声部交差・声域・声部間隔・大きすぎる跳躍に対応しています。",
-        introNote: "このツールは補助的な確認用です。音楽的な判断や例外処理はレッスン内で確認します。",
+        introNote: "このチェッカーは学習補助ツールです。詳細な添削や作曲・和声・対位法の個別指導をご希望の方は、オンラインレッスンをご利用ください。",
         analyzeButton: "解析する",
 
         resultsTitle: "解析結果",
@@ -283,7 +322,7 @@
 
         intro1: "Importez un fichier MusicXML pour vérifier certaines règles fondamentales de l’écriture à quatre voix.",
         intro2: "L’outil détecte actuellement les quintes parallèles, octaves parallèles, quintes et octaves directes, croisements de voix, tessitures, espacements et grands sauts mélodiques.",
-        introNote: "Cet outil sert d’aide à la vérification. Les choix musicaux, les exceptions et l’écriture stylistique sont discutés pendant les cours.",
+        introNote: "Cet outil est conçu comme une aide pédagogique. Pour une correction détaillée ou un accompagnement personnalisé en harmonie, contrepoint ou composition, vous pouvez réserver une leçon en ligne.",
         analyzeButton: "Analyser",
 
         resultsTitle: "Résultats de l’analyse",
@@ -344,11 +383,6 @@
 
     let currentLang = localStorage.getItem("harmony_checker_lang") || "ja";
 
-    const loginScreen = document.getElementById("loginScreen");
-    const app = document.getElementById("app");
-    const passwordInput = document.getElementById("passwordInput");
-    const loginButton = document.getElementById("loginButton");
-    const loginMessage = document.getElementById("loginMessage");
 
     const langJa = document.getElementById("langJa");
     const langFr = document.getElementById("langFr");
@@ -374,15 +408,20 @@
       langJa.classList.toggle("active", lang === "ja");
       langFr.classList.toggle("active", lang === "fr");
 
-      document.getElementById("loginText").textContent = t("loginText");
-      document.getElementById("loginNote").textContent = t("loginNote");
-      passwordInput.placeholder = t("passwordPlaceholder");
-      loginButton.textContent = t("loginButton");
 
       document.getElementById("intro1").textContent = t("intro1");
       document.getElementById("intro2").textContent = t("intro2");
       document.getElementById("introNote").textContent = t("introNote");
       analyzeButton.textContent = t("analyzeButton");
+
+      document.getElementById("ctaTitle").textContent = t("ctaTitle");
+      document.getElementById("ctaText1").textContent = t("ctaText1");
+      document.getElementById("ctaText2").textContent = t("ctaText2");
+      document.getElementById("ctaPrimary").textContent = t("ctaPrimary");
+      document.getElementById("ctaSecondary").textContent = t("ctaSecondary");
+      document.getElementById("ctaPrimary").href = currentLang === "fr" ? "https://ateliercompositionson.com/fr/" : "https://ateliercompositionson.com/ja/";
+      document.getElementById("ctaSecondary").href = currentLang === "fr" ? "https://ateliercompositionson.com/ja/" : "https://ateliercompositionson.com/fr/";
+      document.getElementById("creatorCredit").textContent = t("creatorCredit");
 
       document.getElementById("resultsTitle").textContent = t("resultsTitle");
       document.getElementById("scoreTitle").textContent = t("scoreTitle");
@@ -398,31 +437,6 @@
 
     langJa.addEventListener("click", () => setLanguage("ja"));
     langFr.addEventListener("click", () => setLanguage("fr"));
-
-    function showApp() {
-      sessionStorage.setItem("harmony_checker_access", "ok");
-      loginScreen.style.display = "none";
-      app.style.display = "block";
-    }
-
-    loginButton.addEventListener("click", () => {
-      if (passwordInput.value === ACCESS_PASSWORD) {
-        showApp();
-      } else {
-        loginMessage.textContent = t("wrongPassword");
-      }
-    });
-
-    passwordInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        loginButton.click();
-      }
-    });
-
-    if (sessionStorage.getItem("harmony_checker_access") === "ok") {
-      loginScreen.style.display = "none";
-      app.style.display = "block";
-    }
 
     function escapeHtml(text) {
       if (text === undefined || text === null) return "";
