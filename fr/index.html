@@ -880,6 +880,16 @@
       }
     }
   </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y1792EBWTT');
+</script>
+
 </head>
 
 <body>
@@ -900,7 +910,7 @@
         <a href="#questions">questions</a>
         <a href="#conditions">conditions</a>
         <a href="#contact">contact</a>
-        <a class="booking-button" href="https://calendly.com/sound-sachiekobayashi/new-meeting" target="_blank" rel="noopener">réserver</a>
+        <a class="booking-button" href="https://calendly.com/sound-sachiekobayashi/new-meeting" target="_blank" rel="noopener" data-track="calendly_click">réserver</a>
       </nav>
     </div>
 
@@ -921,8 +931,8 @@
         <p>Activité entre composition contemporaine, musique électronique et recherche sonore.</p>
 
         <div class="hero-actions">
-          <a class="btn primary" href="#contact">demander un cours</a>
-          <a class="btn" href="#formats">voir les formats</a>
+          <a class="btn primary" href="#contact" data-track="course_request_click">demander un cours</a>
+          <a class="btn" href="#formats" data-track="formats_click">voir les formats</a>
         </div>
       </div>
     </header>
@@ -994,7 +1004,7 @@
               <h3>composition</h3>
               <p>écriture musicale, forme et développement.</p>
               <div class="discipline-actions">
-                <a href="#contact" data-subject="composition">demander ce cours</a>
+                <a href="#contact" data-subject="composition" data-track="course_card_click">demander ce cours</a>
                 <a class="secondary" href="https://youtu.be/OTqVlso1q9Y" target="_blank" rel="noopener">voir la démo</a>
               </div>
             </article>
@@ -1003,7 +1013,7 @@
               <h3>analyse</h3>
               <p>écoute, structure, harmonie et langage musical.</p>
               <div class="discipline-actions">
-                <a href="#contact" data-subject="analyse">demander ce cours</a>
+                <a href="#contact" data-subject="analyse" data-track="course_card_click">demander ce cours</a>
                 <a class="secondary" href="https://www.youtube.com/watch?v=YOUR_ANALYSE_DEMO_ID" target="_blank" rel="noopener">voir la démo</a>
               </div>
             </article>
@@ -1011,37 +1021,37 @@
             <article class="discipline-item">
               <h3>solfège</h3>
               <p>lecture, rythme, écoute et formation musicale.</p>
-              <a href="#contact" data-subject="solfège">demander ce cours</a>
+              <a href="#contact" data-subject="solfège" data-track="course_card_click">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
               <h3>orchestration</h3>
               <p>instruments, timbre et écriture orchestrale.</p>
-              <a href="#contact" data-subject="orchestration">demander ce cours</a>
+              <a href="#contact" data-subject="orchestration" data-track="course_card_click">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
               <h3>synthétiseurs</h3>
               <p>synthèse sonore et création de textures.</p>
-              <a href="#contact" data-subject="synthétiseurs">demander ce cours</a>
+              <a href="#contact" data-subject="synthétiseurs" data-track="course_card_click">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
               <h3>sound design</h3>
               <p>montage, espace, traitements et matière sonore.</p>
-              <a href="#contact" data-subject="sound design">demander ce cours</a>
+              <a href="#contact" data-subject="sound design" data-track="course_card_click">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
               <h3>musique électronique</h3>
               <p>composition numérique, hybridation et performance.</p>
-              <a href="#contact" data-subject="musique électronique">demander ce cours</a>
+              <a href="#contact" data-subject="musique électronique" data-track="course_card_click">demander ce cours</a>
             </article>
 
             <article class="discipline-item">
               <h3>composition assistée par ordinateur</h3>
               <p>Ableton Live, workflows et production.</p>
-              <a href="#contact" data-subject="composition assistée par ordinateur">demander ce cours</a>
+              <a href="#contact" data-subject="composition assistée par ordinateur" data-track="course_card_click">demander ce cours</a>
             </article>
           </div>
         </div>
@@ -1153,13 +1163,13 @@
               <li>correction d’exercices d’harmonie, contrepoint, solfège ou composition</li>
               <li>commentaires sur une courte pièce, un extrait sonore ou une maquette</li>
               <li>pistes d’amélioration et conseils de travail</li>
-              <li>réponse indicative sous 3 jours</li>
+              <li>réponse indicative sous 2 jours</li>
               <li>lien de paiement Stripe envoyé après vérification du contenu</li>
               <li>la correction commence après confirmation du paiement</li>
               <li>retour écrit uniquement, sans cours Zoom</li>
               <li>les analyses détaillées ou portfolios complets relèvent du cours individuel</li>
             </ul>
-            <a href="#contact" data-subject="correction par e-mail">demander une correction</a>
+            <a href="#contact" data-subject="correction par e-mail" data-track="course_card_click">demander une correction</a>
           </article>
         </div>
       </div>
@@ -1231,10 +1241,10 @@
                 </select>
               </label>
               <label>Message <textarea id="messageField" name="message" placeholder="Votre niveau, vos outils, et ce que vous souhaitez travailler." required></textarea></label>
-              <button type="submit">envoyer</button>
+              <button type="submit" data-track="form_submit_click">envoyer</button>
             </form>
 
-            <p class="small">Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com">info@sachiekobayashi.com</a>.</p>
+            <p class="small">Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com" data-track="email_click">info@sachiekobayashi.com</a>.</p>
           </div>
 
           <div class="calendly-wrapper">
@@ -1298,6 +1308,20 @@ Mon projet :
       });
     });
   </script>
+
+  
+<script>
+  document.querySelectorAll('[data-track]').forEach(function(element) {
+    element.addEventListener('click', function() {
+      if (typeof gtag === 'function') {
+        gtag('event', element.dataset.track, {
+          page_location: window.location.href,
+          link_text: element.textContent.trim()
+        });
+      }
+    });
+  });
+</script>
 
   <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </body>
