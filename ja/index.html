@@ -417,6 +417,156 @@ h2 {
   font-size: 15px;
 }
 
+
+/* Price cards used in the current price section */
+
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 42px;
+}
+
+.price-card {
+  border: 1px solid var(--line);
+  background: var(--card);
+  padding: 30px;
+  min-height: 620px;
+  border-radius: 24px;
+}
+
+.price-card h3 {
+  margin: 0 0 18px;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.price-subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 18px;
+}
+
+.price-main {
+  margin: 22px 0 8px;
+}
+
+.price-amount {
+  font-size: 34px;
+  letter-spacing: -0.04em;
+}
+
+.price-unit {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.price-description {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  margin-top: 20px;
+}
+
+.price-list {
+  padding-left: 1.2em;
+  margin-top: 20px;
+}
+
+.price-list li {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.price-list li + li {
+  margin-top: 0.45em;
+}
+
+/* Student voices */
+
+.voices-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 42px;
+}
+
+.voice-card {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 24px;
+  padding: 28px;
+  min-height: 280px;
+}
+
+.voice-profile {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.voice-card h3 {
+  margin: 0 0 18px;
+  font-size: 22px;
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.voice-card p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+/* Policy cards */
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 42px;
+}
+
+.policy-card {
+  border: 1px solid var(--line);
+  background: var(--card);
+  padding: 28px;
+  border-radius: 24px;
+}
+
+.policy-card h3 {
+  margin: 0 0 18px;
+  font-size: 22px;
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+.policy-card p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.policy-card p + p {
+  margin-top: 1em;
+}
+
+@media (max-width: 900px) {
+  .price-grid,
+  .voices-grid,
+  .policy-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .price-card {
+    min-height: auto;
+  }
+}
+
 /* Price section */
 
 .price-table {
@@ -654,7 +804,7 @@ footer {
     <a href="#instructor">Instructor</a>
     <a href="#modules">Modules</a>
     <a href="#price">Price</a>
-    <a href="#policies">Policies</a>
+    <a href="#policy">Policies</a>
     <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
     <a href="../fr/">FR</a>
@@ -1078,6 +1228,9 @@ footer {
 
   <ul>
     <li>月4回の継続レッスン込み</li>
+    <li>月2回までのメール添削レッスン込み</li>
+    <li>楽譜3〜4ページ程度、または音源4分程度までの簡易フィードバック</li>
+    <li>詳細な添削・分析はレッスン時間内で対応</li>
     <li>作曲作品・楽譜・音源のレビュー</li>
     <li>音大・作曲科受験対策</li>
     <li>和声：ソプラノ課題対応</li>
@@ -1087,6 +1240,35 @@ footer {
     <li>現代音楽・電子音楽・サウンドデザイン</li>
   </ul>
 </div>
+
+
+      <!-- メール添削レッスン -->
+      <div class="price-card">
+        <div class="price-card-header">
+          <h3>メール添削レッスン</h3>
+          <p class="price-subtitle">Written Feedback / Zoomなし</p>
+        </div>
+
+        <div class="price-main">
+          <span class="price-amount">1,500円</span>
+          <span class="price-unit">/ 1件</span>
+        </div>
+
+        <p class="price-description">
+          レッスンとは別に、楽譜・音源・課題に対する簡易的な文章フィードバックを行います。
+          和声・対位法・作曲課題・短い音源レビューなどに対応します。
+        </p>
+
+        <ul class="price-list">
+          <li>楽譜3〜4ページ程度、または音源4分程度まで</li>
+          <li>和声・対位法・楽典などの課題添削</li>
+          <li>作曲作品・音源への簡易コメント</li>
+          <li>改善点・練習方法・次に取り組む内容の提案</li>
+          <li>返信目安：2日以内</li>
+          <li>文章フィードバックのみ・Zoomレッスンなし</li>
+          <li>詳細な分析や作品全体の講評は Advanced または単発レッスンで対応</li>
+        </ul>
+      </div>
 
       <!-- Advanced 単発 -->
       <div class="price-card">
@@ -1174,6 +1356,20 @@ footer {
           事前確認はレッスン準備の範囲内で行います。
           詳細な添削、大規模な分析、継続的なメッセージ対応、直前提出への対応は、
           原則としてレッスン時間内に扱います。
+        </p>
+      </div>
+
+
+      <div class="policy-card">
+        <h3>メール添削レッスンについて</h3>
+        <p>
+          メール添削レッスンは、Zoomを使わない文章フィードバック形式のサービスです。
+          1件あたりの目安は、楽譜3〜4ページ程度、または音源4分程度までです。
+          返信目安は2日以内ですが、内容や分量によって前後する場合があります。
+        </p>
+        <p>
+          作品全体の詳細な講評、受験課題の総合指導、ポートフォリオ全体の確認、
+          長い音源や複数資料の確認は、通常レッスンまたはAdvancedで扱います。
         </p>
       </div>
 
@@ -1280,6 +1476,7 @@ footer {
               <option value="Online Lesson — Advanced">Online Lesson — Advanced</option>
               <option value="In-person Lesson">In-person Lesson</option>
               <option value="作品講評・ポートフォリオ相談">作品講評・ポートフォリオ相談</option>
+              <option value="メール添削レッスン">メール添削レッスン</option>
               <option value="相談して決めたい">相談して決めたい</option>
             </select>
           </div>
