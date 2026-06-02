@@ -789,6 +789,16 @@ footer {
   
 }
   </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y1792EBWTT');
+</script>
+
 </head>
 
 <body>
@@ -836,9 +846,9 @@ footer {
       </p>
 
       <div class="button-row">
-        <a class="btn primary" href="#contact">無料面談を申し込む</a>
-        <a class="btn" href="#price">料金を見る</a>
-        <a class="btn" href="#modules">内容を見る</a>
+        <a class="btn primary" href="#contact" data-track="free_consultation_click">無料面談を申し込む</a>
+        <a class="btn" href="#price" data-track="price_click">料金を見る</a>
+        <a class="btn" href="#modules" data-track="modules_click">内容を見る</a>
       </div>
     </div>
 
@@ -1311,7 +1321,7 @@ footer {
           <li>作曲作品・音源への簡易コメント</li>
           <li>Suno、ElevenLabsなどで作成した音源への簡易フィードバック</li>
           <li>改善点・練習方法・次に取り組む内容の提案</li>
-          <li>返信目安：3日以内</li>
+          <li>返信目安：2日以内</li>
           <li>フォーム確認後にStripe決済リンクを送付</li>
           <li>お支払い確認後に添削を開始</li>
           <li>文章フィードバックのみ・Zoomレッスンなし</li>
@@ -1415,7 +1425,7 @@ footer {
         <p>
           メール添削レッスンは、Zoomを使わない文章フィードバック形式のサービスです。
           1件あたりの目安は、楽譜3〜4ページ程度、または音源4分程度までです。
-          返信目安は3日以内ですが、内容や分量によって前後する場合があります。
+          返信目安は2日以内ですが、内容や分量によって前後する場合があります。
         </p>
         <p>
           作品全体の詳細な講評、受験課題の総合指導、ポートフォリオ全体の確認、
@@ -1432,7 +1442,7 @@ footer {
           フォームからお申し込みいただいた後、内容と分量を確認してからStripeの決済リンクをお送りします。
         </p>
         <p>
-          お支払い確認後に添削を開始し、返信目安は3日以内です。
+          お支払い確認後に添削を開始し、返信目安は2日以内です。
           規定を超える長い作品、複数資料、詳細な分析が必要な場合は、
           通常レッスンまたはAdvancedでの対応をご案内することがあります。
         </p>
@@ -1583,8 +1593,8 @@ footer {
           </div>
 
           <div class="button-row">
-            <button type="submit" class="btn primary">送信する</button>
-            <a class="btn" href="mailto:info@sachiekobayashi.com">メールで相談する</a>
+            <button type="submit" class="btn primary" data-track="form_submit_click">送信する</button>
+            <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_click">メールで相談する</a>
           </div>
         </form>
 
@@ -1601,6 +1611,20 @@ footer {
   <div>© Atelier Composition Son</div>
   <div>Japanese / Français / English</div>
 </footer>
+
+
+<script>
+  document.querySelectorAll('[data-track]').forEach(function(element) {
+    element.addEventListener('click', function() {
+      if (typeof gtag === 'function') {
+        gtag('event', element.dataset.track, {
+          page_location: window.location.href,
+          link_text: element.textContent.trim()
+        });
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
