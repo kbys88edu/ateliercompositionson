@@ -8,6 +8,7 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ateliercompositionson.com/fr/">
   <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/">
+  <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/">
 
   <style>
     :root {
@@ -601,7 +602,7 @@
 
     .formats {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
       border-top: none;
       padding-top: 0;
@@ -1110,7 +1111,7 @@
     <section id="formats">
       <div class="section-label">formats</div>
       <div class="content">
-        <h2>Deux manières de commencer</h2>
+        <h2>Trois manières de commencer</h2>
         <div class="formats">
           <article class="format">
             <h3>Mini-cours</h3>
@@ -1138,6 +1139,26 @@
             </ul>
             <a href="#contact" class="general-contact-link">demander un cours</a>
           </article>
+
+          <article class="format">
+            <h3>Correction par e-mail</h3>
+            <p class="format-note">written feedback / sans Zoom</p>
+            <p class="price">15€</p>
+            <p>
+              Retour écrit sur une partition, un exercice, un court projet sonore ou une question précise.
+              Ce format convient aux corrections ponctuelles sans séance en visioconférence.
+            </p>
+            <ul>
+              <li>partition d’environ 3 à 4 pages, ou audio jusqu’à 4 minutes</li>
+              <li>correction d’exercices d’harmonie, contrepoint, solfège ou composition</li>
+              <li>commentaires sur une courte pièce, un extrait sonore ou une maquette</li>
+              <li>pistes d’amélioration et conseils de travail</li>
+              <li>réponse indicative sous 2 jours</li>
+              <li>retour écrit uniquement, sans cours Zoom</li>
+              <li>les analyses détaillées ou portfolios complets relèvent du cours individuel</li>
+            </ul>
+            <a href="#contact" data-subject="correction par e-mail">demander une correction</a>
+          </article>
         </div>
       </div>
     </section>
@@ -1160,14 +1181,15 @@
         <h2>Informations et politique des cours</h2>
         <ul class="list">
           <li><span>format</span><span>cours individuels en ligne via Zoom.</span></li>
-          <li><span>tarif</span><span>70€ par heure.</span></li>
+          <li><span>tarif</span><span>70€ par heure. La correction par e-mail est proposée à 15€ par dossier.</span></li>
           <li><span>langues</span><span>français uniquement.</span></li>
-          <li><span>paiement</span><span>les paiements sont effectués via Stripe avant le cours.</span></li>
+          <li><span>paiement</span><span>les paiements sont effectués via Stripe avant le cours ou avant la correction.</span></li>
+          <li><span>correction</span><span>la correction par e-mail est un retour écrit sans séance Zoom. Elle concerne une partition d’environ 3 à 4 pages ou un audio jusqu’à 4 minutes. Réponse indicative sous 2 jours.</span></li>
           <li><span>planning</span><span>le rythme des cours est flexible selon les disponibilités et les projets.</span></li>
           <li><span>annulation</span><span>un report est possible avant l’heure du cours selon les disponibilités.</span></li>
           <li><span>remboursement</span><span>les cours déjà réglés ne sont généralement pas remboursables.</span></li>
           <li><span>contact</span><span>info@sachiekobayashi.com</span></li>
-          <li><span>mise à jour</span><span>28 mai 2026.</span></li>
+          <li><span>mise à jour</span><span>2 juin 2026.</span></li>
         </ul>
       </div>
     </section>
@@ -1195,6 +1217,7 @@
                   <option value="sound design">sound design</option>
                   <option value="musique électronique">musique électronique</option>
                   <option value="composition assistée par ordinateur">composition assistée par ordinateur</option>
+                  <option value="correction par e-mail">correction par e-mail</option>
                   <option value="mini-cours">mini-cours</option>
                 </select>
               </label>
