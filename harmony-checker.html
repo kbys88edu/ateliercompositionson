@@ -197,6 +197,33 @@
       color: #4a443d;
     }
 
+    .lesson-button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .lesson-link-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 11px 18px;
+      background: #1f1f1f;
+      color: #ffffff;
+      font-size: 14px;
+      border: 1px solid #1f1f1f;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .lesson-link-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+
+
     .creator-credit {
       max-width: 1080px;
       margin: 10px auto 0;
@@ -271,8 +298,7 @@
         <p id="lessonLinkDescription">初心者から受験・専門レベルまで。和声、対位法、作曲、音楽理論を個別に学べます。</p>
         <p class="lesson-understanding-note" id="lessonUnderstandingNote">和声は、検出結果を見るだけでなく、実際に弾いて耳で確認し、レッスンで声部の動きと響きを整理しながら音楽的に理解することが大切です。</p>
         <div class="lesson-button-row">
-          <a class="lesson-link-button" id="lessonLinkButton" href="https://ateliercompositionson.com/ja/" target="_blank" rel="noopener noreferrer">日本語ページへ</a>
-          <a class="lesson-link-button secondary" id="consultationButton" href="https://ateliercompositionson.com/ja/" target="_blank" rel="noopener noreferrer">無料相談を予約する</a>
+          <a class="lesson-link-button" id="consultationButton" href="https://ateliercompositionson.com/ja/" target="_blank" rel="noopener noreferrer">無料相談を予約する</a>
         </div>
       </article>
     </section>
@@ -353,8 +379,6 @@
         lessonLinkHeading: "Page des leçons en français",
         lessonLinkDescription: "Cours personnalisés en harmonie, contrepoint, composition et écriture, du niveau débutant au niveau avancé.",
         lessonUnderstandingNote: "En harmonie, il est essentiel de ne pas seulement lire le résultat de l’analyse, mais aussi de jouer les enchaînements, d’écouter les voix et de comprendre musicalement le mouvement harmonique pendant le cours.",
-        lessonLinkButton: "Page française",
-        lessonLinkHref: "https://ateliercompositionson.com/fr/",
         consultationButton: "Réserver une consultation gratuite",
         consultationHref: "https://ateliercompositionson.com/fr/",
         creatorCredit: "Created by Sachie Kobayashi",
@@ -453,8 +477,6 @@
       document.getElementById("lessonLinkHeading").textContent = t("lessonLinkHeading");
       document.getElementById("lessonLinkDescription").textContent = t("lessonLinkDescription");
       document.getElementById("lessonUnderstandingNote").textContent = t("lessonUnderstandingNote");
-      document.getElementById("lessonLinkButton").textContent = t("lessonLinkButton");
-      document.getElementById("lessonLinkButton").href = t("lessonLinkHref");
       document.getElementById("consultationButton").textContent = t("consultationButton");
       document.getElementById("consultationButton").href = t("consultationHref");
       document.getElementById("creatorCredit").textContent = t("creatorCredit");
