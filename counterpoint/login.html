@@ -3,177 +3,404 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Login｜Atelier Composition Son</title>
-  <meta name="robots" content="noindex, nofollow" />
-
+  <title>Counterpoint Modules｜Atelier Composition Son</title>
   <style>
+    * { box-sizing: border-box; }
     :root {
-      --bg: #f4f1ea;
-      --text: #181818;
-      --muted: #666666;
-      --line: rgba(0, 0, 0, 0.14);
-      --card: rgba(255, 255, 255, 0.72);
-      --error: #b3261e;
+      --bg: #f4f1eb;
+      --paper: rgba(255,255,255,0.84);
+      --ink: #171717;
+      --muted: rgba(23,23,23,0.62);
+      --line: rgba(23,23,23,0.14);
+      --test-bg: rgba(23,23,23,0.045);
+      --test-ink: rgba(23,23,23,0.46);
+      --test-line: rgba(23,23,23,0.10);
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Helvetica Neue",
-        "Yu Gothic",
-        "YuGothic",
-        "Hiragino Sans",
-        "Hiragino Kaku Gothic ProN",
-        Meiryo,
-        sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(255, 255, 255, 0.78), transparent 34rem),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.7;
+      font-family: Inter, "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 12% 0%, #fff, transparent 34%), var(--bg);
     }
-
-    .box {
-      width: min(440px, 100%);
-      padding: 34px;
+    .page {
+      width: min(1260px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+    .hero, .card {
+      background: var(--paper);
       border: 1px solid var(--line);
-      border-radius: 26px;
-      background: var(--card);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.07);
     }
-
-    .logo {
-      display: block;
-      width: 64px;
-      height: auto;
-      margin-bottom: 22px;
+    .hero {
+      padding: 28px;
+      margin-bottom: 16px;
     }
-
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: inherit;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .brand img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+    .lang {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    select {
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #fff;
+    }
     .eyebrow {
       margin: 0 0 10px;
       color: var(--muted);
-      font-size: 0.78rem;
-      letter-spacing: 0.14em;
       text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.78rem;
     }
-
     h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2.25rem, 6vw, 5.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+    }
+    .lead {
+      max-width: 760px;
       margin: 0;
-      font-size: clamp(1.8rem, 7vw, 2.8rem);
-      line-height: 1.02;
-      letter-spacing: -0.06em;
-    }
-
-    p {
-      margin: 18px 0 20px;
       color: var(--muted);
-      font-size: 0.96rem;
+      line-height: 1.75;
     }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
+    .modules {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      min-height: 250px;
+      padding: 20px;
+      color: inherit;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, opacity 0.14s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 58px rgba(0,0,0,0.1);
+      border-color: rgba(23,23,23,0.32);
+    }
+    .card.is-test {
+      background: var(--test-bg);
+      border-color: var(--test-line);
+      color: var(--test-ink);
+      box-shadow: none;
+      filter: grayscale(1);
+    }
+    .card.is-test:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: rgba(23,23,23,0.18);
+    }
+    .card.is-disabled {
+      pointer-events: none;
+      cursor: default;
+    }
+    .num {
       color: var(--muted);
-      font-size: 0.88rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
     }
-
-    input {
-      width: 100%;
-      min-height: 48px;
-      padding: 0 16px;
-      border: 1px solid rgba(0, 0, 0, 0.2);
+    .card.is-test .num,
+    .card.is-test p,
+    .card.is-test .open {
+      color: var(--test-ink);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      margin: 0 0 12px;
+      padding: 5px 9px;
+      border: 1px solid rgba(23,23,23,0.16);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.86);
-      color: var(--text);
-      font-size: 1rem;
-      outline: none;
+      color: var(--test-ink);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.44);
     }
-
-    input:focus {
-      border-color: rgba(0, 0, 0, 0.45);
+    h2 {
+      margin: 0;
+      font-size: clamp(1.1rem, 1.9vw, 1.75rem);
+      line-height: 1.06;
+      letter-spacing: -0.055em;
     }
-
-    button {
-      width: 100%;
-      min-height: 48px;
-      margin-top: 14px;
-      border: 0;
-      border-radius: 999px;
-      background: var(--text);
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
+    .card p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.92rem;
     }
-
-    .error {
-      min-height: 1.3em;
-      margin-top: 12px;
-      color: var(--error);
-      font-size: 0.9rem;
+    .open {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
     }
-
-    .hint {
+    
+    .guide-wrap {
       margin-top: 18px;
-      color: var(--muted);
-      font-size: 0.82rem;
     }
-  </style>
+    .guide-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.07);
+      padding: 22px;
+      overflow: hidden;
+    }
+    .guide-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .guide-title {
+      margin: 0;
+      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+      letter-spacing: -0.03em;
+    }
+    .guide-caption {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+    .guide-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .creator-credit {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    @media (max-width: 1180px) {
+      .modules { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      .page { width: min(100% - 18px, 1180px); padding-top: 12px; }
+      .hero { padding: 18px; border-radius: 18px; }
+      .modules { grid-template-columns: 1fr; }
+      .card { min-height: 190px; border-radius: 18px; }
+    }
+  
+.module-card.is-disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+.module-card.is-disabled:hover {
+  transform: none;
+}
+.status-badge.ready {
+  border-color: rgba(31, 122, 63, 0.32);
+  color: #1f7a3f;
+  background: rgba(31, 122, 63, 0.08);
+}
+.status-badge.pending {
+  border-color: rgba(0, 0, 0, 0.18);
+  color: rgba(0, 0, 0, 0.52);
+  background: rgba(0, 0, 0, 0.04);
+}
+</style>
 </head>
 
 <body>
-  <main class="box">
-    <img class="logo" src="images/acs-logo.png" alt="Atelier Composition Son" />
-    <p class="eyebrow">Atelier Composition Son</p>
-    <h1>Counterpoint Tools</h1>
-    <p>教材ページを開くには、パスワードを入力してください。</p>
+  <main class="page">
+    <header class="hero">
+      <div class="top">
+        <a class="brand" href="/counterpoint/index.html">
+          <img src="/counterpoint/images/acs-logo.png?v=logo-20260601" alt="Atelier Composition Son" />
+          <span>Atelier Composition Son</span>
+        </a>
+        <label class="lang">
+          <span data-i18n="languageLabel">言語</span>
+          <select id="languageSelect" onchange="setLanguage(this.value)">
+            <option value="ja">日本語</option>
+            <option value="fr">Français</option>
+          </select>
+        </label>
+      </div>
 
-    <label for="passwordInput">Password</label>
-    <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Password" />
+      <p class="eyebrow">Counterpoint Training</p>
+      <h1 data-i18n="title">対位法トレーニング</h1>
+      <p class="lead" data-i18n="lead">
+        2声から3声まで、段階的に対位法を学ぶための練習モジュールです。各ページで五線入力、解析、再生を行えます。
+      </p>
+    </header>
 
-    <button type="button" onclick="login()">Enter</button>
+    <section class="modules" aria-label="Counterpoint modules">
+      <a class="card" href="/counterpoint/counterpoint-checker.html">
+        <div>
+          <div class="num">Module 1</div>
+          <h2 data-i18n="m1Title">第一種 2声</h2>
+          <p data-i18n="m1Desc">全音符の定旋律に対して、全音符の対旋律を作ります。</p>
+        </div>
+        <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
+      </a>
 
-    <div class="error" id="errorMessage"></div>
-    <div class="hint">日本語 / Français versions are available after login.</div>
+      <a class="card" href="/counterpoint/module2/module2-halfnote-counterpoint.html">
+        <div>
+          <div class="num">Module 2</div>
+          <h2 data-i18n="m2Title">二分音符対位法</h2>
+          <p data-i18n="m2Desc">全音符の定旋律に対して、二分音符で対旋律を作ります。</p>
+        </div>
+        <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
+      </a>
+
+      <a class="card" href="/counterpoint/module3/module3-tied-counterpoint.html">
+        <div>
+          <div class="num">Module 3</div>
+          <h2 data-i18n="m3Title">タイ付きリズム</h2>
+          <p data-i18n="m3Desc">二分音符とタイを使い、持続音やシンコペーションを練習します。</p>
+        </div>
+        <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
+      </a>
+
+      <a class="card" href="/counterpoint/module4/module4-quarter-counterpoint.html">
+        <div>
+          <div class="num">Module 4</div>
+          <h2 data-i18n="m4Title">四分音符対位法</h2>
+          <p data-i18n="m4Desc">経過音や刺繍音を含む、より細かい動きを練習します。</p>
+        </div>
+        <div class="open"><span data-i18n="open">開く</span><span>→</span></div>
+      </a>
+
+      <div class="card is-test is-disabled" aria-disabled="true">
+        <div>
+          <div class="num">Module 5</div>
+          <div class="badge" data-i18n="preparingBadge">準備中</div>
+          <h2 data-i18n="m5Title">混合リズム</h2>
+          <p data-i18n="m5Desc">二分音符・四分音符などを組み合わせて対旋律を作ります。</p>
+        </div>
+        <div class="open"><span data-i18n="preparingBadge">準備中</span><span>—</span></div>
+      </div>
+
+      <div class="card is-test is-disabled" aria-disabled="true">
+        <div>
+          <div class="num">Module 6</div>
+          <div class="badge" data-i18n="preparingBadge">準備中</div>
+          <h2 data-i18n="m6Title">3声対位法</h2>
+          <p data-i18n="m6Desc">定旋律に対して、2つの対旋律を組み合わせます。</p>
+        </div>
+        <div class="open"><span data-i18n="preparingBadge">準備中</span><span>—</span></div>
+      </div>
+    </section>
+
+    <section class="guide-wrap" aria-label="Usage guide">
+      <div class="guide-card">
+        <div class="guide-head">
+          <h2 class="guide-title" data-i18n="guideTitle">Guide</h2>
+          <p class="guide-caption" data-i18n="guideCaption">How to Use</p>
+        </div>
+        <img class="guide-image" src="./images/counterpoint-usage-guide.png" alt="Counterpoint usage guide with keyboard shortcuts and playback controls" />
+      </div>
+    </section>
+
+    <p class="creator-credit">Created by Sachie Kobayashi</p>
+
   </main>
 
   <script>
-    const PASSWORD = "2026";
-
-    function login() {
-      const input = document.getElementById("passwordInput").value;
-
-      if (input === PASSWORD) {
-        sessionStorage.setItem("acsCounterpointAuth", "true");
-
-        const params = new URLSearchParams(window.location.search);
-        const next = params.get("next");
-
-        if (next && !next.startsWith("http")) {
-          window.location.href = next;
-        } else {
-          window.location.href = "index.html";
-        }
-      } else {
-        document.getElementById("errorMessage").textContent = "パスワードが違います。";
+    const I18N = {
+      ja: {
+        languageLabel: "言語",
+        title: "対位法トレーニング",
+        lead: "2声から3声まで、段階的に対位法を学ぶための練習モジュールです。各ページで五線入力、解析、再生を行えます。",
+        m1Title: "第一種 2声",
+        m1Desc: "全音符の定旋律に対して、全音符の対旋律を作ります。",
+        m2Title: "二分音符対位法",
+        m2Desc: "全音符の定旋律に対して、二分音符で対旋律を作ります。",
+        m3Title: "タイ付きリズム",
+        m3Desc: "二分音符とタイを使い、持続音やシンコペーションを練習します。",
+        m4Title: "四分音符対位法",
+        m4Desc: "経過音や刺繍音を含む、より細かい動きを練習します。",
+        m5Title: "混合リズム",
+        m5Desc: "二分音符・四分音符などを組み合わせて対旋律を作ります。",
+        m6Title: "3声対位法",
+        m6Desc: "定旋律に対して、2つの対旋律を組み合わせます。",
+        testBadge: "テスト段階",
+        preparingBadge: "準備中",
+        open: "開く"
+      },
+      fr: {
+        languageLabel: "Langue",
+        title: "Entraînement au contrepoint",
+        lead: "Modules progressifs pour travailler le contrepoint, de deux à trois voix. Chaque page permet la saisie sur portée, l’analyse et la lecture.",
+        m1Title: "Première espèce à 2 voix",
+        m1Desc: "Écrire une voix en rondes contre un cantus en rondes.",
+        m2Title: "Contrepoint en blanches",
+        m2Desc: "Écrire deux notes contre une note longue du cantus.",
+        m3Title: "Rythme avec liaisons",
+        m3Desc: "Travailler les tenues et syncopes avec des blanches liées.",
+        m4Title: "Contrepoint en noires",
+        m4Desc: "Travailler les notes de passage et les broderies.",
+        m5Title: "Rythmes mixtes",
+        m5Desc: "Combiner blanches, noires et rythmes plus variés.",
+        m6Title: "Contrepoint à 3 voix",
+        m6Desc: "Combiner deux voix de contrepoint autour d’un cantus.",
+        testBadge: "En test",
+        preparingBadge: "En préparation",
+        open: "Ouvrir"
       }
+    };
+
+    function setLanguage(lang) {
+      const current = lang === "fr" ? "fr" : "ja";
+      document.documentElement.lang = current;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (I18N[current] && I18N[current][key]) {
+          el.textContent = I18N[current][key];
+        }
+      });
     }
 
-    document.getElementById("passwordInput").addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        login();
-      }
-    });
+    window.addEventListener("DOMContentLoaded", () => setLanguage("ja"));
   </script>
 </body>
 </html>
