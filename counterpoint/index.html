@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <script src="auth.js"></script>
   <title>Counterpoint Modules｜Atelier Composition Son</title>
   <style>
     * { box-sizing: border-box; }
@@ -214,6 +212,69 @@
       border: 1px solid var(--line);
       background: #fff;
     }
+    .creator-credit {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+
+    .lesson-cta {
+      margin-top: 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.07);
+      padding: 24px;
+    }
+    .lesson-cta .eyebrow {
+      margin-bottom: 10px;
+    }
+    .lesson-cta-title {
+      margin: 0 0 10px;
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+    }
+    .lesson-cta-text {
+      max-width: 820px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+    .lesson-cta-note {
+      max-width: 900px;
+      margin: 14px 0 0;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--ink);
+      line-height: 1.75;
+    }
+    .lesson-cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .lesson-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 11px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
+    }
+    .lesson-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.10);
+    }
 
     @media (max-width: 1180px) {
       .modules { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -337,6 +398,23 @@
       </div>
     </section>
 
+
+    <section class="lesson-cta" aria-label="Counterpoint lessons">
+      <p class="eyebrow" data-i18n="lessonEyebrow">Lesson</p>
+      <h2 class="lesson-cta-title" data-i18n="lessonTitle">対位法を、音として理解する</h2>
+      <p class="lesson-cta-text" data-i18n="lessonText">
+        チェッカーの結果は、学習の入口です。なぜその進行が自然に聞こえるのか、どこで声部が硬くなるのかを、実際に弾いて確認しながら整理します。
+      </p>
+      <p class="lesson-cta-note" data-i18n="lessonNote">
+        対位法は、禁則を避けるだけでなく、旋律の方向、緊張と解決、二つの声部の独立性を耳で理解することが重要です。
+      </p>
+      <div class="lesson-cta-actions">
+        <a class="lesson-button" id="consultationLink" href="https://ateliercompositionson.com/ja/" target="_blank" rel="noopener noreferrer" data-i18n="consultationButton">無料相談を予約する</a>
+      </div>
+    </section>
+
+    <p class="creator-credit">Created by Sachie Kobayashi</p>
+
   </main>
 
   <script>
@@ -359,7 +437,12 @@
         m6Desc: "定旋律に対して、2つの対旋律を組み合わせます。",
         testBadge: "テスト段階",
         preparingBadge: "準備中",
-        open: "開く"
+        open: "開く",
+        lessonEyebrow: "Lesson",
+        lessonTitle: "対位法を、音として理解する",
+        lessonText: "チェッカーの結果は、学習の入口です。なぜその進行が自然に聞こえるのか、どこで声部が硬くなるのかを、実際に弾いて確認しながら整理します。",
+        lessonNote: "対位法は、禁則を避けるだけでなく、旋律の方向、緊張と解決、二つの声部の独立性を耳で理解することが重要です。",
+        consultationButton: "無料相談を予約する"
       },
       fr: {
         languageLabel: "Langue",
@@ -379,7 +462,12 @@
         m6Desc: "Combiner deux voix de contrepoint autour d’un cantus.",
         testBadge: "En test",
         preparingBadge: "En préparation",
-        open: "Ouvrir"
+        open: "Ouvrir",
+        lessonEyebrow: "Cours",
+        lessonTitle: "Comprendre le contrepoint par l’écoute",
+        lessonText: "Le résultat du vérificateur n’est qu’un point de départ. En cours, nous jouons les lignes, écoutons les tensions et clarifions pourquoi certains mouvements fonctionnent musicalement.",
+        lessonNote: "Le contrepoint ne consiste pas seulement à éviter des fautes : il faut comprendre la direction mélodique, la tension et la résolution, ainsi que l’indépendance réelle des voix.",
+        consultationButton: "Réserver une consultation gratuite"
       }
     };
 
@@ -392,6 +480,13 @@
           el.textContent = I18N[current][key];
         }
       });
+
+      const consultationUrl = current === "fr"
+        ? "https://ateliercompositionson.com/fr/"
+        : "https://ateliercompositionson.com/ja/";
+
+      const consultationLink = document.getElementById("consultationLink");
+      if (consultationLink) consultationLink.href = consultationUrl;
     }
 
     window.addEventListener("DOMContentLoaded", () => setLanguage("ja"));
