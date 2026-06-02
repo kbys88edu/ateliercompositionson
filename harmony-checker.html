@@ -152,41 +152,81 @@
       margin-top: 14px;
     }
 
-    .cta-card {
-      background: #1f1f1f;
-      color: #ffffff;
-      border-color: #1f1f1f;
+
+    .lesson-links-card {
+      background: linear-gradient(135deg, #f8f5ef 0%, #ffffff 100%);
     }
 
-    .cta-card h2,
-    .cta-card p {
-      color: #ffffff;
+    .lesson-links-header {
+      margin-bottom: 20px;
     }
 
-    .cta-buttons {
+    .lesson-link-box {
+      border: 1px solid #ddd5c7;
+      border-radius: 16px;
+      background: #ffffff;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+    }
+
+    .lesson-link-label {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6f665d;
+      margin-bottom: 10px;
+    }
+
+    .lesson-link-box h3 {
+      font-size: 20px;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .lesson-link-box p {
+      margin-bottom: 16px;
+      color: #4a443d;
+    }
+
+    .lesson-understanding-note {
+      border-top: 1px solid #e6ded2;
+      padding-top: 14px;
+      margin-top: 14px;
+      font-size: 14px;
+      color: #4a443d;
+    }
+
+    .lesson-button-row {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 18px;
     }
 
-    .cta-button {
+    .lesson-link-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-decoration: none;
       border-radius: 999px;
-      padding: 12px 20px;
-      font-size: 15px;
-      background: #ffffff;
-      color: #1f1f1f;
-      border: 1px solid #ffffff;
+      padding: 11px 18px;
+      background: #1f1f1f;
+      color: #ffffff;
+      font-size: 14px;
+      border: 1px solid #1f1f1f;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .cta-button.secondary {
-      background: transparent;
-      color: #ffffff;
-      border-color: rgba(255,255,255,0.55);
+    .lesson-link-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+
+    .lesson-link-button.secondary {
+      background: #ffffff;
+      color: #1f1f1f;
+      border-color: #d8d0c4;
     }
 
     .creator-credit {
@@ -249,24 +289,30 @@
       <button id="analyzeButton">解析する</button>
     </section>
 
+    <section class="card lesson-links-card">
+      <div class="lesson-links-header">
+        <h2 id="lessonLinksTitle">レッスンページを見る</h2>
+        <p id="lessonLinksText">
+          より詳しい添削や、和声・対位法・作曲の個別指導をご希望の方は、レッスンページをご覧ください。
+        </p>
+      </div>
+
+      <article class="lesson-link-box">
+        <span class="lesson-link-label" id="lessonLinkLabel">Japanese</span>
+        <h3 id="lessonLinkHeading">日本語レッスンページ</h3>
+        <p id="lessonLinkDescription">初心者から受験・専門レベルまで。和声、対位法、作曲、音楽理論を個別に学べます。</p>
+        <p class="lesson-understanding-note" id="lessonUnderstandingNote">和声は、検出結果を見るだけでなく、実際に弾いて耳で確認し、レッスンで声部の動きと響きを整理しながら音楽的に理解することが大切です。</p>
+        <div class="lesson-button-row">
+          <a class="lesson-link-button" id="lessonLinkButton" href="https://ateliercompositionson.com/ja/" target="_blank" rel="noopener noreferrer">日本語ページへ</a>
+          <a class="lesson-link-button secondary" id="consultationButton" href="https://ateliercompositionson.com/ja/" target="_blank" rel="noopener noreferrer">無料相談を予約する</a>
+        </div>
+      </article>
+    </section>
+
     <section class="card">
       <h2 id="resultsTitle">解析結果</h2>
       <div id="status" class="status">ファイルを選択してください。</div>
       <div id="results"></div>
-    </section>
-
-    <section class="card cta-card" id="lessonCta">
-      <h2 id="ctaTitle">結果を、実際の書法につなげる</h2>
-      <p id="ctaText1">
-        検出された禁則は、単なるエラーではなく、声部の動き・和声進行・様式感を見直す入口です。
-      </p>
-      <p id="ctaText2">
-        レッスンでは、この結果をもとに、なぜ問題になるのか、どのように自然に書き換えられるのかを一緒に確認できます。
-      </p>
-      <div class="cta-buttons">
-        <a class="cta-button" id="ctaPrimary" href="https://ateliercompositionson.com/ja/">レッスンを相談する</a>
-        <a class="cta-button secondary" id="ctaSecondary" href="https://ateliercompositionson.com/fr/">Français</a>
-      </div>
     </section>
 
     <section class="card">
@@ -413,14 +459,16 @@
       document.getElementById("intro2").textContent = t("intro2");
       document.getElementById("introNote").textContent = t("introNote");
       analyzeButton.textContent = t("analyzeButton");
-
-      document.getElementById("ctaTitle").textContent = t("ctaTitle");
-      document.getElementById("ctaText1").textContent = t("ctaText1");
-      document.getElementById("ctaText2").textContent = t("ctaText2");
-      document.getElementById("ctaPrimary").textContent = t("ctaPrimary");
-      document.getElementById("ctaSecondary").textContent = t("ctaSecondary");
-      document.getElementById("ctaPrimary").href = currentLang === "fr" ? "https://ateliercompositionson.com/fr/" : "https://ateliercompositionson.com/ja/";
-      document.getElementById("ctaSecondary").href = currentLang === "fr" ? "https://ateliercompositionson.com/ja/" : "https://ateliercompositionson.com/fr/";
+      document.getElementById("lessonLinksTitle").textContent = t("lessonLinksTitle");
+      document.getElementById("lessonLinksText").textContent = t("lessonLinksText");
+      document.getElementById("lessonLinkLabel").textContent = t("lessonLinkLabel");
+      document.getElementById("lessonLinkHeading").textContent = t("lessonLinkHeading");
+      document.getElementById("lessonLinkDescription").textContent = t("lessonLinkDescription");
+      document.getElementById("lessonUnderstandingNote").textContent = t("lessonUnderstandingNote");
+      document.getElementById("lessonLinkButton").textContent = t("lessonLinkButton");
+      document.getElementById("lessonLinkButton").href = t("lessonLinkHref");
+      document.getElementById("consultationButton").textContent = t("consultationButton");
+      document.getElementById("consultationButton").href = t("consultationHref");
       document.getElementById("creatorCredit").textContent = t("creatorCredit");
 
       document.getElementById("resultsTitle").textContent = t("resultsTitle");
