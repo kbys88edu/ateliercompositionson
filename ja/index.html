@@ -431,16 +431,18 @@ h2 {
 
 .price-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   margin-top: 42px;
+  align-items: stretch;
 }
 
-.price-card {
+.price-card,
+.price {
   border: 1px solid var(--line);
   background: var(--card);
   padding: 30px;
-  min-height: 620px;
+  min-height: auto;
   border-radius: 24px;
 }
 
