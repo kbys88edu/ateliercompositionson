@@ -429,69 +429,67 @@ h2 {
 
 /* Price cards used in the current price section */
 
+/* Price layout fix */
+
 .price-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
   margin-top: 42px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .price-card,
 .price {
   border: 1px solid var(--line);
   background: var(--card);
-  padding: 30px;
-  min-height: auto;
+  padding: 32px;
+  min-height: auto !important;
   border-radius: 24px;
 }
 
-.price-card h3 {
-  margin: 0 0 18px;
-  font-weight: 400;
-  font-size: 22px;
+.price-card h3,
+.price h3 {
+  font-size: 24px;
   line-height: 1.35;
 }
 
-.price-subtitle {
-  color: var(--muted);
-  font-size: 13px;
-  margin: 0 0 18px;
+.price-description,
+.price-card p,
+.price p,
+.price-list li,
+.price li {
+  font-size: 15px;
+  line-height: 1.85;
 }
 
-.price-main {
-  margin: 22px 0 8px;
+.price-amount,
+.amount {
+  font-size: 36px;
+  line-height: 1.15;
 }
 
-.price-amount {
-  font-size: 34px;
-  letter-spacing: -0.04em;
+.price.price-recommended,
+.price.recommended {
+  border: 1.5px solid rgba(0, 0, 0, 0.32);
 }
 
-.price-unit {
-  color: var(--muted);
-  font-size: 14px;
+/* Wider price section */
+.price-section .container {
+  max-width: 1120px;
+  margin: 0 auto;
 }
 
-.price-description {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.8;
-  margin-top: 20px;
-}
+/* Smartphone */
+@media (max-width: 900px) {
+  .price-grid {
+    grid-template-columns: 1fr;
+  }
 
-.price-list {
-  padding-left: 1.2em;
-  margin-top: 20px;
-}
-
-.price-list li {
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.price-list li + li {
-  margin-top: 0.45em;
+  .price-card,
+  .price {
+    padding: 26px;
+  }
 }
 
 /* Student voices */
