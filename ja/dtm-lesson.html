@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>DTM・音作りオンラインレッスン｜Ableton Live・Reaper・Logic対応｜Sachie Kobayashi</title>
+
+  <meta name="description" content="DTM・音作りオンラインレッスン。Ableton Live、Reaper、Logicなどを使い、作曲、アレンジ、音色設計、ミックス基礎、電子音響、AI音源の整理まで個別指導。無料相談受付中。" />
+  <meta name="keywords" content="DTMオンラインレッスン, DTM レッスン, 音作り レッスン, Ableton Live レッスン, Reaper レッスン, Logic レッスン, ミックス レッスン, 作曲 DTM, オンライン音楽レッスン" />
+
+  <link rel="canonical" href="https://ateliercompositionson.com/ja/dtm-lesson.html" />
+
+  <meta property="og:title" content="DTM・音作りオンラインレッスン｜Sachie Kobayashi" />
+  <meta property="og:description" content="Ableton Live、Reaper、Logicなどを使い、作曲、音色設計、アレンジ、ミックス基礎、電子音響まで学ぶオンライン個人レッスン。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ateliercompositionson.com/ja/dtm-lesson.html" />
+  <meta property="og:site_name" content="Atelier Composition Son" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-Y1792EBWTT");
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "DTM・音作りオンラインレッスン",
+    "description": "Ableton Live、Reaper、Logicなどを使い、作曲、アレンジ、音色設計、ミックス基礎、電子音響、AI音源の整理まで扱うDTMオンライン個人レッスン。",
+    "provider": {
+      "@type": "Person",
+      "name": "Sachie Kobayashi",
+      "url": "https://www.sachiekobayashi.com/"
+    },
+    "inLanguage": "ja",
+    "courseMode": "online",
+    "url": "https://ateliercompositionson.com/ja/dtm-lesson.html"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #f5f2ea;
+      --paper: #fffdf8;
+      --ink: #111111;
+      --muted: #6d6a63;
+      --line: #d8d3c7;
+      --soft: #ebe6dc;
+      --radius: 24px;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
+      line-height: 1.85;
+      letter-spacing: 0.03em;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    p { margin: 0; }
+    p + p { margin-top: 1.2em; }
+    ul { margin: 0; padding-left: 1.2em; }
+    li + li { margin-top: 0.45em; }
+    .muted { color: var(--muted); }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--line);
+      background: rgba(245, 242, 234, 0.92);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .brand {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      color: var(--ink);
+    }
+
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 92px 24px 70px;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 52px;
+      align-items: center;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow { margin-bottom: 28px; }
+
+    h1 {
+      margin: 0 0 30px;
+      font-size: clamp(42px, 6.5vw, 86px);
+      line-height: 1.03;
+      letter-spacing: -0.06em;
+      font-weight: 380;
+    }
+
+    .lead {
+      max-width: 760px;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.95;
+    }
+
+    .hero-panel {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      padding: 34px;
+      border-radius: var(--radius);
+    }
+
+    .hero-panel h2 {
+      margin: 0 0 18px;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-panel li {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 14px;
+      line-height: 1;
+      transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn.primary {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .btn:hover {
+      opacity: 0.72;
+      transform: translateY(-1px);
+    }
+
+    section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 76px 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 0.34fr 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(30px, 4.4vw, 56px);
+      line-height: 1.08;
+      font-weight: 380;
+      letter-spacing: -0.055em;
+    }
+
+    .text-block {
+      max-width: 840px;
+      font-size: 17px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 42px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      padding: 28px;
+      min-height: 250px;
+    }
+
+    .card .num {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .card h3 {
+      margin: 0 0 18px;
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 34px;
+    }
+
+    .video-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      padding: 22px;
+    }
+
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #000;
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-meta {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .video-card h3 {
+      margin: 10px 0 12px;
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+
+    .video-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .soundcloud-card {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      padding: 22px;
+    }
+
+    .soundcloud-wrap {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #000;
+    }
+
+    .soundcloud-wrap iframe {
+      display: block;
+      width: 100%;
+      border: 0;
+    }
+
+    .soundcloud-meta {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .soundcloud-card h3 {
+      margin: 10px 0 12px;
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+
+    .soundcloud-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+
+    .band {
+      max-width: none;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 78px 24px;
+    }
+
+    .band-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 0.34fr 1fr;
+      gap: 56px;
+    }
+
+    .band .muted { color: rgba(245, 242, 234, 0.68); }
+
+    .band .card {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.16);
+      color: var(--bg);
+    }
+
+    .band .card p,
+    .band .card li { color: rgba(245, 242, 234, 0.68); }
+
+    .tools-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .tools-list span {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      padding: 7px 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 42px;
+      align-items: start;
+    }
+
+    .price-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      padding: 34px;
+    }
+
+    .price-card.recommended {
+      border: 1.5px solid rgba(17, 17, 17, 0.36);
+    }
+
+    .recommended-outline {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 18px;
+      padding: 5px 10px;
+      border: 1px solid rgba(17, 17, 17, 0.24);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .price-card h3 {
+      margin: 0 0 8px;
+      font-size: 25px;
+      line-height: 1.35;
+      font-weight: 400;
+      letter-spacing: -0.035em;
+    }
+
+    .price-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .price-main { margin: 22px 0 16px; }
+
+    .price-amount {
+      font-size: 40px;
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+    }
+
+    .price-unit {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .price-description,
+    .price-card li,
+    .price-card p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    .price-list { margin-top: 20px; }
+
+    .included-box {
+      display: inline-flex;
+      width: fit-content;
+      margin: 8px 0 18px;
+      padding: 7px 11px;
+      border: 1px solid rgba(17, 17, 17, 0.16);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .faq {
+      border-top: 1px solid var(--line);
+      margin-top: 42px;
+    }
+
+    details {
+      border-bottom: 1px solid var(--line);
+      padding: 24px 0;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "+ "; }
+    details[open] summary::before { content: "– "; }
+
+    details p {
+      margin-top: 16px;
+      max-width: 820px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .contact-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+
+    footer {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 50px 24px 70px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .nav-links { display: none; }
+
+      .hero,
+      .section-grid,
+      .band-inner,
+      .contact-box {
+        grid-template-columns: 1fr;
+      }
+
+      .cards,
+      .price-grid,
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+
+      footer { flex-direction: column; }
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding-top: 70px; }
+      section { padding: 68px 24px; }
+      h1 { font-size: clamp(42px, 14vw, 76px); }
+
+      .price-card,
+      .card,
+      .hero-panel,
+      .contact-box {
+        padding: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="/ja/">Atelier Composition Son</a>
+
+      <div class="nav-links">
+        <a href="/ja/">Home</a>
+        <a href="#content">Content</a>
+        <a href="#video">Video</a>
+        <a href="#tools">Tools</a>
+        <a href="#price">Price</a>
+        <a class="nav-cta" href="#contact">無料相談</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Online DTM / Sound Production Lesson</div>
+
+        <h1>
+          DTMを、操作ではなく<br>
+          音の設計として学ぶ。
+        </h1>
+
+        <p class="lead">
+          Ableton Live、Reaper、Logicなどを使いながら、
+          作曲、アレンジ、音色設計、録音素材の編集、ミックスの基礎を、
+          作品制作のプロセスとして学ぶオンライン個人レッスンです。
+        </p>
+
+        <div class="button-row">
+          <a class="btn primary" href="#contact">無料相談を予約する</a>
+          <a class="btn" href="#video">デモを見る</a>
+          <a class="btn" href="#price">料金を見る</a>
+        </div>
+      </div>
+
+      <aside class="hero-panel">
+        <h2>扱う内容</h2>
+        <ul>
+          <li>DAWの基本操作と制作ワークフロー</li>
+          <li>シンセサイザー、サンプラー、MIDI編集</li>
+          <li>音色設計、レイヤー、空間処理、エフェクト</li>
+          <li>アレンジ、展開、構成、密度の整理</li>
+          <li>ミックス基礎、音が細い時の改善</li>
+          <li>電子音響、サウンドアート、AI生成音源の整理</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="content">
+      <div class="section-grid">
+        <div>
+          <div class="section-kicker">For whom</div>
+          <h2>こんな方に向いています</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            このレッスンは、単なるDAW操作説明ではなく、
+            「音をどう選び、どう配置し、どう作品として成立させるか」を扱います。
+            初心者の方には基礎操作から、経験者には音色・構成・ミックス・作品性の整理まで対応します。
+          </p>
+
+          <div class="cards">
+            <article class="card">
+              <div class="num">01</div>
+              <h3>DTMを始めたい方</h3>
+              <p>DAWの画面で何から始めればよいか分からない方に、音源、MIDI、録音、編集の基本を整理します。</p>
+            </article>
+
+            <article class="card">
+              <div class="num">02</div>
+              <h3>音が細い・平面的に感じる方</h3>
+              <p>レイヤー、音域、倍音、空間処理、コンプレッション、EQの使い方を確認し、音の密度を整えます。</p>
+            </article>
+
+            <article class="card">
+              <div class="num">03</div>
+              <h3>作品として完成させたい方</h3>
+              <p>8小節のループで止まってしまう状態から、展開、構成、クライマックス、終わり方まで設計します。</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="video">
+      <div class="section-grid">
+        <div>
+          <div class="section-kicker">Demo Videos</div>
+          <h2>制作デモ</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            DTM、音作り、アレンジ、質感の作り方を確認できるデモ動画です。
+            ポップ寄りの制作を2本、エクスペリメンタルな音響制作を1本、さらにビデオ・インスタレーション作品と、ハンドパン＋エレクトロニクス作品の音源抜粋を掲載しています。
+          </p>
+
+          <div class="video-grid">
+            <article class="video-card">
+              <div class="video-wrap">
+                <iframe
+                  src="https://www.youtube.com/embed/v_Vm7N_svws"
+                  title="Pop / DTM Production Demo 1"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <div class="video-meta">Pop / DTM production</div>
+              <h3>ポップ寄りのDTM制作 I</h3>
+              <p>
+                メロディ、コード、ビート、アレンジ、音色の整理など、
+                ポップスや歌ものに近い制作プロセスを確認できます。
+              </p>
+            </article>
+
+            <article class="video-card">
+              <div class="video-wrap">
+                <iframe
+                  src="https://www.youtube.com/embed/4x8w6YhQD4s"
+                  title="Pop / DTM Production Demo 2"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <div class="video-meta">Pop / arrangement / production</div>
+              <h3>ポップ寄りのDTM制作 II</h3>
+              <p>
+                楽曲の流れ、音色の選び方、アレンジの組み立て方など、
+                より実践的なDTM制作の例として掲載しています。
+              </p>
+            </article>
+
+            <article class="video-card">
+              <div class="video-wrap">
+                <iframe
+                  src="https://www.youtube.com/embed/kdXu_GEH4ew"
+                  title="Experimental / Sound Production Demo"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <div class="video-meta">Experimental / sound design</div>
+              <h3>エクスペリメンタルな音響制作</h3>
+              <p>
+                通常の楽曲制作だけでなく、音色、ノイズ、空間、質感、電子音響的な構成を扱う制作例です。
+              </p>
+            </article>
+          </div>
+
+          <article class="soundcloud-card">
+            <div class="soundcloud-wrap">
+              <iframe
+                height="166"
+                scrolling="no"
+                allow="autoplay"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Fpoetry-is-whats-gets-lost-in-translation-extract&color=%23111111&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+              </iframe>
+            </div>
+
+            <div class="soundcloud-meta">Paris / video installation / extract</div>
+            <h3>Poetry is what gets lost in translation</h3>
+            <p>
+              パリで発表したビデオ・インスタレーション作品の抜粋です。
+              DTMレッスンでは、通常の楽曲制作だけでなく、映像、空間、声、テクスチャを含む音響作品の設計も扱います。
+            </p>
+          </article>
+
+          <article class="soundcloud-card">
+            <div class="soundcloud-wrap">
+              <iframe
+                height="166"
+                scrolling="no"
+                allow="autoplay"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Fovni-2021-pour-handpan-et-electronics-extract-mix&color=%23111111&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+              </iframe>
+            </div>
+
+            <div class="soundcloud-meta">Handpan / electronics / extract</div>
+            <h3>OVNI 2021</h3>
+            <p>
+              ハンドパンとエレクトロニクスのための作品抜粋です。
+              生楽器と電子音響を組み合わせる制作例として、音色、空間、処理、ミックスの観点から扱えます。
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="band-inner">
+        <div>
+          <div class="section-kicker">Method</div>
+          <h2>音作りを、作品の構造から考える。</h2>
+        </div>
+
+        <div class="text-block">
+          <p class="muted">
+            音がよくならない原因は、プラグインやプリセットだけではなく、
+            音域、密度、リズム、アレンジ、空間、構成の問題であることが多いです。
+            レッスンでは、音色だけを個別に修正するのではなく、
+            作品全体の中でその音がどのような役割を持つかを確認します。
+          </p>
+
+          <div class="cards">
+            <article class="card">
+              <div class="num">Sound</div>
+              <h3>音色</h3>
+              <p>シンセ、サンプル、録音素材、エフェクトの質感を整理します。</p>
+            </article>
+
+            <article class="card">
+              <div class="num">Structure</div>
+              <h3>構成</h3>
+              <p>ループ、展開、間、密度、クライマックスを作品として設計します。</p>
+            </article>
+
+            <article class="card">
+              <div class="num">Space</div>
+              <h3>空間</h3>
+              <p>リバーブ、ディレイ、定位、奥行き、音像の整理を行います。</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tools">
+      <div class="section-grid">
+        <div>
+          <div class="section-kicker">DAW / Tools</div>
+          <h2>対応ソフト・制作環境</h2>
+        </div>
+
+        <div class="text-block">
+          <p>
+            お持ちのDAWやプラグイン環境に合わせて進めます。
+            内蔵プラグインだけでも受講できます。必要に応じて、外部プラグインやAIツールも扱います。
+          </p>
+
+          <div class="tools-list">
+            <span>Ableton Live</span>
+            <span>Reaper</span>
+            <span>Logic Pro</span>
+            <span>Pro Tools</span>
+            <span>Max/MSP</span>
+            <span>iZotope</span>
+            <span>Waves</span>
+            <span>MeldaProduction</span>
+            <span>u-he</span>
+            <span>Vital</span>
+            <span>GRM Tools</span>
+            <span>EastWest</span>
+            <span>Splice</span>
+            <span>Suno</span>
+            <span>ElevenLabs</span>
+            <span>Supertone</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-grid">
+        <div>
+          <div class="section-kicker">Lesson Flow</div>
+          <h2>レッスンの進め方</h2>
+        </div>
+
+        <div class="text-block">
+          <div class="cards">
+            <article class="card">
+              <div class="num">01</div>
+              <h3>環境と目的を確認</h3>
+              <p>使用しているDAW、音源、制作ジャンル、現在困っている点を確認します。</p>
+            </article>
+
+            <article class="card">
+              <div class="num">02</div>
+              <h3>制作中のプロジェクトを扱う</h3>
+              <p>MIDI、音源、DAWプロジェクト、書き出した音源をもとに、具体的な改善点を見ます。</p>
+            </article>
+
+            <article class="card">
+              <div class="num">03</div>
+              <h3>次の制作課題へ接続</h3>
+              <p>レッスン後に何を直すか、何を作るか、どの順番で進めるかを明確にします。</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="price">
+      <div class="section-kicker">Price</div>
+      <h2>料金</h2>
+
+      <div class="price-grid">
+        <article class="price-card">
+          <h3>初回無料面談</h3>
+          <p class="price-subtitle">受講前のカウンセリング</p>
+
+          <div class="price-main">
+            <span class="price-amount">無料</span>
+            <span class="price-unit">/ 30分</span>
+          </div>
+
+          <p class="price-description">現在の制作環境、目標、使用DAW、困っている点を確認し、レッスン内容を提案します。</p>
+
+          <div class="button-row">
+            <a class="btn primary" href="#contact">無料相談へ</a>
+          </div>
+        </article>
+
+        <article class="price-card">
+          <h3>Beginner</h3>
+          <p class="price-subtitle">基礎から学ぶDTMレッスン</p>
+
+          <div class="price-main">
+            <span class="price-amount">4,800円</span>
+            <span class="price-unit">/ 60分</span>
+          </div>
+
+          <p class="price-description">DAWの基本、MIDI、音源、簡単なアレンジ、ミックス前の整理まで扱います。</p>
+
+          <ul class="price-list">
+            <li>DAWの基本操作</li>
+            <li>MIDI入力・編集</li>
+            <li>音源・サンプルの使い方</li>
+            <li>簡単なアレンジ</li>
+            <li>ミックス基礎</li>
+          </ul>
+        </article>
+
+        <article class="price-card recommended">
+          <div class="recommended-outline">Recommended</div>
+
+          <h3>Advanced 月謝</h3>
+          <p class="price-subtitle">継続型の制作レッスン</p>
+
+          <div class="price-main">
+            <span class="price-amount">28,000円</span>
+            <span class="price-unit">/ 月額</span>
+          </div>
+
+          <div class="included-box">月4回のレッスン込み</div>
+
+          <p class="price-description">作品制作、音色設計、アレンジ、ミックス、ポートフォリオ、電子音響まで継続的に扱います。</p>
+
+          <ul class="price-list">
+            <li>月4回の継続レッスン込み</li>
+            <li>制作中プロジェクトのレビュー</li>
+            <li>音作り・アレンジ・構成の改善</li>
+            <li>ミックス基礎から応用</li>
+            <li>電子音響・サウンドデザイン</li>
+            <li>AI生成音源の整理・選定</li>
+          </ul>
+        </article>
+
+        <article class="price-card">
+          <h3>Advanced 単発</h3>
+          <p class="price-subtitle">単発の制作相談</p>
+
+          <div class="price-main">
+            <span class="price-amount">7,500円</span>
+            <span class="price-unit">/ 60分</span>
+          </div>
+
+          <p class="price-description">作品講評、ミックス相談、音作り、プラグイン選定、制作方針の確認に対応します。</p>
+
+          <ul class="price-list">
+            <li>制作中の曲のレビュー</li>
+            <li>音が細い・まとまらない原因の確認</li>
+            <li>アレンジ・構成の相談</li>
+            <li>AI音源・サンプル素材の使い方相談</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-grid">
+        <div>
+          <div class="section-kicker">FAQ</div>
+          <h2>よくある質問</h2>
+        </div>
+
+        <div class="text-block">
+          <div class="faq">
+            <details>
+              <summary>完全初心者でも受講できますか？</summary>
+              <p>可能です。DAWの基本操作、MIDI入力、音源の立ち上げ、簡単な曲作りから始められます。</p>
+            </details>
+
+            <details>
+              <summary>Ableton Live以外でも受講できますか？</summary>
+              <p>可能です。Reaper、Logic Pro、Pro Toolsなどにも対応できます。共通する制作原理を重視します。</p>
+            </details>
+
+            <details>
+              <summary>ミックスだけ見てもらえますか？</summary>
+              <p>可能です。ただし、ミックスの問題はアレンジや音色選びに原因があることも多いため、必要に応じて作品全体を確認します。</p>
+            </details>
+
+            <details>
+              <summary>プラグインを買う必要はありますか？</summary>
+              <p>ありません。まずはDAW内蔵プラグインだけでも十分に学べます。必要な場合のみ、目的に合うプラグインを相談できます。</p>
+            </details>
+
+            <details>
+              <summary>AIで作った音源の相談もできますか？</summary>
+              <p>可能です。SunoやElevenLabsなどで作成した音源の選定、編集、作品化、方向性整理に対応します。</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact-box">
+        <div>
+          <div class="section-kicker">Consultation</div>
+          <h2>まずは無料相談から</h2>
+          <p class="muted" style="margin-top: 18px;">使用しているDAW、作りたい音楽、現在困っていることを簡単に書いてご連絡ください。</p>
+        </div>
+
+        <a class="btn primary" href="/ja/#contact">無料相談を予約する</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© Sachie Kobayashi / Atelier Composition Son</div>
+    <div class="footer-links">
+      <a href="/ja/">日本語トップ</a>
+      <a href="/fr/">Français</a>
+      <a href="https://www.sachiekobayashi.com/">Portfolio</a>
+    </div>
+  </footer>
+</body>
+</html>
