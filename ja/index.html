@@ -876,7 +876,65 @@ footer {
   }
 }
 
-  </style>
+  
+/* Module links layout fix */
+.module-listening,
+.module-link-featured {
+  grid-template-columns: 120px 1fr 1.2fr auto;
+}
+
+.module-submark {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.module-view {
+  white-space: nowrap;
+  padding-top: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.module-listening {
+  position: relative;
+  transition: background 0.25s ease, padding-left 0.25s ease;
+}
+
+.module-listening:hover {
+  background: linear-gradient(90deg, rgba(17, 17, 17, 0.035), rgba(17, 17, 17, 0));
+  padding-left: 18px;
+}
+
+.module-listening:hover .module-view {
+  color: var(--text);
+  transform: translateX(4px);
+}
+
+@media (max-width: 900px) {
+  .module-listening,
+  .module-link-featured {
+    grid-template-columns: 1fr;
+  }
+
+  .module-listening:hover {
+    padding-left: 0;
+  }
+
+  .module-view {
+    width: fit-content;
+    padding-top: 4px;
+  }
+}
+
+</style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
 <script>
@@ -1095,27 +1153,42 @@ footer {
   </div>
 </section>
 
-<a class="module module-listening" href="dtm-lesson.html">
-  <div class="module-number">Module 00</div>
-  <div class="module-title">
-    Listening / 聴く
-    <span class="module-submark">sound production</span>
-  </div>
-  <div class="module-desc">
-    音色、沈黙、空間、ノイズ、質感を分析し、自分の感覚と言語をつなげる。
-  </div>
-  <div class="module-view">view →</div>
-</a>
+<section id="modules">
+  <div class="section-grid">
+    <div>
+      <div class="section-kicker">Modules</div>
+      <h2>扱う領域</h2>
+    </div>
 
-<a class="module module-link module-link-featured" href="composition-lesson.html">
-  <div class="module-number">Module 01</div>
-  <div class="module-title">Composition / 作曲</div>
-  <div class="module-desc">
-    旋律・和声・形式だけでなく、時間構造、素材、展開、コンセプトから作品を考える。
+    <div class="text-block">
+      <p>
+        レッスン内容は固定されたカリキュラムではなく、目的と制作状況に応じて組み合わせます。
+      </p>
+    </div>
   </div>
-  <div class="module-button">詳細を見る</div>
-</a>
-    
+
+  <div class="modules">
+    <a class="module module-listening" href="dtm-lesson.html">
+      <div class="module-number">Module 00</div>
+      <div class="module-title">
+        Listening / 聴く
+        <span class="module-submark">sound production</span>
+      </div>
+      <div class="module-desc">
+        音色、沈黙、空間、ノイズ、質感を分析し、自分の感覚と言語をつなげる。
+      </div>
+      <div class="module-view">view →</div>
+    </a>
+
+    <a class="module module-link module-link-featured" href="composition-lesson.html">
+      <div class="module-number">Module 01</div>
+      <div class="module-title">Composition / 作曲</div>
+      <div class="module-desc">
+        旋律・和声・形式だけでなく、時間構造、素材、展開、コンセプトから作品を考える。
+      </div>
+      <div class="module-button">詳細を見る</div>
+    </a>
+
     <div class="module">
       <div class="module-number">Module 02</div>
       <div class="module-title">Theory / 音楽理論</div>
