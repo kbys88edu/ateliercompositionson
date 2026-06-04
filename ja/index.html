@@ -746,6 +746,95 @@ footer {
   }
   
 }
+/* Final price readability override */
+
+#price .price-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+  gap: 28px !important;
+  align-items: start !important;
+}
+
+#price .price-card,
+#price .price {
+  min-height: auto !important;
+  padding: 36px !important;
+  border-radius: 24px !important;
+}
+
+#price .price-card h3,
+#price .price h3 {
+  font-size: 26px !important;
+  line-height: 1.35 !important;
+  margin-bottom: 18px !important;
+}
+
+#price .price-description,
+#price .price-card p,
+#price .price p,
+#price .price-list li,
+#price .price li {
+  font-size: 16px !important;
+  line-height: 1.9 !important;
+}
+
+#price .price-amount,
+#price .amount {
+  font-size: 40px !important;
+  line-height: 1.1 !important;
+}
+
+#price .price-unit,
+#price .unit {
+  font-size: 15px !important;
+}
+
+#price .price-list,
+#price .price ul {
+  padding-left: 1.25em !important;
+  margin-top: 22px !important;
+}
+
+#price .price-list li + li,
+#price .price li + li {
+  margin-top: 0.65em !important;
+}
+
+#price .button-row {
+  margin-top: 28px !important;
+}
+
+/* Plugin grid */
+.plugin-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.plugin-grid span {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 7px 12px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  #price .price-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  #price .price-card,
+  #price .price {
+    padding: 28px !important;
+  }
+}
+
   </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
@@ -878,8 +967,8 @@ footer {
   </section>
 
   <section id="instructor" class="teacher">
-    <div class="teacher-inner">
-      <div class="section-kicker">Instructor</div>
+  <div class="teacher-inner">
+    <div class="section-kicker">Instructor</div>
 
     <h2>講師</h2>
 
