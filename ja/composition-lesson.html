@@ -45,14 +45,15 @@
 
   <style>
     :root {
-      --bg: #f4f2ee;
-      --paper: #ffffff;
-      --ink: #111111;
-      --muted: #666666;
-      --line: #d8d4cc;
-      --soft: #ebe7df;
-      --radius: 22px;
-      --max: 1120px;
+      --bg: #f8f6f1;
+      --paper: #fffefa;
+      --ink: #101010;
+      --muted: #67625a;
+      --line: #1c1c1c;
+      --fine-line: rgba(16, 16, 16, 0.18);
+      --soft: #ece7dc;
+      --accent: #c83d2e;
+      --max: 1180px;
     }
 
     * {
@@ -65,7 +66,9 @@
 
     body {
       margin: 0;
-      background: var(--bg);
+      background:
+        linear-gradient(90deg, rgba(16,16,16,0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
+        var(--bg);
       color: var(--ink);
       font-family:
         -apple-system,
@@ -77,7 +80,7 @@
         YuGothic,
         Meiryo,
         sans-serif;
-      letter-spacing: 0.02em;
+      letter-spacing: 0;
       line-height: 1.8;
     }
 
@@ -90,15 +93,15 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(244, 242, 238, 0.92);
+      background: rgba(248, 246, 241, 0.92);
       backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--ink);
     }
 
     .nav {
-      max-width: var(--max);
+      max-width: none;
       margin: 0 auto;
-      padding: 18px 24px;
+      padding: 16px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -106,7 +109,7 @@
     }
 
     .brand {
-      font-weight: 700;
+      font-weight: 650;
       letter-spacing: 0.12em;
       font-size: 14px;
       text-transform: uppercase;
@@ -115,7 +118,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 22px;
       font-size: 13px;
       color: var(--muted);
     }
@@ -126,19 +129,19 @@
 
     .nav-cta {
       border: 1px solid var(--ink);
-      padding: 8px 14px;
-      border-radius: 999px;
+      padding: 7px 13px;
       color: var(--ink);
     }
 
     .hero {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 88px 24px 64px;
+      max-width: none;
+      margin: 0;
+      padding: 94px 28px 70px;
       display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      gap: 48px;
-      align-items: center;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      gap: 36px;
+      align-items: end;
+      border-bottom: 1px solid var(--ink);
     }
 
     .eyebrow {
@@ -146,15 +149,16 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 18px;
+      margin-bottom: 28px;
     }
 
     h1 {
-      font-size: clamp(38px, 6vw, 78px);
-      line-height: 1.05;
-      letter-spacing: -0.05em;
-      margin: 0 0 28px;
-      font-weight: 650;
+      max-width: 980px;
+      font-size: clamp(48px, 9.8vw, 150px);
+      line-height: 0.96;
+      letter-spacing: 0;
+      margin: 0 0 34px;
+      font-weight: 500;
     }
 
     .lead {
@@ -167,19 +171,24 @@
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 0;
       margin-top: 34px;
+      border-top: 1px solid var(--ink);
+      border-left: 1px solid var(--ink);
+      width: fit-content;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 999px;
-      padding: 13px 22px;
+      min-height: 46px;
+      padding: 13px 20px;
       font-size: 14px;
       line-height: 1;
       border: 1px solid var(--ink);
+      border-top: 0;
+      border-left: 0;
       transition: 0.2s ease;
     }
 
@@ -194,47 +203,51 @@
     }
 
     .button:hover {
-      transform: translateY(-1px);
-      opacity: 0.82;
+      background: var(--accent);
+      color: #fff;
+      opacity: 1;
     }
 
     .hero-card {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 34px;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.04);
+      background: transparent;
+      border: 1px solid var(--ink);
+      padding: 26px;
     }
 
     .hero-card h2 {
-      margin: 0 0 18px;
-      font-size: 18px;
-      letter-spacing: -0.02em;
+      margin: 0 0 24px;
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.08;
+      font-weight: 500;
+      letter-spacing: 0;
     }
 
     .hero-card ul {
       margin: 0;
-      padding-left: 1.2em;
+      padding: 0;
       color: #333;
       font-size: 15px;
+      list-style: none;
     }
 
     .hero-card li {
-      margin-bottom: 10px;
+      border-top: 1px solid var(--fine-line);
+      padding: 13px 0;
     }
 
     section {
-      max-width: var(--max);
+      max-width: none;
       margin: 0 auto;
-      padding: 68px 24px;
+      padding: 76px 28px;
+      border-bottom: 1px solid var(--ink);
     }
 
     .section-title {
       display: grid;
-      grid-template-columns: 0.34fr 1fr;
-      gap: 32px;
+      grid-template-columns: minmax(170px, 0.28fr) 1fr;
+      gap: 42px;
       align-items: start;
-      margin-bottom: 34px;
+      margin-bottom: 44px;
     }
 
     .section-label {
@@ -246,18 +259,19 @@
     }
 
     h2 {
-      font-size: clamp(28px, 4vw, 48px);
-      line-height: 1.16;
-      letter-spacing: -0.04em;
+      font-size: clamp(34px, 5.6vw, 82px);
+      line-height: 1.02;
+      letter-spacing: 0;
       margin: 0;
-      font-weight: 620;
+      font-weight: 500;
     }
 
     h3 {
       margin: 0 0 12px;
-      font-size: 20px;
-      letter-spacing: -0.02em;
+      font-size: 22px;
+      letter-spacing: 0;
       line-height: 1.35;
+      font-weight: 500;
     }
 
     p {
@@ -271,28 +285,32 @@
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      gap: 0;
+      border-top: 1px solid var(--ink);
+      border-left: 1px solid var(--ink);
     }
 
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
+      gap: 0;
+      border-top: 1px solid var(--ink);
+      border-left: 1px solid var(--ink);
     }
 
     .card {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 28px;
+      background: transparent;
+      border-right: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      padding: 30px;
       min-height: 100%;
     }
 
     .card .number {
       font-size: 12px;
-      color: var(--muted);
+      color: var(--accent);
       letter-spacing: 0.16em;
-      margin-bottom: 18px;
+      margin-bottom: 52px;
     }
 
     .list {
@@ -309,15 +327,16 @@
       max-width: none;
       background: var(--ink);
       color: #fff;
-      margin-top: 40px;
-      padding: 76px 24px;
+      margin-top: 0;
+      padding: 82px 28px;
+      border-bottom: 1px solid var(--ink);
     }
 
     .band-inner {
       max-width: var(--max);
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
+      grid-template-columns: 0.8fr 1.2fr;
       gap: 48px;
       align-items: start;
     }
@@ -328,20 +347,22 @@
 
     .band .card {
       background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.26);
       color: #fff;
     }
 
     .video-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
+      gap: 0;
+      border-top: 1px solid var(--ink);
+      border-left: 1px solid var(--ink);
     }
 
     .video-card {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+      background: transparent;
+      border-right: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
       padding: 18px;
     }
 
@@ -350,7 +371,6 @@
       width: 100%;
       aspect-ratio: 16 / 9;
       overflow: hidden;
-      border-radius: 16px;
       background: #000;
       margin-bottom: 18px;
     }
@@ -375,14 +395,16 @@
     .price-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
+      gap: 0;
       align-items: stretch;
+      border-top: 1px solid var(--ink);
+      border-left: 1px solid var(--ink);
     }
 
     .price {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+      background: transparent;
+      border-right: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
       padding: 30px;
       display: flex;
       flex-direction: column;
@@ -391,15 +413,30 @@
     }
 
     .price.recommended {
-      border: 2px solid var(--ink);
+      background: var(--ink);
+      color: #fff;
       position: relative;
+    }
+
+    .price.recommended .muted,
+    .price.recommended .small {
+      color: rgba(255,255,255,0.66);
+    }
+
+    .price.recommended .badge {
+      border-color: rgba(255,255,255,0.7);
+    }
+
+    .price.recommended .button.primary {
+      background: #fff;
+      color: var(--ink);
+      border-color: #fff;
     }
 
     .badge {
       display: inline-flex;
       width: fit-content;
       border: 1px solid var(--ink);
-      border-radius: 999px;
       padding: 5px 10px;
       font-size: 11px;
       letter-spacing: 0.08em;
@@ -408,9 +445,9 @@
     }
 
     .amount {
-      font-size: 34px;
+      font-size: 40px;
       line-height: 1;
-      letter-spacing: -0.04em;
+      letter-spacing: 0;
       margin: 12px 0 10px;
     }
 
@@ -422,24 +459,23 @@
     .flow {
       counter-reset: step;
       display: grid;
-      gap: 14px;
+      border-top: 1px solid var(--ink);
     }
 
     .flow-item {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
+      background: transparent;
+      border-bottom: 1px solid var(--ink);
+      padding: 26px 0;
       display: grid;
-      grid-template-columns: 60px 1fr;
-      gap: 18px;
+      grid-template-columns: minmax(90px, 0.2fr) 1fr;
+      gap: 32px;
       align-items: start;
     }
 
     .flow-item::before {
       counter-increment: step;
       content: counter(step, decimal-leading-zero);
-      color: var(--muted);
+      color: var(--accent);
       font-size: 14px;
       letter-spacing: 0.12em;
       padding-top: 2px;
@@ -447,14 +483,13 @@
 
     .faq {
       display: grid;
-      gap: 12px;
+      border-top: 1px solid var(--ink);
     }
 
     details {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 20px 22px;
+      background: transparent;
+      border-bottom: 1px solid var(--ink);
+      padding: 22px 0;
     }
 
     summary {
@@ -469,9 +504,9 @@
     }
 
     .cta {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 30px;
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--ink);
       padding: 46px;
       display: grid;
       grid-template-columns: 1fr auto;
@@ -483,16 +518,26 @@
       font-size: clamp(30px, 4vw, 56px);
     }
 
+    .cta .muted {
+      color: rgba(255,255,255,0.76);
+    }
+
+    .cta .button.primary {
+      border-color: #fff;
+      background: #fff;
+      color: var(--ink);
+    }
+
     footer {
-      max-width: var(--max);
-      margin: 0 auto;
+      max-width: none;
+      margin: 0;
       padding: 42px 24px 70px;
       color: var(--muted);
       font-size: 13px;
       display: flex;
       justify-content: space-between;
       gap: 20px;
-      border-top: 1px solid var(--line);
+      border-top: 1px solid var(--ink);
     }
 
     .footer-links {
@@ -547,6 +592,26 @@
     @media (max-width: 700px) {
       .price-grid {
         grid-template-columns: 1fr;
+      }
+
+      .hero,
+      section,
+      .band {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .nav {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .hero-actions {
+        width: 100%;
+      }
+
+      .button {
+        flex: 1 1 100%;
       }
     }
   </style>

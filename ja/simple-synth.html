@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>簡易シンセサイザー｜Atelier Composition Son</title>
+    <meta name="description" content="ブラウザ上で波形、フィルター、エンベロープ、LFOなどを試しながら、音の合成について学べる簡易シンセサイザーです。">
+    <link rel="stylesheet" href="simple-synth.css?v=1">
+  </head>
+  <body>
+    <main class="app-shell">
+      <a class="site-back-link" href="./">← Atelier Composition Son</a>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Atelier Composition Son / Free Tool</p>
+          <h1>簡易シンセサイザー</h1>
+        </div>
+        <button id="powerButton" class="power-button" type="button" aria-pressed="false">
+          <span class="power-light"></span>
+          Start Audio
+        </button>
+      </header>
+
+      <section class="learn-panel" aria-label="学習ステップ">
+        <div class="lesson-copy">
+          <p class="step-label" id="stepLabel">Step 1 / 6</p>
+          <h2 id="lessonTitle">まずは波形を選ぶ</h2>
+          <p id="lessonText">鍵盤を押しながら、Saw / Square / Triangle の音色差を聴いてみましょう。音作りは「素材を選ぶ」ことから始まります。</p>
+        </div>
+        <div class="lesson-actions">
+          <button id="prevLesson" class="icon-button" type="button" aria-label="前のステップ">‹</button>
+          <button id="nextLesson" class="icon-button" type="button" aria-label="次のステップ">›</button>
+        </div>
+      </section>
+
+      <section class="signal-flow" aria-label="信号の流れ">
+        <div class="flow-node active">OSC</div>
+        <div class="flow-line"></div>
+        <div class="flow-node">FILTER</div>
+        <div class="flow-line"></div>
+        <div class="flow-node">ENV</div>
+        <div class="flow-line"></div>
+        <div class="flow-node">FX</div>
+        <div class="flow-line"></div>
+        <div class="flow-node">OUT</div>
+      </section>
+
+      <section class="workspace">
+        <aside class="preset-panel" aria-label="プリセット">
+          <h2>Presets</h2>
+          <div id="presetButtons" class="preset-list"></div>
+          <div class="tip-box">
+            <h3 id="parameterName">Waveform</h3>
+            <p id="parameterHint">波形は音の材料です。Saw は明るく、Square は太く、Triangle はやわらかい印象になります。</p>
+          </div>
+        </aside>
+
+        <section class="synth-panel" aria-label="シンセ操作パネル">
+          <div class="module module-wide">
+            <div class="module-header">
+              <h2>Oscillators</h2>
+              <span>音の材料</span>
+            </div>
+            <div class="control-grid">
+              <div class="control selector-control">
+                <span>OSC 1 Wave</span>
+                <select id="waveform" data-hint="Waveform">
+                  <option value="sawtooth">Saw</option>
+                  <option value="square">Square</option>
+                  <option value="triangle">Triangle</option>
+                  <option value="sine">Sine</option>
+                </select>
+              </div>
+              <div class="control selector-control">
+                <span>OSC 1 Oct</span>
+                <select id="octave" data-hint="Octave">
+                  <option value="0">0</option>
+                  <option value="-1">-1</option>
+                  <option value="1">+1</option>
+                </select>
+              </div>
+              <div class="control selector-control">
+                <span>OSC 2 Wave</span>
+                <select id="osc2Waveform" data-hint="OSC 2 Wave">
+                  <option value="sawtooth">Saw</option>
+                  <option value="square">Square</option>
+                  <option value="triangle">Triangle</option>
+                  <option value="sine">Sine</option>
+                </select>
+              </div>
+              <div class="control selector-control">
+                <span>OSC 2 Oct</span>
+                <select id="osc2Octave" data-hint="OSC 2 Octave">
+                  <option value="0">0</option>
+                  <option value="-1">-1</option>
+                  <option value="1">+1</option>
+                </select>
+              </div>
+              <label class="control knob-control">
+                <span>OSC 2 Mix</span>
+                <input id="osc2Level" type="range" min="0" max="1" value="0.35" step="0.01" data-hint="OSC 2 Mix">
+                <output id="osc2LevelValue">35%</output>
+              </label>
+              <label class="control knob-control">
+                <span>OSC 2 Tune</span>
+                <input id="osc2Detune" type="range" min="-50" max="50" value="7" step="1" data-hint="OSC 2 Tune">
+                <output id="osc2DetuneValue">+7 cents</output>
+              </label>
+              <label class="control knob-control">
+                <span>Sub</span>
+                <input id="subLevel" type="range" min="0" max="0.6" value="0.18" step="0.01" data-hint="Sub">
+                <output id="subLevelValue">18%</output>
+              </label>
+              <label class="control knob-control">
+                <span>Noise</span>
+                <input id="noiseLevel" type="range" min="0" max="0.35" value="0" step="0.01" data-hint="Noise">
+                <output id="noiseLevelValue">0%</output>
+              </label>
+            </div>
+          </div>
+
+          <div class="module module-filter">
+            <div class="module-header">
+              <h2>Filter</h2>
+              <span>明るさ</span>
+            </div>
+            <svg id="filterCurve" class="filter-curve" viewBox="0 0 280 82" role="img" aria-label="フィルターカーブ表示">
+              <rect x="1" y="1" width="278" height="80" rx="6"></rect>
+              <path id="filterCurvePath" d="M 0 15 L 28 15 L 56 15 L 84 16 L 112 18 L 140 25 L 168 44 L 196 62 L 224 70 L 252 73 L 280 74"></path>
+              <line id="filterCutoffLine" x1="120" y1="7" x2="120" y2="75"></line>
+            </svg>
+            <label class="control knob-control">
+              <span>Cutoff</span>
+              <input id="cutoff" type="range" min="120" max="8000" value="2600" step="1" data-hint="Cutoff">
+              <output id="cutoffValue">2600 Hz</output>
+            </label>
+            <label class="control knob-control">
+              <span>Resonance</span>
+              <input id="resonance" type="range" min="0.2" max="18" value="1.2" step="0.1" data-hint="Resonance">
+              <output id="resonanceValue">1.2</output>
+            </label>
+          </div>
+
+          <div class="module module-envelope">
+            <div class="module-header">
+              <h2>Envelope</h2>
+              <span>音量の形</span>
+            </div>
+            <label class="control knob-control">
+              <span>Attack</span>
+              <input id="attack" type="range" min="0.005" max="2" value="0.03" step="0.005" data-hint="Attack">
+              <output id="attackValue">0.03 s</output>
+            </label>
+            <label class="control knob-control">
+              <span>Decay</span>
+              <input id="decay" type="range" min="0.01" max="2" value="0.22" step="0.01" data-hint="Decay">
+              <output id="decayValue">0.22 s</output>
+            </label>
+            <label class="control knob-control">
+              <span>Sustain</span>
+              <input id="sustain" type="range" min="0" max="1" value="0.68" step="0.01" data-hint="Sustain">
+              <output id="sustainValue">68%</output>
+            </label>
+            <label class="control knob-control">
+              <span>Release</span>
+              <input id="release" type="range" min="0.02" max="3" value="0.35" step="0.01" data-hint="Release">
+              <output id="releaseValue">0.35 s</output>
+            </label>
+          </div>
+
+          <div class="module module-lfo">
+            <div class="module-header">
+              <h2>LFO</h2>
+              <span>ゆらぎ</span>
+            </div>
+            <label class="control knob-control">
+              <span>Rate</span>
+              <input id="lfoRate" type="range" min="0.1" max="12" value="4" step="0.1" data-hint="LFO Rate">
+              <output id="lfoRateValue">4.0 Hz</output>
+            </label>
+            <label class="control knob-control">
+              <span>Depth</span>
+              <input id="lfoDepth" type="range" min="0" max="900" value="0" step="1" data-hint="LFO Depth">
+              <output id="lfoDepthValue">0 cents</output>
+            </label>
+          </div>
+
+          <div class="module module-effects">
+            <div class="module-header">
+              <h2>Effects</h2>
+              <span>奥行き</span>
+            </div>
+            <label class="control knob-control">
+              <span>Delay</span>
+              <input id="delayMix" type="range" min="0" max="0.45" value="0.08" step="0.01" data-hint="Delay">
+              <output id="delayMixValue">8%</output>
+            </label>
+            <label class="control knob-control">
+              <span>Volume</span>
+              <input id="volume" type="range" min="0" max="0.9" value="0.42" step="0.01" data-hint="Volume">
+              <output id="volumeValue">42%</output>
+            </label>
+          </div>
+
+          <section class="keyboard-section" aria-label="鍵盤">
+            <div class="keyboard-toolbar">
+              <p>Keyboard: A W S E D F T G Y H U J</p>
+              <div class="keyboard-actions">
+                <button id="panicButton" class="small-button danger-button" type="button">Emergency Stop</button>
+                <button id="holdButton" class="small-button" type="button" aria-pressed="false">Hold</button>
+              </div>
+            </div>
+            <div id="keyboard" class="keyboard"></div>
+          </section>
+
+          <div class="module visualizer">
+            <div class="module-header">
+              <h2>Scope</h2>
+              <span>波を見る</span>
+            </div>
+            <canvas id="scope" width="680" height="190" aria-label="音の波形表示"></canvas>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="simple-synth-app.js?v=1"></script>
+  </body>
+</html>
