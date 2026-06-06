@@ -67,9 +67,9 @@ a {
       rgba(248, 246, 241, 1) 100%
     ),
     url('../images/header-soft.jpg');
-  background-size: 25vw 100%, cover;
-  background-position: center, center;
-  background-repeat: no-repeat;
+  background-size: 25vw 100%, cover, cover;
+  background-position: center, center, center;
+  background-repeat: repeat, no-repeat, no-repeat;
 }
 
 .hero::after {
@@ -818,6 +818,7 @@ footer {
       url('../images/header-soft.jpg');
     background-size: 25vw 100%, cover, 100% auto;
     background-position: center, center, center top;
+    background-repeat: repeat, no-repeat, no-repeat;
   }
 
   .hero > div:not(.hero-quote) {
