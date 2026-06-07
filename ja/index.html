@@ -51,34 +51,46 @@ a {
 
 .hero {
   position: relative;
-  min-height: 88vh;
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 56px;
-  align-items: end;
-  padding: 12vh 5vw 9vh;
-  background-image:
-    linear-gradient(90deg, rgba(17, 17, 17, 0.045) 1px, transparent 1px),
-    linear-gradient(
-      to bottom,
-      rgba(248, 246, 241, 0.72) 0%,
-      rgba(248, 246, 241, 0.78) 42%,
-      rgba(248, 246, 241, 0.92) 78%,
-      rgba(248, 246, 241, 1) 100%
-    ),
-    url('../images/header-soft.jpg');
-  background-size: 25vw 100%, cover, cover;
-  background-position: center, center, center;
-  background-repeat: repeat, no-repeat, no-repeat;
+  min-height: auto;
+  display: block;
+  padding: 0;
+  background: var(--bg);
+}
+
+.hero::before {
+  content: "";
+  display: block;
+  height: clamp(360px, 33.35vw, 720px);
+  background-image: url('../images/acs-header-collage.png?v=2');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero::after {
   content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+  display: block;
   border-bottom: 1px solid var(--line);
   mix-blend-mode: multiply;
+}
+
+.hero > .hero-quote {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.hero-copy {
+  position: static;
+  display: flex;
+  justify-content: flex-start;
+  padding: 24px 5vw 26px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  z-index: 2;
 }
 
 .hero-quote {
@@ -191,6 +203,26 @@ nav a:hover {
   line-height: 1.45;
 }
 
+.hero-kicker {
+  margin: 0 0 14px;
+  color: var(--text);
+  font-size: clamp(16px, 1.8vw, 22px);
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+.hero-copy .hero-identity,
+.hero-copy .hero-kicker,
+.hero-copy h1,
+.hero-copy .lead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 h1 {
   font-size: clamp(36px, 6.4vw, 96px);
   line-height: 1;
@@ -211,13 +243,12 @@ h1 {
 }
 
 .hero-panel {
-  border: 1px solid var(--line);
-  background: rgba(248, 246, 241, 0.7);
-  padding: 34px;
-  min-height: 320px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .hero-panel p {
@@ -242,6 +273,19 @@ h1 {
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 28px;
+}
+
+.hero .button-row {
+  gap: 12px;
+  margin-top: 0;
+}
+
+.hero .btn {
+  min-width: 216px;
+}
+
+.hero .hero-price-link {
+  display: none;
 }
 
 .btn {
@@ -276,6 +320,46 @@ h1 {
 .audience-strip {
   padding: 58px 5vw;
   border-top: 1px solid var(--line);
+}
+
+.background-scope {
+  padding: 64px 5vw;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.background-scope-inner {
+  display: grid;
+  grid-template-columns: 0.38fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.background-scope-copy {
+  max-width: 920px;
+  border-left: 1px solid var(--line);
+  padding-left: 28px;
+}
+
+.background-scope-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(15px, 1.55vw, 18px);
+  line-height: 1.9;
+}
+
+.background-scope-copy p + p {
+  margin-top: 1.1em;
+}
+
+.background-note {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.8;
 }
 
 .audience-inner {
@@ -801,44 +885,62 @@ footer {
   }
 
   .hero {
-    grid-template-columns: 1fr;
+    display: block;
     min-height: auto;
-    gap: 28px;
-    padding-top: 34px;
-    padding-bottom: 44px;
+    padding: 0;
+    background: var(--bg);
+  }
+
+  .hero::before {
+    content: "";
+    display: block;
+    height: clamp(210px, 58vw, 310px);
     background-image:
-      linear-gradient(90deg, rgba(17, 17, 17, 0.04) 1px, transparent 1px),
-      linear-gradient(
-        to bottom,
-        rgba(248, 246, 241, 0.76) 0%,
-        rgba(248, 246, 241, 0.8) 42%,
-        rgba(248, 246, 241, 0.94) 78%,
-        rgba(248, 246, 241, 1) 100%
-      ),
-      url('../images/header-soft.jpg');
-    background-size: 25vw 100%, cover, 100% auto;
-    background-position: center, center, center top;
+      linear-gradient(90deg, rgba(17, 17, 17, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(248, 246, 241, 0.08), rgba(248, 246, 241, 0.32)),
+      url('../images/acs-header-collage.png?v=2');
+    background-size: 25vw 100%, cover, cover;
+    background-position: center, center, center;
     background-repeat: repeat, no-repeat, no-repeat;
+    border-bottom: 1px solid var(--line);
   }
 
-  .hero > div:not(.hero-quote) {
-    order: 1;
+  .hero::after {
+    display: none;
   }
 
-  .hero-quote {
-    order: 2;
+  .hero-copy {
+    position: static;
+    display: block;
+    background: rgba(248, 246, 241, 0.88);
+    border-left: 1px solid var(--line);
+    margin: 0 5vw;
+    padding: 24px 0 26px 18px;
   }
 
-  .hero-panel {
-    order: 3;
-    min-height: auto;
-    padding: 24px;
+  .hero-copy .hero-identity,
+  .hero-copy .hero-kicker,
+  .hero-copy h1,
+  .hero-copy .lead {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
   }
 
   h1 {
-    font-size: clamp(30px, 8.5vw, 40px);
-    line-height: 1.12;
-    margin-bottom: 20px;
+    font-size: clamp(20px, 5.8vw, 24px);
+    line-height: 1.48;
+    margin-bottom: 16px;
+    max-width: 22em;
+  }
+
+  .hero-kicker {
+    margin-bottom: 12px;
+    font-size: 18px;
+    line-height: 1.38;
   }
 
   .eyebrow {
@@ -847,12 +949,12 @@ footer {
 
   .hero-identity {
     gap: 12px;
-    margin-bottom: 22px;
+    margin-bottom: 18px;
     padding-bottom: 12px;
   }
 
   .hero-mark {
-    width: 48px;
+    width: 42px;
     margin-bottom: 0;
   }
 
@@ -862,23 +964,66 @@ footer {
   }
 
   .lead {
-    font-size: 15px;
-    line-height: 1.75;
+    max-width: 30em;
+    font-size: 13px;
+    line-height: 1.78;
   }
 
   .hero .button-row {
-    display: grid;
-    gap: 10px;
-    margin-top: 22px;
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
   }
 
   .hero .btn {
-    width: 100%;
-    min-height: 48px;
+    width: auto;
+    min-width: 0;
+    min-height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    padding: 10px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .hero .hero-price-link {
+    display: none;
+  }
+
+  .hero-quote {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    max-width: none;
+    margin: 24px 5vw 0;
+    padding-left: 16px;
+  }
+
+  .hero-quote p {
+    font-size: 14px;
+  }
+
+  .hero-panel {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    min-height: auto;
+    margin: 24px 5vw 42px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    background: rgba(248, 246, 241, 0.88);
+  }
+
+  .hero-panel p {
+    font-size: 14px;
   }
 
   .section-grid {
@@ -888,6 +1033,25 @@ footer {
 
   .audience-strip {
     padding: 44px 5vw;
+  }
+
+  .background-scope {
+    padding: 44px 5vw;
+  }
+
+  .background-scope-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .background-scope-copy {
+    padding-left: 18px;
+  }
+
+  .background-scope-copy p,
+  .background-note {
+    font-size: 14px;
+    line-height: 1.85;
   }
 
   .audience-inner {
@@ -913,12 +1077,6 @@ footer {
     flex-direction: column;
   }
 
-   .hero-quote {
-    position: static;
-    max-width: 100%;
-    margin-bottom: 32px;
-  }
-  
 }
 /* Final price readability override */
 
@@ -926,12 +1084,12 @@ footer {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
   gap: 0 !important;
-  align-items: start !important;
+  align-items: stretch !important;
 }
 
 #price .price-card,
 #price .price {
-  min-height: 620px !important;
+  min-height: auto !important;
   padding: 36px !important;
   border-radius: 0 !important;
 }
@@ -1158,11 +1316,13 @@ footer {
     </span>
   </div>
 
-  <div>
+  <div class="hero-copy">
     <div class="hero-identity">
       <img class="hero-mark" src="../images/acs-logo.png" alt="Atelier Composition Son" />
       <div class="eyebrow">Online atelier for sound and creation</div>
     </div>
+
+    <div class="hero-kicker">Composition / DTM / Music Theory</div>
 
     <h1>
       作曲・DTM・音楽理論の<br>
@@ -1181,7 +1341,7 @@ footer {
       <div class="button-row">
         <a class="btn primary" href="#contact" data-track="click_free_consultation">30分無料相談を予約する</a>
         <a class="btn" href="#modules" data-track="click_lesson_content">レッスン内容を見る</a>
-        <a class="btn" href="#price" data-track="click_price">料金を見る</a>
+        <a class="btn hero-price-link" href="#price" data-track="click_price">料金を見る</a>
       </div>
     </div>
 
@@ -1197,6 +1357,34 @@ footer {
         Composer / Artist / Educator
       </p>
     </aside>
+  </section>
+
+  <section class="background-scope" aria-labelledby="background-scope-title">
+    <div class="background-scope-inner">
+      <div>
+        <div class="section-kicker">Background &amp; Scope</div>
+        <h2 id="background-scope-title">専門的な背景を、ひとりひとりの学びへ。</h2>
+      </div>
+
+      <div class="background-scope-copy">
+        <p>
+          講師の Sachie Kobayashi は、ジュネーブ高等音楽院で作曲・音楽教育を学び、IRCAM作曲研究課程を経て、
+          ヨーロッパと日本で現代音楽、電子音響、映像音楽、サウンドアートの制作に携わってきました。
+          文化庁海外研修、フランスでのアーティストビザによる活動経験、国際的なアンサンブルや芸術機関との協働をもとに、
+          専門的な制作現場で得た知識を、個人レッスンの形でわかりやすく還元します。
+        </p>
+
+        <p>
+          初心者の基礎づくりから、東京藝大・音大受験、海外音楽院、ポートフォリオ制作、現代音楽、映画音楽、
+          DTM、電子音響、AI音楽制作まで、目的と現在地に合わせて個別に指導します。
+        </p>
+
+        <div class="background-note">
+          「まだ何を作りたいかわからない」段階でも相談できます。現在の経験、好きな音、
+          作りたい方向性を一緒に整理し、必要な学習内容を提案します。
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="audience-strip" aria-labelledby="audience-title">
@@ -1739,7 +1927,7 @@ footer {
   </ul>
 
   <div class="button-row">
-    <a class="btn primary" href="booking.html">無料相談を予約する</a>
+    <a class="btn primary" href="booking.html" data-track="click_free_consultation">無料相談を予約する</a>
   </div>
 </div>
 
