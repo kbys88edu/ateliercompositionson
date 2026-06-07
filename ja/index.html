@@ -211,6 +211,10 @@ nav a:hover {
   font-weight: 400;
 }
 
+.mobile-hero-subcopy {
+  display: none;
+}
+
 .hero-copy .hero-identity,
 .hero-copy .hero-kicker,
 .hero-copy h1,
@@ -876,12 +880,52 @@ footer {
 
 @media (max-width: 900px) {
   header {
-    align-items: flex-start;
+    align-items: center;
     gap: 18px;
+    min-height: 104px;
+    padding: 18px 8vw;
   }
 
   nav {
     display: none;
+  }
+
+  header::after {
+    content: "";
+    width: 34px;
+    height: 24px;
+    margin-left: auto;
+    background:
+      linear-gradient(var(--text), var(--text)) 0 0 / 100% 1px no-repeat,
+      linear-gradient(var(--text), var(--text)) 0 50% / 100% 1px no-repeat,
+      linear-gradient(var(--text), var(--text)) 0 100% / 100% 1px no-repeat;
+  }
+
+  .logo {
+    gap: 20px;
+    letter-spacing: 0.2em;
+    line-height: 1.45;
+  }
+
+  .logo::after {
+    content: "";
+    width: 1px;
+    height: 48px;
+    background: var(--line);
+    order: 1;
+  }
+
+  .logo img {
+    width: 48px;
+    height: 48px;
+    order: 0;
+  }
+
+  .logo span {
+    display: block;
+    max-width: 155px;
+    order: 2;
+    white-space: normal;
   }
 
   .hero {
@@ -894,15 +938,15 @@ footer {
   .hero::before {
     content: "";
     display: block;
-    height: clamp(210px, 58vw, 310px);
+    width: calc(100% - 16vw);
+    height: clamp(330px, 98vw, 420px);
+    margin: 0 auto;
     background-image:
-      linear-gradient(90deg, rgba(17, 17, 17, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(248, 246, 241, 0.08), rgba(248, 246, 241, 0.32)),
+      linear-gradient(to bottom, rgba(248, 246, 241, 0.02), rgba(248, 246, 241, 0.06)),
       url('../images/acs-header-collage.png?v=2');
-    background-size: 25vw 100%, cover, cover;
-    background-position: center, center, center;
-    background-repeat: repeat, no-repeat, no-repeat;
-    border-bottom: 1px solid var(--line);
+    background-size: cover, auto 100%;
+    background-position: center, 64% center;
+    background-repeat: no-repeat, no-repeat;
   }
 
   .hero::after {
@@ -912,16 +956,15 @@ footer {
   .hero-copy {
     position: static;
     display: block;
-    background: rgba(248, 246, 241, 0.88);
-    border-left: 1px solid var(--line);
-    margin: 0 5vw;
-    padding: 24px 0 26px 18px;
+    background: var(--bg);
+    border-left: 0;
+    margin: 0;
+    padding: 32px 8vw 34px;
+    text-align: left;
   }
 
   .hero-copy .hero-identity,
-  .hero-copy .hero-kicker,
-  .hero-copy h1,
-  .hero-copy .lead {
+  .hero-copy .hero-kicker {
     position: static;
     width: auto;
     height: auto;
@@ -930,69 +973,13 @@ footer {
     white-space: normal;
   }
 
-  h1 {
-    font-size: clamp(20px, 5.8vw, 24px);
-    line-height: 1.48;
-    margin-bottom: 16px;
-    max-width: 22em;
-  }
-
-  .hero-kicker {
-    margin-bottom: 12px;
-    font-size: 18px;
-    line-height: 1.38;
-  }
-
-  .eyebrow {
-    font-size: 11px;
-  }
-
-  .hero-identity {
-    gap: 12px;
-    margin-bottom: 18px;
-    padding-bottom: 12px;
-  }
-
-  .hero-mark {
-    width: 42px;
-    margin-bottom: 0;
-  }
-
-  .hero-identity .eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.16em;
-  }
-
-  .lead {
-    max-width: 30em;
-    font-size: 13px;
-    line-height: 1.78;
-  }
-
-  .hero .button-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 18px;
-  }
-
-  .hero .btn {
-    width: auto;
-    min-width: 0;
-    min-height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 10px 12px;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-
-  .hero .hero-price-link {
+  .hero-copy .hero-identity,
+  .hero-copy .hero-kicker,
+  .hero-copy .lead {
     display: none;
   }
 
-  .hero-quote {
+  .hero-copy h1 {
     position: static;
     width: auto;
     height: auto;
@@ -1000,30 +987,60 @@ footer {
     clip: auto;
     white-space: normal;
     max-width: none;
-    margin: 24px 5vw 0;
-    padding-left: 16px;
+    display: block;
+    font-size: clamp(23px, 6.7vw, 29px);
+    line-height: 1.48;
+    letter-spacing: 0.055em;
+    font-weight: 600;
+    margin: 0 0 16px;
   }
 
-  .hero-quote p {
-    font-size: 14px;
+  .mobile-hero-subcopy {
+    display: block;
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.65;
+    letter-spacing: 0.12em;
+  }
+
+  .hero .button-row {
+    display: grid;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  .hero .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    padding: 0 28px;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .hero .btn::after {
+    content: "→";
+    margin-left: 18px;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .hero .hero-price-link {
+    display: none;
+  }
+
+  .hero-quote {
+    display: none;
   }
 
   .hero-panel {
-    position: static;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    clip: auto;
-    white-space: normal;
-    min-height: auto;
-    margin: 24px 5vw 42px;
-    padding: 22px;
-    border: 1px solid var(--line);
-    background: rgba(248, 246, 241, 0.88);
-  }
-
-  .hero-panel p {
-    font-size: 14px;
+    display: none;
   }
 
   .section-grid {
@@ -1328,6 +1345,8 @@ footer {
       作曲・DTM・音楽理論の<br>
       オンライン個人レッスン
     </h1>
+
+      <p class="mobile-hero-subcopy">音と創作のためのオンラインアトリエ</p>
 
       <p class="lead">
         作曲を始めたい方、音楽理論を作品に使いたい方、
