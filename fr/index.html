@@ -146,33 +146,33 @@
 
     .hero {
       position: relative;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 56px;
-      min-height: 88vh;
-      align-items: end;
-      padding: 14vh 5vw 9vh;
+      display: block;
+      min-height: auto;
+      margin-top: 66px;
+      padding: 0;
       border-bottom: 1px solid var(--line);
-      background-image:
-        linear-gradient(
-          to bottom,
-          rgba(247, 245, 239, 0.02) 0%,
-          rgba(247, 245, 239, 0.14) 36%,
-          rgba(247, 245, 239, 0.66) 82%,
-          rgba(247, 245, 239, 1) 100%
-        ),
-        url('../images/header-soft.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background: var(--bg);
       overflow: visible;
     }
 
+    .hero::before {
+      content: "";
+      display: block;
+      height: clamp(360px, 42.85vw, 720px);
+      background-image: url('../images/acs-header-fr.png');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      border-bottom: 1px solid var(--line);
+    }
+
     .identity {
-      position: relative;
-      z-index: 2;
-      align-self: start;
-      max-width: 360px;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
 
     .logo-image {
@@ -198,19 +198,17 @@
     }
 
     .hero-copy {
-      position: relative;
+      position: static;
       z-index: 2;
-      align-self: end;
-      justify-self: end;
-      max-width: 620px;
-      padding: 34px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 24px;
+      max-width: none;
+      padding: 28px 5vw 30px;
+      background: var(--bg);
+      border: 0;
+      border-radius: 0;
     }
 
     .hero-label {
-      margin-bottom: 24px;
+      margin-bottom: 10px;
       color: var(--muted);
       font-size: 13px;
       letter-spacing: 0.16em;
@@ -218,35 +216,35 @@
     }
 
     .intro-title {
-      font-size: clamp(42px, 5.6vw, 84px);
-      line-height: 1.02;
+      max-width: 920px;
+      font-size: clamp(30px, 3.5vw, 54px);
+      line-height: 1.12;
       font-weight: 400;
-      letter-spacing: -0.055em;
-      margin-bottom: 24px;
+      letter-spacing: -0.035em;
+      margin-bottom: 14px;
     }
 
     .hero-copy p {
       color: var(--muted);
       font-size: 15px;
       line-height: 1.75;
-      max-width: 560px;
+      max-width: 760px;
     }
 
-    .hero-copy p + p {
-      margin-top: 13px;
+    .hero-copy p + p,
+    .hero-copy .desktop-extra {
+      margin-top: 10px;
     }
 
     .separator {
-      height: 1px;
-      background: var(--line);
-      margin: 24px 0;
+      display: none;
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 28px;
+      margin-top: 22px;
     }
 
     .btn {
@@ -254,13 +252,15 @@
       align-items: center;
       justify-content: center;
       border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 12px 18px;
+      border-radius: 0;
+      min-height: 48px;
+      padding: 0 24px;
       background: transparent;
       color: var(--text);
       font: inherit;
       font-size: 14px;
       line-height: 1;
+      letter-spacing: 0.08em;
       cursor: pointer;
     }
 
@@ -801,29 +801,122 @@
 
     @media (max-width: 980px) {
       .top-nav {
-        align-items: flex-start;
-        min-height: auto;
-        padding: 16px 5vw;
-        flex-direction: column;
+        position: static;
+        align-items: center;
+        min-height: 104px;
+        padding: 18px 8vw;
+        flex-direction: row;
+        background: var(--bg);
+        backdrop-filter: none;
       }
 
       nav {
-        justify-content: flex-start;
-        overflow-x: auto;
-        width: 100%;
-        gap: 16px;
-        padding-bottom: 2px;
+        display: none;
+      }
+
+      .top-nav::after {
+        content: "";
+        width: 34px;
+        height: 24px;
+        margin-left: auto;
+        background:
+          linear-gradient(var(--text), var(--text)) 0 0 / 100% 1px no-repeat,
+          linear-gradient(var(--text), var(--text)) 0 50% / 100% 1px no-repeat,
+          linear-gradient(var(--text), var(--text)) 0 100% / 100% 1px no-repeat;
+      }
+
+      .brand {
+        gap: 20px;
+        letter-spacing: 0.2em;
+        line-height: 1.45;
+      }
+
+      .brand::after {
+        content: "";
+        width: 1px;
+        height: 48px;
+        background: var(--line);
+        order: 1;
+      }
+
+      .brand img {
+        width: 48px;
+        height: 48px;
+        order: 0;
+      }
+
+      .brand span {
+        display: block;
+        max-width: 155px;
+        order: 2;
+        color: var(--text);
+        white-space: normal;
       }
 
       .hero {
-        grid-template-columns: 1fr;
+        display: block;
         min-height: auto;
-        padding: 140px 5vw 72px;
+        margin-top: 0;
+        padding: 0;
+      }
+
+      .hero::before {
+        width: calc(100% - 16vw);
+        height: clamp(142px, 36.8vw, 220px);
+        margin: 0 auto;
+        background-size: contain;
+        background-position: center;
+        border-bottom: 0;
       }
 
       .hero-copy {
-        justify-self: start;
+        display: block;
         width: 100%;
+        padding: 32px 8vw 34px;
+        text-align: left;
+      }
+
+      .hero-label,
+      .hero-copy .desktop-extra,
+      .separator {
+        display: none;
+      }
+
+      .intro-title {
+        max-width: none;
+        font-size: clamp(25px, 7vw, 31px);
+        line-height: 1.38;
+        letter-spacing: 0.02em;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+      .hero-copy p {
+        font-size: 15px;
+        line-height: 1.7;
+        letter-spacing: 0.06em;
+      }
+
+      .hero-actions {
+        display: grid;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+        min-height: 56px;
+        justify-content: space-between;
+        padding: 0 28px;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      .hero-actions .btn::after {
+        content: "→";
+        margin-left: 18px;
+        font-size: 24px;
+        line-height: 1;
       }
 
       section,
@@ -859,19 +952,15 @@
     @media (max-width: 560px) {
       .brand span {
         font-size: 12px;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.14em;
       }
 
       section {
         padding: 72px 5vw;
       }
 
-      .hero-copy {
-        padding: 24px;
-      }
-
       .intro-title {
-        font-size: clamp(38px, 13vw, 64px);
+        font-size: clamp(24px, 6.6vw, 28px);
       }
 
       .documentation-grid img,
@@ -924,16 +1013,16 @@
       </div>
 
       <div class="hero-copy">
-        <div class="hero-label">Online atelier for sound and creation</div>
-        <div class="intro-title">Composition, sound design et création musicale.</div>
-        <p>Un accompagnement pour développer une pratique musicale personnelle&nbsp;: écriture, forme, timbre, écoute, outils numériques et direction artistique.</p>
-        <p>Les nouvelles technologies, y compris l’IA, peuvent être abordées comme outils de création, de recherche ou de performance lorsqu’elles servent réellement le projet artistique.</p>
+        <div class="hero-label">Cours individuels en ligne</div>
+        <div class="intro-title">Composition, théorie musicale et création sonore.</div>
+        <p>Un accompagnement personnalisé pour apprendre, comprendre et créer&nbsp;: écriture, écoute, timbre, outils numériques et développement de projets.</p>
+        <p class="desktop-extra">Les nouvelles technologies, y compris l’IA, peuvent être abordées comme outils de création, de recherche ou de performance lorsqu’elles servent réellement le projet artistique.</p>
         <div class="separator"></div>
-        <p>Pour compositeurs, producteurs, artistes sonores, étudiants et créateurs qui souhaitent structurer leurs idées et affiner leur langage musical.</p>
-        <p>Activité entre composition contemporaine, musique électronique et recherche sonore.</p>
+        <p class="desktop-extra">Pour débutants, étudiants, compositeurs, producteurs, artistes sonores et créateurs qui souhaitent structurer leurs idées et affiner leur langage musical.</p>
+        <p class="desktop-extra">Activité entre composition contemporaine, musique électronique et recherche sonore.</p>
 
         <div class="hero-actions">
-          <a class="btn primary" href="#contact" data-track="course_request_click">demander un cours</a>
+          <a class="btn primary" href="#contact" data-track="course_request_click">réserver un échange</a>
           <a class="btn" href="#formats" data-track="formats_click">voir les formats</a>
         </div>
       </div>
