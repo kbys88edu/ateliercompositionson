@@ -773,11 +773,49 @@ h2 {
   margin-top: 1em;
 }
 
+.legal-disclosure {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 24px;
+  margin: 28px 0 36px;
+  border: 1px solid var(--line);
+  padding: 28px;
+  background: rgba(255, 254, 250, 0.58);
+}
+
+.legal-disclosure h3 {
+  margin: 0 0 14px;
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.legal-disclosure p,
+.legal-disclosure li {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.legal-disclosure ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.legal-disclosure .button-row {
+  margin-top: 20px;
+}
+
 @media (max-width: 900px) {
   .price-grid,
   .voices-grid,
   .policy-grid {
     grid-template-columns: 1fr;
+  }
+
+  .legal-disclosure {
+    grid-template-columns: 1fr;
+    padding: 22px;
   }
 
   .price-card {
@@ -2041,6 +2079,11 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
       目的やレベルに応じて、初回相談・基礎レッスン・専門メンタリングをお選びいただけます。
       Advanced は継続的な作品改善・受験対策・ポートフォリオ制作に対応する月謝制の専門コースです。
     </p>
+    <p class="note">
+      お申し込み前に、支払方法、キャンセル、返金、提供時期を含む
+      <a href="terms.html" data-track="terms_page_click">レッスン規約・キャンセルポリシー / Commerce Disclosure</a>
+      をご確認ください。
+    </p>
 
     <div class="price-grid">
 
@@ -2202,6 +2245,31 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
   <div class="container">
     <p class="section-kicker">Policy</p>
     <h2 class="section-title">受講に関する注意事項</h2>
+
+    <div class="legal-disclosure">
+      <div>
+        <h3>レッスン規約・商取引に関する表示</h3>
+        <p>
+          Atelier Composition Son / Sachie Kobayashi のオンライン個人レッスン、メール添削、
+          無料学習補助ツールに関する支払条件、提供時期、キャンセル、返金、問い合わせ先をまとめています。
+        </p>
+        <div class="button-row">
+          <a class="btn primary" href="terms.html" data-track="terms_page_click">
+            規約ページを開く
+          </a>
+        </div>
+      </div>
+      <div>
+        <ul>
+          <li>事業名: Sachie Kobayashi (Studio Cucurbits.) / Atelier Composition Son</li>
+          <li>所在地: 〒150-0043 東京都渋谷区道玄坂1-10-8 渋谷道玄坂東急ビル2F-C Shibuya Office</li>
+          <li>連絡先: info@sachiekobayashi.com / 050-5530-1800（平日10:00-18:00 JST）</li>
+          <li>支払方法: Stripeによるクレジットカード決済を基本とし、銀行振込は事前相談により対応します。</li>
+          <li>提供時期: オンラインレッスンは合意した日時に実施し、メール添削は支払いと資料受領後、通常3日以内を目安に返信します。</li>
+          <li>返金: 受講者都合のキャンセル、欠席、途中終了、期待内容との相違による返金は原則行いません。講師都合で提供できない場合は振替または返金で対応します。</li>
+        </ul>
+      </div>
+    </div>
 
     <div class="policy-grid">
       <div class="policy-card">
@@ -2406,6 +2474,11 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
           メール添削レッスンをご希望の場合は、内容・分量を確認後、Stripe決済リンクをお送りします。
           お支払い確認後に添削を開始します。
         </p>
+        <p class="note">
+          決済、キャンセル、返金、日程変更に関する条件は
+          <a href="terms.html" data-track="terms_page_click">レッスン規約・キャンセルポリシー</a>
+          に記載しています。ご不明点は送信前にお問い合わせください。
+        </p>
 
         <form class="contact-form" action="https://formspree.io/f/mbdbpqrj" method="POST">
           <div>
@@ -2451,7 +2524,8 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
         </form>
 
         <p class="note">
-          直接メールする場合：info@sachiekobayashi.com
+          直接メールする場合：info@sachiekobayashi.com<br>
+          電話でのお問い合わせ：050-5530-1800（平日 10:00-18:00 JST）
         </p>
       </div>
     </div>
@@ -2461,7 +2535,10 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
 
 <footer>
   <div>© Atelier Composition Son</div>
-  <div>Japanese / Français / English</div>
+  <div>
+    Japanese / Français / English<br>
+    <a href="terms.html" data-track="terms_page_click">Terms &amp; Policies / レッスン規約</a>
+  </div>
 </footer>
 
 
