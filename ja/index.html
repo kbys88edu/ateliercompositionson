@@ -957,16 +957,9 @@ footer {
     display: none;
   }
 
-  header::after {
-    content: "";
-    width: 34px;
-    height: 24px;
-    margin-left: auto;
-    background:
-      linear-gradient(var(--text), var(--text)) 0 0 / 100% 1px no-repeat,
-      linear-gradient(var(--text), var(--text)) 0 50% / 100% 1px no-repeat,
-      linear-gradient(var(--text), var(--text)) 0 100% / 100% 1px no-repeat;
-  }
+header::after {
+  display: none;
+}
 
   .logo {
     gap: 14px;
@@ -1439,6 +1432,23 @@ footer {
   }
 }
 
+
+  .teacher-link {
+  margin: 0 0 28px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.teacher-link a {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+}
+
+.teacher-link a:hover {
+  opacity: 0.65;
+}
+
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
@@ -1647,6 +1657,15 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
     <div class="teacher-name">Sachie Kobayashi</div>
     <div class="teacher-role">Composer / Artist / Educator</div>
 
+<div class="teacher-name">Sachie Kobayashi</div>
+<div class="teacher-role">Composer / Artist / Educator</div>
+
+<p class="teacher-link">
+  <a href="https://www.sachiekobayashi.com/" target="_blank" rel="noopener">
+    Artist website
+  </a>
+</p>
+    
     <p class="teacher-text">
       神奈川県生まれ。作曲家・アーティスト。ジュネーブ高等音楽院にて
       作曲・音楽理論修士および音楽教育修士課程を修了。
