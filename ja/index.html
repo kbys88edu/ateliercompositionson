@@ -1454,73 +1454,26 @@ header::after {
 }
 
 @media (max-width: 900px) {
-  header::after {
-    display: none !important;
-  }
-
-  .menu-toggle {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 34px;
-    height: 24px;
-    margin-left: auto;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    z-index: 30;
-  }
-
-  .menu-toggle span {
-    display: block;
-    width: 100%;
-    height: 1px;
-    background: var(--text);
-    transition: transform 0.25s ease, opacity 0.25s ease;
-  }
-
-  .menu-toggle.is-open span:nth-child(1) {
-    transform: translateY(11px) rotate(45deg);
-  }
-
-  .menu-toggle.is-open span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .menu-toggle.is-open span:nth-child(3) {
-    transform: translateY(-11px) rotate(-45deg);
-  }
-
   .site-nav {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 22px;
-    padding: 96px 7vw 48px;
-    background: rgba(248, 246, 241, 0.97);
-    backdrop-filter: blur(12px);
-    transform: translateX(100%);
-    transition: transform 0.28s ease;
-    z-index: 20;
-  }
-
-  .site-nav.is-open {
-    transform: translateX(0);
+    background: var(--bg);
+    backdrop-filter: none;
+    justify-content: flex-start;
+    gap: 0;
+    padding: 104px 7vw 40px;
   }
 
   .site-nav a {
-    font-size: 24px;
-    line-height: 1.2;
-    color: var(--text);
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 14px;
+    font-size: 15px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--fine-line);
+    padding: 14px 0;
   }
 
-  body.menu-open {
-    overflow: hidden;
+  .site-nav a:hover {
+    color: var(--text);
   }
 }
 
@@ -1551,17 +1504,21 @@ header::after {
     <span></span>
   </button>
 
-  <nav class="site-nav" aria-label="Main navigation">
-    <a href="#about">About</a>
-    <a href="#instructor">Instructor</a>
-    <a href="#modules">Modules</a>
-    <a href="#tools">Tools</a>
-    <a href="#price" data-track="click_price">Price</a>
-    <a href="#policy">Policies</a>
-    <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
-    <a href="../fr/">FR</a>
-  </nav>
+<nav class="site-nav" aria-label="メインメニュー">
+  <a href="#about">概要</a>
+  <a href="#instructor">講師</a>
+  <a href="#modules">レッスン内容</a>
+  <a href="#lessons">対象者</a>
+  <a href="#ai-review">AI添削</a>
+  <a href="#plugins">対応プラグイン</a>
+  <a href="#tools">無料ツール</a>
+  <a href="#voices">受講者の声</a>
+  <a href="#price">料金</a>
+  <a href="#policy">規約</a>
+  <a href="#faq">よくある質問</a>
+  <a href="#contact">お問い合わせ</a>
+  <a href="../fr/">FR</a>
+</nav>
 </header>
 
 <main id="top">
