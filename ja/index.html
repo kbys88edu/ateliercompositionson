@@ -1449,6 +1449,20 @@ header::after {
     overflow: hidden;
   }
 }
+
+  @media (max-width: 900px) {
+  header {
+    background: var(--bg) !important;
+    backdrop-filter: none !important;
+  }
+
+  .site-nav {
+    background:
+      linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
+      var(--bg) !important;
+    opacity: 1 !important;
+  }
+}
   </style>
 
 </head>
@@ -1485,7 +1499,6 @@ header::after {
   </nav>
 </header>
 
-<main id="top">
 <main id="top">
 <section class="hero">
   <div class="hero-quote">
