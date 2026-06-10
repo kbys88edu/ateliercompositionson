@@ -1383,143 +1383,75 @@ header::after {
   color: inherit;
   text-decoration: none;
 }
-
 @media (max-width: 900px) {
-  .modules {
-    gap: 14px;
-    border-top: 0;
+  header::after {
+    display: none !important;
   }
-
-  .module,
-  .module-link,
-  .module-listening,
-  .module-link-featured {
-    display: grid;
-    grid-template-columns: 1fr !important;
-    gap: 12px;
-    padding: 22px 18px;
-    border: 1px solid var(--line);
-    background: rgba(255, 254, 250, 0.42);
-  }
-
-  .module-number {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .module-title {
-    font-size: 20px;
-    line-height: 1.35;
-  }
-
-  .module-desc {
-    font-size: 14px;
-    line-height: 1.75;
-  }
-
-  .module-button,
-  .module-view {
-    width: 100%;
-    min-height: 42px;
-    margin-top: 4px;
-    justify-content: center;
-    padding: 11px 14px;
-    border: 1px solid var(--accent);
-    color: var(--text);
-    background: transparent;
-    text-align: center;
-  }
-}
-
-
-  .teacher-link {
-  margin: 0 0 28px;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.teacher-link a {
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 3px;
-}
-
-.teacher-link a:hover {
-  opacity: 0.65;
-}
 
   .menu-toggle {
-  display: none;
-}
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 34px;
+    height: 24px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 30;
+  }
 
-@media (max-width: 900px) {
+  .menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--text);
+  }
+
   .site-nav {
-    background: var(--bg);
-    backdrop-filter: none;
+    position: fixed;
+    inset: 0;
+    display: flex !important;
+    flex-direction: column;
     justify-content: flex-start;
     gap: 0;
     padding: 104px 7vw 40px;
+    background: var(--bg);
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    z-index: 20;
+  }
+
+  .site-nav.is-open {
+    transform: translateX(0);
   }
 
   .site-nav a {
     font-size: 15px;
     line-height: 1.4;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     color: var(--muted);
     border-bottom: 1px solid var(--fine-line);
     padding: 14px 0;
   }
 
-  .site-nav a:hover {
-    color: var(--text);
+  .menu-toggle.is-open span:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+  }
+
+  .menu-toggle.is-open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.is-open span:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+  }
+
+  body.menu-open {
+    overflow: hidden;
   }
 }
-
-</style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-Y1792EBWTT');
-</script>
-
-</head>
-
-<body>
-
-<header>
-  <a class="logo" href="#top" aria-label="Atelier Composition Son home">
-    <img src="../images/acs-logo.png" alt="" />
-    <span>Atelier Composition Son</span>
-  </a>
-
-  <button class="menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-<nav class="site-nav" aria-label="メインメニュー">
-  <a href="#about">概要</a>
-  <a href="#instructor">講師</a>
-  <a href="#modules">レッスン内容</a>
-  <a href="#lessons">対象者</a>
-  <a href="#ai-review">AI添削</a>
-  <a href="#plugins">対応プラグイン</a>
-  <a href="#tools">無料ツール</a>
-  <a href="#voices">受講者の声</a>
-  <a href="#price">料金</a>
-  <a href="#policy">規約</a>
-  <a href="#faq">よくある質問</a>
-  <a href="#contact">お問い合わせ</a>
-  <a href="../fr/">FR</a>
-</nav>
-</header>
 
 <main id="top">
 <section class="hero">
