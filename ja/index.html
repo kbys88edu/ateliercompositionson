@@ -1449,6 +1449,81 @@ header::after {
   opacity: 0.65;
 }
 
+  .menu-toggle {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  header::after {
+    display: none !important;
+  }
+
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 34px;
+    height: 24px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 30;
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--text);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+
+  .menu-toggle.is-open span:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+  }
+
+  .menu-toggle.is-open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.is-open span:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+  }
+
+  .site-nav {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+    padding: 96px 7vw 48px;
+    background: rgba(248, 246, 241, 0.97);
+    backdrop-filter: blur(12px);
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    z-index: 20;
+  }
+
+  .site-nav.is-open {
+    transform: translateX(0);
+  }
+
+  .site-nav a {
+    font-size: 24px;
+    line-height: 1.2;
+    color: var(--text);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 14px;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
@@ -1470,7 +1545,13 @@ header::after {
     <span>Atelier Composition Son</span>
   </a>
 
-  <nav aria-label="Main navigation">
+  <button class="menu-toggle" type="button" aria-label="メニューを開く" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <nav class="site-nav" aria-label="Main navigation">
     <a href="#about">About</a>
     <a href="#instructor">Instructor</a>
     <a href="#modules">Modules</a>
@@ -2556,6 +2637,48 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
     <a href="terms.html" data-track="terms_page_click">Terms &amp; Policies / レッスン規約</a>
   </div>
 </footer>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const menuToggle = document.querySelector(".menu-toggle");
+    const siteNav = document.querySelector(".site-nav");
+    const navLinks = document.querySelectorAll(".site-nav a");
+
+    if (!menuToggle || !siteNav) return;
+
+    function closeMenu() {
+      menuToggle.classList.remove("is-open");
+      siteNav.classList.remove("is-open");
+      document.body.classList.remove("menu-open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "メニューを開く");
+    }
+
+    function openMenu() {
+      menuToggle.classList.add("is-open");
+      siteNav.classList.add("is-open");
+      document.body.classList.add("menu-open");
+      menuToggle.setAttribute("aria-expanded", "true");
+      menuToggle.setAttribute("aria-label", "メニューを閉じる");
+    }
+
+    menuToggle.addEventListener("click", function () {
+      if (siteNav.classList.contains("is-open")) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    navLinks.forEach(function (link) {
+      link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeMenu();
+    });
+  });
+</script>
 
 
 <script>
