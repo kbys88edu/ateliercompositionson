@@ -1743,11 +1743,15 @@ body {
   まずは30分の無料相談で、現在の課題と学習の進め方を整理します。
 </p>
 
-      <div class="button-row">
-        <a class="btn primary" href="#contact" data-track="click_free_consultation">自分に合うレッスンを相談する</a>
-        <a class="btn" href="#modules" data-track="click_lesson_content">レッスン内容を見る</a>
-      </div>
-    </div>
+<div class="button-row">
+  <a class="btn primary" href="#booking" data-track="click_free_consultation">
+    30分の無料相談を予約する
+  </a>
+
+  <a class="btn" href="#email-correction" data-track="click_email_correction">
+    メール添削を依頼する
+  </a>
+</div>
 
     <aside class="hero-panel">
       <p>
@@ -2707,83 +2711,233 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
     </div>
   </section>
 
-  <section id="contact">
-    <div class="section-grid">
-      <div>
-        <div class="section-kicker">Contact</div>
-        <h2>相談・問い合わせ</h2>
+
+  
+<section id="booking">
+  <div class="section-grid">
+    <div>
+      <div class="section-kicker">Booking / Contact</div>
+      <h2>予約・添削・お問い合わせ</h2>
+    </div>
+
+    <div class="text-block">
+      <p>
+        30分の無料相談、メール添削、その他のお問い合わせから、目的に合うものをお選びください。
+      </p>
+
+      <div class="booking-grid">
+        <article class="booking-card booking-card-primary">
+          <div class="num">01</div>
+          <h3>30分の無料相談</h3>
+          <p>
+            作曲、DTM、音楽理論、ソルフェージュ、電子音響などについて、
+            現在の目的やレベルに合わせて進め方を相談できます。
+          </p>
+          <a class="btn primary" href="#timerex-booking" data-track="click_free_consultation">
+            日程を選ぶ
+          </a>
+        </article>
+
+        <article class="booking-card">
+          <div class="num">02</div>
+          <h3>メール添削</h3>
+          <p>
+            楽譜、和声・対位法課題、MIDI、MusicXML、音源などを送り、
+            文章でフィードバックを受けられます。
+          </p>
+          <a class="btn" href="#email-correction" data-track="click_email_correction">
+            添削を依頼する
+          </a>
+        </article>
+
+        <article class="booking-card">
+          <div class="num">03</div>
+          <h3>その他のお問い合わせ</h3>
+          <p>
+            制作依頼、料金、継続受講、取材、コラボレーションなどについては、
+            通常のお問い合わせフォームからご連絡ください。
+          </p>
+          <a class="btn" href="#general-contact" data-track="click_general_contact">
+            問い合わせる
+          </a>
+        </article>
       </div>
 
-      <div class="text-block">
+      <div id="timerex-booking" class="timerex-area">
+        <h3>30分の無料相談を予約する</h3>
         <p>
-          受講を希望される方は、現在の経験、興味のある内容、作りたいもの、使用しているソフトなどを簡単に書いてご連絡ください。
+          以下のカレンダーから、ご都合のよい日時をお選びください。
+          相談内容がまだはっきり決まっていない場合でも問題ありません。
         </p>
 
+        <div class="timerex-embed">
+          <!-- Begin TimeRex Widget -->
+          <div id="timerex_calendar" data-url="https://timerex.net/s/sonata2153_79ec/cefc7ba1"></div>
 
-        <p class="note">
-          メール添削レッスンをご希望の場合は、内容・分量を確認後、Stripe決済リンクをお送りします。
-          お支払い確認後に添削を開始します。
-        </p>
-        <p class="note">
-          決済、キャンセル、返金、日程変更に関する条件は
-          <a href="terms.html" data-track="terms_page_click">レッスン規約・キャンセルポリシー</a>
-          に記載しています。ご不明点は送信前にお問い合わせください。
-        </p>
+          <script id="timerex_embed" src="https://asset.timerex.net/js/embed.js"></script>
 
-        <form class="contact-form" action="https://formspree.io/f/mbdbpqrj" method="POST">
-          <div>
-            <label for="name">お名前</label>
-            <input type="text" id="name" name="name" required />
-          </div>
-
-          <div>
-            <label for="email">メールアドレス</label>
-            <input type="email" id="email" name="email" required />
-          </div>
-
-          <div>
-            <label for="course">ご希望の内容</label>
-            <select id="course" name="course" required>
-              <option value="">選択してください</option>
-              <option value="Online Lesson — Beginner">Online Lesson — Beginner</option>
-              <option value="Online Lesson — Advanced">Online Lesson — Advanced</option>
-              <option value="In-person Lesson">In-person Lesson</option>
-              <option value="作品講評・ポートフォリオ相談">作品講評・ポートフォリオ相談</option>
-              <option value="メール添削レッスン">メール添削レッスン</option>
-              <option value="AI生成音源レビュー">AI生成音源レビュー</option>
-              <option value="和声・対位法チェッカー結果の相談">和声・対位法チェッカー結果の相談</option>
-              <option value="相談して決めたい">相談して決めたい</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="message">相談内容</label>
-            <textarea
-              id="message"
-              name="message"
-              rows="8"
-              required
-              placeholder="現在の経験、興味のある内容、使用しているソフト、作りたい作品、ご希望の頻度などをご記入ください。"
-            ></textarea>
-          </div>
-
-          <div class="button-row">
-            <button type="submit" class="btn primary" data-track="form_submit_click">送信する</button>
-            <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_click">メールで相談する</a>
-          </div>
-        </form>
-
-               </form>
-
-       </form>
-
-<p class="note">
-  直接メールする場合：info@sachiekobayashi.com<br>
-  電話でのお問い合わせ：050-5530-1800（平日 10:00-18:00 JST）
-</p>
+          <script type="text/javascript">
+            TimerexCalendar();
+          </script>
+          <!-- End TimeRex Widget -->
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<section id="email-correction">
+  <div class="section-grid">
+    <div>
+      <div class="section-kicker">Email Correction</div>
+      <h2>メール添削を依頼する</h2>
+    </div>
+
+    <div class="text-block">
+      <p>
+        楽譜、和声・対位法課題、作曲作品、MIDI、MusicXML、音源などを送って、
+        文章でフィードバックを受けられます。
+      </p>
+
+      <p class="note">
+        内容と分量を確認後、料金と納期をご案内します。
+        お支払い確認後に添削を開始します。
+      </p>
+
+      <form class="contact-form" action="https://formspree.io/f/mbdbpqrj" method="POST">
+        <input type="hidden" name="form_type" value="email_correction">
+
+        <div>
+          <label for="correction-name">お名前</label>
+          <input type="text" id="correction-name" name="name" required>
+        </div>
+
+        <div>
+          <label for="correction-email">メールアドレス</label>
+          <input type="email" id="correction-email" name="email" required>
+        </div>
+
+        <div>
+          <label for="correction-type">添削したい内容</label>
+          <select id="correction-type" name="correction_type" required>
+            <option value="">選択してください</option>
+            <option value="楽譜添削">楽譜添削</option>
+            <option value="和声・対位法課題">和声・対位法課題</option>
+            <option value="作曲作品">作曲作品</option>
+            <option value="DTM / ミックス">DTM / ミックス</option>
+            <option value="AI生成音源レビュー">AI生成音源レビュー</option>
+            <option value="チェッカー結果の相談">チェッカー結果の相談</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="file-link">ファイル共有リンク</label>
+          <input
+            type="url"
+            id="file-link"
+            name="file_link"
+            placeholder="Google Drive、Dropbox、WeTransfer などのURL"
+          >
+        </div>
+
+        <div>
+          <label for="correction-message">相談内容</label>
+          <textarea
+            id="correction-message"
+            name="message"
+            rows="8"
+            required
+            placeholder="添削してほしい内容、困っている点、締切希望、現在のレベルなどをご記入ください。"
+          ></textarea>
+        </div>
+
+        <div class="button-row">
+          <button type="submit" class="btn primary" data-track="email_correction_submit_click">
+            添削を依頼する
+          </button>
+
+          <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_click">
+            メールで送る
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="general-contact">
+  <div class="section-grid">
+    <div>
+      <div class="section-kicker">General Contact</div>
+      <h2>その他のお問い合わせ</h2>
+    </div>
+
+    <div class="text-block">
+      <p>
+        制作依頼、取材、コラボレーション、継続受講、料金についてのご質問はこちらからご連絡ください。
+      </p>
+
+      <form class="contact-form" action="https://formspree.io/f/mbdbpqrj" method="POST">
+        <input type="hidden" name="form_type" value="general_contact">
+
+        <div>
+          <label for="general-name">お名前</label>
+          <input type="text" id="general-name" name="name" required>
+        </div>
+
+        <div>
+          <label for="general-email">メールアドレス</label>
+          <input type="email" id="general-email" name="email" required>
+        </div>
+
+        <div>
+          <label for="general-topic">お問い合わせ内容</label>
+          <select id="general-topic" name="topic" required>
+            <option value="">選択してください</option>
+            <option value="通常レッスンについて">通常レッスンについて</option>
+            <option value="料金について">料金について</option>
+            <option value="制作依頼">制作依頼</option>
+            <option value="取材・コラボレーション">取材・コラボレーション</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="general-message">お問い合わせ内容</label>
+          <textarea
+            id="general-message"
+            name="message"
+            rows="8"
+            required
+            placeholder="お問い合わせ内容をご記入ください。"
+          ></textarea>
+        </div>
+
+        <div class="button-row">
+          <button type="submit" class="btn primary" data-track="general_contact_submit_click">
+            送信する
+          </button>
+
+          <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_click">
+            メールで相談する
+          </a>
+        </div>
+      </form>
+
+      <p class="note">
+        直接メールする場合：info@sachiekobayashi.com<br>
+        電話でのお問い合わせ：050-5530-1800（平日 10:00–18:00 JST）
+      </p>
+
+      <p class="note">
+        決済、キャンセル、返金、日程変更に関する条件は
+        <a href="terms.html" data-track="terms_page_click">レッスン規約・キャンセルポリシー</a>
+        に記載しています。
+      </p>
+    </div>
+  </div>
+</section>
 
 </main>
 
