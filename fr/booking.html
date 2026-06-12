@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Échange gratuit de 30 minutes｜Atelier Composition Son</title>
+  <meta name="description" content="Réservez un échange gratuit de 30 minutes avec Atelier Composition Son pour clarifier votre projet, vos besoins et les pistes de travail possibles en composition, théorie musicale, MAO, électroacoustique et création avec IA." />
+  <link rel="canonical" href="https://ateliercompositionson.com/fr/booking.html" />
+
+  <style>
+    :root {
+      --bg: #f7f5ef;
+      --text: #111;
+      --muted: #6d6a63;
+      --line: #151515;
+      --fine-line: rgba(17, 17, 17, 0.18);
+      --card: #fffdf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
+        var(--bg);
+      color: var(--text);
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.8;
+      letter-spacing: 0.015em;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 18px 5vw;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 245, 239, 0.92);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      font-size: 14px;
+      line-height: 1.35;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 76px 5vw 88px;
+    }
+
+    .kicker {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.32em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .rule {
+      width: 56px;
+      height: 2px;
+      margin: 0 auto 30px;
+      background: var(--line);
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.15;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .lead {
+      max-width: 660px;
+      margin: 0 auto;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 2;
+      text-align: center;
+    }
+
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 30px auto 38px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      max-width: 680px;
+      background: rgba(255, 253, 248, 0.52);
+    }
+
+    .badges span {
+      flex: 1 1 0;
+      padding: 11px 14px;
+      border-right: 1px solid var(--fine-line);
+      text-align: center;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .badges span:last-child {
+      border-right: 0;
+    }
+
+    .booking-panel {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 30px 0 34px;
+    }
+
+    .calendly-inline-widget {
+      width: 100%;
+      min-width: 0;
+      height: 720px;
+      border: 1px solid var(--line);
+      background: var(--card);
+    }
+
+    .note {
+      margin: 22px auto 0;
+      max-width: 660px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .note a {
+      border-bottom: 1px solid var(--fine-line);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 42px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 5vw;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 720px) {
+      header {
+        align-items: flex-start;
+        padding: 15px 5vw;
+      }
+
+      .brand {
+        max-width: 220px;
+        font-size: 12px;
+      }
+
+      nav {
+        gap: 13px;
+        font-size: 12px;
+      }
+
+      main {
+        padding: 48px 5vw 66px;
+      }
+
+      .kicker {
+        font-size: 11px;
+        letter-spacing: 0.28em;
+      }
+
+      h1 {
+        font-size: 34px;
+        letter-spacing: 0.04em;
+      }
+
+      .lead {
+        font-size: 15px;
+        line-height: 1.9;
+        text-align: left;
+      }
+
+      .badges {
+        border-radius: 0;
+      }
+
+      .badges span {
+        padding: 10px 8px;
+        font-size: 12px;
+      }
+
+      .booking-panel {
+        padding: 22px 0 28px;
+      }
+
+      .calendly-inline-widget {
+        height: 690px;
+      }
+
+      .note {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 420px) {
+      header {
+        gap: 14px;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .badges {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .badges span {
+        border-right: 0;
+        border-bottom: 1px solid var(--fine-line);
+      }
+
+      .badges span:last-child {
+        border-bottom: 0;
+      }
+    }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-Y1792EBWTT");
+  </script>
+</head>
+
+<body>
+  <header>
+    <a class="brand" href="index.html">Atelier Composition Son</a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="index.html#cours">Cours</a>
+      <a href="index.html#formats">Formats</a>
+    </nav>
+  </header>
+
+  <main>
+    <a class="back-link" href="index.html">← Retour</a>
+
+    <div class="kicker">Premier échange</div>
+    <div class="rule"></div>
+
+    <h1>Échange gratuit<br>de 30 minutes</h1>
+
+    <p class="lead">
+      Réservez un échange gratuit de 30 minutes pour clarifier votre projet,
+      vos besoins et les pistes de travail possibles.
+      Cet échange est ouvert aux débutants, aux étudiants, aux artistes et aux personnes
+      qui souhaitent simplement poser une première question. Aucun engagement n’est demandé.
+    </p>
+
+    <div class="badges" aria-label="Informations principales">
+      <span>30 minutes</span>
+      <span>Débutants bienvenus</span>
+      <span>Sans engagement</span>
+    </div>
+
+    <section class="booking-panel" aria-label="Calendrier de réservation">
+      <div
+        class="calendly-inline-widget"
+        data-url="https://calendly.com/acs_trial/trial_acs"
+      ></div>
+
+      <p class="note">
+        Après la réservation, les informations de rendez-vous sont envoyées automatiquement par e-mail.
+        Pour une correction par e-mail ou une autre demande, vous pouvez écrire à
+        <a href="mailto:info@sachiekobayashi.com" data-track="email_click">info@sachiekobayashi.com</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    © Atelier Composition Son
+  </footer>
+
+  <script>
+    document.querySelectorAll("[data-track]").forEach(function(element) {
+      element.addEventListener("click", function() {
+        if (typeof gtag === "function") {
+          gtag("event", element.dataset.track, {
+            page_location: window.location.href,
+            link_text: element.textContent.trim()
+          });
+        }
+      });
+    });
+  </script>
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+</body>
+</html>

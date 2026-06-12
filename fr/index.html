@@ -700,12 +700,13 @@
 
     .contact-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, .95fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: 22px;
       margin-top: 32px;
       border-top: 1px solid var(--line);
       padding-top: 24px;
       align-items: start;
+      max-width: 760px;
     }
 
     .contact-form {
@@ -996,7 +997,7 @@
         <a href="#questions">questions</a>
         <a href="#conditions">conditions</a>
         <a href="#contact">contact</a>
-        <a class="booking-button" href="https://calendly.com/sound-sachiekobayashi/new-meeting" target="_blank" rel="noopener" data-track="calendly_click">réserver</a>
+        <a class="booking-button" href="booking.html" data-track="click_free_consultation_fr">réserver</a>
       </nav>
     </div>
 
@@ -1017,8 +1018,8 @@
         <p class="desktop-extra">Activité entre composition contemporaine, musique électronique et recherche sonore.</p>
 
         <div class="hero-actions">
-          <a class="btn primary" href="#contact" data-track="course_request_click">réserver un échange</a>
-          <a class="btn" href="#formats" data-track="formats_click">voir les formats</a>
+          <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">réserver un échange gratuit</a>
+          <a class="btn" href="#cours" data-track="click_lesson_content_fr">voir les cours</a>
         </div>
       </div>
     </header>
@@ -1393,51 +1394,32 @@
     <section id="contact">
       <div class="section-label">contact</div>
       <div class="content">
-        <h2>Envoyez simplement votre projet</h2>
-        <p>Indiquez votre niveau, vos outils, et ce que vous souhaitez travailler.</p>
+        <h2>Échange gratuit de 30 minutes</h2>
+        <p>
+          Réservez un premier échange pour clarifier votre projet, vos besoins et les pistes de travail possibles.
+        </p>
 
         <div class="contact-layout">
           <div>
+            <p class="small">
+              Cet échange est ouvert aux débutants, aux étudiants, aux artistes et aux personnes qui souhaitent simplement poser une première question.
+              Aucun engagement n’est demandé.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">réserver un échange gratuit</a>
+              <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_click">écrire par e-mail</a>
+            </div>
 
             <p class="small">
-              Pour une correction par e-mail, envoyez d’abord votre demande via le formulaire. 
-              Après vérification du contenu et du volume, un lien de paiement Stripe vous sera envoyé. 
-              La correction commence après confirmation du paiement.
+              Pour une correction par e-mail, une demande de création, une question sur les cours ou un autre sujet,
+              vous pouvez écrire directement à <a href="mailto:info@sachiekobayashi.com" data-track="email_click">info@sachiekobayashi.com</a>.
+            </p>
+
+            <p class="small">
               Les conditions complètes sont disponibles ici :
               <a href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener" data-track="terms_pdf_click">Terms &amp; Policies</a>.
             </p>
-
-            <form class="contact-form" action="https://formspree.io/f/mvzywvop" method="POST">
-              <label>Nom <input type="text" name="nom" autocomplete="name" required></label>
-              <label>Email <input type="email" name="email" autocomplete="email" required></label>
-              <label>
-                Cours souhaité
-                <select id="courseSelect" name="cours" required>
-                  <option value="">sélectionner un cours</option>
-                  <option value="composition">composition</option>
-                  <option value="analyse">analyse</option>
-                  <option value="solfège">solfège</option>
-                  <option value="orchestration">orchestration</option>
-                  <option value="synthétiseurs">synthétiseurs</option>
-                  <option value="sound design">sound design</option>
-                  <option value="musique électronique">musique électronique</option>
-                  <option value="composition assistée par ordinateur">composition assistée par ordinateur</option>
-                  <option value="retour sur création IA">retour sur création IA</option>
-                  <option value="correction par e-mail">correction par e-mail</option>
-                  <option value="résultat harmonie / contrepoint">résultat harmonie / contrepoint</option>
-                  <option value="mini-cours">mini-cours</option>
-                </select>
-              </label>
-              <label>Message <textarea id="messageField" name="message" placeholder="Votre niveau, vos outils, ce que vous souhaitez travailler. Pour une correction, vous pouvez ajouter un lien Google Drive, Dropbox, SoundCloud ou le résultat d’un outil gratuit." required></textarea></label>
-              <button type="submit" data-track="form_submit_click">envoyer</button>
-            </form>
-
-            <p class="small">Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com" data-track="email_click">info@sachiekobayashi.com</a>.</p>
-          </div>
-
-          <div class="calendly-wrapper">
-            <p class="small">Le premier échange de 30 minutes est gratuit. Après la réservation, un lien Zoom est envoyé automatiquement par email.</p>
-            <div class="calendly-inline-widget" data-url="https://calendly.com/acs_trial/trial_acs" style="min-width:320px;height:640px;"></div>
           </div>
         </div>
       </div>
@@ -1511,6 +1493,5 @@ Mon projet :
   });
 </script>
 
-  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </body>
 </html>
