@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>メール添削レッスン｜Atelier Composition Son</title>
+  <meta name="description" content="楽譜・課題・短い音源・AI生成音源などに文章で簡易フィードバックを行うメール添削レッスン。内容確認後、対応可否とStripe決済リンクをメールでご案内します。" />
+  <link rel="canonical" href="https://ateliercompositionson.com/ja/mail-correction.html" />
+
+  <meta property="og:title" content="メール添削レッスン｜Atelier Composition Son" />
+  <meta property="og:description" content="楽譜・課題・短い音源・AI生成音源などに、文章で簡易フィードバックを行います。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ateliercompositionson.com/ja/mail-correction.html" />
+  <meta property="og:site_name" content="Atelier Composition Son" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-Y1792EBWTT");
+  </script>
+
+  <style>
+    :root {
+      --bg: #f8f6f1;
+      --paper: #fffefa;
+      --text: #111111;
+      --muted: #6a645c;
+      --line: #151515;
+      --fine-line: rgba(17, 17, 17, 0.18);
+      --accent: #111111;
+      --red: #c83d2e;
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
+      background:
+        linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
+        var(--bg);
+      color: var(--text);
+      line-height: 1.85;
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(248, 246, 241, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 20px 5vw;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    main {
+      border-bottom: 1px solid var(--line);
+    }
+
+    section {
+      padding: 92px 5vw;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero {
+      padding-top: 80px;
+    }
+
+    .hero-grid,
+    .section-grid {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(340px, 1.15fr);
+      gap: clamp(34px, 6vw, 86px);
+      align-items: start;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 24px;
+      max-width: 820px;
+      font-size: clamp(40px, 6vw, 78px);
+      font-weight: 500;
+      line-height: 1.08;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      font-size: clamp(28px, 3.4vw, 48px);
+      font-weight: 500;
+      line-height: 1.18;
+    }
+
+    h3 {
+      margin-bottom: 12px;
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .lead {
+      margin-bottom: 0;
+      max-width: 760px;
+      font-size: clamp(17px, 1.5vw, 21px);
+      line-height: 1.85;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .info-panel {
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+      background: rgba(255, 254, 250, 0.58);
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 20px;
+      padding: 22px 24px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 0;
+      margin: 34px 0 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .flow-list li {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 20px;
+      padding: 24px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 254, 250, 0.42);
+    }
+
+    .flow-list strong {
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    .form-wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .correction-form {
+      display: grid;
+      gap: 28px;
+      margin-top: 38px;
+      padding: clamp(28px, 4vw, 46px);
+      border: 1px solid var(--line);
+      background: rgba(255, 254, 250, 0.74);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .field {
+      display: grid;
+      gap: 9px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label,
+    legend {
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .required {
+      margin-left: 6px;
+      color: var(--red);
+      font-size: 12px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      min-height: 52px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--paper);
+      color: var(--text);
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    fieldset {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 18px;
+      margin-top: 12px;
+    }
+
+    .check-option,
+    .consent {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border: 1px solid var(--fine-line);
+      background: rgba(248, 246, 241, 0.56);
+      line-height: 1.55;
+    }
+
+    .check-option input,
+    .consent input {
+      width: 18px;
+      min-width: 18px;
+      height: 18px;
+      min-height: 18px;
+      margin: 3px 0 0;
+      accent-color: var(--text);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 50px;
+      padding: 13px 22px;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn:hover {
+      opacity: 0.72;
+    }
+
+    .note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 32px 5vw;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    footer a {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    @media (max-width: 820px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 7vw;
+      }
+
+      .nav-links {
+        gap: 14px 18px;
+      }
+
+      section {
+        padding: 64px 7vw;
+      }
+
+      .hero {
+        padding-top: 54px;
+      }
+
+      .hero-grid,
+      .section-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .info-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 20px;
+      }
+
+      .flow-list li {
+        grid-template-columns: 42px 1fr;
+        padding: 20px;
+      }
+
+      .checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .correction-form {
+        padding: 24px 18px;
+      }
+
+      .btn {
+        width: 100%;
+        min-height: 52px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="メインメニュー">
+      <a class="brand" href="/ja/">Atelier Composition Son</a>
+      <div class="nav-links">
+        <a href="/ja/">Home</a>
+        <a href="#flow">流れ</a>
+        <a href="#form">依頼フォーム</a>
+        <a href="/ja/#price">料金</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Written Feedback</div>
+          <h1>メール添削レッスン</h1>
+          <p class="lead">
+            楽譜・課題・短い音源・AI生成音源などに、文章で簡易フィードバックを行います。
+            内容を確認後、対応可否とStripe決済リンクをメールでご案内します。
+          </p>
+        </div>
+
+        <div class="info-panel" aria-label="メール添削レッスンの案内">
+          <div class="info-row">
+            <span>Price</span>
+            <div>料金：1,800円 / 1件</div>
+          </div>
+          <div class="info-row">
+            <span>Scope</span>
+            <div>対象：楽譜3〜4ページ程度、または音源4分程度まで</div>
+          </div>
+          <div class="info-row">
+            <span>Reply</span>
+            <div>返信目安：お支払い確認後、3日以内</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="flow">
+      <div class="section-grid">
+        <div>
+          <div class="section-kicker">Flow</div>
+          <h2>添削の流れ</h2>
+        </div>
+
+        <div>
+          <ol class="flow-list">
+            <li>
+              <strong>1</strong>
+              <span>フォームから内容と資料URLを送信</span>
+            </li>
+            <li>
+              <strong>2</strong>
+              <span>内容確認後、対応可否とStripe決済リンクをメールでご案内</span>
+            </li>
+            <li>
+              <strong>3</strong>
+              <span>お支払い確認後、文章フィードバックを返信</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="form">
+      <div class="form-wrap">
+        <div class="section-kicker">Request Form</div>
+        <h2>メール添削 専用フォーム</h2>
+        <p class="muted">
+          ファイルアップロードは使用しません。Google Drive、Dropbox、SoundCloud、YouTube限定公開など、
+          共有URLを貼ってください。
+        </p>
+
+        <form class="correction-form" action="https://formspree.io/f/mbdbpqrj" method="POST">
+          <input type="hidden" name="_subject" value="メール添削レッスンの依頼" />
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">お名前<span class="required">必須</span></label>
+              <input id="name" name="お名前" type="text" autocomplete="name" required />
+            </div>
+
+            <div class="field">
+              <label for="email">メールアドレス<span class="required">必須</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+
+            <fieldset class="field full">
+              <legend>添削したい内容<span class="required">必須</span></legend>
+              <div class="checkbox-grid">
+                <label class="check-option">
+                  <input type="checkbox" name="添削したい内容[]" value="和声課題" />
+                  <span>和声課題</span>
+                </label>
+                <label class="check-option">
+                  <input type="checkbox" name="添削したい内容[]" value="対位法課題" />
+                  <span>対位法課題</span>
+                </label>
+                <label class="check-option">
+                  <input type="checkbox" name="添削したい内容[]" value="楽典・ソルフェージュ課題" />
+                  <span>楽典・ソルフェージュ課題</span>
+                </label>
+                <label class="check-option">
+                  <input type="checkbox" name="添削したい内容[]" value="作曲作品" />
+                  <span>作曲作品</span>
+                </label>
+                <label class="check-option">
+                  <input type="checkbox" name="添削したい内容[]" value="音源・DTM作品" />
+                  <span>音源・DTM作品</span>
+                </label>
+                <label class="check-option">
+                  <input type="checkbox" name="添削したい内容[]" value="AI生成音源" />
+                  <span>AI生成音源</span>
+                </label>
+                <label class="check-option">
+                  <input type="checkbox" name="添削したい内容[]" value="その他" />
+                  <span>その他</span>
+                </label>
+              </div>
+              <p class="hint">複数選択できます。</p>
+            </fieldset>
+
+            <div class="field full">
+              <label for="material-url">資料URL<span class="required">必須</span></label>
+              <textarea id="material-url" name="資料URL" placeholder="Google Drive、Dropbox、SoundCloud、YouTube限定公開などのURLを貼ってください。複数URL可。" required></textarea>
+              <p class="hint">アクセス権限が「リンクを知っている人が閲覧可」になっているかご確認ください。</p>
+            </div>
+
+            <div class="field full">
+              <label for="request-detail">特に見てほしい点・相談したいこと<span class="required">必須</span></label>
+              <textarea id="request-detail" name="特に見てほしい点・相談したいこと" required></textarea>
+            </div>
+
+            <div class="field">
+              <label for="study-status">現在の学習状況</label>
+              <textarea id="study-status" name="現在の学習状況"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="deadline">締切・希望返信時期</label>
+              <textarea id="deadline" name="締切・希望返信時期"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="regular-lesson">通常レッスンも検討しているか</label>
+              <select id="regular-lesson" name="通常レッスンも検討しているか">
+                <option value="">選択してください</option>
+                <option value="検討している">検討している</option>
+                <option value="内容によって検討したい">内容によって検討したい</option>
+                <option value="メール添削のみ希望">メール添削のみ希望</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="consent">
+            <input type="checkbox" name="同意" value="理解しました" required />
+            <span>内容確認後に決済リンクが送られること、支払い確認後に添削が開始されることを理解しました。</span>
+          </label>
+
+          <div class="button-row">
+            <button class="btn primary" type="submit" data-track="submit_mail_correction">
+              メール添削を依頼する
+            </button>
+            <a class="btn" href="/ja/" data-track="back_to_ja_home">日本語トップへ戻る</a>
+          </div>
+
+          <p class="note">
+            送信後、内容と分量を確認して返信します。代作、提出課題の不正な作成代行、無制限の添削対応は行っていません。
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© Sachie Kobayashi / Atelier Composition Son</div>
+    <div>
+      <a href="/ja/">日本語トップ</a> /
+      <a href="/ja/terms.html">レッスン規約</a> /
+      <a href="mailto:info@sachiekobayashi.com">info@sachiekobayashi.com</a>
+    </div>
+  </footer>
+
+  <script>
+    var correctionForm = document.querySelector(".correction-form");
+    var correctionTypes = Array.prototype.slice.call(document.querySelectorAll('input[name="添削したい内容[]"]'));
+
+    function validateCorrectionTypes() {
+      var isChecked = correctionTypes.some(function(input) {
+        return input.checked;
+      });
+
+      if (correctionTypes[0]) {
+        correctionTypes[0].setCustomValidity(isChecked ? "" : "添削したい内容を1つ以上選択してください。");
+      }
+
+      return isChecked;
+    }
+
+    correctionTypes.forEach(function(input) {
+      input.addEventListener("change", validateCorrectionTypes);
+    });
+
+    if (correctionForm) {
+      correctionForm.addEventListener("submit", function(event) {
+        if (!validateCorrectionTypes()) {
+          event.preventDefault();
+          correctionTypes[0].reportValidity();
+        }
+      });
+    }
+
+    document.querySelectorAll("[data-track]").forEach(function(element) {
+      element.addEventListener("click", function() {
+        if (typeof gtag === "function") {
+          gtag("event", element.dataset.track, {
+            page_location: window.location.href,
+            link_text: element.textContent.trim()
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
