@@ -15,14 +15,14 @@
 
 <style>
   :root {
-  --bg: #f8f6f1;
+  --bg: #ffffff;
   --text: #111111;
   --muted: #6a645c;
   --line: #151515;
   --fine-line: rgba(17, 17, 17, 0.18);
   --accent: #111111;
   --red: #c83d2e;
-  --card: #fffefa;
+  --card: #ffffff;
 }
 
 * {
@@ -36,9 +36,7 @@ html {
 body {
   margin: 0;
   font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
-  background:
-    linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   line-height: 1.85;
   letter-spacing: 0;
@@ -69,10 +67,7 @@ a {
 }
 
 .hero::after {
-  content: "";
-  display: block;
-  border-bottom: 1px solid var(--line);
-  mix-blend-mode: multiply;
+  display: none;
 }
 
 .hero > .hero-quote {
@@ -89,7 +84,7 @@ a {
   display: block;
   justify-content: flex-start;
   padding: 34px 5vw 38px;
-  border-top: 1px solid var(--line);
+  border-top: 0;
   border-bottom: 1px solid var(--line);
   z-index: 2;
 }
@@ -142,7 +137,7 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 20px 5vw;
-  background: rgba(248, 246, 241, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
@@ -297,7 +292,7 @@ h1 {
   align-items: center;
   gap: 16px;
   padding: 18px 5vw;
-  border-top: 1px solid var(--line);
+  border-top: 0;
   background: var(--bg);
 }
 
@@ -311,7 +306,7 @@ h1 {
 .hero-trust {
   padding: 18px 5vw;
   border-bottom: 1px solid var(--line);
-  background: rgba(248, 246, 241, 0.72);
+  background: var(--bg);
 }
 
 .hero-trust ul {
@@ -798,7 +793,7 @@ h2 {
   margin: 28px 0 36px;
   border: 1px solid var(--line);
   padding: 28px;
-  background: rgba(255, 254, 250, 0.58);
+  background: var(--bg);
 }
 
 .legal-disclosure h3 {
@@ -1019,12 +1014,10 @@ header::after {
     width: 100%;
     height: clamp(260px, 76vw, 330px);
     margin: 0 auto;
-    background-image:
-      linear-gradient(to bottom, rgba(248, 246, 241, 0.02), rgba(248, 246, 241, 0.06)),
-      url('../images/acs-header-collage.png?v=2');
-    background-size: cover, auto 100%;
-    background-position: center, 64% center;
-    background-repeat: no-repeat, no-repeat;
+    background-image: url('../images/acs-header-collage.png?v=2');
+    background-size: auto 100%;
+    background-position: 64% center;
+    background-repeat: no-repeat;
   }
 
   .hero::after {
@@ -1214,7 +1207,7 @@ header::after {
     padding: 22px 18px;
     border: 1px solid var(--line);
     border-top: 0;
-    background: rgba(255, 254, 250, 0.42);
+    background: var(--bg);
   }
 
   footer {
@@ -1507,9 +1500,7 @@ body {
     justify-content: flex-start;
     gap: 0;
     padding: 84px 7vw 40px;
-    background:
-      linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
-      var(--bg) !important;
+    background: var(--bg) !important;
     transform: translateX(100%);
     transition: transform 0.28s ease;
     opacity: 1 !important;
@@ -1541,7 +1532,7 @@ body {
     gap: 12px;
     padding: 22px 18px;
     border: 1px solid var(--line);
-    background: rgba(255, 254, 250, 0.42);
+    background: var(--bg);
   }
 
   .module-button,
@@ -1689,15 +1680,7 @@ body {
 
   #contact {
   position: relative;
-  background:
-    linear-gradient(
-      rgba(248, 246, 241, 0.86),
-      rgba(248, 246, 241, 0.92)
-    ),
-    url("../images/contact-background-modular-synth-index.jpg");
-  background-size: cover;
-  background-position: center bottom;
-  background-repeat: no-repeat;
+  background: var(--bg);
 }
 
   #contact .contact-form,
@@ -1709,7 +1692,7 @@ body {
 #contact .contact-form input,
 #contact .contact-form select,
 #contact .contact-form textarea {
-  background: rgba(255, 254, 250, 0.92);
+  background: var(--card);
 }
   
 </style>
