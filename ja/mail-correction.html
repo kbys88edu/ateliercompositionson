@@ -508,6 +508,13 @@
           <input type="hidden" name="_subject" value="メール添削レッスンの依頼" />
 
           <div class="form-grid">
+            <div class="field full">
+              <label class="check-option">
+                <input id="mail-correction-request" type="checkbox" name="申込内容" value="メール添削レッスン" />
+                <span>メール添削レッスンを依頼する</span>
+              </label>
+            </div>
+
             <div class="field">
               <label for="name">お名前<span class="required">必須</span></label>
               <input id="name" name="お名前" type="text" autocomplete="name" required />
@@ -616,7 +623,13 @@
 
   <script>
     var correctionForm = document.querySelector(".correction-form");
+    var requestCheckbox = document.getElementById("mail-correction-request");
     var correctionTypes = Array.prototype.slice.call(document.querySelectorAll('input[name="添削したい内容[]"]'));
+
+    var params = new URLSearchParams(window.location.search);
+    if (requestCheckbox && params.get("request") === "mail-correction") {
+      requestCheckbox.checked = true;
+    }
 
     function validateCorrectionTypes() {
       var isChecked = correctionTypes.some(function(input) {

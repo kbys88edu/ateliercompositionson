@@ -1308,6 +1308,18 @@ header::after {
     padding: 28px !important;
     min-height: auto !important;
   }
+
+  #price .price-card .button-row,
+  #price .price .button-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  #price .price-card .btn,
+  #price .price .btn {
+    width: 100%;
+  }
 }
 
   .module-link-featured {
@@ -2485,7 +2497,10 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
         </ul>
 
         <div class="button-row">
-          <a class="btn primary" href="mail-correction.html" data-track="click_mail_correction">
+          <a class="btn" href="../assets/pdf/mail-correction-sample.pdf" target="_blank" rel="noopener" data-track="price_mail_correction_sample_pdf">
+            サンプルを見る
+          </a>
+          <a class="btn primary" href="mail-correction.html?request=mail-correction#form" data-track="price_mail_correction_apply">
             メール添削を依頼する
           </a>
         </div>
