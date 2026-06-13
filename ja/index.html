@@ -291,6 +291,23 @@ h1 {
   display: none;
 }
 
+.hero-mail-correction-cta {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 5vw;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.hero-mail-correction-cta p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 .hero-trust {
   padding: 18px 5vw;
   border-bottom: 1px solid var(--line);
@@ -1104,6 +1121,28 @@ header::after {
     display: none;
   }
 
+  .hero-mail-correction-cta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 18px 7vw;
+  }
+
+  .hero-mail-correction-cta .btn {
+    width: 100%;
+    min-height: 52px;
+    justify-content: space-between;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .hero-mail-correction-cta .btn::after {
+    content: "→";
+    margin-left: 18px;
+    font-size: 24px;
+    line-height: 1;
+  }
+
   .hero-trust {
     padding: 0 7vw 30px;
     border-bottom: 1px solid var(--line);
@@ -1716,6 +1755,13 @@ body {
     <span>
       inspired by Pierre Schaeffer
     </span>
+  </div>
+
+  <div class="hero-mail-correction-cta" aria-label="メール添削レッスン">
+    <p>楽譜・課題・短い音源・AI生成音源の文章フィードバックはこちら。</p>
+    <a class="btn primary" href="mail-correction.html" data-track="click_mail_correction">
+      メール添削を依頼する
+    </a>
   </div>
 
   <div class="hero-copy">
@@ -2454,6 +2500,12 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
           <li>文章フィードバックのみ・Zoomレッスンなし</li>
           <li>詳細な分析や作品全体の講評は Advanced または単発レッスンで対応</li>
         </ul>
+
+        <div class="button-row">
+          <a class="btn primary" href="mail-correction.html" data-track="click_mail_correction">
+            メール添削を依頼する
+          </a>
+        </div>
       </div>
 
       <!-- Advanced 単発 -->
