@@ -85,7 +85,7 @@ a {
   justify-content: flex-start;
   padding: 34px 5vw 38px;
   border-top: 0;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
   z-index: 2;
 }
 
@@ -139,7 +139,7 @@ header {
   padding: 20px 5vw;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
 }
 
 .logo {
@@ -360,7 +360,7 @@ h1 {
 
 .image-sequence {
   padding: 0 5vw 72px;
-  border-top: 1px solid var(--line);
+  border-top: 0;
 }
 
 .audience-strip {
@@ -436,7 +436,7 @@ h1 {
   aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--text);
-  border: 1px solid var(--line);
+  border: 0;
 }
 
 .image-slideshow img {
@@ -1571,8 +1571,8 @@ body {
     margin-left: 0 !important;
     padding: 42px 7vw 40px !important;
     border-left: 0 !important;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+    border-top: 0;
+    border-bottom: 0;
   }
 
   .hero-copy::before {
@@ -1656,7 +1656,8 @@ body {
 
   .visual-break {
   padding: 0;
-  border-bottom: 1px solid var(--ink);
+  border-top: 0;
+  border-bottom: 0;
   background: var(--bg);
 }
 
@@ -1664,6 +1665,10 @@ body {
   width: 100%;
   height: auto;
   display: block;
+}
+
+#modules {
+  border-top: 0;
 }
 
   .contact-art {
