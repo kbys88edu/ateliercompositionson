@@ -1753,8 +1753,32 @@ body {
 
   .mobile-hero-landing {
     display: block;
+    position: relative;
+    overflow: hidden;
     padding: 28px 6vw 34px;
     background: var(--bg);
+  }
+
+  .mobile-hero-landing > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .mobile-hero-visual {
+    position: absolute;
+    z-index: 0;
+    top: 64px;
+    right: 0;
+    width: 56%;
+    height: 252px;
+    background:
+      linear-gradient(90deg, var(--bg) 0%, rgba(255, 255, 255, 0.72) 24%, rgba(255, 255, 255, 0) 54%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0) 72%, var(--bg) 100%),
+      url("../images/home.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(100%) contrast(112%);
+    opacity: 0.92;
   }
 
   .mobile-hero-brand {
@@ -1784,17 +1808,18 @@ body {
 
   .mobile-hero-landing h1 {
     margin: 0 0 16px;
-    max-width: none;
-    font-size: clamp(30px, 9vw, 42px);
+    max-width: 68%;
+    font-size: clamp(27px, 7.7vw, 38px);
     line-height: 1.24;
     font-weight: 500;
   }
 
   .mobile-hero-lead {
     margin: 0;
+    max-width: 62%;
     color: var(--muted);
-    font-size: 15px;
-    line-height: 1.9;
+    font-size: 13px;
+    line-height: 1.85;
   }
 
   .mobile-hero-actions {
@@ -1813,28 +1838,211 @@ body {
 
   .mobile-entry-cards {
     display: grid;
-    gap: 16px;
+    gap: 8px;
     margin-top: 30px;
   }
 
   .mobile-entry-card {
     display: grid;
-    gap: 8px;
-    padding: 18px;
-    border: 1px solid var(--line);
+    grid-template-columns: 46px 1fr 20px;
+    gap: 12px;
+    align-items: center;
+    min-height: 72px;
+    padding: 12px 14px;
+    border: 1px solid var(--fine-line);
+    border-radius: 6px;
     background: var(--bg);
   }
 
-  .mobile-entry-card span {
+  .mobile-entry-card::after {
+    content: "›";
+    color: var(--text);
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .mobile-entry-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    color: var(--text);
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .mobile-entry-copy {
+    display: grid;
+    gap: 4px;
+  }
+
+  .mobile-entry-copy span {
     font-size: 17px;
     line-height: 1.35;
     font-weight: 500;
   }
 
-  .mobile-entry-card small {
+  .mobile-entry-copy small {
     color: var(--muted);
     font-size: 13px;
     line-height: 1.65;
+  }
+
+  .mobile-audience-checks,
+  .mobile-price-menu,
+  .mobile-teacher-card {
+    margin-top: 22px;
+  }
+
+  .mobile-audience-checks h2,
+  .mobile-price-menu h2,
+  .mobile-teacher-card h2 {
+    margin: 0 0 10px;
+    font-size: 17px;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  .mobile-audience-checks ul {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mobile-audience-checks li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .mobile-audience-checks li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .mobile-studio-image {
+    width: 100%;
+    aspect-ratio: 16 / 5.4;
+    object-fit: cover;
+    object-position: center;
+    margin-top: 18px;
+    border-radius: 3px;
+    filter: saturate(88%) contrast(104%);
+  }
+
+  .mobile-price-menu h2 {
+    text-align: center;
+  }
+
+  .mobile-price-menu {
+    display: grid;
+    gap: 6px;
+  }
+
+  .mobile-price-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 18px;
+    gap: 10px;
+    align-items: center;
+    min-height: 62px;
+    padding: 12px 13px;
+    border: 1px solid var(--fine-line);
+    border-radius: 6px;
+    background: var(--bg);
+  }
+
+  .mobile-price-item::after {
+    content: "›";
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .mobile-price-item strong {
+    display: block;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .mobile-price-item small {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .mobile-price-item b {
+    font-size: 12px;
+    line-height: 1.35;
+    white-space: nowrap;
+  }
+
+  .mobile-price-item.recommended {
+    border: 2px solid var(--line);
+  }
+
+  .mobile-price-item.recommended em {
+    position: absolute;
+    top: -10px;
+    left: -1px;
+    padding: 3px 7px;
+    background: var(--line);
+    color: var(--bg);
+    font-size: 10px;
+    font-style: normal;
+    line-height: 1;
+  }
+
+  .mobile-teacher-body {
+    display: grid;
+    grid-template-columns: 38% 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .mobile-teacher-body img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .mobile-teacher-body p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.65;
+  }
+
+  .mobile-teacher-body h3 {
+    margin: 2px 0 6px;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+
+  .mobile-teacher-body a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    margin-top: 8px;
+    padding: 7px 11px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  .background-scope,
+  .audience-strip,
+  .image-sequence {
+    display: none;
   }
 
   section {
@@ -1968,6 +2176,8 @@ body {
   </div>
 
   <div class="mobile-hero-landing" aria-label="スマートフォン用メイン案内">
+    <div class="mobile-hero-visual" aria-hidden="true"></div>
+
     <div class="mobile-hero-brand">
       <img src="../images/acs-logo.png" alt="Atelier Composition Son" />
       <span>Atelier Composition Son</span>
@@ -1990,17 +2200,96 @@ body {
 
     <div class="mobile-entry-cards" aria-label="目的別の入口">
       <a class="mobile-entry-card" href="#modules" data-track="mobile_entry_beginner">
+        <span class="mobile-entry-icon" aria-hidden="true">□</span>
+        <span class="mobile-entry-copy">
         <span>基礎から学びたい</span>
         <small>作曲・DTM・音楽理論の土台を整理する</small>
+        </span>
       </a>
       <a class="mobile-entry-card" href="#price" data-track="mobile_entry_work_review">
+        <span class="mobile-entry-icon" aria-hidden="true">▤</span>
+        <span class="mobile-entry-copy">
         <span>作品を見てほしい</span>
         <small>楽譜・音源・ポートフォリオを具体的に相談する</small>
+        </span>
       </a>
       <a class="mobile-entry-card" href="mail-correction.html?request=mail-correction#form" data-track="mobile_entry_mail_correction">
+        <span class="mobile-entry-icon" aria-hidden="true">✉</span>
+        <span class="mobile-entry-copy">
         <span>Zoomなしで添削してほしい</span>
         <small>文章フィードバックで作品や課題を確認する</small>
+        </span>
       </a>
+    </div>
+
+    <div class="mobile-audience-checks" aria-label="このような方へ">
+      <h2>このような方へ</h2>
+      <ul>
+        <li>作りたい音楽はあるけど、形にする方法がわからない</li>
+        <li>作曲やDTMの基礎を、しっかり身につけたい</li>
+        <li>自分の作品を客観的にフィードバックしてほしい</li>
+        <li>独学や受験で、制作にどう活かすか知りたい</li>
+      </ul>
+    </div>
+
+    <img class="mobile-studio-image" src="../images/home.jpg" alt="音楽制作とレッスンのイメージ" />
+
+    <div class="mobile-price-menu" aria-label="受講メニュー・料金">
+      <h2>受講メニュー・料金</h2>
+
+      <a class="mobile-price-item consultation" href="booking.html" data-track="mobile_price_free_consultation">
+        <span>
+          <strong>30分無料相談</strong>
+          <small>今の状況を聞き、合う進め方を整理します</small>
+        </span>
+        <b>無料</b>
+      </a>
+
+      <a class="mobile-price-item" href="#price" data-track="mobile_price_beginner">
+        <span>
+          <strong>Beginner（基礎コース）</strong>
+          <small>作曲・DTM・理論の基礎を学ぶコース</small>
+        </span>
+        <b>4800円 / 60分</b>
+      </a>
+
+      <a class="mobile-price-item" href="#price" data-track="mobile_price_advanced_single">
+        <span>
+          <strong>Advanced 単発（Zoom）</strong>
+          <small>作品の相談や専門課題を単発で確認</small>
+        </span>
+        <b>7500円 / 60分</b>
+      </a>
+
+      <a class="mobile-price-item recommended" href="#price" data-track="mobile_price_advanced_monthly">
+        <em>おすすめ</em>
+        <span>
+          <strong>Advanced 月額（Zoom）</strong>
+          <small>継続的に作品を育てる専門コース</small>
+        </span>
+        <b>28000円 / 月</b>
+      </a>
+
+      <a class="mobile-price-item" href="mail-correction.html?request=mail-correction#form" data-track="mobile_price_mail_correction">
+        <span>
+          <strong>メール添削コース</strong>
+          <small>音源・楽譜を送って文章でフィードバック</small>
+        </span>
+        <b>1800円 / 1件</b>
+      </a>
+    </div>
+
+    <div class="mobile-teacher-card" aria-label="講師紹介">
+      <h2>講師紹介</h2>
+      <div class="mobile-teacher-body">
+        <img src="../images/sachie_studio.jpg" alt="Sachie Kobayashi" />
+        <div>
+          <p>Atelier Composition Son 主宰</p>
+          <h3>小林 祥恵</h3>
+          <p>作曲家・サウンドアーティスト。電子音楽からアコースティック音楽まで、制作と学習を結びつけて指導します。</p>
+          <a href="#instructor" data-track="mobile_teacher_profile">詳しいプロフィールを見る</a>
+        </div>
+      </div>
     </div>
   </div>
 
