@@ -819,6 +819,52 @@ h2 {
   margin-top: 20px;
 }
 
+.policy-summary {
+  max-width: 760px;
+  margin-top: 28px;
+  border: 1px solid var(--line);
+  padding: 28px;
+  background: var(--bg);
+}
+
+.policy-summary p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.policy-summary ul {
+  display: grid;
+  gap: 8px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.policy-summary li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.policy-summary li::before {
+  content: "・";
+  position: absolute;
+  left: 0;
+}
+
+.policy-summary .button-row {
+  margin-top: 24px;
+}
+
+.price-terms-note {
+  max-width: 760px;
+  margin-top: 28px;
+}
+
 @media (max-width: 900px) {
   .price-grid,
   .voices-grid,
@@ -2109,6 +2155,36 @@ body {
     margin-top: 22px !important;
     padding-top: 0;
   }
+
+  .policy-summary {
+    margin-top: 20px;
+    padding: 20px;
+  }
+
+  .policy-summary p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .policy-summary ul {
+    gap: 6px;
+    margin-top: 18px;
+  }
+
+  .policy-summary .button-row {
+    margin-top: 20px;
+  }
+
+  .policy-summary .btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .price-terms-note {
+    margin-top: 22px;
+    font-size: 13px;
+    line-height: 1.75;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2190,10 +2266,10 @@ body {
     </p>
 
     <div class="mobile-hero-actions">
-      <a class="btn primary" href="booking.html" data-track="mobile_firstview_free_consultation">
+      <a class="btn primary" href="booking.html" data-track="click_free_consultation">
         30分無料相談
       </a>
-      <a class="btn" href="mail-correction.html" data-track="mobile_firstview_mail_correction">
+      <a class="btn" href="mail-correction.html" data-track="click_mail_correction_apply">
         メール添削を見る
       </a>
     </div>
@@ -2206,14 +2282,14 @@ body {
         <small>作曲・DTM・音楽理論の土台を整理する</small>
         </span>
       </a>
-      <a class="mobile-entry-card" href="#price" data-track="mobile_entry_work_review">
+      <a class="mobile-entry-card" href="#price" data-track="click_price_view">
         <span class="mobile-entry-icon" aria-hidden="true">▤</span>
         <span class="mobile-entry-copy">
         <span>作品を見てほしい</span>
         <small>楽譜・音源・ポートフォリオを具体的に相談する</small>
         </span>
       </a>
-      <a class="mobile-entry-card" href="mail-correction.html?request=mail-correction#form" data-track="mobile_entry_mail_correction">
+      <a class="mobile-entry-card" href="mail-correction.html?request=mail-correction#form" data-track="click_mail_correction_apply">
         <span class="mobile-entry-icon" aria-hidden="true">✉</span>
         <span class="mobile-entry-copy">
         <span>Zoomなしで添削してほしい</span>
@@ -2237,7 +2313,7 @@ body {
     <div class="mobile-price-menu" aria-label="受講メニュー・料金">
       <h2>受講メニュー・料金</h2>
 
-      <a class="mobile-price-item consultation" href="booking.html" data-track="mobile_price_free_consultation">
+      <a class="mobile-price-item consultation" href="booking.html" data-track="click_free_consultation">
         <span>
           <strong>30分無料相談</strong>
           <small>今の状況を聞き、合う進め方を整理します</small>
@@ -2245,7 +2321,7 @@ body {
         <b>無料</b>
       </a>
 
-      <a class="mobile-price-item" href="#price" data-track="mobile_price_beginner">
+      <a class="mobile-price-item" href="#price" data-track="click_price_view">
         <span>
           <strong>Beginner（基礎コース）</strong>
           <small>作曲・DTM・理論の基礎を学ぶコース</small>
@@ -2253,7 +2329,7 @@ body {
         <b>4800円 / 60分</b>
       </a>
 
-      <a class="mobile-price-item" href="#price" data-track="mobile_price_advanced_single">
+      <a class="mobile-price-item" href="#price" data-track="click_price_view">
         <span>
           <strong>Advanced 単発（Zoom）</strong>
           <small>作品の相談や専門課題を単発で確認</small>
@@ -2261,7 +2337,7 @@ body {
         <b>7500円 / 60分</b>
       </a>
 
-      <a class="mobile-price-item recommended" href="#price" data-track="mobile_price_advanced_monthly">
+      <a class="mobile-price-item recommended" href="#price" data-track="click_price_view">
         <em>おすすめ</em>
         <span>
           <strong>Advanced 月額（Zoom）</strong>
@@ -2270,7 +2346,7 @@ body {
         <b>28000円 / 月</b>
       </a>
 
-      <a class="mobile-price-item" href="mail-correction.html?request=mail-correction#form" data-track="mobile_price_mail_correction">
+      <a class="mobile-price-item" href="mail-correction.html?request=mail-correction#form" data-track="click_mail_correction_apply">
         <span>
           <strong>メール添削コース</strong>
           <small>音源・楽譜を送って文章でフィードバック</small>
@@ -2295,7 +2371,7 @@ body {
 
   <div class="hero-mail-correction-cta" aria-label="メール添削レッスン">
     <p>楽譜・課題・短い音源・AI生成音源の文章フィードバックはこちら。</p>
-    <a class="btn primary" href="mail-correction.html" data-track="click_mail_correction">
+    <a class="btn primary" href="mail-correction.html" data-track="click_mail_correction_apply">
       メール添削を依頼する
     </a>
   </div>
@@ -2915,12 +2991,6 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
       目的やレベルに応じて、初回相談・基礎レッスン・専門メンタリングをお選びいただけます。
       Advanced は継続的な作品改善・受験対策・ポートフォリオ制作に対応する月謝制の専門コースです。
     </p>
-    <p class="note">
-      お申し込み前に、支払方法、キャンセル、返金、提供時期を含む
-      <a href="terms.html" data-track="terms_page_click">レッスン規約・キャンセルポリシー / Commerce Disclosure</a>
-      をご確認ください。
-    </p>
-
     <div class="price-grid">
 
 <!-- 初回無料相談 -->
@@ -3038,10 +3108,10 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
         </ul>
 
         <div class="button-row">
-          <a class="btn" href="../assets/pdf/mail-correction-sample.pdf" target="_blank" rel="noopener" data-track="price_mail_correction_sample_pdf">
+          <a class="btn" href="../assets/pdf/mail-correction-sample.pdf" target="_blank" rel="noopener" data-track="click_sample_pdf">
             サンプルを見る
           </a>
-          <a class="btn primary" href="mail-correction.html?request=mail-correction#form" data-track="price_mail_correction_apply">
+          <a class="btn primary" href="mail-correction.html?request=mail-correction#form" data-track="click_mail_correction_apply">
             メール添削を依頼する
           </a>
         </div>
@@ -3083,140 +3153,36 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
 </div>
 
     </div>
+
+    <p class="note price-terms-note">
+      お申し込み前に、日程変更・キャンセル・お支払いに関する
+      <a href="terms.html" data-track="click_terms_page">レッスン規約を見る</a>
+      をご確認ください。
+    </p>
   </div>
 </section>
 
 <section id="policy" class="section policy-section">
   <div class="container">
     <p class="section-kicker">Policy</p>
-    <h2 class="section-title">受講に関する注意事項</h2>
+    <h2 class="section-title">受講前にご確認ください</h2>
 
-    <div class="legal-disclosure">
-      <div>
-        <h3>レッスン規約・商取引に関する表示</h3>
-        <p>
-          Atelier Composition Son / Sachie Kobayashi のオンライン個人レッスン、メール添削、
-          無料学習補助ツールに関する支払条件、提供時期、キャンセル、返金、問い合わせ先をまとめています。
-        </p>
-        <div class="button-row">
-          <a class="btn primary" href="terms.html" data-track="terms_page_click">
-            規約ページを開く
-          </a>
-        </div>
-      </div>
-      <div>
-        <ul>
-          <li>事業名: Sachie Kobayashi (Studio Cucurbits.) / Atelier Composition Son</li>
-          <li>所在地: 〒150-0043 東京都渋谷区道玄坂1-10-8 渋谷道玄坂東急ビル2F-C Shibuya Office</li>
-          <li>連絡先: info@sachiekobayashi.com / 050-5530-1800（平日10:00-18:00 JST）</li>
-          <li>支払方法: Stripeによるクレジットカード決済を基本とし、銀行振込は事前相談により対応します。</li>
-          <li>提供時期: オンラインレッスンは合意した日時に実施し、メール添削は支払いと資料受領後、通常3日以内を目安に返信します。</li>
-          <li>返金: 受講者都合のキャンセル、欠席、途中終了、期待内容との相違による返金は原則行いません。講師都合で提供できない場合は振替または返金で対応します。</li>
-        </ul>
-      </div>
-    </div>
+    <div class="policy-summary">
+      <p>
+        安心してレッスンを受講いただくため、日程変更・キャンセル・お支払い方法についての規約を設けています。
+      </p>
 
-    <div class="policy-grid">
-      <div class="policy-card">
-        <h3>お支払いについて</h3>
-        <p>
-          お支払いは Stripe によるクレジットカード決済を基本としています。
-          銀行振込をご希望の場合は、事前にご相談ください。
-        </p>
-      </div>
+      <ul>
+        <li>オンラインレッスンの実施方法</li>
+        <li>日程変更と振替について</li>
+        <li>キャンセル、無断欠席について</li>
+        <li>お支払い方法について</li>
+      </ul>
 
-      <div class="policy-card">
-        <h3>月謝制について</h3>
-        <p>
-          Advanced Mentoring は月謝制です。月初にお支払いいただき、
-          月内でスケジュールを調整します。
-        </p>
-      </div>
-
-      <div class="policy-card">
-        <h3>キャンセル・日程変更</h3>
-        <p>
-          月内で事前にご相談いただいた場合は、可能な範囲で日程調整に対応します。
-          生徒都合による欠席分の返金、翌月への繰り越しは行っていません。
-        </p>
-      </div>
-
-      <div class="policy-card">
-        <h3>資料の事前共有</h3>
-        <p>
-          Advanced では、必要に応じて事前に共有された楽譜・音源・ポートフォリオを確認し、
-          レッスン内で具体的な改善点を整理します。
-        </p>
-        <p>
-          資料は原則としてレッスンの48時間前までに共有してください。
-          直前に共有された資料は、当日のレッスン内で確認します。
-        </p>
-      </div>
-
-      <div class="policy-card">
-        <h3>レッスン外対応について</h3>
-        <p>
-          事前確認はレッスン準備の範囲内で行います。
-          詳細な添削、大規模な分析、継続的なメッセージ対応、直前提出への対応は、
-          原則としてレッスン時間内に扱います。
-        </p>
-      </div>
-
-
-      <div class="policy-card">
-        <h3>メール添削レッスンについて</h3>
-        <p>
-          メール添削レッスンは、Zoomを使わない文章フィードバック形式のサービスです。
-          1件あたりの目安は、楽譜3〜4ページ程度、または音源4分程度までです。
-          返信目安は3日以内ですが、内容や分量によって前後する場合があります。
-        </p>
-        <p>
-          作品全体の詳細な講評、受験課題の総合指導、ポートフォリオ全体の確認、
-          長い音源や複数資料の確認は、通常レッスンまたはAdvancedで扱います。
-        </p>
-      </div>
-
-
-
-      <div class="policy-card">
-        <h3>メール添削レッスンのお支払い</h3>
-        <p>
-          メール添削レッスンは、最初から自動購入する形式ではなく、
-          フォームからお申し込みいただいた後、内容と分量を確認してからStripeの決済リンクをお送りします。
-        </p>
-        <p>
-          お支払い確認後に添削を開始し、返信目安は3日以内です。
-          規定を超える長い作品、複数資料、詳細な分析が必要な場合は、
-          通常レッスンまたはAdvancedでの対応をご案内することがあります。
-        </p>
-      </div>
-
-      <div class="policy-card">
-        <h3>AI生成音源の講評について</h3>
-        <p>
-          Suno、ElevenLabsなどで作成した音源について、選定、構成、音色、作品化の方向性を確認します。
-          AI生成物の代作や権利確認の代行ではなく、音楽的・創作的な判断を整理するためのサポートです。
-        </p>
-      </div>
-
-
-      <div class="policy-card">
-        <h3>無料チェックツールについて</h3>
-        <p>
-          和声チェッカー・対位法チェッカーは、学習補助を目的とした簡易チェックツールです。
-          検出結果は機械的な確認であり、音楽的な判断、課題全体の妥当性、受験課題としての完成度を保証するものではありません。
-        </p>
-        <p>
-          指摘の意味、修正方法、課題全体の流れについては、メール添削レッスンまたは通常レッスンで個別に確認できます。
-        </p>
-      </div>
-
-      <div class="policy-card">
-        <h3>対応できない内容</h3>
-        <p>
-          課題や作品の代作、試験・提出課題の不正な作成代行、無制限の添削対応は行っていません。
-          作品制作や学習を自分で進めるためのサポートとしてレッスンを行います。
-        </p>
+      <div class="button-row">
+        <a class="btn primary" href="terms.html" data-track="click_terms_page">
+          詳しいレッスン規約を見る
+        </a>
       </div>
     </div>
   </div>
@@ -3321,7 +3287,7 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
         <a class="btn primary" href="booking.html" data-track="click_free_consultation">
           自分に合うレッスンを相談する
         </a>
-        <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_click">
+        <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="click_email_contact">
           メールで問い合わせる
         </a>
       </div>
@@ -3332,9 +3298,9 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
 
       <p class="note">
         メール添削・制作依頼・取材・その他のお問い合わせは、
-        <a href="mailto:info@sachiekobayashi.com" data-track="email_click">info@sachiekobayashi.com</a>
+        <a href="mailto:info@sachiekobayashi.com" data-track="click_email_contact">info@sachiekobayashi.com</a>
         までお送りください。決済、キャンセル、返金、日程変更に関する条件は
-        <a href="terms.html" data-track="terms_page_click">レッスン規約・キャンセルポリシー</a>
+        <a href="terms.html" data-track="click_terms_page">レッスン規約・キャンセルポリシー</a>
         に記載しています。
       </p>
     </div>
@@ -3347,7 +3313,7 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
   <div>© Atelier Composition Son</div>
   <div>
     Japanese / Français / English<br>
-    <a href="terms.html" data-track="terms_page_click">Terms &amp; Policies / レッスン規約</a>
+    <a href="terms.html" data-track="click_terms_page">Terms &amp; Policies / レッスン規約</a>
   </div>
 </footer>
 
@@ -3395,14 +3361,28 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
 
 
 <script>
+  function trackGaEvent(eventName, params) {
+    if (typeof gtag === 'function' && eventName) {
+      gtag('event', eventName, params || {});
+    }
+  }
+
   document.querySelectorAll('[data-track]').forEach(function(element) {
     element.addEventListener('click', function() {
-      if (typeof gtag === 'function') {
-        gtag('event', element.dataset.track, {
-          page_location: window.location.href,
-          link_text: element.textContent.trim()
-        });
-      }
+      trackGaEvent(element.dataset.track, {
+        page_location: window.location.href,
+        link_text: element.textContent.trim()
+      });
+    });
+  });
+
+  document.querySelectorAll('form[data-track-submit], form.contact-form').forEach(function(form) {
+    form.addEventListener('submit', function() {
+      trackGaEvent(form.dataset.trackSubmit || 'submit_contact_form', {
+        page_location: window.location.href,
+        form_id: form.id || '',
+        form_name: form.getAttribute('name') || ''
+      });
     });
   });
 </script>

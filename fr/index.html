@@ -3,12 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Composition, Sound Design et Création Musicale</title>
-  <meta name="description" content="Cours en ligne de composition, théorie musicale, sound design, musique électronique, Max/MSP et création avec IA. Accompagnement individuel pour projets, portfolios, correction par e-mail, Suno, ElevenLabs, outils de contrepoint et vérificateur d’harmonie.">
+  <title>Cours de composition, harmonie et MAO en ligne | Atelier Composition Son</title>
+  <meta name="description" content="Cours individuels en ligne en français : composition musicale, harmonie, analyse, MAO, électroacoustique et accompagnement de projet. Premier échange gratuit de 30 minutes.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ateliercompositionson.com/fr/">
   <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/">
+  <link rel="alternate" hreflang="ja" href="https://ateliercompositionson.com/ja/">
   <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Atelier Composition Son">
+  <meta property="og:title" content="Cours de composition, harmonie et MAO en ligne | Atelier Composition Son">
+  <meta property="og:description" content="Cours individuels en ligne en français : composition musicale, harmonie, analyse, MAO, électroacoustique et accompagnement de projet. Premier échange gratuit de 30 minutes.">
+  <meta property="og:url" content="https://ateliercompositionson.com/fr/">
+  <meta property="og:image" content="https://ateliercompositionson.com/images/acs-header-fr.png">
+  <meta name="twitter:card" content="summary_large_image">
 
   <style>
     :root {
@@ -142,6 +150,10 @@
       color: var(--accent);
     }
 
+    .language-link {
+      color: var(--muted);
+    }
+
     /* Hero */
 
     .hero {
@@ -221,7 +233,7 @@
       line-height: 1.12;
       font-weight: 400;
       letter-spacing: -0.035em;
-      margin-bottom: 14px;
+      margin: 0 0 14px;
     }
 
     .hero-copy p {
@@ -234,6 +246,25 @@
     .hero-copy p + p,
     .hero-copy .desktop-extra {
       margin-top: 10px;
+    }
+
+    .hero-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .hero-highlights span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      background: rgba(255, 253, 248, 0.48);
     }
 
     .separator {
@@ -369,6 +400,11 @@
       margin-top: 14px;
     }
 
+    .section-intro {
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
     ul {
       list-style: none;
     }
@@ -392,6 +428,23 @@
 
     .list li span:last-child {
       color: var(--muted);
+    }
+
+    .audience-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .audience-list li {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 24px;
+      padding: 22px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
     }
 
     /* Direction */
@@ -609,12 +662,21 @@
       margin-top: 32px;
     }
 
+    .formats-focused {
+      grid-template-columns: 1.2fr 1fr;
+    }
+
     .format {
       min-height: 360px;
       border: 1px solid var(--line);
       background: var(--card);
       border-radius: 24px;
       padding: 30px;
+    }
+
+    .format.featured {
+      border-color: var(--accent);
+      background: #fff;
     }
 
     .price {
@@ -646,6 +708,22 @@
       line-height: 1.5;
     }
 
+    .format-meta {
+      display: grid;
+      gap: 10px;
+      margin: 22px 0 0;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .format-meta strong {
+      color: var(--text);
+      font-weight: 400;
+    }
+
     .format a {
       display: inline-flex;
       align-items: center;
@@ -656,6 +734,23 @@
       font-size: 12px;
       letter-spacing: 0.04em;
       text-transform: lowercase;
+    }
+
+    .cta-panel {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 24px;
+      padding: 30px;
+      margin-top: 34px;
+    }
+
+    .cta-panel p {
+      max-width: 700px;
+    }
+
+    .inline-link {
+      border-bottom: 1px solid currentColor;
+      text-underline-offset: 3px;
     }
 
     /* FAQ / details */
@@ -905,7 +1000,9 @@
         padding: 0 12px;
         font-size: 12px;
         letter-spacing: 0.04em;
-        white-space: nowrap;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
       }
 
       .hero-actions .btn::after {
@@ -929,8 +1026,10 @@
       }
 
       .formats,
+      .formats-focused,
       .disciplines-grid,
-      .contact-layout {
+      .contact-layout,
+      .audience-list {
         grid-template-columns: 1fr;
       }
 
@@ -964,6 +1063,35 @@
         height: 240px;
       }
     }
+
+    @media (max-width: 768px) {
+      .hero-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions .btn,
+      .booking-button,
+      .format a {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 14px;
+        line-height: 1.25;
+        text-align: left;
+        white-space: normal;
+      }
+
+      .hero-highlights {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .audience-list li,
+      .discipline-item,
+      .format,
+      .cta-panel {
+        padding: 22px;
+      }
+    }
   </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
@@ -986,17 +1114,14 @@
       </a>
 
       <nav aria-label="Navigation principale">
-        <a href="#approche">approche</a>
-        <a href="#direction">direction</a>
-        <a href="#cours">cours</a>
-        <a href="#outils">outils</a>
-        <a href="#ia">IA</a>
-        <a href="#free-tools">outils gratuits</a>
-        <a href="#programme">programme</a>
+        <a href="#public">public</a>
+        <a href="#travail">contenu</a>
         <a href="#formats">formats</a>
+        <a href="#parcours">parcours</a>
         <a href="#questions">questions</a>
-        <a href="#conditions">conditions</a>
         <a href="#contact">contact</a>
+        <a class="language-link" href="../ja/">日本語</a>
+        <a class="language-link" href="../">EN</a>
         <a class="booking-button" href="booking.html" data-track="click_free_consultation_fr">réserver</a>
       </nav>
     </div>
@@ -1004,22 +1129,25 @@
     <header id="top" class="hero">
       <div class="identity">
         <img class="logo-image" src="../images/acs-logo.png" alt="ACS — Atelier Composition Son">
-        <h1>Composition<br>Sound Design<br>Création Musicale</h1>
-        <p>cours en ligne<br>en français</p>
+        <p>Atelier Composition Son</p>
       </div>
 
       <div class="hero-copy">
         <div class="hero-label">Cours individuels en ligne</div>
-        <div class="intro-title">Composition, théorie musicale et création sonore.</div>
-        <p>Un accompagnement personnalisé pour apprendre, comprendre et créer&nbsp;: écriture, écoute, timbre, outils numériques et développement de projets.</p>
-        <p class="desktop-extra">Les nouvelles technologies, y compris l’IA, peuvent être abordées comme outils de création, de recherche ou de performance lorsqu’elles servent réellement le projet artistique.</p>
+        <h1 class="intro-title">Cours de composition, harmonie &amp; MAO en ligne</h1>
+        <p>Un accompagnement individuel en français pour développer vos idées musicales, structurer vos pièces et approfondir votre langage sonore.</p>
+        <p class="desktop-extra">Les cours partent de votre niveau, de vos références et de vos outils&nbsp;: partition, maquette, session DAW, portfolio ou simple idée encore à clarifier.</p>
+        <div class="hero-highlights" aria-label="Informations principales">
+          <span>cours de composition en ligne</span>
+          <span>MAO, harmonie, électroacoustique</span>
+          <span>premier échange gratuit</span>
+        </div>
         <div class="separator"></div>
-        <p class="desktop-extra">Pour débutants, étudiants, compositeurs, producteurs, artistes sonores et créateurs qui souhaitent structurer leurs idées et affiner leur langage musical.</p>
-        <p class="desktop-extra">Activité entre composition contemporaine, musique électronique et recherche sonore.</p>
+        <p class="desktop-extra">L’objectif n’est pas de suivre une méthode uniforme, mais de construire un cadre de travail précis autour de votre pratique musicale.</p>
 
         <div class="hero-actions">
-          <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">réserver un échange gratuit</a>
-          <a class="btn" href="#cours" data-track="click_lesson_content_fr">voir les cours</a>
+          <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">Réserver un échange gratuit de 30 minutes</a>
+          <a class="btn" href="#formats" data-track="click_lesson_content_fr">Voir les cours et tarifs</a>
         </div>
       </div>
     </header>
@@ -1030,363 +1158,158 @@
         <img src="../images/home-2.jpg" alt="Atelier de composition et recherche sonore">
         <img src="../images/home-3.jpg" alt="Cours de composition, sound design et musique électronique">
       </div>
-      <figcaption>composition / sound design / création musicale</figcaption>
+      <figcaption>composition / MAO / électroacoustique</figcaption>
     </figure>
 
-    <section id="approche">
-      <div class="section-label">approche</div>
+    <section id="public">
+      <div class="section-label">à qui</div>
       <div class="content">
-        <h2>Travailler le son comme une pensée musicale</h2>
-        <p>Le cours ne suit pas une méthode unique. Il part de votre niveau, de vos références, de vos outils et du type de musique que vous souhaitez construire.</p>
-        <p>L’objectif est de clarifier vos matériaux, de renforcer vos décisions et de donner une forme plus précise à votre univers sonore.</p>
+        <h2>À qui s’adressent ces cours&nbsp;?</h2>
+        <p class="section-intro">Ces cours de musique en français s’adressent aux personnes qui souhaitent apprendre avec un cadre clair, mais sans perdre le lien avec leur propre univers sonore.</p>
 
-        <ul class="list">
-          <li><span>écriture</span><span>forme, harmonie, rythme, développement, notation, structure.</span></li>
-          <li><span>timbre</span><span>textures, synthèse, montage, espace, traitements, couches sonores.</span></li>
-          <li><span>outils</span><span>DAW, Max/MSP, TouchDesigner, samples, IA générative, transformation vocale, partitions et workflows hybrides.</span></li>
-          <li><span>projet</span><span>pièce, album, portfolio, performance, installation ou recherche personnelle.</span></li>
+        <ul class="audience-list">
+          <li>Débutants motivés qui souhaitent commencer à composer.</li>
+          <li>Adultes qui veulent apprendre la composition musicale ou la MAO.</li>
+          <li>Étudiants qui souhaitent renforcer harmonie, analyse ou écriture.</li>
+          <li>Artistes, vidéastes ou créateurs qui développent un projet musical.</li>
+          <li>Personnes ayant déjà une maquette, une partition ou une idée à structurer.</li>
+          <li>Musiciens qui veulent relier technique, écoute et décision artistique.</li>
         </ul>
       </div>
     </section>
 
-    <section id="direction">
-      <div class="section-label">direction</div>
+    <section id="travail">
+      <div class="section-label">contenu</div>
       <div class="content">
-        <div class="direction-layout">
-          <div>
-            <h2>Un atelier dirigé par une artiste</h2>
-            <p>Atelier Composition Son est conçu comme un espace de formation exigeant, à la croisée de la composition contemporaine, de la musique électronique et de la recherche sonore.</p>
-            <p>La direction pédagogique est assurée par Sachie Kobayashi, compositrice et artiste sonore formée en composition et pédagogie musicale à la Haute École de Musique de Genève.</p>
-            <p>L’enseignement privilégie une approche précise, personnelle et critique&nbsp;: développer l’écoute, structurer les idées, comprendre les outils, et construire une pratique musicale autonome.</p>
-            <p>Le travail artistique a été présenté dans différents contextes liés à la création contemporaine, à la performance et aux pratiques hybrides entre son, image et technologie.</p>
-          </div>
-
-          <figure class="direction-photo direction-photo-large">
-            <img src="../images/sachie_re.jpeg" alt="Sachie Kobayashi">
-            <figcaption>Sachie Kobayashi<br>composition / recherche sonore</figcaption>
-          </figure>
-        </div>
-
-        <ul class="list">
-          <li><span>direction</span><span>Sachie Kobayashi — compositrice, artiste sonore, créatrice.</span></li>
-          <li><span>orientation</span><span>composition contemporaine, musique électronique, sound design, recherche sonore.</span></li>
-          <li><span>pédagogie</span><span>accompagnement individuel, écoute critique, projets personnels et développement artistique.</span></li>
-          <li><span>formation</span><span>Haute École de Musique de Genève — composition et pédagogie musicale.</span></li>
-          <li><span>recherche</span><span>travaux et recherches autour de la création sonore, des technologies musicales et des pratiques hybrides, notamment dans un contexte lié à l’IRCAM.</span></li>
-          <li><span>activité</span><span>concert, installation, création audiovisuelle, performance et projets interdisciplinaires.</span></li>
-          <li><span>distinctions</span><span>sélections, collaborations et présentations dans des contextes internationaux liés à la création contemporaine.</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="cours">
-      <div class="section-label">cours</div>
-      <div class="content">
-        <div class="disciplines-card">
-          <h2>Disciplines</h2>
-          <p class="disciplines-note">Certaines classes proposent une vidéo de démonstration d’environ dix minutes, pensée comme une première séance accessible aux débutants. Les cours individuels ont lieu en ligne via Zoom. Les vidéos de démonstration sont hébergées sur YouTube et pourront évoluer ensuite vers des mini-cours plus développés.</p>
-
-          <div class="disciplines-grid">
-            <article class="discipline-item">
-              <h3>composition</h3>
-              <p>écriture musicale, forme et développement.</p>
-              <div class="discipline-actions">
-                <a href="#contact" data-subject="composition" data-track="course_card_click">demander ce cours</a>
-                <a class="secondary" href="https://youtu.be/OTqVlso1q9Y" target="_blank" rel="noopener">voir la démo</a>
-              </div>
-            </article>
-
-            <article class="discipline-item">
-              <h3>analyse</h3>
-              <p>écoute, structure, harmonie et langage musical.</p>
-              <div class="discipline-actions">
-                <a href="#contact" data-subject="analyse" data-track="course_card_click">demander ce cours</a>
-                <a class="secondary" href="https://www.youtube.com/watch?v=YOUR_ANALYSE_DEMO_ID" target="_blank" rel="noopener">voir la démo</a>
-              </div>
-            </article>
-
-            <article class="discipline-item">
-              <h3>solfège</h3>
-              <p>lecture, rythme, écoute et formation musicale.</p>
-              <a href="#contact" data-subject="solfège" data-track="course_card_click">demander ce cours</a>
-            </article>
-
-            <article class="discipline-item">
-              <h3>orchestration</h3>
-              <p>instruments, timbre et écriture orchestrale.</p>
-              <a href="#contact" data-subject="orchestration" data-track="course_card_click">demander ce cours</a>
-            </article>
-
-            <article class="discipline-item">
-              <h3>synthétiseurs</h3>
-              <p>synthèse sonore et création de textures.</p>
-              <a href="#contact" data-subject="synthétiseurs" data-track="course_card_click">demander ce cours</a>
-            </article>
-
-            <article class="discipline-item">
-              <h3>sound design</h3>
-              <p>montage, espace, traitements et matière sonore.</p>
-              <a href="#contact" data-subject="sound design" data-track="course_card_click">demander ce cours</a>
-            </article>
-
-            <article class="discipline-item">
-              <h3>musique électronique</h3>
-              <p>composition numérique, hybridation et performance.</p>
-              <a href="#contact" data-subject="musique électronique" data-track="course_card_click">demander ce cours</a>
-            </article>
-
-            <article class="discipline-item">
-              <h3>composition assistée par ordinateur</h3>
-              <p>Ableton Live, workflows et production.</p>
-              <a href="#contact" data-subject="composition assistée par ordinateur" data-track="course_card_click">demander ce cours</a>
-            </article>
-
-            <article class="discipline-item">
-              <h3>création musicale avec IA</h3>
-              <p>Suno, ElevenLabs, sélection, critique et structuration artistique.</p>
-              <a href="#contact" data-subject="retour sur création IA" data-track="course_card_click">demander ce cours</a>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="documentation">
-      <div class="section-label">documentation</div>
-      <div class="content">
-        <h2>Espaces, performances et recherche</h2>
-        <p>Le travail pédagogique et artistique s’inscrit dans des contextes liés à la performance, à l’installation sonore, à la recherche musicale et aux pratiques contemporaines du son.</p>
-
-        <div class="documentation-grid">
-          <figure>
-            <img src="../images/documentation-1.jpg" alt="Performance et installation sonore">
-            <figcaption>Performance audiovisuelle et projection dans un espace historique — pratiques hybrides entre son, espace et image.</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section id="outils">
-      <div class="section-label">outils</div>
-      <div class="content">
-        <h2>Environnements de création</h2>
-        <p>Les cours peuvent intégrer différents logiciels et outils selon le projet&nbsp;: composition, production, synthèse, performance, analyse ou création audiovisuelle.</p>
-
-        <ul class="list">
-          <li><span>DAW</span><span>Ableton Live, Logic Pro, Reaper, Pro Tools — arrangement, édition, automation, production. D’autres environnements comme Cubase ou Studio One peuvent également être utilisés selon les habitudes de chaque étudiant.</span></li>
-          <li><span>création sonore</span><span>Max/MSP, synthèse, sampling, traitement du signal, systèmes interactifs.</span></li>
-          <li><span>image / interaction</span><span>TouchDesigner, génération audiovisuelle, dispositifs hybrides, performance.</span></li>
-          <li><span>IA générative</span><span>Suno, ElevenLabs, Supertone, génération vocale, voice transformation, outils d’assistance à la composition, à l’analyse, au sound design et aux performances audiovisuelles.</span></li>
-          <li><span>VST / plugins</span><span>synthétiseurs virtuels, effets, spatialisation, outils de mixage et environnements modulaires selon les besoins du projet.</span></li>
-        </ul>
-
-        <div class="tool-gallery">
-          <figure>
-            <img src="../images/max-screen.png" alt="Patch Max MSP">
-            <figcaption>Environnements de création interactifs avec Max/MSP, systèmes génératifs, traitement du signal et performance en temps réel.</figcaption>
-          </figure>
-        </div>
-
-        <div class="plugin-list">
-          <span>acids</span><span>Alan Vista</span><span>Denise Audio</span><span>Devious Machines</span>
-          <span>Digital Suburban</span><span>East West</span><span>Excite Audio</span><span>IK Multimedia</span>
-          <span>Ina-GRM</span><span>Ircam</span><span>iZotope</span><span>MeldaProduction</span>
-          <span>Modartt</span><span>Scaler Music</span><span>Slate Digital</span><span>Supertone</span>
-          <span>u-he</span><span>Vital Audio</span><span>Waves</span><span>XLN Audio</span><span>Zynaptiq</span>
-        </div>
-      </div>
-    </section>
-
-
-    <section id="ia">
-      <div class="section-label">IA / création</div>
-      <div class="content">
-        <h2>Créer avec Suno, ElevenLabs et les outils d’IA générative</h2>
-        <p>
-          Les outils comme Suno, ElevenLabs, Supertone ou d’autres systèmes génératifs peuvent produire rapidement des sons, des voix ou des esquisses musicales.
-          Le problème principal n’est pas seulement de générer, mais de savoir écouter, choisir, transformer et organiser les résultats.
-        </p>
-        <p>
-          Le cours peut aider à évaluer une création générée par IA&nbsp;: cohérence musicale, qualité sonore, structure, timbre, relation entre texte et son,
-          potentiel pour un portfolio, une musique à l’image, une maquette, une installation ou une pièce plus personnelle.
-        </p>
+        <h2>Ce que nous pouvons travailler ensemble</h2>
+        <p class="section-intro">Le contenu est construit à partir de votre projet. Un cours peut être très technique, très musical, ou alterner entre écoute, écriture, analyse et production.</p>
 
         <div class="disciplines-grid">
           <article class="discipline-item">
-            <h3>écoute critique</h3>
-            <p>Identifier ce qui fonctionne, ce qui reste générique, et ce qui peut devenir un matériau personnel.</p>
+            <h3>Composition musicale</h3>
+            <p>Développer une idée, organiser les matériaux, trouver une forme et préciser l’intention.</p>
           </article>
-
           <article class="discipline-item">
-            <h3>sélection</h3>
-            <p>Choisir les fragments utiles parmi plusieurs générations et éviter l’accumulation de versions faibles.</p>
+            <h3>Harmonie et analyse</h3>
+            <p>Comprendre accords, fonctions, couleur harmonique, conduite des voix et structure.</p>
           </article>
-
           <article class="discipline-item">
-            <h3>transformation</h3>
-            <p>Retravailler les sons dans un DAW, par montage, effets, spatialisation, sampling ou transformation vocale.</p>
+            <h3>Mélodie, basse, accords et forme</h3>
+            <p>Relier les éléments fondamentaux pour construire une pièce plus cohérente.</p>
           </article>
-
           <article class="discipline-item">
-            <h3>projet artistique</h3>
-            <p>Relier les outils d’IA à une intention musicale claire, à un langage sonore et à un contexte de diffusion.</p>
+            <h3>MAO</h3>
+            <p>Travailler dans Ableton Live, Logic Pro, Reaper ou un autre environnement familier.</p>
+          </article>
+          <article class="discipline-item">
+            <h3>Électroacoustique et timbre</h3>
+            <p>Explorer texture, synthèse, montage, espace, traitement et écoute du son.</p>
+          </article>
+          <article class="discipline-item">
+            <h3>Notation, partition, portfolio</h3>
+            <p>Clarifier une partition, préparer un dossier ou structurer une présentation artistique.</p>
+          </article>
+          <article class="discipline-item">
+            <h3>Projet personnel</h3>
+            <p>Accompagnement musical pour une pièce, une maquette, une musique à l’image ou une recherche sonore.</p>
           </article>
         </div>
-
-        <p class="disciplines-note">
-          L’IA n’est pas présentée comme un raccourci créatif, mais comme un outil à intégrer dans une pensée musicale, critique et personnelle.
-        </p>
-      </div>
-    </section>
-
-
-
-    <section id="free-tools">
-      <div class="section-label">outils gratuits</div>
-      <div class="content">
-        <h2>Outils gratuits pour l’harmonie et le contrepoint</h2>
-        <p>
-          Des outils gratuits sont proposés comme supports de travail&nbsp;: un vérificateur d’harmonie pour les exercices SATB et un espace de pratique du contrepoint.
-          Ces outils sont pensés comme aides pédagogiques, non comme validation musicale définitive.
-        </p>
-        <p>
-          Si vous ne comprenez pas une erreur, une règle ou une manière de corriger votre exercice, la correction par e-mail ou le cours individuel permet de reprendre le problème plus précisément.
-        </p>
-
-        <div class="disciplines-grid">
-          <article class="discipline-item">
-            <h3>vérificateur d’harmonie</h3>
-            <p>Contrôle simple de fichiers MusicXML en écriture SATB&nbsp;: quintes parallèles, octaves parallèles et points de vigilance.</p>
-            <a href="../harmony-checker.html" data-track="harmony_checker_fr_click">utiliser l’outil</a>
-          </article>
-
-          <article class="discipline-item">
-            <h3>outils de contrepoint</h3>
-            <p>Pratique du contrepoint à deux voix et modules d’entraînement pour vérifier les intervalles et les mouvements.</p>
-            <a href="../counterpoint/" data-track="counterpoint_checker_fr_click">utiliser l’outil</a>
-          </article>
-
-          <article class="discipline-item">
-            <h3>correction par e-mail</h3>
-            <p>Envoyez une partition, un exercice, un court extrait audio ou le résultat d’un outil pour recevoir un retour écrit.</p>
-            <a href="#contact" data-subject="correction par e-mail" data-track="checker_lesson_cta_fr_click">demander une correction</a>
-          </article>
-        </div>
-
-        <p class="disciplines-note">
-          Ces outils effectuent des vérifications mécaniques. Ils ne garantissent pas la pertinence musicale d’un exercice, d’une pièce ou d’un dossier d’admission.
-        </p>
-      </div>
-    </section>
-
-
-    <section id="programme">
-      <div class="section-label">programme</div>
-      <div class="content">
-        <h2>Un parcours construit selon votre niveau et votre pratique</h2>
-        <ul class="program">
-          <li><span class="num">01</span><div><h3>Curriculum personnalisé</h3><p>Chaque parcours est adapté à votre niveau, vos objectifs, votre esthétique musicale et votre manière de travailler.</p></div></li>
-          <li><span class="num">02</span><div><h3>Composition à l’ère de l’IA</h3><p>Les outils d’intelligence artificielle peuvent être intégrés activement dans des projets de composition, de performance ou de recherche sonore.</p></div></li>
-          <li><span class="num">03</span><div><h3>Outils et environnements de création</h3><p>Le travail peut intégrer DAW, Max/MSP, TouchDesigner, synthèse sonore, partition, orchestration numérique, IA générative et workflows hybrides.</p></div></li>
-          <li><span class="num">04</span><div><h3>Organisation flexible</h3><p>Les cours peuvent être suivis à partir d’une séance par mois, avec un rythme flexible selon votre projet.</p></div></li>
-          <li><span class="num">05</span><div><h3>Ce que permet le format en ligne</h3><p>Le travail à distance permet de partager directement projets, sessions, partitions, patches et références sonores.</p></div></li>
-        </ul>
       </div>
     </section>
 
     <section id="formats">
       <div class="section-label">formats</div>
       <div class="content">
-        <h2>Trois manières de commencer</h2>
-        <div class="formats">
-          <article class="format">
-            <h3>Mini-cours</h3>
-            <p class="format-note">en préparation</p>
-            <p>Mini-cours en 4 vidéos d’environ 30 minutes. Une introduction progressive à la composition, au sound design et aux outils numériques.</p>
-            <ul>
-              <li>4 vidéos (~30 min chacune)</li>
-              <li>composition et écoute critique</li>
-              <li>sound design et textures</li>
-              <li>outils numériques et workflows</li>
-            </ul>
-            <a href="#contact" class="general-contact-link">être informé du lancement</a>
+        <h2>Format des cours</h2>
+        <p class="section-intro">Avant de commencer, un échange gratuit de 30 minutes permet de comprendre votre situation et de proposer un rythme adapté. Le tarif est ensuite présenté comme un accompagnement individuel, centré sur votre travail réel.</p>
+
+        <div class="formats formats-focused">
+          <article class="format featured">
+            <h3>Cours individuel en ligne</h3>
+            <p>Une séance de 60 minutes consacrée à votre projet, votre apprentissage ou une question musicale précise.</p>
+            <div class="format-meta">
+              <span><strong>Durée</strong> · 60 minutes</span>
+              <span><strong>Tarif</strong> · 70€ / séance</span>
+              <span><strong>Langues</strong> · français, anglais ou japonais</span>
+              <span><strong>Rythme</strong> · ponctuel, mensuel ou accompagnement régulier</span>
+              <span><strong>Paiement</strong> · paiement en ligne possible</span>
+            </div>
           </article>
 
           <article class="format">
-            <h3>Cours individuel</h3>
-            <p class="price">70€ / h</p>
-            <p>Accompagnement en ligne via Zoom, centré sur votre projet, votre niveau et vos outils.</p>
+            <h3>Premier échange gratuit</h3>
+            <p>Un rendez-vous de 30 minutes, sans engagement, pour clarifier vos objectifs, votre niveau, vos outils et les pistes de travail possibles.</p>
             <ul>
-              <li>composition et retour sur projet</li>
-              <li>sound design, Ableton Live, Logic Pro, Reaper, Pro Tools, Max/MSP, TouchDesigner</li>
-              <li>écriture, portfolio, direction artistique</li>
-              <li>cours en ligne via Zoom</li>
-              <li>français uniquement</li>
+              <li>présenter votre projet ou vos questions</li>
+              <li>choisir un format de cours adapté</li>
+              <li>vérifier les disponibilités et le fuseau horaire</li>
             </ul>
-            <a href="#contact" class="general-contact-link">demander un cours</a>
-          </article>
-
-          <article class="format">
-            <h3>Correction par e-mail</h3>
-            <p class="format-note">written feedback / sans Zoom</p>
-            <p class="price">15€</p>
-            <p>
-              Retour écrit sur une partition, un exercice, un court projet sonore ou une question précise.
-              Ce format convient aux corrections ponctuelles sans séance en visioconférence.
-            </p>
-            <ul>
-              <li>partition d’environ 3 à 4 pages, ou audio jusqu’à 4 minutes</li>
-              <li>correction d’exercices d’harmonie, contrepoint, solfège ou composition</li>
-              <li>commentaires sur une courte pièce, un extrait sonore ou une maquette</li>
-              <li>retour simple sur des créations générées avec Suno, ElevenLabs ou d’autres outils d’IA</li>
-              <li>commentaires sur les résultats du vérificateur d’harmonie ou des outils de contrepoint</li>
-              <li>pistes d’amélioration et conseils de travail</li>
-              <li>réponse indicative sous 3 jours</li>
-              <li>lien de paiement Stripe envoyé après vérification du contenu</li>
-              <li>la correction commence après confirmation du paiement</li>
-              <li>retour écrit uniquement, sans cours Zoom</li>
-              <li>les analyses détaillées ou portfolios complets relèvent du cours individuel</li>
-            </ul>
-            <a href="#contact" data-subject="correction par e-mail" data-track="course_card_click">demander une correction</a>
+            <a href="booking.html" data-track="click_free_consultation_fr">Réserver un échange gratuit</a>
           </article>
         </div>
+
+        <div class="cta-panel">
+          <h3>Vous hésitez entre plusieurs directions&nbsp;?</h3>
+          <p>Vous pouvez venir avec une partition, une maquette audio, une session Ableton Live, Logic Pro ou Reaper, ou simplement une idée musicale encore ouverte.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">Réserver un échange gratuit de 30 minutes</a>
+            <a class="btn" href="#questions" data-track="click_faq_fr">Lire la FAQ</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="parcours">
+      <div class="section-label">parcours</div>
+      <div class="content">
+        <div class="direction-layout">
+          <div>
+            <h2>Pourquoi travailler avec moi&nbsp;?</h2>
+            <p>Sachie Kobayashi est compositrice et artiste sonore. Son travail se situe entre composition contemporaine, électroacoustique, création audiovisuelle, pédagogie et outils numériques.</p>
+            <p>Elle a étudié la composition et la pédagogie musicale à la Haute École de Musique de Genève, et a participé au Cursus de composition et d’informatique musicale de l’IRCAM à Paris.</p>
+            <p>Les cours peuvent accompagner des débutants comme des personnes ayant déjà une pièce, une maquette, une partition ou un dossier à structurer.</p>
+          </div>
+
+          <figure class="direction-photo direction-photo-large">
+            <img src="../images/sachie_re.jpeg" alt="Sachie Kobayashi">
+            <figcaption>Sachie Kobayashi<br>composition / électroacoustique / pédagogie</figcaption>
+          </figure>
+        </div>
+
+        <ul class="list">
+          <li><span>approche</span><span>écoute attentive, clarté technique et développement d’une pratique autonome.</span></li>
+          <li><span>formation</span><span>composition et pédagogie musicale à la Haute École de Musique de Genève.</span></li>
+          <li><span>recherche</span><span>IRCAM Cursus de composition et d’informatique musicale.</span></li>
+          <li><span>domaines</span><span>composition musicale, harmonie, électroacoustique, musique à l’image, MAO et accompagnement de projet.</span></li>
+        </ul>
       </div>
     </section>
 
     <section id="questions">
       <div class="section-label">questions</div>
       <div class="content">
-        <details><summary>Je ne viens pas d’un conservatoire. Est-ce possible&nbsp;?</summary><p>Oui. Les cours sont adaptés au niveau et au parcours de chaque personne.</p></details>
-        <details><summary>Est-ce que je peux travailler sur mes propres projets&nbsp;?</summary><p>Oui. Pièces, albums, performances, portfolios, musique à l’image, installations, projets électroniques ou recherches personnelles peuvent être intégrés directement.</p></details>
-        <details><summary>Faut-il utiliser un logiciel particulier&nbsp;?</summary><p>Non. Ableton Live, Logic Pro, Reaper, Pro Tools, Cubase, Studio One, Max/MSP ou d’autres environnements peuvent être utilisés.</p></details>
-        <details><summary>Combien de cours par mois sont recommandés&nbsp;?</summary><p>Le rythme dépend du projet et du temps disponible.</p></details>
-        <details><summary>Les cours sont-ils orientés vers un style musical précis&nbsp;?</summary><p>Non. Le travail peut concerner la composition contemporaine, la musique électronique, le sound design, l’ambient, l’expérimental, la musique à l’image ou des formes hybrides.</p></details>
-        <details><summary>Est-ce un cours centré sur l’IA&nbsp;?</summary><p>Le centre reste la composition, l’écoute et le son, mais les projets utilisant activement l’IA sont également bienvenus.</p></details>
-
-        <details><summary>Puis-je demander un retour sur une création faite avec Suno ou ElevenLabs&nbsp;?</summary><p>Oui. Le retour peut porter sur le choix des matériaux, la structure, le timbre, la qualité sonore, la relation texte-son et la manière d’intégrer le résultat dans un projet musical ou artistique.</p></details>
-        <details><summary>Puis-je utiliser les outils gratuits pour préparer une correction&nbsp;?</summary><p>Oui. Vous pouvez envoyer le résultat du vérificateur d’harmonie ou d’un exercice de contrepoint, puis demander une explication des erreurs et des pistes de correction.</p></details>
-
+        <h2>FAQ</h2>
+        <details><summary>Puis-je suivre les cours si je suis débutant&nbsp;?</summary><p>Oui. Le cours peut commencer par les bases de la composition, de l’écoute, de l’harmonie ou de la MAO. Le parcours est adapté à votre niveau et à vos objectifs.</p></details>
+        <details><summary>Faut-il savoir lire une partition&nbsp;?</summary><p>Non. La lecture peut être travaillée progressivement si elle est utile à votre projet. Il est aussi possible de partir d’une maquette audio, d’une session DAW ou d’une idée musicale.</p></details>
+        <details><summary>Peut-on travailler sur Ableton, Logic ou Reaper&nbsp;?</summary><p>Oui. Les cours de MAO en ligne peuvent s’appuyer sur Ableton Live, Logic Pro, Reaper ou d’autres environnements selon vos habitudes.</p></details>
+        <details><summary>Puis-je apporter mes propres morceaux ou maquettes&nbsp;?</summary><p>Oui. C’est même recommandé. Le travail peut porter sur vos pièces, esquisses, partitions, portfolios, musiques à l’image ou projets électroacoustiques.</p></details>
+        <details><summary>Comment se déroule le premier échange gratuit&nbsp;?</summary><p>Il dure environ 30 minutes. Nous clarifions votre niveau, vos besoins, votre disponibilité et la forme de cours la plus pertinente avant tout engagement.</p></details>
+        <details><summary>Les cours sont-ils adaptés au fuseau horaire européen&nbsp;?</summary><p>Les horaires sont discutés au cas par cas. Le premier échange permet de vérifier les créneaux possibles entre l’Europe et le Japon.</p></details>
       </div>
     </section>
 
     <section id="conditions">
       <div class="section-label">conditions</div>
       <div class="content">
-        <h2>Informations et politique des cours</h2>
+        <h2>Informations pratiques</h2>
         <ul class="list">
           <li><span>format</span><span>cours individuels en ligne via Zoom.</span></li>
-          <li><span>tarif</span><span>70€ par heure. La correction par e-mail est proposée à 15€ par dossier.</span></li>
-          <li><span>langues</span><span>français uniquement.</span></li>
-          <li><span>paiement</span><span>les paiements sont effectués via Stripe. Pour la correction par e-mail, le lien de paiement est envoyé après vérification du contenu et du volume.</span></li>
-          <li><span>correction</span><span>la correction par e-mail est un retour écrit sans séance Zoom. Elle concerne une partition d’environ 3 à 4 pages ou un audio jusqu’à 4 minutes. Après réception du formulaire, le contenu et le volume sont vérifiés, puis un lien de paiement Stripe est envoyé. La correction commence après confirmation du paiement. Réponse indicative sous 3 jours.</span></li>
-          <li><span>IA</span><span>les créations générées avec Suno, ElevenLabs ou d’autres outils peuvent être commentées sous l’angle de l’écoute, de la structure, du timbre, du montage et de l’intégration artistique.</span></li>
-          <li><span>outils gratuits</span><span>le vérificateur d’harmonie et les outils de contrepoint sont des aides pédagogiques. Ils ne remplacent pas une évaluation musicale complète.</span></li>
-          <li><span>planning</span><span>le rythme des cours est flexible selon les disponibilités et les projets.</span></li>
-          <li><span>annulation</span><span>un report est possible avant l’heure du cours selon les disponibilités.</span></li>
-          <li><span>remboursement</span><span>les cours déjà réglés ne sont généralement pas remboursables.</span></li>
+          <li><span>tarif</span><span>70€ / 60 minutes, après un premier échange gratuit de 30 minutes.</span></li>
+          <li><span>langues</span><span>français, anglais ou japonais.</span></li>
+          <li><span>paiement</span><span>paiement en ligne possible. Les modalités sont précisées avant le cours.</span></li>
+          <li><span>planning</span><span>rythme ponctuel, mensuel ou régulier selon le projet et les disponibilités.</span></li>
           <li><span>conditions complètes</span><span><a href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener" data-track="terms_pdf_click">Lesson Terms &amp; Policies / Commerce Disclosure</a></span></li>
           <li><span>contact</span><span>info@sachiekobayashi.com</span></li>
-          <li><span>mise à jour</span><span>9 juin 2026.</span></li>
         </ul>
       </div>
     </section>
@@ -1394,26 +1317,24 @@
     <section id="contact">
       <div class="section-label">contact</div>
       <div class="content">
-        <h2>Échange gratuit de 30 minutes</h2>
+        <h2>Commencer par un échange gratuit</h2>
         <p>
-          Réservez un premier échange pour clarifier votre projet, vos besoins et les pistes de travail possibles.
+          Si vous souhaitez un accompagnement musical mais ne savez pas encore par où commencer, le plus simple est de réserver un premier échange gratuit.
         </p>
 
         <div class="contact-layout">
           <div>
             <p class="small">
-              Cet échange est ouvert aux débutants, aux étudiants, aux artistes et aux personnes qui souhaitent simplement poser une première question.
-              Aucun engagement n’est demandé.
+              Cet échange est ouvert aux débutants, aux étudiants, aux artistes et aux personnes qui souhaitent simplement poser une première question. Aucun engagement n’est demandé.
             </p>
 
             <div class="hero-actions">
-              <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">réserver un échange gratuit</a>
-              <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_click">écrire par e-mail</a>
+              <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">Réserver un échange gratuit de 30 minutes</a>
+              <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_click">Écrire par e-mail</a>
             </div>
 
             <p class="small">
-              Pour une correction par e-mail, une demande de création, une question sur les cours ou un autre sujet,
-              vous pouvez écrire directement à <a href="mailto:info@sachiekobayashi.com" data-track="email_click">info@sachiekobayashi.com</a>.
+              Vous pouvez aussi écrire directement à <a href="mailto:info@sachiekobayashi.com" data-track="email_click">info@sachiekobayashi.com</a> pour présenter votre projet ou poser une question avant de réserver.
             </p>
 
             <p class="small">
@@ -1432,54 +1353,6 @@
     </footer>
   </div>
 
-  <script>
-    const courseLinks = document.querySelectorAll('[data-subject]');
-    const generalLinks = document.querySelectorAll('.general-contact-link');
-    const courseSelect = document.getElementById('courseSelect');
-    const messageField = document.getElementById('messageField');
-
-    courseLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        const subject = link.getAttribute('data-subject');
-        if (courseSelect) courseSelect.value = subject;
-        if (messageField && !messageField.value.trim()) {
-          messageField.value = `Bonjour,
-
-Je souhaite recevoir des informations concernant le cours : ${subject}.
-
-Mon niveau :
-Mes outils :
-Mon projet :
-`;
-        }
-        setTimeout(() => {
-          document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-        }, 0);
-      });
-    });
-
-    generalLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        if (courseSelect) courseSelect.value = '';
-        if (messageField && !messageField.value.trim()) {
-          messageField.value = `Bonjour,
-
-Je souhaite recevoir des informations concernant les cours.
-
-Mon niveau :
-Mes outils :
-Mon projet :
-`;
-        }
-
-        setTimeout(() => {
-          document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-        }, 0);
-      });
-    });
-  </script>
-
-  
 <script>
   document.querySelectorAll('[data-track]').forEach(function(element) {
     element.addEventListener('click', function() {
