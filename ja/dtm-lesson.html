@@ -295,64 +295,6 @@
       line-height: 1.8;
     }
 
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0;
-      margin-top: 34px;
-      border-top: 1px solid var(--line);
-      border-left: 1px solid var(--line);
-    }
-
-    .video-card {
-      border: 1px solid var(--line);
-      border-top: 0;
-      border-left: 0;
-      border-radius: 0;
-      background: transparent;
-      padding: 22px;
-    }
-
-    .video-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: #000;
-    }
-
-    .video-wrap iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    .video-meta {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .video-card h3 {
-      margin: 10px 0 12px;
-      font-size: 22px;
-      line-height: 1.35;
-      font-weight: 400;
-      letter-spacing: -0.03em;
-    }
-
-    .video-card p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
     .soundcloud-card {
       margin-top: 24px;
       border: 1px solid var(--line);
@@ -600,8 +542,7 @@
       }
 
       .cards,
-      .price-grid,
-      .video-grid {
+      .price-grid {
         grid-template-columns: 1fr;
       }
 
@@ -733,67 +674,8 @@
 
         <div class="text-block">
           <p>
-            DTM、音作り、アレンジ、質感の作り方を確認できるデモ動画です。
-            ポップ寄りの制作を2本、エクスペリメンタルな音響制作を1本、さらにビデオ・インスタレーション作品と、ハンドパン＋エレクトロニクス作品の音源抜粋を掲載しています。
+            ビデオ・インスタレーション作品と、ハンドパン＋エレクトロニクス作品の音源抜粋を掲載しています。
           </p>
-
-          <div class="video-grid">
-            <article class="video-card">
-              <div class="video-wrap">
-                <iframe
-                  src="https://www.youtube.com/embed/v_Vm7N_svws"
-                  title="Pop / DTM Production Demo 1"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-                </iframe>
-              </div>
-
-              <div class="video-meta">Pop / DTM production</div>
-              <h3>ポップ寄りのDTM制作 I</h3>
-              <p>
-                メロディ、コード、ビート、アレンジ、音色の整理など、
-                ポップスや歌ものに近い制作プロセスを確認できます。
-              </p>
-            </article>
-
-            <article class="video-card">
-              <div class="video-wrap">
-                <iframe
-                  src="https://www.youtube.com/embed/4x8w6YhQD4s"
-                  title="Pop / DTM Production Demo 2"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-                </iframe>
-              </div>
-
-              <div class="video-meta">Pop / arrangement / production</div>
-              <h3>ポップ寄りのDTM制作 II</h3>
-              <p>
-                楽曲の流れ、音色の選び方、アレンジの組み立て方など、
-                より実践的なDTM制作の例として掲載しています。
-              </p>
-            </article>
-
-            <article class="video-card">
-              <div class="video-wrap">
-                <iframe
-                  src="https://www.youtube.com/embed/kdXu_GEH4ew"
-                  title="Experimental / Sound Production Demo"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-                </iframe>
-              </div>
-
-              <div class="video-meta">Experimental / sound design</div>
-              <h3>エクスペリメンタルな音響制作</h3>
-              <p>
-                通常の楽曲制作だけでなく、音色、ノイズ、空間、質感、電子音響的な構成を扱う制作例です。
-              </p>
-            </article>
-          </div>
 
           <article class="soundcloud-card">
             <div class="soundcloud-wrap">
