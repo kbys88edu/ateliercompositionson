@@ -447,7 +447,7 @@ h1 {
   object-fit: cover;
   opacity: 0;
   filter: grayscale(100%);
-  animation: imageFade 20s infinite;
+  animation: imageFade 16s infinite;
 }
 
 .image-slideshow img:nth-child(1) {
@@ -466,24 +466,20 @@ h1 {
   animation-delay: 12s;
 }
 
-.image-slideshow img:nth-child(5) {
-  animation-delay: 16s;
-}
-
 @keyframes imageFade {
   0% {
     opacity: 0;
   }
 
-  4% {
-    opacity: 1;
-  }
-
-  16% {
+  5% {
     opacity: 1;
   }
 
   20% {
+    opacity: 1;
+  }
+
+  25% {
     opacity: 0;
   }
 
@@ -2472,7 +2468,6 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
       <img src="../images/home-2.jpg" alt="作曲・電子音響・サウンドアートの制作風景">
       <img src="../images/home-3.jpg" alt="Atelier Composition Son の創作イメージ">
       <img src="../images/module5-vr-performance-documentation.jpeg" alt="VR、演奏、音響、空間演出を含む作品記録">
-      <img src="../images/module5-vr-performance-composite.png" alt="VR空間、映像、演奏シーンを組み合わせた制作イメージ">
     </div>
     <div class="image-caption">composition / sound / electronic creation</div>
   </section>
