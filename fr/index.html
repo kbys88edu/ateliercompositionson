@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
@@ -1092,7 +1092,48 @@
         padding: 20px;
       }
     }
-  </style>
+
+  /* Global white background and frameless images */
+  :root {
+    --bg: #ffffff !important;
+    --paper: #ffffff !important;
+    --card: #ffffff !important;
+    --white: #ffffff !important;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  figure,
+  img,
+  .lesson-image,
+  .lesson-header-image,
+  .teacher-photo,
+  .inline-work-image,
+  .mobile-studio-image,
+  .hero-image,
+  .image-frame,
+  .visual-card {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+
+  figure img,
+  .lesson-image img,
+  .lesson-header-image img,
+  .teacher-photo img,
+  .inline-work-image img,
+  .hero-image img,
+  .image-frame img,
+  .visual-card img {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+</style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
 <script>

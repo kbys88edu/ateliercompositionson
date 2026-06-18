@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
@@ -649,7 +649,48 @@
         flex: 1 1 100%;
       }
     }
-  </style>
+
+  /* Global white background and frameless images */
+  :root {
+    --bg: #ffffff !important;
+    --paper: #ffffff !important;
+    --card: #ffffff !important;
+    --white: #ffffff !important;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  figure,
+  img,
+  .lesson-image,
+  .lesson-header-image,
+  .teacher-photo,
+  .inline-work-image,
+  .mobile-studio-image,
+  .hero-image,
+  .image-frame,
+  .visual-card {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+
+  figure img,
+  .lesson-image img,
+  .lesson-header-image img,
+  .teacher-photo img,
+  .inline-work-image img,
+  .hero-image img,
+  .image-frame img,
+  .visual-card img {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+</style>
 </head>
 
 <body>
@@ -889,9 +930,6 @@
             </iframe>
           </div>
           <h3>Composition / Sound Work</h3>
-          <p class="muted">
-            音色、時間構成、空間性を扱った作品例です。
-          </p>
         </div>
 
         <div class="video-card">
@@ -904,10 +942,7 @@
               allowfullscreen>
             </iframe>
           </div>
-          <h3>Music / Visual Collaboration</h3>
-          <p class="muted">
-            映像や舞台的な時間感覚と結びついた制作例です。
-          </p>
+          <h3>講師のインタビュー動画</h3>
         </div>
 
         <div class="video-card">
@@ -921,9 +956,6 @@
             </iframe>
           </div>
           <h3>Electronic / Contemporary Practice</h3>
-          <p class="muted">
-            現代音楽、電子音響、サウンドデザインに関わる制作例です。
-          </p>
         </div>
 
         <div class="video-card">
@@ -937,9 +969,6 @@
             </iframe>
           </div>
           <h3>Instrumental / Contemporary Work</h3>
-          <p class="muted">
-            器楽、構成、演奏表現を含む作品例です。
-          </p>
         </div>
       </div>
     </section>

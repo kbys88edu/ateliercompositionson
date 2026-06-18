@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
@@ -295,6 +295,55 @@
       line-height: 1.8;
     }
 
+    .video-grid {
+      display: grid;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .video-card {
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      padding: 22px;
+    }
+
+    .video-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-meta {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .video-card h3 {
+      margin: 10px 0 12px;
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 400;
+    }
+
+    .video-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
     .soundcloud-card {
       margin-top: 24px;
       border: 1px solid var(--line);
@@ -569,7 +618,48 @@
         padding: 26px;
       }
     }
-  </style>
+
+  /* Global white background and frameless images */
+  :root {
+    --bg: #ffffff !important;
+    --paper: #ffffff !important;
+    --card: #ffffff !important;
+    --white: #ffffff !important;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  figure,
+  img,
+  .lesson-image,
+  .lesson-header-image,
+  .teacher-photo,
+  .inline-work-image,
+  .mobile-studio-image,
+  .hero-image,
+  .image-frame,
+  .visual-card {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+
+  figure img,
+  .lesson-image img,
+  .lesson-header-image img,
+  .teacher-photo img,
+  .inline-work-image img,
+  .hero-image img,
+  .image-frame img,
+  .visual-card img {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+</style>
 </head>
 
 <body>
@@ -674,8 +764,28 @@
 
         <div class="text-block">
           <p>
-            ビデオ・インスタレーション作品と、ハンドパン＋エレクトロニクス作品の音源抜粋を掲載しています。
+            ポップ寄りのDTM制作デモと、ビデオ・インスタレーション作品、ハンドパン＋エレクトロニクス作品の音源抜粋を掲載しています。
           </p>
+
+          <div class="video-grid">
+            <article class="video-card">
+              <div class="video-wrap">
+                <iframe
+                  src="https://www.youtube.com/embed/4x8w6YhQD4s"
+                  title="Pop / DTM Production Demo 2"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <div class="video-meta">Pop / arrangement / production</div>
+              <h3>ポップ寄りのDTM制作 II</h3>
+              <p>
+                楽曲の流れ、音色の選び方、アレンジの組み立て方などを確認できる制作デモです。
+              </p>
+            </article>
+          </div>
 
           <article class="soundcloud-card">
             <div class="soundcloud-wrap">

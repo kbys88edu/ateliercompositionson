@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
   
 <head>
@@ -139,7 +139,7 @@ header {
   padding: 20px 5vw;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
-  border-bottom: 0;
+  border-bottom: 1px solid var(--line);
 }
 
 .logo {
@@ -305,7 +305,7 @@ h1 {
 
 .hero-trust {
   padding: 18px 5vw;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
   background: var(--bg);
 }
 
@@ -365,13 +365,13 @@ h1 {
 
 .audience-strip {
   padding: 58px 5vw;
-  border-top: 1px solid var(--line);
+  border-top: 0;
 }
 
 .background-scope {
   padding: 64px 5vw;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-top: 0;
+  border-bottom: 0;
   background: var(--bg);
 }
 
@@ -498,7 +498,7 @@ h1 {
 
 section {
   padding: 96px 5vw;
-  border-top: 1px solid var(--line);
+  border-top: 0;
 }
 
 .section-grid {
@@ -1006,7 +1006,7 @@ details p {
 
 footer {
   padding: 56px 5vw;
-  border-top: 1px solid var(--line);
+  border-top: 0;
   display: flex;
   justify-content: space-between;
   gap: 30px;
@@ -1196,7 +1196,7 @@ header::after {
 
   .hero-trust {
     padding: 0 7vw 30px;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 0;
   }
 
   .hero-trust ul {
@@ -1641,7 +1641,7 @@ body {
   .hero-trust {
     padding: 16px 7vw 28px;
     border-top: 0;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 0;
     background: var(--bg);
   }
 
@@ -2203,7 +2203,48 @@ body {
     padding: 22px 18px !important;
   }
 }
-  
+
+
+  /* Global white background and frameless images */
+  :root {
+    --bg: #ffffff !important;
+    --paper: #ffffff !important;
+    --card: #ffffff !important;
+    --white: #ffffff !important;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  figure,
+  img,
+  .lesson-image,
+  .lesson-header-image,
+  .teacher-photo,
+  .inline-work-image,
+  .mobile-studio-image,
+  .hero-image,
+  .image-frame,
+  .visual-card {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+
+  figure img,
+  .lesson-image img,
+  .lesson-header-image img,
+  .teacher-photo img,
+  .inline-work-image img,
+  .hero-image img,
+  .image-frame img,
+  .visual-card img {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
 </style>
 </head>
   
@@ -2460,7 +2501,7 @@ IRCAM作曲研究課程を経て、現代音楽・電子音響・映像音楽・
         </p>
 
         <div class="background-note">
-          継続レッスンは少数枠で行います。これから制作を始める方、独学で進めてきた方、
+          レッスンは少数枠、個別指導で行います。これから制作を始める方、独学で進めてきた方、
           すでに作品やプロジェクトを持っている方の現在地に合わせて、必要な学習内容を提案します。
         </div>
       </div>
