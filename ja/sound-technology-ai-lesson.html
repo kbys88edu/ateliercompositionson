@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>サウンドテクノロジー・AI音楽レッスン｜Max/MSP・AI生成音源｜Atelier Composition Son</title>
-  <meta name="description" content="サウンドテクノロジーとAI音楽のオンライン個人レッスン。DAW、Max/MSP、MIDI、OSC、センサー、生成システム、Suno・ElevenLabsなどのAI音源を作品制作に接続します。" />
+  <title>サウンドテクノロジー・AI音楽レッスン｜Atelier Composition Son</title>
+  <meta name="description" content="サウンドテクノロジーとAI音楽のオンライン個人レッスン。音楽プログラミング、DAW拡張、センサー、生成システム、AI音源、対話型AI、映像との連携を作品制作に接続します。" />
   <link rel="canonical" href="https://ateliercompositionson.com/ja/sound-technology-ai-lesson.html" />
   <meta property="og:title" content="サウンドテクノロジー・AI音楽レッスン｜Atelier Composition Son" />
-  <meta property="og:description" content="DAW、Max/MSP、MIDI、OSC、センサー、生成システム、AI生成音源を作品制作の道具として扱うオンライン個人レッスン。" />
+  <meta property="og:description" content="音楽プログラミング、DAW拡張、センサー、生成システム、AI音源、対話型AI、映像との連携を作品制作の道具として扱うオンライン個人レッスン。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ateliercompositionson.com/ja/sound-technology-ai-lesson.html" />
   <meta property="og:site_name" content="Atelier Composition Son" />
@@ -174,6 +174,69 @@
     .card { border-top: 0; border-left: 0; }
     .list { color: var(--muted); }
 
+    .scope-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      margin-top: 32px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+
+    .scope-item {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: var(--paper);
+      padding: 26px;
+    }
+
+    .scope-item small {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .tool-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .tool-list span {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      background: transparent;
+      padding: 7px 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .inline-work-image {
+      margin: 0;
+      margin-top: 28px;
+      max-width: 360px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    .inline-work-image img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .inline-work-image figcaption {
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
     footer {
       display: flex;
       justify-content: space-between;
@@ -185,7 +248,8 @@
 
     @media (max-width: 900px) {
       .nav-links { display: none; }
-      .hero, section, .grid-2 { grid-template-columns: 1fr; }
+      .hero, section, .grid-2, .scope-list { grid-template-columns: 1fr; }
+      .inline-work-image { max-width: 340px; }
       .hero, section { padding-left: 18px; padding-right: 18px; }
       .btn { width: 100%; min-height: 48px; }
       footer { flex-direction: column; }
@@ -208,7 +272,7 @@
 
   <main>
     <figure class="lesson-header-image">
-      <img src="../images/max-screen.png" alt="Max/MSPとサウンドテクノロジー">
+      <img src="../images/max-screen.png" alt="音楽プログラミングとサウンドテクノロジー">
     </figure>
 
     <section class="hero">
@@ -216,7 +280,7 @@
         <div class="eyebrow">Module 05 / Sound Technology &amp; AI</div>
         <h1>技術を、作品のための道具にする。</h1>
         <p class="lead muted">
-          DAW、Max/MSP、MIDI、OSC、センサー、生成システム、AI生成音源を、
+          音楽プログラミング、DAW拡張、センサー、生成システム、AI音源、対話型AI、映像との連携を、
           単なる操作方法ではなく、作品制作やサウンドデザインのための手段として扱います。
         </p>
         <div class="button-row">
@@ -228,10 +292,10 @@
       <aside class="hero-panel">
         <h2>扱うこと</h2>
         <ul class="list">
-          <li>DAW、Max/MSP、MIDI、OSCの基礎と応用</li>
-          <li>センサー、生成システム、インタラクション</li>
-          <li>Suno、ElevenLabsなどのAI生成音源の整理</li>
-          <li>技術と作品コンセプトの接続</li>
+          <li>音楽プログラミングとDAW拡張の基本設計</li>
+          <li>センサー、MIDI、OSC、生成システムの整理</li>
+          <li>AI音源、対話型AI、追加学習の考え方</li>
+          <li>映像・インタラクションと作品コンセプトの接続</li>
         </ul>
       </aside>
     </section>
@@ -245,23 +309,87 @@
           どの道具を選ぶか、どの結果を採用するか、音楽的にどう構成するかを、
           制作プロセスの中で具体的に整理します。
         </p>
+        <p class="muted">
+          はじめて触れる段階から、制作の中で自分なりに使い始める段階までを想定しています。
+          既存の作品やスケッチがある場合は、それをもとに必要な技術だけを選びます。
+        </p>
+
+        <div class="tool-list" aria-label="扱えるツール例">
+          <span>OpenMusic</span>
+          <span>Max/MSP</span>
+          <span>Max for Live</span>
+          <span>Suno</span>
+          <span>ElevenLabs</span>
+          <span>LLMトレーニング</span>
+          <span>TouchDesigner</span>
+          <span>VRテクノロジー</span>
+        </div>
+
+        <figure class="inline-work-image">
+          <img src="../images/module5-vr-performance-documentation.jpeg" alt="VR、音響、映像、演奏が関わるSachie Kobayashiの作品記録">
+          <figcaption>Sachie KobayashiのVR作品</figcaption>
+        </figure>
 
         <div class="grid-2" style="margin-top: 32px;">
           <article class="card">
             <h3>制作環境</h3>
-            <p class="muted">Ableton Live、Logic、Reaper、Max/MSPなど、現在の環境に合わせて進めます。</p>
+            <p class="muted">普段使っているDAWや音楽制作環境をもとに、音作り、編集、ルーティング、外部ツールとの接続を整理します。</p>
           </article>
           <article class="card">
-            <h3>生成システム</h3>
-            <p class="muted">MIDI、OSC、ランダム、ルール、センサー入力などを作品の仕組みに接続します。</p>
+            <h3>音楽プログラミング</h3>
+            <p class="muted">音高、リズム、形式、確率、ルール、反復、変化を使い、作曲のための小さな仕組みを作ります。</p>
           </article>
           <article class="card">
             <h3>AI音源の判断</h3>
-            <p class="muted">生成された音源を聴き、使える部分、避けたい部分、編集すべき点を整理します。</p>
+            <p class="muted">生成された音源を聴き、使える部分、避けたい部分、編集すべき点、作品に接続できる可能性を整理します。</p>
           </article>
           <article class="card">
-            <h3>作品化</h3>
-            <p class="muted">AIやシステムの出力を、自分の表現やポートフォリオにどう接続するか考えます。</p>
+            <h3>映像・インタラクション</h3>
+            <p class="muted">音と映像、動き、センサー、画面上の反応を結びつけ、作品の構造として使える形にします。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Scope</div>
+      <div class="content">
+        <h2>扱える範囲</h2>
+        <p class="muted">
+          それぞれの技術を深く網羅する講座ではなく、作品制作に必要な範囲を選んで扱います。
+          目的がまだ曖昧な場合は、まず小さな試作から始めます。
+        </p>
+
+        <div class="scope-list">
+          <article class="scope-item">
+            <small>01</small>
+            <h3>音の仕組みを作る</h3>
+            <p class="muted">パッチ、ルール、確率、反復、変化を使って、音や構造が動く仕組みを作ります。</p>
+          </article>
+          <article class="scope-item">
+            <small>02</small>
+            <h3>制作環境を広げる</h3>
+            <p class="muted">DAWの中だけで完結しない制作、外部制御、拡張ツール、リアルタイム処理を整理します。</p>
+          </article>
+          <article class="scope-item">
+            <small>03</small>
+            <h3>AIを素材として扱う</h3>
+            <p class="muted">生成結果をそのまま使うのではなく、選定、編集、再構成、批評を通して作品に接続します。</p>
+          </article>
+          <article class="scope-item">
+            <small>04</small>
+            <h3>言葉と音をつなげる</h3>
+            <p class="muted">プロンプト、文章生成、データの整理、追加学習の考え方を、音楽制作の補助線として扱います。</p>
+          </article>
+          <article class="scope-item">
+            <small>05</small>
+            <h3>音と映像を連動させる</h3>
+            <p class="muted">映像生成、画面上の動き、リアルタイム反応を、音楽作品やパフォーマンスに接続します。</p>
+          </article>
+          <article class="scope-item">
+            <small>06</small>
+            <h3>小さな試作を作る</h3>
+            <p class="muted">大きなシステムを作る前に、短い実験、音のスケッチ、簡単な操作系から始めます。</p>
           </article>
         </div>
       </div>
@@ -274,8 +402,11 @@
         <ul class="list">
           <li>オンライン個人レッスン</li>
           <li>60分 / 単発または継続</li>
-          <li>DAWセッション、Maxパッチ、音源、AI生成素材を共有可能</li>
-          <li>プロンプトや生成結果の講評にも対応</li>
+          <li>DAWセッション、音源、パッチ、生成素材、映像スケッチを共有可能</li>
+          <li>OpenMusic、Max/MSP、Max for Live、TouchDesigner、VRテクノロジーなどの導入相談</li>
+          <li>Suno、ElevenLabs、LLMトレーニングなどの生成・整理・活用相談</li>
+          <li>プロンプト、生成結果、対話型AIの使い方、追加学習の計画相談にも対応</li>
+          <li>必要な技術を選び、小さな制作課題として進めます</li>
         </ul>
         <div class="button-row">
           <a class="btn primary" href="/ja/#contact">無料相談を予約する</a>

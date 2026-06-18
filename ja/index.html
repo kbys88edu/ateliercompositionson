@@ -447,7 +447,7 @@ h1 {
   object-fit: cover;
   opacity: 0;
   filter: grayscale(100%);
-  animation: imageFade 12s infinite;
+  animation: imageFade 20s infinite;
 }
 
 .image-slideshow img:nth-child(1) {
@@ -462,20 +462,28 @@ h1 {
   animation-delay: 8s;
 }
 
+.image-slideshow img:nth-child(4) {
+  animation-delay: 12s;
+}
+
+.image-slideshow img:nth-child(5) {
+  animation-delay: 16s;
+}
+
 @keyframes imageFade {
   0% {
     opacity: 0;
   }
 
-  8% {
+  4% {
     opacity: 1;
   }
 
-  28% {
+  16% {
     opacity: 1;
   }
 
-  36% {
+  20% {
     opacity: 0;
   }
 
@@ -2463,6 +2471,8 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
       <img src="../images/home.jpg" alt="音と創作のためのオンラインアトリエ">
       <img src="../images/home-2.jpg" alt="作曲・電子音響・サウンドアートの制作風景">
       <img src="../images/home-3.jpg" alt="Atelier Composition Son の創作イメージ">
+      <img src="../images/module5-vr-performance-documentation.jpeg" alt="VR、演奏、音響、空間演出を含む作品記録">
+      <img src="../images/module5-vr-performance-composite.png" alt="VR空間、映像、演奏シーンを組み合わせた制作イメージ">
     </div>
     <div class="image-caption">composition / sound / electronic creation</div>
   </section>
@@ -2676,7 +2686,7 @@ IRCAM作曲研究課程を経て、国内外で、現代音楽・電子音響・
     <a class="module module-link" href="sound-technology-ai-lesson.html">
       <div class="module-number">Module 05</div>
       <div class="module-title">Sound Technology &amp; AI / サウンドテクノロジー・AI音楽</div>
-      <div class="module-desc">DAW、Max/MSP、MIDI、OSC、センサー、生成システム、Suno・ElevenLabsなどのAI音源を、作品制作の道具として扱う。</div>
+      <div class="module-desc">音楽プログラミング、DAW拡張、センサー、生成システム、AI音源や対話型AIを、作品制作の道具として整理する。</div>
       <div class="module-button">詳細を見る</div>
     </a>
   </div>
