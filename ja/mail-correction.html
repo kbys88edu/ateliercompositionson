@@ -13,6 +13,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ateliercompositionson.com/ja/mail-correction.html" />
   <meta property="og:site_name" content="Atelier Composition Son" />
+  <meta property="og:image" content="https://ateliercompositionson.com/images/emailfeedback_hero.png" />
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
@@ -110,7 +111,22 @@
     }
 
     .hero {
-      padding-top: 80px;
+      padding-top: 0;
+    }
+
+    .hero-visual {
+      max-width: min(1440px, 100%);
+      margin: 0 auto 48px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      height: clamp(280px, 44vw, 620px);
+      object-fit: cover;
+      object-position: center;
     }
 
     .hero-grid,
@@ -387,7 +403,16 @@
       }
 
       .hero {
-        padding-top: 54px;
+        padding-top: 0;
+      }
+
+      .hero-visual {
+        margin-bottom: 34px;
+      }
+
+      .hero-visual img {
+        height: clamp(210px, 58vw, 340px);
+        object-position: center top;
       }
 
       .hero-grid,
@@ -483,6 +508,10 @@
 
   <main>
     <section class="hero">
+      <figure class="hero-visual" aria-label="Composition feedback">
+        <img src="../images/emailfeedback_hero.png" alt="Composition Feedback - 楽譜と音源へのメール添削イメージ">
+      </figure>
+
       <div class="hero-grid">
         <div>
           <div class="eyebrow">Written Feedback</div>
