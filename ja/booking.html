@@ -6,6 +6,7 @@
   <title>30分無料相談 お申し込み｜Atelier Composition Son</title>
   <meta name="description" content="Atelier Composition Sonの30分無料相談専用フォーム。作曲、DTM、音楽理論、ソルフェージュ、和声・対位法、電子音響、AI音楽制作、受験・ポートフォリオについて相談できます。" />
   <link rel="canonical" href="https://ateliercompositionson.com/ja/booking.html" />
+  <meta property="og:image" content="https://ateliercompositionson.com/images/contact_hero.png" />
 
   <style>
     :root {
@@ -69,7 +70,22 @@
     main {
       max-width: 760px;
       margin: 0 auto;
-      padding: 72px 24px 92px;
+      padding: 52px 24px 92px;
+    }
+
+    .form-hero {
+      width: min(1120px, calc(100vw - 48px));
+      margin: 0 50% 46px;
+      transform: translateX(-50%);
+      background: #fff;
+    }
+
+    .form-hero img {
+      display: block;
+      width: 100%;
+      height: clamp(260px, 42vw, 560px);
+      object-fit: cover;
+      object-position: center;
     }
 
     .kicker {
@@ -267,7 +283,17 @@
       }
 
       main {
-        padding: 52px 20px 76px;
+        padding: 34px 20px 76px;
+      }
+
+      .form-hero {
+        width: calc(100vw - 40px);
+        margin-bottom: 34px;
+      }
+
+      .form-hero img {
+        height: clamp(210px, 58vw, 330px);
+        object-position: center top;
       }
 
       h1 {
@@ -352,6 +378,10 @@
   </header>
 
   <main>
+    <figure class="form-hero" aria-label="Contact form">
+      <img src="../images/contact_hero.png" alt="Contact form - 無料相談申し込みフォームのイメージ">
+    </figure>
+
     <div class="kicker">Free Consultation</div>
     <div class="mark" aria-hidden="true"></div>
     <h1>30分無料相談<br>お申し込み</h1>
