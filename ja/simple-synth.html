@@ -6,7 +6,16 @@
     <title>簡易シンセサイザー｜Atelier Composition Son</title>
     <meta name="description" content="ブラウザ上で波形、フィルター、エンベロープ、LFOなどを試しながら、音の合成について学べる簡易シンセサイザーです。">
     <link rel="stylesheet" href="simple-synth.css?v=1">
-  </head>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-Y1792EBWTT");
+  </script>
+</head>
   <body>
     <main class="app-shell">
       <a class="site-back-link" href="./">← Atelier Composition Son</a>
@@ -225,5 +234,6 @@
     </main>
 
     <script src="simple-synth-app.js?v=1"></script>
-  </body>
+    <script defer src="../assets/js/acs-tracking.js"></script>
+</body>
 </html>
