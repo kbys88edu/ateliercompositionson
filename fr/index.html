@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cours de composition, harmonie et MAO en ligne | Atelier Composition Son</title>
-  <meta name="description" content="Atelier en ligne pour la composition musicale, l’harmonie, la MAO et l’électroacoustique. Accompagnement individuel en français, diagnostic de morceau et premier échange gratuit de 30 minutes.">
+  <meta name="description" content="Atelier Composition Son propose des cours, carnets d&rsquo;atelier et ressources en fran&ccedil;ais pour la composition, l&rsquo;&eacute;coute, la MAO et les pratiques sonores.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ateliercompositionson.com/fr/">
   <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/">
@@ -753,6 +753,84 @@
       text-underline-offset: 3px;
     }
 
+
+
+    /* Ressources */
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .resource-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 24px;
+      padding: 28px;
+    }
+
+    .resource-label {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .resource-subtitle {
+      margin-top: -2px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .resource-list {
+      margin: 18px 0 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .resource-list li {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .resource-card a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      margin-top: auto;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 12px;
+      line-height: 1.35;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+    }
+
+    .resources-note {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .resources-note a {
+      border-bottom: 1px solid currentColor;
+      text-underline-offset: 3px;
+    }
+
     /* FAQ / details */
 
     details {
@@ -1085,6 +1163,14 @@
         grid-template-columns: 1fr;
       }
 
+      .resources-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .resource-card {
+        min-height: 0;
+      }
+
       .audience-list li,
       .discipline-item,
       .format,
@@ -1379,6 +1465,69 @@
         </ul>
       </div>
     </section>
+    <section id="ressources">
+      <div class="section-label">ressources</div>
+      <div class="content">
+        <h2>Ressources en fran&ccedil;ais</h2>
+        <p class="section-intro">Des carnets, vid&eacute;os, exercices et exemples audio pour travailler la composition, l&rsquo;&eacute;coute et les pratiques sonores &agrave; votre rythme.</p>
+        <p class="section-intro">Ces ressources ne sont pas des formations g&eacute;n&eacute;ralistes de MAO. Elles sont pens&eacute;es comme des carnets d&rsquo;atelier : &eacute;couter, d&eacute;crire, transformer, organiser, puis prolonger une mati&egrave;re sonore.</p>
+
+        <div class="resources-grid">
+          <article class="resource-card">
+            <div class="resource-label">Carnet gratuit</div>
+            <h3>5 questions pour commencer une pi&egrave;ce sonore</h3>
+            <p>Un court carnet d&rsquo;&eacute;coute pour ouvrir une premi&egrave;re direction de composition &agrave; partir d&rsquo;un son.</p>
+            <ul class="resource-list">
+              <li>Quel son vous attire&nbsp;?</li>
+              <li>Qu&rsquo;est-ce qui change dans ce son&nbsp;?</li>
+              <li>Quel espace ce son sugg&egrave;re-t-il&nbsp;?</li>
+              <li>Comment ce son peut-il se transformer&nbsp;?</li>
+              <li>Quelle forme pourrait na&icirc;tre de cette &eacute;coute&nbsp;?</li>
+            </ul>
+            <a href="#" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger le carnet gratuit</a>
+          </article>
+
+          <article class="resource-card">
+            <div class="resource-label">Carnet complet &mdash; Prix de lancement : 19&euro;</div>
+            <h3>Commencer une pi&egrave;ce &agrave; partir d&rsquo;un son</h3>
+            <p class="resource-subtitle">Carnet d&rsquo;&eacute;coute, de composition et de pratiques sonores</p>
+            <p>Un carnet d&rsquo;atelier en fran&ccedil;ais pour commencer une composition &agrave; partir de l&rsquo;&eacute;coute d&rsquo;un seul son.</p>
+            <ul class="resource-list">
+              <li>un PDF principal</li>
+              <li>une annexe</li>
+              <li>5 vid&eacute;os d&rsquo;accompagnement, pour une dur&eacute;e totale d&rsquo;environ 13 minutes</li>
+              <li>5 exemples audio WAV</li>
+              <li>3 sons de pratique WAV</li>
+              <li>une invitation &agrave; un &eacute;change en ligne de 30 minutes</li>
+            </ul>
+            <p class="resource-subtitle">Apr&egrave;s avoir parcouru le carnet, vous pouvez choisir l&rsquo;un des sons de pratique et composer une courte esquisse de 60 secondes.</p>
+            <a href="#" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="resource_paid_carnet_click" data-resource-extra-track="gumroad_product_click">Voir le carnet complet</a>
+          </article>
+
+          <article class="resource-card">
+            <div class="resource-label">Retour &eacute;crit &mdash; 29&euro;</div>
+            <h3>Mini retour &eacute;crit sur une esquisse sonore</h3>
+            <p>Envoyez une courte esquisse sonore. Vous recevrez un retour &eacute;crit concis sur la mati&egrave;re, l&rsquo;&eacute;coute, la forme et les pistes possibles de d&eacute;veloppement.</p>
+            <p class="resource-subtitle">Pour une premi&egrave;re orientation, sans s&eacute;ance en direct.</p>
+            <ul class="resource-list">
+              <li>une esquisse sonore courte</li>
+              <li>un retour &eacute;crit concis</li>
+              <li>une seule r&eacute;ponse</li>
+              <li>pas de s&eacute;ance en direct</li>
+            </ul>
+            <a href="#" data-resource-url="MINI_FEEDBACK_URL" data-resource-track="resource_mini_feedback_click">Demander un mini retour</a>
+          </article>
+
+          <article class="resource-card">
+            <div class="resource-label">&Eacute;change en ligne</div>
+            <h3>&Eacute;change de 30 minutes</h3>
+            <p>Ce set inclut une invitation &agrave; un &eacute;change en ligne de 30 minutes.</p>
+            <p class="resource-subtitle">Cet &eacute;change peut servir &agrave; situer votre projet, poser des questions sur le carnet, &eacute;couter votre esquisse de 60 secondes, ou d&eacute;finir une prochaine &eacute;tape de travail.</p>
+            <a href="#" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">R&eacute;server un &eacute;change</a>
+          </article>
+        </div>
+      </div>
+    </section>
 
     <section id="questions">
       <div class="section-label">questions</div>
@@ -1458,6 +1607,94 @@
       }
     });
   });
+</script>
+
+<script>
+  const FREE_PDF_URL = "../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf";
+  const GUMROAD_CARNET_URL = "https://sonata14.gumroad.com/l/gvbzop";
+  const MINI_FEEDBACK_URL = "#";
+  const BOOKING_URL = "booking.html";
+  const GUMROAD_DEFAULT_UTM = {
+    utm_source: "ateliercompositionson",
+    utm_medium: "fr_page",
+    utm_campaign: "202607_carnet_launch"
+  };
+
+  const ACS_RESOURCE_URLS = {
+    FREE_PDF_URL,
+    GUMROAD_CARNET_URL,
+    MINI_FEEDBACK_URL,
+    BOOKING_URL
+  };
+
+  function appendCurrentUtm(url) {
+    if (!url || url === '#') return url;
+    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+    const currentParams = new URLSearchParams(window.location.search);
+    const target = new URL(url, window.location.href);
+
+    utmKeys.forEach(function(key) {
+      if (currentParams.has(key) && !target.searchParams.has(key)) {
+        target.searchParams.set(key, currentParams.get(key));
+      }
+    });
+
+    if (target.hostname === 'sonata14.gumroad.com') {
+      Object.keys(GUMROAD_DEFAULT_UTM).forEach(function(key) {
+        if (!currentParams.has(key) && !target.searchParams.has(key)) {
+          target.searchParams.set(key, GUMROAD_DEFAULT_UTM[key]);
+        }
+      });
+    }
+
+    return target.href;
+  }
+
+  document.querySelectorAll('[data-resource-url]').forEach(function(link) {
+    const key = link.getAttribute('data-resource-url');
+    if (ACS_RESOURCE_URLS[key]) link.setAttribute('href', appendCurrentUtm(ACS_RESOURCE_URLS[key]));
+  });
+
+  document.querySelectorAll('[data-resource-track]').forEach(function(link) {
+    link.addEventListener('click', function(event) {
+      const eventName = link.getAttribute('data-resource-track');
+      const extraEventName = link.getAttribute('data-resource-extra-track');
+      const href = link.getAttribute('href') || '#';
+      const shouldDelay = href && href !== '#' && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && !link.getAttribute('target');
+      let completed = false;
+
+      function finish() {
+        if (completed) return;
+        completed = true;
+        if (shouldDelay) window.location.href = href;
+      }
+
+      if (typeof gtag !== 'function') return;
+      if (shouldDelay) event.preventDefault();
+
+      const eventParams = {
+        page_location: window.location.href,
+        link_url: link.href,
+        link_text: link.textContent.trim(),
+        transport_type: 'beacon',
+        event_callback: finish,
+        event_timeout: 800
+      };
+
+      gtag('event', eventName, eventParams);
+      if (extraEventName) {
+        gtag('event', extraEventName, {
+          page_location: window.location.href,
+          link_url: link.href,
+          link_text: link.textContent.trim(),
+          transport_type: 'beacon'
+        });
+      }
+
+      if (shouldDelay) window.setTimeout(finish, 240);
+    });
+  });
+
 </script>
 
   <script defer src="../assets/js/acs-tracking.js"></script>
