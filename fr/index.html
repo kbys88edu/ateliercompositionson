@@ -1484,7 +1484,7 @@
               <li>Comment ce son peut-il se transformer&nbsp;?</li>
               <li>Quelle forme pourrait na&icirc;tre de cette &eacute;coute&nbsp;?</li>
             </ul>
-            <a href="#" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger le carnet gratuit</a>
+            <a href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener noreferrer" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger le carnet gratuit</a>
           </article>
 
           <article class="resource-card">
@@ -1501,7 +1501,7 @@
               <li>une invitation &agrave; un &eacute;change en ligne de 30 minutes</li>
             </ul>
             <p class="resource-subtitle">Apr&egrave;s avoir parcouru le carnet, vous pouvez choisir l&rsquo;un des sons de pratique et composer une courte esquisse de 60 secondes.</p>
-            <a href="#" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="resource_paid_carnet_click" data-resource-extra-track="gumroad_product_click">Voir le carnet complet</a>
+            <a href="https://sonata14.gumroad.com/l/gvbzop" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="resource_paid_carnet_click" data-resource-extra-track="gumroad_product_click">Voir le carnet complet</a>
           </article>
 
           <article class="resource-card">
@@ -1515,7 +1515,7 @@
               <li>une seule r&eacute;ponse</li>
               <li>pas de s&eacute;ance en direct</li>
             </ul>
-            <a href="#" data-resource-url="MINI_FEEDBACK_URL" data-resource-track="resource_mini_feedback_click">Demander un mini retour</a>
+            <a href="mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore" data-resource-url="MINI_FEEDBACK_URL" data-resource-track="resource_mini_feedback_click">Demander un mini retour</a>
           </article>
 
           <article class="resource-card">
@@ -1523,7 +1523,7 @@
             <h3>&Eacute;change de 30 minutes</h3>
             <p>Ce set inclut une invitation &agrave; un &eacute;change en ligne de 30 minutes.</p>
             <p class="resource-subtitle">Cet &eacute;change peut servir &agrave; situer votre projet, poser des questions sur le carnet, &eacute;couter votre esquisse de 60 secondes, ou d&eacute;finir une prochaine &eacute;tape de travail.</p>
-            <a href="#" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">R&eacute;server un &eacute;change</a>
+            <a href="/fr/booking.html" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">R&eacute;server un &eacute;change</a>
           </article>
         </div>
       </div>
@@ -1612,8 +1612,8 @@
 <script>
   const FREE_PDF_URL = "../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf";
   const GUMROAD_CARNET_URL = "https://sonata14.gumroad.com/l/gvbzop";
-  const MINI_FEEDBACK_URL = "#";
-  const BOOKING_URL = "booking.html";
+  const MINI_FEEDBACK_URL = "mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore";
+  const BOOKING_URL = "/fr/booking.html";
   const GUMROAD_DEFAULT_UTM = {
     utm_source: "ateliercompositionson",
     utm_medium: "fr_page",
@@ -1632,6 +1632,8 @@
     const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
     const currentParams = new URLSearchParams(window.location.search);
     const target = new URL(url, window.location.href);
+
+    if (target.protocol !== 'http:' && target.protocol !== 'https:') return url;
 
     utmKeys.forEach(function(key) {
       if (currentParams.has(key) && !target.searchParams.has(key)) {
