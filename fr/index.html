@@ -757,6 +757,10 @@
 
     /* Ressources */
 
+    #ressources {
+      scroll-margin-top: 100px;
+    }
+
     .resources-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -772,6 +776,11 @@
       background: var(--card);
       border-radius: 24px;
       padding: 28px;
+    }
+
+    .resource-card-featured {
+      border-color: var(--accent);
+      background: #ffffff;
     }
 
     .resource-label {
@@ -817,6 +826,11 @@
       line-height: 1.35;
       letter-spacing: 0.04em;
       text-transform: lowercase;
+    }
+
+    .resource-card-featured a {
+      margin-top: 8px;
+      margin-bottom: 18px;
     }
 
     .resources-note {
@@ -1473,6 +1487,23 @@
         <p class="section-intro">Ces ressources ne sont pas des formations g&eacute;n&eacute;ralistes de MAO. Elles sont pens&eacute;es comme des carnets d&rsquo;atelier : &eacute;couter, d&eacute;crire, transformer, organiser, puis prolonger une mati&egrave;re sonore.</p>
 
         <div class="resources-grid">
+          <article class="resource-card resource-card-featured">
+            <div class="resource-label">Lancement &mdash; Carnet complet &mdash; Prix de lancement : 19&euro;</div>
+            <h3>Commencer une pi&egrave;ce &agrave; partir d&rsquo;un son</h3>
+            <p class="resource-subtitle">Carnet d&rsquo;&eacute;coute, de composition et de pratiques sonores</p>
+            <p>Un carnet d&rsquo;atelier en fran&ccedil;ais pour commencer une composition &agrave; partir de l&rsquo;&eacute;coute d&rsquo;un seul son.</p>
+            <a href="https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&amp;utm_medium=fr_page&amp;utm_campaign=202607_carnet_launch" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="resource_paid_carnet_click" data-resource-extra-track="gumroad_product_click">Voir le carnet complet</a>
+            <ul class="resource-list">
+              <li>un PDF principal</li>
+              <li>une annexe</li>
+              <li>5 vid&eacute;os d&rsquo;accompagnement, pour une dur&eacute;e totale d&rsquo;environ 13 minutes</li>
+              <li>5 exemples audio WAV</li>
+              <li>3 sons de pratique WAV</li>
+              <li>une invitation &agrave; un &eacute;change en ligne de 30 minutes</li>
+            </ul>
+            <p class="resource-subtitle">Apr&egrave;s avoir parcouru le carnet, vous pouvez choisir l&rsquo;un des sons de pratique et composer une courte esquisse de 60 secondes.</p>
+          </article>
+
           <article class="resource-card">
             <div class="resource-label">Carnet gratuit</div>
             <h3>5 questions pour commencer une pi&egrave;ce sonore</h3>
@@ -1485,23 +1516,6 @@
               <li>Quelle forme pourrait na&icirc;tre de cette &eacute;coute&nbsp;?</li>
             </ul>
             <a href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener noreferrer" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger le carnet gratuit</a>
-          </article>
-
-          <article class="resource-card">
-            <div class="resource-label">Carnet complet &mdash; Prix de lancement : 19&euro;</div>
-            <h3>Commencer une pi&egrave;ce &agrave; partir d&rsquo;un son</h3>
-            <p class="resource-subtitle">Carnet d&rsquo;&eacute;coute, de composition et de pratiques sonores</p>
-            <p>Un carnet d&rsquo;atelier en fran&ccedil;ais pour commencer une composition &agrave; partir de l&rsquo;&eacute;coute d&rsquo;un seul son.</p>
-            <ul class="resource-list">
-              <li>un PDF principal</li>
-              <li>une annexe</li>
-              <li>5 vid&eacute;os d&rsquo;accompagnement, pour une dur&eacute;e totale d&rsquo;environ 13 minutes</li>
-              <li>5 exemples audio WAV</li>
-              <li>3 sons de pratique WAV</li>
-              <li>une invitation &agrave; un &eacute;change en ligne de 30 minutes</li>
-            </ul>
-            <p class="resource-subtitle">Apr&egrave;s avoir parcouru le carnet, vous pouvez choisir l&rsquo;un des sons de pratique et composer une courte esquisse de 60 secondes.</p>
-            <a href="https://sonata14.gumroad.com/l/gvbzop" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="resource_paid_carnet_click" data-resource-extra-track="gumroad_product_click">Voir le carnet complet</a>
           </article>
 
           <article class="resource-card">
@@ -1611,7 +1625,7 @@
 
 <script>
   const FREE_PDF_URL = "../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf";
-  const GUMROAD_CARNET_URL = "https://sonata14.gumroad.com/l/gvbzop";
+  const GUMROAD_CARNET_URL = "https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&utm_medium=fr_page&utm_campaign=202607_carnet_launch";
   const MINI_FEEDBACK_URL = "mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore";
   const BOOKING_URL = "/fr/booking.html";
   const GUMROAD_DEFAULT_UTM = {
@@ -1636,7 +1650,9 @@
     if (target.protocol !== 'http:' && target.protocol !== 'https:') return url;
 
     utmKeys.forEach(function(key) {
-      if (currentParams.has(key) && !target.searchParams.has(key)) {
+      if (currentParams.has(key) && target.hostname === 'sonata14.gumroad.com') {
+        target.searchParams.set(key, currentParams.get(key));
+      } else if (currentParams.has(key) && !target.searchParams.has(key)) {
         target.searchParams.set(key, currentParams.get(key));
       }
     });
