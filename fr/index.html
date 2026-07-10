@@ -1488,11 +1488,11 @@
 
         <div class="resources-grid">
           <article class="resource-card resource-card-featured">
-            <div class="resource-label">Lancement &mdash; Carnet complet &mdash; Prix de lancement : 19&euro;</div>
+            <div class="resource-label">Carnet complet &mdash; Prix de lancement : 19&euro;</div>
             <h3>Commencer une pi&egrave;ce &agrave; partir d&rsquo;un son</h3>
             <p class="resource-subtitle">Carnet d&rsquo;&eacute;coute, de composition et de pratiques sonores</p>
             <p>Un carnet d&rsquo;atelier en fran&ccedil;ais pour commencer une composition &agrave; partir de l&rsquo;&eacute;coute d&rsquo;un seul son.</p>
-            <a href="https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&amp;utm_medium=fr_page&amp;utm_campaign=202607_carnet_launch" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="resource_paid_carnet_click" data-resource-extra-track="gumroad_product_click">Voir le carnet complet</a>
+            <a href="https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&amp;utm_medium=referral&amp;utm_campaign=202607_carnet_launch&amp;utm_content=resources_primary_cta" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="gumroad_product_click">Voir le carnet complet</a>
             <ul class="resource-list">
               <li>un PDF principal</li>
               <li>une annexe</li>
@@ -1625,13 +1625,16 @@
 
 <script>
   const FREE_PDF_URL = "../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf";
-  const GUMROAD_CARNET_URL = "https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&utm_medium=fr_page&utm_campaign=202607_carnet_launch";
+  const GUMROAD_CARNET_URL = "https://sonata14.gumroad.com/l/gvbzop";
   const MINI_FEEDBACK_URL = "mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore";
   const BOOKING_URL = "/fr/booking.html";
+  const ACS_UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  const ACS_UTM_STORAGE_KEY = "acs_fr_utm_params";
   const GUMROAD_DEFAULT_UTM = {
     utm_source: "ateliercompositionson",
-    utm_medium: "fr_page",
-    utm_campaign: "202607_carnet_launch"
+    utm_medium: "referral",
+    utm_campaign: "202607_carnet_launch",
+    utm_content: "resources_primary_cta"
   };
 
   const ACS_RESOURCE_URLS = {
@@ -1641,42 +1644,88 @@
     BOOKING_URL
   };
 
-  function appendCurrentUtm(url) {
-    if (!url || url === '#') return url;
-    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  function readStoredUtm() {
+    try {
+      return JSON.parse(sessionStorage.getItem(ACS_UTM_STORAGE_KEY) || "{}");
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeStoredUtm(params) {
+    try {
+      sessionStorage.setItem(ACS_UTM_STORAGE_KEY, JSON.stringify(params));
+    } catch (error) {}
+  }
+
+  function collectCurrentUtm() {
     const currentParams = new URLSearchParams(window.location.search);
+    const collected = {};
+
+    ACS_UTM_KEYS.forEach(function(key) {
+      if (currentParams.has(key)) collected[key] = currentParams.get(key);
+    });
+
+    if (Object.keys(collected).length) writeStoredUtm(collected);
+    return Object.keys(collected).length ? collected : readStoredUtm();
+  }
+
+  function appendTrackedUtm(url) {
+    if (!url || url === '#') return url;
     const target = new URL(url, window.location.href);
+    const utmParams = collectCurrentUtm();
 
     if (target.protocol !== 'http:' && target.protocol !== 'https:') return url;
 
-    utmKeys.forEach(function(key) {
-      if (currentParams.has(key) && target.hostname === 'sonata14.gumroad.com') {
-        target.searchParams.set(key, currentParams.get(key));
-      } else if (currentParams.has(key) && !target.searchParams.has(key)) {
-        target.searchParams.set(key, currentParams.get(key));
-      }
-    });
-
     if (target.hostname === 'sonata14.gumroad.com') {
-      Object.keys(GUMROAD_DEFAULT_UTM).forEach(function(key) {
-        if (!currentParams.has(key) && !target.searchParams.has(key)) {
-          target.searchParams.set(key, GUMROAD_DEFAULT_UTM[key]);
-        }
+      const sourceParams = Object.keys(utmParams).length ? utmParams : GUMROAD_DEFAULT_UTM;
+      ACS_UTM_KEYS.forEach(function(key) {
+        if (!sourceParams[key]) return;
+        const value = key === 'utm_content' && Object.keys(utmParams).length ? sourceParams[key] + "_resources_cta" : sourceParams[key];
+        target.searchParams.set(key, value);
       });
+      Object.keys(GUMROAD_DEFAULT_UTM).forEach(function(key) {
+        if (!target.searchParams.has(key)) target.searchParams.set(key, GUMROAD_DEFAULT_UTM[key]);
+      });
+      return target.href;
     }
+
+    ACS_UTM_KEYS.forEach(function(key) {
+      if (utmParams[key] && !target.searchParams.has(key)) target.searchParams.set(key, utmParams[key]);
+    });
 
     return target.href;
   }
 
   document.querySelectorAll('[data-resource-url]').forEach(function(link) {
     const key = link.getAttribute('data-resource-url');
-    if (ACS_RESOURCE_URLS[key]) link.setAttribute('href', appendCurrentUtm(ACS_RESOURCE_URLS[key]));
+    if (ACS_RESOURCE_URLS[key]) link.setAttribute('href', appendTrackedUtm(ACS_RESOURCE_URLS[key]));
   });
+
+  function buildResourceEventParams(link, eventName) {
+    const params = {
+      page_language: "fr",
+      cta_location: "resources_section",
+      link_url: link.href,
+      link_text: link.textContent.trim(),
+      page_location: window.location.href,
+      transport_type: "beacon"
+    };
+
+    if (eventName === "gumroad_product_click") {
+      params.product_id = "commencer_piece_son";
+      params.product_name = "Commencer une pièce à partir d’un son";
+      params.value = 19;
+      params.currency = "EUR";
+      params.cta_location = "resources_primary_card";
+    }
+
+    return params;
+  }
 
   document.querySelectorAll('[data-resource-track]').forEach(function(link) {
     link.addEventListener('click', function(event) {
       const eventName = link.getAttribute('data-resource-track');
-      const extraEventName = link.getAttribute('data-resource-extra-track');
       const href = link.getAttribute('href') || '#';
       const shouldDelay = href && href !== '#' && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && !link.getAttribute('target');
       let completed = false;
@@ -1690,28 +1739,47 @@
       if (typeof gtag !== 'function') return;
       if (shouldDelay) event.preventDefault();
 
-      const eventParams = {
-        page_location: window.location.href,
-        link_url: link.href,
-        link_text: link.textContent.trim(),
-        transport_type: 'beacon',
-        event_callback: finish,
-        event_timeout: 800
-      };
+      const eventParams = buildResourceEventParams(link, eventName);
+      eventParams.event_callback = finish;
+      eventParams.event_timeout = 800;
 
       gtag('event', eventName, eventParams);
-      if (extraEventName) {
-        gtag('event', extraEventName, {
-          page_location: window.location.href,
-          link_url: link.href,
-          link_text: link.textContent.trim(),
-          transport_type: 'beacon'
-        });
-      }
 
       if (shouldDelay) window.setTimeout(finish, 240);
     });
   });
+
+  (function observeResourcesSection() {
+    const section = document.getElementById('ressources');
+    if (!section || typeof IntersectionObserver === 'undefined') return;
+
+    try {
+      if (sessionStorage.getItem('acs_resource_section_viewed') === '1') return;
+    } catch (error) {}
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.5) return;
+
+        try {
+          sessionStorage.setItem('acs_resource_section_viewed', '1');
+        } catch (error) {}
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'resource_section_view', {
+            page_language: 'fr',
+            section_name: 'resources',
+            featured_product: 'commencer_piece_son',
+            transport_type: 'beacon'
+          });
+        }
+
+        observer.disconnect();
+      });
+    }, { threshold: 0.5 });
+
+    observer.observe(section);
+  })();
 
 </script>
 

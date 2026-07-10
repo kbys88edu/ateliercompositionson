@@ -114,6 +114,7 @@
     document.addEventListener("click", function (event) {
       var link = event.target.closest ? event.target.closest("a[href]") : null;
       if (!link) return;
+      if (link.hasAttribute("data-resource-track")) return;
       var canonicalEvents = [];
       if (isFreeConsultation(link)) canonicalEvents.push("free_consultation_click");
       if (isContact(link)) canonicalEvents.push("contact_click");
