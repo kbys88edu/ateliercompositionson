@@ -1617,11 +1617,20 @@
   .kinetic-note-top {
     top: 11%;
     right: 25%;
+    font-weight: 700;
   }
 
-  .kinetic-note-bottom {
-    right: 7%;
-    bottom: 14%;
+  .kinetic-word-motion {
+    display: block;
+    animation: kineticFloat 7s ease-in-out 1350ms infinite alternate;
+  }
+
+  .kinetic-word-composition .kinetic-word-motion {
+    animation-delay: 1580ms;
+  }
+
+  .kinetic-word-son .kinetic-word-motion {
+    animation-delay: 1790ms;
   }
 
   @keyframes kineticWord {
@@ -1642,6 +1651,11 @@
   @keyframes kineticNote {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes kineticFloat {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, -7px, 0); }
   }
 
   @media (max-width: 768px) {
@@ -1687,16 +1701,13 @@
       right: 23%;
     }
 
-    .kinetic-note-bottom {
-      right: 6%;
-      bottom: 14%;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-kinetic::before,
     .hero-kinetic::after,
     .kinetic-word,
+    .kinetic-word-motion,
     .kinetic-note {
       animation: none;
     }
@@ -1794,11 +1805,10 @@
       </div>
 
       <div class="hero-kinetic" aria-hidden="true">
-        <span class="kinetic-word kinetic-word-atelier">atelier</span>
-        <span class="kinetic-word kinetic-word-composition">composition</span>
-        <span class="kinetic-word kinetic-word-son">son</span>
+        <span class="kinetic-word kinetic-word-atelier"><span class="kinetic-word-motion">atelier</span></span>
+        <span class="kinetic-word kinetic-word-composition"><span class="kinetic-word-motion">composition</span></span>
+        <span class="kinetic-word kinetic-word-son"><span class="kinetic-word-motion">son</span></span>
         <span class="kinetic-note kinetic-note-top">cours<br>individuels<br>en ligne</span>
-        <span class="kinetic-note kinetic-note-bottom">en ligne</span>
       </div>
 
       <div class="hero-copy">
