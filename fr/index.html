@@ -1621,17 +1621,13 @@
   }
 
   .kinetic-word-motion {
-    display: block;
+    display: inline-block;
+  }
+
+  .kinetic-letter {
+    display: inline-block;
     will-change: transform;
-    animation: kineticFloatAtelier 8.4s linear 1350ms infinite;
-  }
-
-  .kinetic-word-composition .kinetic-word-motion {
-    animation: kineticFloatComposition 7.1s linear 1520ms infinite;
-  }
-
-  .kinetic-word-son .kinetic-word-motion {
-    animation: kineticFloatSon 9.3s linear 1690ms infinite;
+    animation: kineticLetterFloat var(--float-duration, 7s) linear var(--float-delay, 1.3s) infinite;
   }
 
   @keyframes kineticWord {
@@ -1654,29 +1650,12 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  @keyframes kineticFloatAtelier {
+  @keyframes kineticLetterFloat {
     0%, 100% { transform: translate3d(0, 0, 0); }
-    22% { transform: translate3d(3px, -8px, 0); }
-    45% { transform: translate3d(-2px, -3px, 0); animation-timing-function: cubic-bezier(.12, .82, .28, 1); }
-    59% { transform: translate3d(4px, 16px, 0); animation-timing-function: cubic-bezier(.16, 1, .3, 1); }
-    76% { transform: translate3d(-1px, -6px, 0); }
-  }
-
-  @keyframes kineticFloatComposition {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    18% { transform: translate3d(-4px, -5px, 0); }
-    39% { transform: translate3d(2px, -11px, 0); }
-    54% { transform: translate3d(-3px, 12px, 0); animation-timing-function: cubic-bezier(.1, .84, .25, 1); }
-    70% { transform: translate3d(3px, 3px, 0); animation-timing-function: cubic-bezier(.16, 1, .3, 1); }
-    84% { transform: translate3d(-2px, -4px, 0); }
-  }
-
-  @keyframes kineticFloatSon {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    27% { transform: translate3d(3px, -10px, 0); }
-    49% { transform: translate3d(-2px, -2px, 0); animation-timing-function: cubic-bezier(.12, .82, .28, 1); }
-    62% { transform: translate3d(2px, 18px, 0); animation-timing-function: cubic-bezier(.16, 1, .3, 1); }
-    79% { transform: translate3d(-3px, -5px, 0); }
+    21% { transform: translate3d(var(--drift-x, 2px), calc(var(--rise-y, 7px) * -1), 0); }
+    45% { transform: translate3d(calc(var(--drift-x, 2px) * -1), -2px, 0); animation-timing-function: cubic-bezier(.12, .82, .28, 1); }
+    59% { transform: translate3d(var(--drop-x, 2px), var(--drop-y, 15px), 0); animation-timing-function: cubic-bezier(.16, 1, .3, 1); }
+    76% { transform: translate3d(calc(var(--drift-x, 2px) * .5), -4px, 0); }
   }
 
   @media (max-width: 768px) {
@@ -1729,6 +1708,7 @@
     .hero-kinetic::after,
     .kinetic-word,
     .kinetic-word-motion,
+    .kinetic-letter,
     .kinetic-note {
       animation: none;
     }
@@ -1826,9 +1806,9 @@
       </div>
 
       <div class="hero-kinetic" aria-hidden="true">
-        <span class="kinetic-word kinetic-word-atelier"><span class="kinetic-word-motion">atelier</span></span>
-        <span class="kinetic-word kinetic-word-composition"><span class="kinetic-word-motion">composition</span></span>
-        <span class="kinetic-word kinetic-word-son"><span class="kinetic-word-motion">son</span></span>
+        <span class="kinetic-word kinetic-word-atelier"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.35s;--float-duration:7.6s;--drift-x:2px;--rise-y:7px;--drop-x:3px;--drop-y:13px;">a</span><span class="kinetic-letter" style="--float-delay:1.7s;--float-duration:6.8s;--drift-x:-2px;--rise-y:10px;--drop-x:-2px;--drop-y:17px;">t</span><span class="kinetic-letter" style="--float-delay:2.05s;--float-duration:8.2s;--drift-x:3px;--rise-y:6px;--drop-x:2px;--drop-y:11px;">e</span><span class="kinetic-letter" style="--float-delay:1.5s;--float-duration:7.1s;--drift-x:-3px;--rise-y:8px;--drop-x:-2px;--drop-y:16px;">l</span><span class="kinetic-letter" style="--float-delay:2.3s;--float-duration:6.6s;--drift-x:2px;--rise-y:11px;--drop-x:3px;--drop-y:14px;">i</span><span class="kinetic-letter" style="--float-delay:1.9s;--float-duration:8.4s;--drift-x:-2px;--rise-y:7px;--drop-x:-3px;--drop-y:18px;">e</span><span class="kinetic-letter" style="--float-delay:2.55s;--float-duration:7.4s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:12px;">r</span></span></span>
+        <span class="kinetic-word kinetic-word-composition"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.55s;--float-duration:7.8s;--drift-x:-2px;--rise-y:9px;--drop-x:-3px;--drop-y:15px;">c</span><span class="kinetic-letter" style="--float-delay:2.15s;--float-duration:6.9s;--drift-x:3px;--rise-y:7px;--drop-x:2px;--drop-y:18px;">o</span><span class="kinetic-letter" style="--float-delay:1.8s;--float-duration:8.5s;--drift-x:-3px;--rise-y:11px;--drop-x:-2px;--drop-y:13px;">m</span><span class="kinetic-letter" style="--float-delay:2.45s;--float-duration:7.2s;--drift-x:2px;--rise-y:6px;--drop-x:3px;--drop-y:16px;">p</span><span class="kinetic-letter" style="--float-delay:1.4s;--float-duration:6.7s;--drift-x:-2px;--rise-y:8px;--drop-x:-3px;--drop-y:12px;">o</span><span class="kinetic-letter" style="--float-delay:2.7s;--float-duration:8.1s;--drift-x:3px;--rise-y:10px;--drop-x:2px;--drop-y:19px;">s</span><span class="kinetic-letter" style="--float-delay:2s;--float-duration:7.5s;--drift-x:-3px;--rise-y:7px;--drop-x:-2px;--drop-y:14px;">i</span><span class="kinetic-letter" style="--float-delay:1.65s;--float-duration:6.5s;--drift-x:2px;--rise-y:11px;--drop-x:3px;--drop-y:17px;">t</span><span class="kinetic-letter" style="--float-delay:2.35s;--float-duration:8.3s;--drift-x:-2px;--rise-y:6px;--drop-x:-3px;--drop-y:13px;">i</span><span class="kinetic-letter" style="--float-delay:1.95s;--float-duration:7s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:18px;">o</span><span class="kinetic-letter" style="--float-delay:2.6s;--float-duration:7.7s;--drift-x:-3px;--rise-y:8px;--drop-x:-2px;--drop-y:15px;">n</span></span></span>
+        <span class="kinetic-word kinetic-word-son"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.6s;--float-duration:7.3s;--drift-x:2px;--rise-y:10px;--drop-x:3px;--drop-y:16px;">s</span><span class="kinetic-letter" style="--float-delay:2.2s;--float-duration:8s;--drift-x:-3px;--rise-y:7px;--drop-x:-2px;--drop-y:19px;">o</span><span class="kinetic-letter" style="--float-delay:1.85s;--float-duration:6.8s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:14px;">n</span></span></span>
         <span class="kinetic-note kinetic-note-top">cours<br>individuels<br>en ligne</span>
       </div>
 
