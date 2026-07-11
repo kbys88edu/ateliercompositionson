@@ -1233,6 +1233,351 @@
     outline: 0 !important;
     box-shadow: none !important;
   }
+
+  /* French homepage: concise decision-oriented structure */
+  .hero-meta {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .entry-grid,
+  .practice-grid,
+  .format-summary,
+  .resource-secondary-grid {
+    display: grid;
+    gap: 18px;
+    margin-top: 30px;
+  }
+
+  .entry-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .entry-card {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border: 1px solid var(--line);
+    background: var(--card);
+  }
+
+  .entry-card p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .entry-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 22px;
+  }
+
+  .text-link {
+    border-bottom: 1px solid currentColor;
+    font-size: 13px;
+    line-height: 1.35;
+    text-underline-offset: 4px;
+  }
+
+  .process-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    margin-top: 30px;
+  }
+
+  .process-item {
+    border-top: 1px solid var(--text);
+    padding-top: 16px;
+  }
+
+  .process-number {
+    display: block;
+    margin-bottom: 16px;
+    font-size: clamp(42px, 5vw, 74px);
+    line-height: .9;
+    letter-spacing: -.06em;
+  }
+
+  .process-item p,
+  .practice-item p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  #atelier {
+    background: #f4f4f2;
+  }
+
+  .practice-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .practice-item {
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  .format-summary {
+    grid-template-columns: minmax(210px, .75fr) 1fr;
+    align-items: stretch;
+  }
+
+  .format-price,
+  .format-details {
+    padding: 28px;
+    border: 1px solid var(--line);
+    background: var(--card);
+  }
+
+  .format-price .price {
+    margin: 10px 0 0;
+    font-size: clamp(48px, 6vw, 74px);
+  }
+
+  .format-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 28px;
+  }
+
+  .format-details div {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 10px;
+  }
+
+  .format-details span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .format-details strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .booking-section {
+    background: var(--text);
+    color: var(--bg);
+    border-top: 0;
+  }
+
+  .booking-section .section-label,
+  .booking-section .content p {
+    color: rgba(255, 255, 255, .7);
+  }
+
+  .booking-section h2 {
+    max-width: 700px;
+  }
+
+  .booking-section .btn.primary {
+    background: var(--bg);
+    border-color: var(--bg);
+    color: var(--text);
+  }
+
+  .booking-section .text-link {
+    color: var(--bg);
+  }
+
+  .resource-featured {
+    display: grid;
+    grid-template-columns: minmax(210px, .72fr) 1.28fr;
+    gap: 28px;
+    margin-top: 30px;
+    padding: 24px;
+    border: 1px solid var(--text);
+    background: #fff;
+  }
+
+  .resource-preview {
+    margin: 0;
+    align-self: stretch;
+  }
+
+  .resource-preview img {
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+    object-fit: cover;
+    filter: grayscale(100%);
+  }
+
+  .resource-featured-copy {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .resource-featured-copy .btn {
+    align-self: flex-start;
+    margin-top: 20px;
+  }
+
+  .resource-secondary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .resource-compact {
+    display: flex;
+    flex-direction: column;
+    padding: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  .resource-compact .text-link {
+    width: fit-content;
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  .compact-details summary {
+    font-size: 16px;
+  }
+
+  .compact-details p {
+    max-width: 680px;
+  }
+
+  .footer-terms {
+    border-bottom: 1px solid currentColor;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 980px) {
+    .entry-grid,
+    .process-list,
+    .practice-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .entry-card {
+      min-height: 0;
+    }
+
+    .format-summary,
+    .resource-featured,
+    .resource-secondary-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .resource-preview img {
+      height: 230px;
+      min-height: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero::before {
+      height: 160px;
+    }
+
+    .hero-copy {
+      padding: 24px 5vw 28px;
+    }
+
+    .hero-meta {
+      font-size: 11px;
+    }
+
+    .entry-card,
+    .format-price,
+    .format-details,
+    .resource-featured,
+    .resource-compact {
+      padding: 20px;
+    }
+
+    .process-list {
+      gap: 22px;
+    }
+
+    .process-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .process-number {
+      margin: 2px 0 0;
+      font-size: 48px;
+    }
+
+    .format-details {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .booking-section .hero-actions {
+      gap: 14px;
+    }
+
+    .resource-featured-copy .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* Selected works */
+  .top-works .content {
+    max-width: 1000px;
+  }
+
+  .works-media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+  }
+
+  .work-media-item {
+    min-width: 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  .work-media-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--text);
+  }
+
+  .work-media-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .work-media-item h3 {
+    margin: 12px 0 0;
+    font-size: 15px;
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  @media (max-width: 980px) {
+    .works-media-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
@@ -1255,14 +1600,9 @@
       </a>
 
       <nav aria-label="Navigation principale">
-        <a href="#public">public</a>
-        <a href="#travail">contenu</a>
-        <a href="#diagnostic">diagnostic</a>
-        <a href="#formats">formats</a>
-        <a href="#tarifs">tarifs</a>
-        <a href="#parcours">parcours</a>
-        <a href="#questions">questions</a>
-        <a href="#contact">contact</a>
+        <a href="#entrypoints">approches</a>
+        <a href="#format" data-track="click_tarifs_fr">format</a>
+        <a href="#ressources">ressources</a>
         <a class="language-link" href="../ja/">日本語</a>
         <a class="language-link" href="../">EN</a>
         <a class="booking-button" href="booking.html" data-track="click_free_consultation_fr">échange gratuit</a>
@@ -1276,270 +1616,191 @@
       </div>
 
       <div class="hero-copy">
-        <div class="hero-label">Cours individuels en ligne</div>
-        <h1 class="intro-title">Un atelier en ligne pour composer, écouter et structurer vos idées musicales</h1>
-        <p>Atelier Composition Son est un petit atelier en ligne consacré à la composition musicale, à l’harmonie, à la MAO et aux pratiques sonores contemporaines.</p>
-        <p class="desktop-extra">Basée au Japon, je propose des cours et diagnostics en ligne pour musiciens, compositeurs, artistes sonores et utilisateurs de MAO qui souhaitent structurer leurs idées et donner plus de cohérence à leurs morceaux.</p>
-        <div class="hero-highlights" aria-label="Informations principales">
-          <span>petit atelier en ligne</span>
-          <span>composition, harmonie, électroacoustique, MAO</span>
-          <span>échange gratuit de 30 minutes</span>
-        </div>
-        <div class="separator"></div>
-        <p class="desktop-extra">L’objectif n’est pas de suivre une méthode uniforme, mais de construire un cadre de travail précis autour de votre pratique musicale.</p>
-
+        <div class="hero-label">Atelier Composition Son</div>
+        <h1 class="intro-title">Un atelier individuel pour développer un projet musical personnel</h1>
+        <p>Composition, harmonie, MAO et pratiques sonores, à partir de votre travail réel.</p>
+        <p class="desktop-extra">Chaque accompagnement part d’une pièce, d’une maquette, d’une partition, d’une session DAW ou d’une question précise.</p>
+        <div class="hero-meta">Cours individuel en ligne · 60 minutes · 70€</div>
         <div class="hero-actions">
-          <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">Réserver un échange gratuit de 30 minutes</a>
-          <a class="btn" href="#formats" data-track="click_courses_tarifs_fr">Voir les cours et tarifs</a>
+          <a class="btn primary" href="booking.html" data-track="hero_booking_click">Réserver un échange de 30 minutes</a>
+          <a class="btn" href="#format" data-track="click_courses_tarifs_fr">Découvrir les façons de travailler</a>
         </div>
       </div>
     </header>
 
-    <figure class="hero-image">
-      <div class="hero-slideshow">
-        <img src="../images/home.jpg" alt="Composition, sound design et création musicale">
-        <img src="../images/home-2.jpg" alt="Atelier de composition et recherche sonore">
-        <img src="../images/home-3.jpg" alt="Cours de composition, sound design et musique électronique">
+    <section id="entrypoints">
+      <div class="section-label">points d’entrée</div>
+      <div class="content">
+        <h2>Choisir un point de départ</h2>
+        <div class="entry-grid">
+          <article class="entry-card">
+            <h3>Développer une pièce</h3>
+            <p>Vous avez une idée, une maquette, une partition ou un matériau sonore à structurer.</p>
+            <div class="entry-links">
+              <a class="text-link" href="composition-lesson.html" data-track="entry_composition_click">Composition</a>
+              <a class="text-link" href="electroacoustic-lesson.html" data-track="course_detail_electroacoustique_fr">Électroacoustique</a>
+            </div>
+          </article>
+          <article class="entry-card">
+            <h3>Clarifier une question</h3>
+            <p>Vous souhaitez comprendre une difficulté d’harmonie, de forme, de production ou d’écriture.</p>
+            <div class="entry-links">
+              <a class="text-link" href="harmony-analysis-lesson.html" data-track="entry_question_click">Harmonie et analyse</a>
+              <a class="text-link" href="mao-lesson.html" data-track="course_detail_mao_fr">MAO</a>
+            </div>
+          </article>
+          <article class="entry-card">
+            <h3>Commencer à votre rythme</h3>
+            <p>Vous préférez explorer une méthode, un exercice ou une ressource avant une séance individuelle.</p>
+            <div class="entry-links">
+              <a class="text-link" href="#ressources" data-track="entry_resources_click">Ressources en français</a>
+            </div>
+          </article>
+        </div>
       </div>
-      <figcaption>composition / MAO / électroacoustique</figcaption>
-    </figure>
+    </section>
+
+    <section id="process">
+      <div class="section-label">accompagnement</div>
+      <div class="content">
+        <h2>Comment se déroule l’accompagnement</h2>
+        <div class="process-list">
+          <article class="process-item"><span class="process-number">01</span><p>Vous apportez une question ou un projet.</p></article>
+          <article class="process-item"><span class="process-number">02</span><p>Nous identifions les points forts et les blocages.</p></article>
+          <article class="process-item"><span class="process-number">03</span><p>Vous repartez avec une direction de travail précise.</p></article>
+        </div>
+        <p class="section-intro">Le travail peut être ponctuel, mensuel ou régulier.</p>
+      </div>
+    </section>
 
     <section id="atelier">
       <div class="section-label">atelier</div>
       <div class="content">
-        <h2>Un cadre individuel, loin du modèle d’école standardisée.</h2>
-        <p class="section-intro">Les cours partent de votre situation réelle : une pièce en cours, une maquette, une partition, une session DAW, une question d’harmonie ou une intuition sonore encore fragile.</p>
-        <div class="disciplines-grid">
-          <article class="discipline-item">
-            <h3>Accompagnement attentif</h3>
-            <p>Chaque séance est construite autour de votre projet, avec des retours précis et des pistes de travail concrètes.</p>
-          </article>
-          <article class="discipline-item">
-            <h3>Expérience internationale</h3>
-            <p>Composition et pédagogie musicale à la Haute École de Musique de Genève, puis Cursus de composition et d’informatique musicale de l’IRCAM à Paris.</p>
-          </article>
-          <article class="discipline-item">
-            <h3>Suivi en nombre limité</h3>
-            <p>Les accompagnements réguliers sont proposés en petit nombre afin de garder un cadre de travail attentif et personnalisé.</p>
-          </article>
+        <h2>Une pratique artistique, pas une méthode standardisée</h2>
+        <p>Sachie Kobayashi est compositrice et artiste sonore. Sa pratique s’est développée entre le Japon, la Suisse et la France, dans les domaines de la composition contemporaine, de l’électroacoustique et des technologies créatives. Formation en composition et pédagogie musicale à la HEM Genève, puis Cursus de l’IRCAM à Paris.</p>
+        <div class="practice-grid">
+          <article class="practice-item"><h3>Écoute</h3><p>Une attention précise à la matière, à la forme et à l’intention.</p></article>
+          <article class="practice-item"><h3>Clarté</h3><p>Des retours concrets, adaptés au projet et à la situation de chacun.</p></article>
+          <article class="practice-item"><h3>Autonomie</h3><p>Un accompagnement conçu pour développer une pratique personnelle.</p></article>
         </div>
       </div>
     </section>
 
-    <section id="public">
-      <div class="section-label">à qui</div>
+    <section id="works" class="top-works" aria-labelledby="works-title">
+      <div class="section-label">œuvres</div>
       <div class="content">
-        <h2>Pour qui&nbsp;?</h2>
-        <p class="section-intro">Ces cours s’adressent aux personnes qui composent déjà, même de manière intuitive, et qui souhaitent mieux comprendre ce qui fonctionne dans leur musique.</p>
-
-        <ul class="audience-list">
-          <li>Débutants motivés qui souhaitent commencer à composer.</li>
-          <li>Adultes qui veulent apprendre la composition musicale ou la MAO.</li>
-          <li>Étudiants qui souhaitent renforcer harmonie, analyse ou écriture.</li>
-          <li>Artistes, vidéastes ou créateurs qui développent un projet musical.</li>
-          <li>Personnes ayant déjà une maquette, une partition ou une idée à structurer.</li>
-          <li>Musiciens qui veulent relier technique, écoute et décision artistique.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="travail">
-      <div class="section-label">contenu</div>
-      <div class="content">
-        <h2>Trois façons de travailler ensemble</h2>
-        <p class="section-intro">Le contenu est construit à partir de votre projet. Un cours peut être très technique, très musical, ou alterner entre écoute, écriture, analyse et production.</p>
-
-        <div class="disciplines-grid">
-          <article class="discipline-item">
-            <h3>Composition musicale</h3>
-            <p>Développer une idée, organiser les matériaux, trouver une forme et préciser l’intention.</p>
-            <a href="composition-lesson.html" data-track="course_detail_composition_fr">Voir la page</a>
-          </article>
-          <article class="discipline-item">
-            <h3>Harmonie et analyse</h3>
-            <p>Comprendre accords, fonctions, couleur harmonique, conduite des voix et structure.</p>
-            <a href="harmony-analysis-lesson.html" data-track="course_detail_harmonie_fr">Voir la page</a>
-          </article>
-          <article class="discipline-item">
-            <h3>MAO</h3>
-            <p>Travailler dans Ableton Live, Logic Pro, Reaper ou un autre environnement familier.</p>
-            <a href="mao-lesson.html" data-track="course_detail_mao_fr">Voir la page</a>
-          </article>
-          <article class="discipline-item">
-            <h3>Électroacoustique et timbre</h3>
-            <p>Explorer texture, synthèse, montage, espace, traitement et écoute du son.</p>
-            <a href="electroacoustic-lesson.html" data-track="course_detail_electroacoustique_fr">Voir la page</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="diagnostic">
-      <div class="section-label">diagnostic</div>
-      <div class="content">
-        <h2>Diagnostic de morceau</h2>
-        <p class="section-intro">Pour les musiciens qui ont déjà une idée, une maquette ou une pièce en cours, mais qui ne savent pas exactement comment l’améliorer.</p>
-        <div class="disciplines-grid">
-          <article class="discipline-item">
-            <h3>Ce que vous pouvez envoyer</h3>
-            <p>Un fichier audio, un MIDI, une partition, un projet Ableton Live ou une description de votre intention musicale.</p>
-          </article>
-          <article class="discipline-item">
-            <h3>Analyse proposée</h3>
-            <p>Harmonie, progression d’accords, mélodie, développement, forme, structure, arrangement, textures sonores et équilibre entre répétition, variation et contraste.</p>
-          </article>
-          <article class="discipline-item">
-            <h3>Retour concret</h3>
-            <p>Vous repartez avec des pistes précises pour retravailler la structure, clarifier l’harmonie, développer l’idée et mieux diriger le son.</p>
-            <a href="booking.html" data-track="diagnostic_booking_click">Parler de mon projet</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="formats">
-      <div class="section-label">formats</div>
-      <div class="content">
-        <h2>Format des cours</h2>
-        <p class="section-intro">Avant de commencer, un échange gratuit de 30 minutes permet de comprendre votre situation et de proposer un rythme adapté. Le tarif est ensuite présenté comme un accompagnement individuel, centré sur votre travail réel.</p>
-
-        <div class="formats formats-focused">
-          <article class="format featured">
-            <h3>Cours individuel</h3>
-            <p>Une séance de 60 minutes consacrée à votre projet, votre apprentissage ou une question musicale précise.</p>
-            <div class="format-meta">
-              <span><strong>Durée</strong> · 60 minutes</span>
-              <span><strong>Tarif</strong> · 70€ / séance</span>
-              <span><strong>Langues</strong> · français, anglais ou japonais</span>
-              <span><strong>Rythme</strong> · ponctuel, mensuel ou accompagnement régulier</span>
-              <span><strong>Paiement</strong> · paiement en ligne possible</span>
+        <h2 id="works-title">Quelques œuvres</h2>
+        <p class="section-intro">Composition instrumentale, électronique et création audiovisuelle : une sélection du travail de Sachie Kobayashi.</p>
+        <div class="works-media-grid">
+          <article class="work-media-item">
+            <div class="work-media-frame">
+              <iframe
+                title="Émergences Résurgences pour orchestre"
+                loading="lazy"
+                scrolling="no"
+                allow="autoplay"
+                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Femergences-resurgences-pour-orchestre&amp;color=%23111111&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=false">
+              </iframe>
             </div>
+            <h3>Émergences Résurgences pour orchestre</h3>
           </article>
 
-          <article class="format">
-            <h3>Séance découverte</h3>
-            <p>Un rendez-vous de 30 minutes, sans engagement, pour clarifier vos objectifs, votre niveau, vos outils et les pistes de travail possibles.</p>
-            <ul>
-              <li>présenter votre projet ou vos questions</li>
-              <li>choisir un format de cours adapté</li>
-              <li>vérifier les disponibilités et le fuseau horaire</li>
-            </ul>
-            <a href="booking.html" data-track="click_free_consultation_fr">Réserver un échange gratuit</a>
+          <article class="work-media-item">
+            <div class="work-media-frame">
+              <iframe
+                src="https://www.youtube.com/embed/SgYGcZS1Mp4"
+                title="Techno Pop / AI Workflow / TouchDesigner MV"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <h3>Techno Pop / AI Workflow / TouchDesigner MV</h3>
           </article>
-        </div>
 
-        <div class="cta-panel">
-          <h3>Vous hésitez entre plusieurs directions&nbsp;?</h3>
-          <p>Vous pouvez venir avec une partition, une maquette audio, une session Ableton Live, Logic Pro ou Reaper, ou simplement une idée musicale encore ouverte.</p>
-          <div class="hero-actions">
-            <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">Réserver une séance découverte</a>
-            <a class="btn" href="#tarifs" data-track="click_tarifs_fr">Voir les tarifs</a>
-          </div>
+          <article class="work-media-item">
+            <div class="work-media-frame">
+              <iframe
+                src="https://www.youtube.com/embed/XfBIiXmU4Rc"
+                title="Electronic / Contemporary Practice"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <h3>Electronic / Contemporary Practice</h3>
+          </article>
         </div>
       </div>
     </section>
 
-    <section id="parcours">
-      <div class="section-label">parcours</div>
+    <section id="format">
+      <div class="section-label">format</div>
       <div class="content">
-        <div class="direction-layout">
-          <div>
-            <h2>Pourquoi travailler avec moi&nbsp;?</h2>
-            <p>Sachie Kobayashi est compositrice et artiste sonore. Son travail se situe entre composition contemporaine, électroacoustique, création audiovisuelle, pédagogie et outils numériques.</p>
-            <p>Elle a étudié la composition et la pédagogie musicale à la Haute École de Musique de Genève, et a participé au Cursus de composition et d’informatique musicale de l’IRCAM à Paris.</p>
-            <p>Les cours peuvent accompagner des débutants comme des personnes ayant déjà une pièce, une maquette, une partition ou un dossier à structurer.</p>
+        <h2>Format</h2>
+        <p class="section-intro">Un premier échange de 30 minutes permet de clarifier votre projet avant de commencer.</p>
+        <div class="format-summary">
+          <div class="format-price"><span class="section-label">cours individuel</span><div class="price">70€</div><p>par séance</p></div>
+          <div class="format-details">
+            <div><span>Durée</span><strong>60 minutes</strong></div>
+            <div><span>Langues</span><strong>Français, anglais ou japonais</strong></div>
+            <div><span>Rythme</span><strong>Ponctuel, mensuel ou régulier</strong></div>
+            <div><span>Paiement</span><strong>En ligne possible</strong></div>
           </div>
-
-          <figure class="direction-photo direction-photo-large">
-            <img src="../images/sachie_re.jpeg" alt="Sachie Kobayashi">
-            <figcaption>Sachie Kobayashi<br>composition / électroacoustique / pédagogie</figcaption>
-          </figure>
         </div>
-
-        <ul class="list">
-          <li><span>approche</span><span>écoute attentive, clarté technique et développement d’une pratique autonome.</span></li>
-          <li><span>formation</span><span>composition et pédagogie musicale à la Haute École de Musique de Genève.</span></li>
-          <li><span>recherche</span><span>IRCAM Cursus de composition et d’informatique musicale.</span></li>
-          <li><span>domaines</span><span>composition musicale, harmonie, électroacoustique, musique à l’image, MAO et accompagnement de projet.</span></li>
-        </ul>
+        <div class="hero-actions">
+          <a class="btn primary" href="booking.html" data-track="click_free_consultation_fr">Réserver un échange de 30 minutes</a>
+          <a class="text-link" href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener noreferrer" data-track="terms_pdf_click">Voir les conditions</a>
+        </div>
       </div>
     </section>
 
-    <section id="tarifs">
-      <div class="section-label">tarifs</div>
+    <section id="booking" class="booking-section">
+      <div class="section-label">échange</div>
       <div class="content">
-        <h2>Tarifs</h2>
-        <p>Les tarifs sont indiqués clairement avant toute séance. Les formats de diagnostic peuvent être ajustés selon le volume du document musical et le type de retour souhaité.</p>
-        <ul class="program">
-          <li><span class="num">01</span><div><h3>Séance découverte</h3><p>30 min / gratuit. Pour clarifier votre projet, vos besoins et la formule adaptée.</p></div></li>
-          <li><span class="num">02</span><div><h3>Diagnostic court</h3><p>30 min / prix à définir. Pour une première lecture ciblée d’une maquette, d’un MIDI, d’une partition ou d’un projet Ableton.</p></div></li>
-          <li><span class="num">03</span><div><h3>Cours individuel</h3><p>60 min / 70 €. Travail sur votre pièce, votre maquette, votre partition ou votre session : composition, harmonie, électroacoustique, MAO, analyse musicale et accompagnement de projet.</p></div></li>
-          <li><span class="num">04</span><div><h3>Diagnostic complet avec retour écrit</h3><p>Prix à définir selon le volume et le type de document musical.</p></div></li>
-          <li><span class="num">05</span><div><h3>Pack projet</h3><p>Sur devis. Suivi d’une pièce, d’un portfolio, d’une musique pour l’image ou d’un projet interdisciplinaire.</p></div></li>
-        </ul>
+        <h2>Parler de votre projet</h2>
+        <p class="section-intro">Un échange de 30 minutes, sans préparation nécessaire.</p>
+        <p>Vous pouvez venir avec une idée, une maquette, une partition, une session DAW ou simplement une question. Cet échange permet de clarifier votre situation et de voir si un accompagnement individuel peut vous convenir. Aucun engagement n’est demandé.</p>
+        <p class="small">Français ou anglais</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="booking.html" data-track="booking_page_click">Réserver un échange de 30 minutes</a>
+          <a class="text-link" href="booking.html" data-track="click_free_consultation_fr">En savoir plus sur l’échange</a>
+        </div>
       </div>
     </section>
     <section id="ressources">
       <div class="section-label">ressources</div>
       <div class="content">
         <h2>Ressources en fran&ccedil;ais</h2>
-        <p class="section-intro">Des carnets, vid&eacute;os, exercices et exemples audio pour travailler la composition, l&rsquo;&eacute;coute et les pratiques sonores &agrave; votre rythme.</p>
-        <p class="section-intro">Ces ressources ne sont pas des formations g&eacute;n&eacute;ralistes de MAO. Elles sont pens&eacute;es comme des carnets d&rsquo;atelier : &eacute;couter, d&eacute;crire, transformer, organiser, puis prolonger une mati&egrave;re sonore.</p>
+        <p class="section-intro">Des carnets, exemples audio et exercices pour travailler &agrave; votre rythme.</p>
 
-        <div class="resources-grid">
-          <article class="resource-card resource-card-featured">
+        <article class="resource-featured">
+          <figure class="resource-preview">
+            <img src="../images/documentation-1.jpg" alt="Aperçu d’un carnet d’atelier sonore">
+          </figure>
+          <div class="resource-featured-copy">
             <div class="resource-label">Carnet complet &mdash; Prix de lancement : 19&euro;</div>
             <h3>Commencer une pi&egrave;ce &agrave; partir d&rsquo;un son</h3>
             <p class="resource-subtitle">Carnet d&rsquo;&eacute;coute, de composition et de pratiques sonores</p>
-            <p>Un carnet d&rsquo;atelier en fran&ccedil;ais pour commencer une composition &agrave; partir de l&rsquo;&eacute;coute d&rsquo;un seul son.</p>
-            <a href="https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&amp;utm_medium=referral&amp;utm_campaign=202607_carnet_launch&amp;utm_content=resources_primary_cta" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="gumroad_product_click">Voir le carnet complet</a>
-            <ul class="resource-list">
-              <li>un PDF principal</li>
-              <li>une annexe</li>
-              <li>5 vid&eacute;os d&rsquo;accompagnement, pour une dur&eacute;e totale d&rsquo;environ 13 minutes</li>
-              <li>5 exemples audio WAV</li>
-              <li>3 sons de pratique WAV</li>
-              <li>une invitation &agrave; un &eacute;change en ligne de 30 minutes</li>
-            </ul>
-            <p class="resource-subtitle">Apr&egrave;s avoir parcouru le carnet, vous pouvez choisir l&rsquo;un des sons de pratique et composer une courte esquisse de 60 secondes.</p>
-          </article>
-
-          <article class="resource-card">
+            <p>Un carnet d&rsquo;atelier pour commencer une composition &agrave; partir de l&rsquo;&eacute;coute d&rsquo;un seul son, puis composer une courte esquisse de 60 secondes.</p>
+            <a class="btn primary" href="https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&amp;utm_medium=referral&amp;utm_campaign=202607_carnet_launch&amp;utm_content=resources_primary_cta" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="gumroad_product_click">Voir le carnet</a>
+          </div>
+        </article>
+        <div class="resource-secondary-grid">
+          <article class="resource-compact">
             <div class="resource-label">Carnet gratuit</div>
             <h3>5 questions pour commencer une pi&egrave;ce sonore</h3>
             <p>Un court carnet d&rsquo;&eacute;coute pour ouvrir une premi&egrave;re direction de composition &agrave; partir d&rsquo;un son.</p>
-            <ul class="resource-list">
-              <li>Quel son vous attire&nbsp;?</li>
-              <li>Qu&rsquo;est-ce qui change dans ce son&nbsp;?</li>
-              <li>Quel espace ce son sugg&egrave;re-t-il&nbsp;?</li>
-              <li>Comment ce son peut-il se transformer&nbsp;?</li>
-              <li>Quelle forme pourrait na&icirc;tre de cette &eacute;coute&nbsp;?</li>
-            </ul>
-            <a href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener noreferrer" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger le carnet gratuit</a>
+            <a class="text-link" href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener noreferrer" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger le carnet gratuit</a>
           </article>
-
-          <article class="resource-card">
+          <article class="resource-compact">
             <div class="resource-label">Retour &eacute;crit &mdash; 29&euro;</div>
-            <h3>Mini retour &eacute;crit sur une esquisse sonore</h3>
-            <p>Envoyez une courte esquisse sonore. Vous recevrez un retour &eacute;crit concis sur la mati&egrave;re, l&rsquo;&eacute;coute, la forme et les pistes possibles de d&eacute;veloppement.</p>
-            <p class="resource-subtitle">Pour une premi&egrave;re orientation, sans s&eacute;ance en direct.</p>
-            <ul class="resource-list">
-              <li>une esquisse sonore courte</li>
-              <li>un retour &eacute;crit concis</li>
-              <li>une seule r&eacute;ponse</li>
-              <li>pas de s&eacute;ance en direct</li>
-            </ul>
-            <a href="mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore" data-resource-url="MINI_FEEDBACK_URL" data-resource-track="resource_mini_feedback_click">Demander un mini retour</a>
-          </article>
-
-          <article class="resource-card">
-            <div class="resource-label">&Eacute;change en ligne</div>
-            <h3>&Eacute;change de 30 minutes</h3>
-            <p>Ce set inclut une invitation &agrave; un &eacute;change en ligne de 30 minutes.</p>
-            <p class="resource-subtitle">Cet &eacute;change peut servir &agrave; situer votre projet, poser des questions sur le carnet, &eacute;couter votre esquisse de 60 secondes, ou d&eacute;finir une prochaine &eacute;tape de travail.</p>
-            <a href="/fr/booking.html" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">R&eacute;server un &eacute;change</a>
+            <h3>Mini retour sur une esquisse sonore</h3>
+            <p>Un retour &eacute;crit concis sur la mati&egrave;re, l&rsquo;&eacute;coute, la forme et les pistes possibles de d&eacute;veloppement.</p>
+            <a class="text-link" href="mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore" data-resource-url="MINI_FEEDBACK_URL" data-resource-track="resource_mini_feedback_click">Demander un mini retour</a>
           </article>
         </div>
+        <p class="resources-note">Pour un travail plus approfondi, vous pouvez <a href="/fr/booking.html" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">réserver un échange individuel</a>.</p>
       </div>
     </section>
 
@@ -1547,16 +1808,14 @@
       <div class="section-label">questions</div>
       <div class="content">
         <h2>FAQ</h2>
-        <details><summary>Puis-je suivre les cours si je suis débutant&nbsp;?</summary><p>Oui. Le cours peut commencer par les bases de la composition, de l’écoute, de l’harmonie ou de la MAO. Le parcours est adapté à votre niveau et à vos objectifs.</p></details>
-        <details><summary>Faut-il savoir lire une partition&nbsp;?</summary><p>Non. La lecture peut être travaillée progressivement si elle est utile à votre projet. Il est aussi possible de partir d’une maquette audio, d’une session DAW ou d’une idée musicale.</p></details>
-        <details><summary>Peut-on travailler sur Ableton, Logic ou Reaper&nbsp;?</summary><p>Oui. Les cours de MAO en ligne peuvent s’appuyer sur Ableton Live, Logic Pro, Reaper ou d’autres environnements selon vos habitudes.</p></details>
-        <details><summary>Puis-je apporter mes propres morceaux ou maquettes&nbsp;?</summary><p>Oui. C’est même recommandé. Le travail peut porter sur vos pièces, esquisses, partitions, portfolios, musiques à l’image ou projets électroacoustiques.</p></details>
-        <details><summary>Comment se déroule le premier échange gratuit&nbsp;?</summary><p>Il dure environ 30 minutes. Nous clarifions votre niveau, vos besoins, votre disponibilité et la forme de cours la plus pertinente avant tout engagement.</p></details>
-        <details><summary>Les cours sont-ils adaptés au fuseau horaire européen&nbsp;?</summary><p>Les horaires sont discutés au cas par cas. Le premier échange permet de vérifier les créneaux possibles entre l’Europe et le Japon.</p></details>
+        <details class="compact-details"><summary>Puis-je commencer si je suis débutant&nbsp;?</summary><p>Oui. Le point de départ peut être une écoute, un exercice, une idée ou une première maquette. Le travail s’adapte à votre situation.</p></details>
+        <details class="compact-details"><summary>Puis-je apporter ma propre musique&nbsp;?</summary><p>Oui. Une pièce, une esquisse, une partition ou une session DAW permet souvent de situer plus précisément le travail.</p></details>
+        <details class="compact-details"><summary>Faut-il savoir lire une partition&nbsp;?</summary><p>Non. La lecture peut être travaillée si elle est utile à votre projet, sans être une condition pour commencer.</p></details>
+        <details class="compact-details"><summary>Comment se déroule le premier échange&nbsp;?</summary><p>Il dure 30 minutes. Nous parlons de votre situation, de vos outils et d’une direction possible, sans engagement.</p></details>
       </div>
     </section>
 
-    <section id="conditions">
+    <section id="conditions" hidden>
       <div class="section-label">conditions</div>
       <div class="content">
         <h2>Informations et politique des cours</h2>
@@ -1572,7 +1831,7 @@
       </div>
     </section>
 
-    <section id="contact">
+    <section id="contact" hidden>
       <div class="section-label">contact</div>
       <div class="content">
         <h2>Réserver un échange ou parler d’un projet</h2>
@@ -1605,7 +1864,7 @@
     </section>
     <footer>
       <div>© 2026</div>
-      <div>Composition, Sound Design et Création Musicale · Cours en ligne</div>
+      <div>Composition, harmonie, MAO et pratiques sonores · <a class="footer-terms" href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener noreferrer" data-track="terms_pdf_click">Conditions</a></div>
       <img class="footer-logo" src="../images/acs-logo.png" alt="ACS logo">
     </footer>
   </div>
@@ -1779,6 +2038,41 @@
     }, { threshold: 0.5 });
 
     observer.observe(section);
+  })();
+
+  (function observePageSections() {
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    [
+      { id: 'booking', eventName: 'booking_section_view', storageKey: 'acs_booking_section_viewed' },
+      { id: 'format', eventName: 'pricing_section_view', storageKey: 'acs_pricing_section_viewed' }
+    ].forEach(function(item) {
+      const section = document.getElementById(item.id);
+      if (!section) return;
+
+      try {
+        if (sessionStorage.getItem(item.storageKey) === '1') return;
+      } catch (error) {}
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting || entry.intersectionRatio < 0.5) return;
+          try {
+            sessionStorage.setItem(item.storageKey, '1');
+          } catch (error) {}
+          if (typeof gtag === 'function') {
+            gtag('event', item.eventName, {
+              page_language: 'fr',
+              section_name: item.id,
+              transport_type: 'beacon'
+            });
+          }
+          observer.disconnect();
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(section);
+    });
   })();
 
 </script>
