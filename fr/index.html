@@ -1530,6 +1530,184 @@
     }
   }
 
+  /* Kinetic typography hero */
+  .hero::before {
+    display: none;
+  }
+
+  .hero-kinetic {
+    position: relative;
+    height: clamp(390px, 42.85vw, 720px);
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    isolation: isolate;
+  }
+
+  .hero-kinetic::before,
+  .hero-kinetic::after {
+    position: absolute;
+    content: "";
+    background: var(--text);
+  }
+
+  .hero-kinetic::before {
+    top: 10%;
+    bottom: 0;
+    left: 7%;
+    width: 1px;
+    transform-origin: top;
+    animation: kineticLine 900ms cubic-bezier(.16, 1, .3, 1) 120ms both;
+  }
+
+  .hero-kinetic::after {
+    top: 15%;
+    right: 5vw;
+    width: clamp(100px, 15vw, 230px);
+    height: 1px;
+    transform-origin: right;
+    animation: kineticRule 900ms cubic-bezier(.16, 1, .3, 1) 900ms both;
+  }
+
+  .kinetic-word {
+    position: absolute;
+    z-index: 1;
+    color: var(--text);
+    font-size: clamp(76px, 15.6vw, 252px);
+    font-weight: 600;
+    line-height: .78;
+    letter-spacing: -.075em;
+    white-space: nowrap;
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
+    animation: kineticWord 1050ms cubic-bezier(.16, 1, .3, 1) both;
+  }
+
+  .kinetic-word-atelier {
+    top: 8%;
+    left: -1.6%;
+    animation-delay: 80ms;
+  }
+
+  .kinetic-word-composition {
+    top: 37%;
+    left: 14%;
+    animation-delay: 260ms;
+  }
+
+  .kinetic-word-son {
+    right: 12%;
+    bottom: 9%;
+    animation-delay: 440ms;
+  }
+
+  .kinetic-note {
+    position: absolute;
+    z-index: 2;
+    color: var(--text);
+    font-size: clamp(11px, 1.1vw, 16px);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: kineticNote 600ms ease-out 1080ms both;
+  }
+
+  .kinetic-note-top {
+    top: 11%;
+    right: 25%;
+  }
+
+  .kinetic-note-bottom {
+    right: 7%;
+    bottom: 14%;
+  }
+
+  @keyframes kineticWord {
+    from { opacity: 0; transform: translate3d(0, 34px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  @keyframes kineticLine {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+
+  @keyframes kineticRule {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  @keyframes kineticNote {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .hero-kinetic {
+      height: 230px;
+    }
+
+    .hero-kinetic::before {
+      left: 5vw;
+    }
+
+    .hero-kinetic::after {
+      top: 13%;
+      right: 5vw;
+      width: 74px;
+    }
+
+    .kinetic-word {
+      font-size: clamp(60px, 18vw, 88px);
+    }
+
+    .kinetic-word-atelier {
+      top: 10%;
+      left: -2%;
+    }
+
+    .kinetic-word-composition {
+      top: 39%;
+      left: 4%;
+    }
+
+    .kinetic-word-son {
+      right: 9%;
+      bottom: 10%;
+    }
+
+    .kinetic-note {
+      font-size: 9px;
+    }
+
+    .kinetic-note-top {
+      top: 13%;
+      right: 23%;
+    }
+
+    .kinetic-note-bottom {
+      right: 6%;
+      bottom: 14%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-kinetic::before,
+    .hero-kinetic::after,
+    .kinetic-word,
+    .kinetic-note {
+      animation: none;
+    }
+
+    .kinetic-word,
+    .kinetic-note {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* Selected works */
   .top-works .content {
     max-width: 1000px;
@@ -1613,6 +1791,14 @@
       <div class="identity">
         <img class="logo-image" src="../images/acs-logo.png" alt="ACS — Atelier Composition Son">
         <p>Atelier Composition Son</p>
+      </div>
+
+      <div class="hero-kinetic" aria-hidden="true">
+        <span class="kinetic-word kinetic-word-atelier">atelier</span>
+        <span class="kinetic-word kinetic-word-composition">composition</span>
+        <span class="kinetic-word kinetic-word-son">son</span>
+        <span class="kinetic-note kinetic-note-top">cours<br>individuels<br>en ligne</span>
+        <span class="kinetic-note kinetic-note-bottom">en ligne</span>
       </div>
 
       <div class="hero-copy">
