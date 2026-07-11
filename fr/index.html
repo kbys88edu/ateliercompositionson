@@ -1622,15 +1622,15 @@
 
   .kinetic-word-motion {
     display: block;
-    animation: kineticFloat 7s ease-in-out 1350ms infinite alternate;
+    animation: kineticFloat 4.8s ease-in-out 1350ms infinite alternate;
   }
 
   .kinetic-word-composition .kinetic-word-motion {
-    animation-delay: 1580ms;
+    animation-delay: 1520ms;
   }
 
   .kinetic-word-son .kinetic-word-motion {
-    animation-delay: 1790ms;
+    animation-delay: 1690ms;
   }
 
   @keyframes kineticWord {
@@ -1655,7 +1655,7 @@
 
   @keyframes kineticFloat {
     from { transform: translate3d(0, 0, 0); }
-    to { transform: translate3d(0, -7px, 0); }
+    to { transform: translate3d(4px, -13px, 0); }
   }
 
   @media (max-width: 768px) {
