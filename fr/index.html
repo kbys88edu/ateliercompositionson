@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cours de composition, harmonie et MAO en ligne | Atelier Composition Son</title>
-  <meta name="description" content="Atelier Composition Son propose des cours, carnets d&rsquo;atelier et ressources en fran&ccedil;ais pour la composition, l&rsquo;&eacute;coute, la MAO et les pratiques sonores.">
+  <meta name="description" content="Cours individuels de composition et de MAO en fran&ccedil;ais pour commencer ou structurer une pratique musicale. &Eacute;change gratuit de 30 minutes et kit d&rsquo;atelier &agrave; 19&euro;.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ateliercompositionson.com/fr/">
   <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/">
@@ -13,7 +13,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Atelier Composition Son">
   <meta property="og:title" content="Cours de composition, harmonie et MAO en ligne | Atelier Composition Son">
-  <meta property="og:description" content="Un petit atelier en ligne pour structurer vos idées musicales, travailler vos pièces et développer votre écoute avec un accompagnement individuel.">
+  <meta property="og:description" content="Un petit atelier en ligne pour commencer ou structurer une pratique musicale, avec un &eacute;change gratuit de 30 minutes et un kit d&rsquo;atelier &agrave; 19&euro;.">
   <meta property="og:url" content="https://ateliercompositionson.com/fr/">
   <meta property="og:image" content="https://ateliercompositionson.com/images/acs-header-fr.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -1191,6 +1191,20 @@
       .cta-panel {
         padding: 20px;
       }
+
+      .consultation-note {
+        margin-top: 14px;
+        font-size: 12px;
+      }
+
+      #ressources .resource-featured {
+        box-shadow: none;
+      }
+
+      #ressources .resource-featured-copy .btn,
+      .resource-consultation-link {
+        width: 100%;
+      }
     }
 
   /* Global white background and frameless images */
@@ -1425,6 +1439,89 @@
     margin-top: 20px;
   }
 
+  .consultation-note {
+    max-width: 620px;
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  #ressources .resource-featured {
+    border-width: 1.5px;
+    box-shadow: 0 0 0 5px rgba(17, 17, 17, .035);
+  }
+
+  #ressources .resource-featured-copy .btn {
+    min-height: 48px;
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+
+  .resource-consultation-link {
+    width: fit-content;
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+    border-bottom: 1px solid currentColor;
+    text-underline-offset: 4px;
+  }
+
+  /* Instructor */
+  .instructor-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, .72fr) minmax(0, 1.28fr);
+    gap: 44px;
+    align-items: start;
+  }
+
+  .instructor-photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    filter: grayscale(100%);
+  }
+
+  .instructor-copy h2 {
+    margin-bottom: 8px;
+  }
+
+  .instructor-role {
+    margin-bottom: 22px;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .instructor-qualification,
+  .instructor-copy p {
+    max-width: 700px;
+    color: var(--muted);
+  }
+
+  .instructor-qualification {
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .instructor-copy p {
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .instructor-link {
+    display: inline-block;
+    margin-top: 22px;
+    border-bottom: 1px solid currentColor;
+    color: var(--text) !important;
+    font-size: 13px !important;
+    text-underline-offset: 4px;
+  }
+
   .resource-secondary-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1468,7 +1565,8 @@
 
     .format-summary,
     .resource-featured,
-    .resource-secondary-grid {
+    .resource-secondary-grid,
+    .instructor-layout {
       grid-template-columns: 1fr;
     }
 
@@ -1814,21 +1912,22 @@
 
       <div class="hero-copy">
         <div class="hero-label">Atelier Composition Son</div>
-        <h1 class="intro-title">Un atelier individuel pour développer un projet musical personnel</h1>
-        <p>Composition, harmonie, MAO et pratiques sonores, à partir de votre travail réel.</p>
-        <p class="desktop-extra">Chaque accompagnement part d’une pièce, d’une maquette, d’une partition, d’une session DAW ou d’une question précise.</p>
+        <h1 class="intro-title">Commencer la composition et la MAO à partir de votre situation</h1>
+        <p>Un petit atelier en ligne pour apprendre, créer et avancer avec une direction claire.</p>
+        <p class="desktop-extra">Que vous débutiez ou que vous soyez autodidacte, nous partons de votre écoute, de vos outils et de vos questions réelles.</p>
         <div class="hero-meta">Cours individuel en ligne · 60 minutes · 70€</div>
         <div class="hero-actions">
           <a class="btn primary" href="booking.html" data-track="hero_booking_click">Réserver un échange de 30 minutes</a>
-          <a class="btn" href="#format" data-track="click_courses_tarifs_fr">Découvrir les façons de travailler</a>
+          <a class="btn" href="#ressources" data-track="hero_resource_click">Découvrir le kit à 19€</a>
         </div>
+        <p class="consultation-note">Pendant cet échange gratuit, nous clarifions votre situation, votre premier axe de travail et un rythme possible. Sans engagement.</p>
       </div>
     </header>
 
     <section id="entrypoints">
       <div class="section-label">points d’entrée</div>
       <div class="content">
-        <h2>Choisir un point de départ</h2>
+        <h2>Pour commencer</h2>
         <div class="entry-grid">
           <article class="entry-card">
             <h3>Développer une pièce</h3>
@@ -1847,8 +1946,8 @@
             </div>
           </article>
           <article class="entry-card">
-            <h3>Commencer à votre rythme</h3>
-            <p>Vous préférez explorer une méthode, un exercice ou une ressource avant une séance individuelle.</p>
+            <h3>Organiser votre pratique</h3>
+            <p>Vous avez commencé seul et souhaitez trouver une direction, un exercice ou un premier projet.</p>
             <div class="entry-links">
               <a class="text-link" href="#ressources" data-track="entry_resources_click">Ressources en français</a>
             </div>
@@ -1857,14 +1956,51 @@
       </div>
     </section>
 
+    <section id="ressources">
+      <div class="section-label">ressource principale</div>
+      <div class="content">
+        <h2>Commencer à votre rythme</h2>
+        <p class="section-intro">Un kit d&rsquo;atelier en français pour commencer une pièce à partir d&rsquo;un son, sans attendre une séance individuelle.</p>
+
+        <article class="resource-featured">
+          <figure class="resource-preview">
+            <img src="../images/documentation-1.jpg" alt="Aperçu d’un carnet d’atelier sonore">
+          </figure>
+          <div class="resource-featured-copy">
+            <div class="resource-label">Kit d&rsquo;atelier &mdash; Prix de lancement : 19&euro;</div>
+            <h3>Commencer une pi&egrave;ce &agrave; partir d&rsquo;un son</h3>
+            <p class="resource-subtitle">Un parcours d&rsquo;&eacute;coute, de composition et de pratiques sonores</p>
+            <p>Choisissez un son, &eacute;coutez-le autrement, transformez-le et composez une courte esquisse de 60 secondes.</p>
+            <a class="btn primary" href="https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&amp;utm_medium=referral&amp;utm_campaign=202607_carnet_launch&amp;utm_content=resources_primary_cta" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="gumroad_product_click">D&eacute;couvrir le kit &agrave; 19&euro;</a>
+            <a class="resource-consultation-link" href="booking.html" data-track="resource_booking_primary_click">Vous pr&eacute;f&eacute;rez en parler&nbsp;? R&eacute;server un &eacute;change gratuit</a>
+          </div>
+        </article>
+        <div class="resource-secondary-grid">
+          <article class="resource-compact">
+            <div class="resource-label">Extrait gratuit</div>
+            <h3>5 questions pour commencer une pi&egrave;ce sonore</h3>
+            <p>Un court carnet d&rsquo;&eacute;coute pour ouvrir une premi&egrave;re direction de composition &agrave; partir d&rsquo;un son.</p>
+            <a class="text-link" href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener noreferrer" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger l&rsquo;extrait</a>
+          </article>
+          <article class="resource-compact">
+            <div class="resource-label">Pour aller plus loin &mdash; 29&euro;</div>
+            <h3>Mini retour sur une esquisse sonore</h3>
+            <p>Un retour &eacute;crit concis sur la mati&egrave;re, l&rsquo;&eacute;coute, la forme et les pistes possibles de d&eacute;veloppement.</p>
+            <a class="text-link" href="mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore" data-resource-url="MINI_FEEDBACK_URL" data-resource-track="resource_mini_feedback_click">Demander un mini retour</a>
+          </article>
+        </div>
+        <p class="resources-note">Pour un travail accompagn&eacute;, vous pouvez aussi <a href="booking.html" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">r&eacute;server un &eacute;change individuel</a>.</p>
+      </div>
+    </section>
+
     <section id="process">
       <div class="section-label">accompagnement</div>
       <div class="content">
         <h2>Comment se déroule l’accompagnement</h2>
         <div class="process-list">
-          <article class="process-item"><span class="process-number">01</span><p>Vous apportez une question ou un projet.</p></article>
-          <article class="process-item"><span class="process-number">02</span><p>Nous identifions les points forts et les blocages.</p></article>
-          <article class="process-item"><span class="process-number">03</span><p>Vous repartez avec une direction de travail précise.</p></article>
+          <article class="process-item"><span class="process-number">01</span><p>Nous clarifions votre situation, vos outils et vos envies actuelles.</p></article>
+          <article class="process-item"><span class="process-number">02</span><p>Nous identifions un premier axe de travail concret.</p></article>
+          <article class="process-item"><span class="process-number">03</span><p>Nous voyons si un rythme d&rsquo;accompagnement vous convient, sans engagement.</p></article>
         </div>
         <p class="section-intro">Le travail peut être ponctuel, mensuel ou régulier.</p>
       </div>
@@ -1879,6 +2015,21 @@
           <article class="practice-item"><h3>Écoute</h3><p>Une attention précise à la matière, à la forme et à l’intention.</p></article>
           <article class="practice-item"><h3>Clarté</h3><p>Des retours concrets, adaptés au projet et à la situation de chacun.</p></article>
           <article class="practice-item"><h3>Autonomie</h3><p>Un accompagnement conçu pour développer une pratique personnelle.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="instructor" aria-labelledby="instructor-title">
+      <div class="section-label">à propos de l&rsquo;enseignante</div>
+      <div class="content instructor-layout">
+        <img class="instructor-photo" src="../images/sachie_studio.jpg" alt="Sachie Kobayashi dans son studio">
+        <div class="instructor-copy">
+          <h2 id="instructor-title">Sachie Kobayashi</h2>
+          <div class="instructor-role">Compositrice / Artiste / Pédagogue</div>
+          <p class="instructor-qualification">Master of Arts HES-SO en pédagogie musicale, obtenu à la Haute école de musique de Genève.</p>
+          <p>Compositrice et artiste sonore, Sachie Kobayashi a étudié la composition, la théorie musicale et la pédagogie en Suisse. Elle a également participé au Cursus de composition et d&rsquo;informatique musicale de l&rsquo;IRCAM à Paris.</p>
+          <p>Son travail traverse la composition contemporaine, l&rsquo;électroacoustique, les technologies créatives et les relations entre son, image et espace. Dans les cours, elle accompagne les personnes qui commencent leur pratique comme celles qui souhaitent donner une direction plus précise à un projet déjà commencé.</p>
+          <a class="instructor-link" href="https://www.sachiekobayashi.com/" target="_blank" rel="noopener noreferrer" data-track="teacher_profile_fr">Voir le site artistique</a>
         </div>
       </div>
     </section>
@@ -1965,42 +2116,6 @@
         </div>
       </div>
     </section>
-    <section id="ressources">
-      <div class="section-label">apprendre en autonomie</div>
-      <div class="content">
-        <h2>Kits pour apprendre en autonomie</h2>
-        <p class="section-intro">Des kits d&rsquo;atelier pour explorer la composition, l&rsquo;&eacute;coute et les pratiques sonores &agrave; votre rythme.</p>
-
-        <article class="resource-featured">
-          <figure class="resource-preview">
-            <img src="../images/documentation-1.jpg" alt="Aperçu d’un carnet d’atelier sonore">
-          </figure>
-          <div class="resource-featured-copy">
-            <div class="resource-label">Kit d&rsquo;atelier &mdash; Prix de lancement : 19&euro;</div>
-            <h3>Commencer une pi&egrave;ce &agrave; partir d&rsquo;un son</h3>
-            <p class="resource-subtitle">Un parcours d&rsquo;&eacute;coute, de composition et de pratiques sonores</p>
-            <p>Un kit d&rsquo;atelier pour partir d&rsquo;un son, l&rsquo;&eacute;couter, le transformer et composer une courte esquisse de 60 secondes.</p>
-            <a class="btn primary" href="https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&amp;utm_medium=referral&amp;utm_campaign=202607_carnet_launch&amp;utm_content=resources_primary_cta" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="gumroad_product_click">D&eacute;couvrir le kit</a>
-          </div>
-        </article>
-        <div class="resource-secondary-grid">
-          <article class="resource-compact">
-            <div class="resource-label">Extrait gratuit</div>
-            <h3>5 questions pour commencer une pi&egrave;ce sonore</h3>
-            <p>Un court carnet d&rsquo;&eacute;coute pour ouvrir une premi&egrave;re direction de composition &agrave; partir d&rsquo;un son.</p>
-            <a class="text-link" href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener noreferrer" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger l&rsquo;extrait</a>
-          </article>
-          <article class="resource-compact">
-            <div class="resource-label">Pour aller plus loin &mdash; 29&euro;</div>
-            <h3>Mini retour sur une esquisse sonore</h3>
-            <p>Un retour &eacute;crit concis sur la mati&egrave;re, l&rsquo;&eacute;coute, la forme et les pistes possibles de d&eacute;veloppement.</p>
-            <a class="text-link" href="mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore" data-resource-url="MINI_FEEDBACK_URL" data-resource-track="resource_mini_feedback_click">Demander un mini retour</a>
-          </article>
-        </div>
-        <p class="resources-note">Pour un travail plus approfondi, vous pouvez <a href="/fr/booking.html" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">réserver un échange individuel</a>.</p>
-      </div>
-    </section>
-
     <section id="questions">
       <div class="section-label">questions</div>
       <div class="content">
