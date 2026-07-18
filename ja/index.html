@@ -358,6 +358,329 @@ h1 {
   opacity: 0.72;
 }
 
+/* Japanese homepage hero: quiet image field with independent moving type. */
+.hero::before,
+.hero > .hero-quote,
+.hero > .mobile-hero-landing,
+.hero > .hero-mail-correction-cta,
+.hero > .hero-copy,
+.hero > .hero-trust {
+  display: none !important;
+}
+
+.ja-hero-kinetic {
+  position: relative;
+  height: clamp(430px, 55vw, 760px);
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+  background: #111 url('../images/header-soft.jpg') center / cover no-repeat;
+}
+
+.ja-hero-kinetic::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .08) 72%);
+}
+
+.ja-hero-rule {
+  position: absolute;
+  top: 12%;
+  right: 5vw;
+  width: clamp(120px, 20vw, 300px);
+  height: 1px;
+  background: #fff;
+  transform-origin: right;
+  animation: jaHeroRule 900ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.ja-hero-word {
+  position: absolute;
+  z-index: 1;
+  display: inline-flex;
+  color: #fff;
+  font-size: clamp(94px, 18vw, 280px);
+  font-weight: 600;
+  line-height: .8;
+  white-space: nowrap;
+  letter-spacing: -.14em;
+  animation: jaHeroWord 1000ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.ja-hero-word span {
+  display: inline-block;
+  will-change: transform;
+  animation: jaHeroLetter var(--float-duration, 7s) ease-in-out var(--float-delay, 1s) infinite alternate;
+}
+
+.ja-hero-word-listen { top: 8%; left: -2%; animation-delay: 80ms; }
+.ja-hero-word-make { top: 37%; left: 18%; animation-delay: 260ms; }
+.ja-hero-word-open { right: 8%; bottom: 8%; animation-delay: 440ms; }
+
+.ja-hero-note {
+  position: absolute;
+  z-index: 2;
+  top: 12%;
+  left: 7vw;
+  font-size: clamp(11px, 1.1vw, 16px);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: .08em;
+  animation: jaHeroNote 650ms ease-out 900ms both;
+}
+
+.ja-hero-copy {
+  padding: 34px 5vw 48px;
+  background: var(--bg);
+}
+
+.ja-hero-copy h1 {
+  max-width: 900px;
+  margin: 0 0 18px;
+  font-size: clamp(30px, 4.2vw, 64px);
+  line-height: 1.18;
+  font-weight: 500;
+}
+
+.ja-hero-copy p {
+  max-width: 780px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(15px, 1.35vw, 18px);
+  line-height: 1.85;
+}
+
+.ja-hero-copy .button-row {
+  margin-top: 24px;
+}
+
+@keyframes jaHeroWord {
+  from { opacity: 0; transform: translateY(34px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes jaHeroRule {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes jaHeroNote {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes jaHeroLetter {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  30% { transform: translate3d(var(--drift-x, 2px), calc(var(--rise-y, 7px) * -1), 0); }
+  56% { transform: translate3d(calc(var(--drift-x, 2px) * -1.4), var(--drop-y, 11px), 0); }
+  82% { transform: translate3d(calc(var(--drift-x, 2px) * .7), calc(var(--rise-y, 7px) * -.35), 0); }
+}
+
+@media (max-width: 768px) {
+  .ja-hero-kinetic {
+    height: 300px;
+  }
+
+  .ja-hero-word {
+    font-size: clamp(68px, 22vw, 112px);
+  }
+
+  .ja-hero-word-listen { top: 12%; left: -3%; }
+  .ja-hero-word-make { top: 40%; left: 10%; }
+  .ja-hero-word-open { right: 8%; bottom: 10%; }
+
+  .ja-hero-note {
+    top: 10%;
+    left: 6vw;
+    font-size: 10px;
+  }
+
+  .ja-hero-copy {
+    padding: 28px 6vw 36px;
+  }
+
+  .ja-hero-copy h1 {
+    font-size: clamp(27px, 8vw, 36px);
+    line-height: 1.3;
+  }
+
+  .ja-hero-copy p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .ja-hero-copy .button-row {
+    display: grid;
+    gap: 12px;
+  }
+
+  .ja-hero-copy .btn {
+    width: 100%;
+    min-height: 52px;
+    justify-content: space-between;
+  }
+
+  .ja-hero-copy .btn::after {
+    content: "→";
+    margin-left: 18px;
+    font-size: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ja-hero-rule,
+  .ja-hero-word,
+  .ja-hero-word span,
+  .ja-hero-note {
+    animation: none;
+  }
+}
+
+/* Keep the Japanese hero geometry identical to the French homepage. */
+.hero-kinetic {
+  position: relative;
+  height: clamp(390px, 42.85vw, 720px);
+  overflow: hidden;
+  border: 0;
+  background: var(--bg);
+  isolation: isolate;
+}
+
+.ja-hero-kinetic {
+  display: none !important;
+}
+
+.hero-kinetic-video {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: .3;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.hero-kinetic::before,
+.hero-kinetic::after {
+  position: absolute;
+  content: "";
+  background: var(--text);
+}
+
+.hero-kinetic::before {
+  top: 10%;
+  bottom: 0;
+  left: 7%;
+  width: 1px;
+  transform-origin: top;
+  animation: kineticLine 900ms cubic-bezier(.16, 1, .3, 1) 120ms both;
+}
+
+.hero-kinetic::after {
+  top: 15%;
+  right: 5vw;
+  width: clamp(100px, 15vw, 230px);
+  height: 1px;
+  transform-origin: right;
+  animation: kineticRule 900ms cubic-bezier(.16, 1, .3, 1) 900ms both;
+}
+
+.kinetic-word {
+  position: absolute;
+  z-index: 1;
+  color: var(--text);
+  font-size: clamp(76px, 15.6vw, 252px);
+  font-weight: 600;
+  line-height: .78;
+  letter-spacing: -.075em;
+  white-space: nowrap;
+  animation: kineticWord 1050ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.kinetic-word-atelier { top: 8%; left: -1.6%; animation-delay: 80ms; }
+.kinetic-word-composition { top: 37%; left: 14%; animation-delay: 260ms; }
+.kinetic-word-son { right: 12%; bottom: 9%; animation-delay: 440ms; }
+
+.kinetic-note {
+  position: absolute;
+  z-index: 2;
+  color: var(--text);
+  font-size: clamp(11px, 1.1vw, 16px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: kineticNote 600ms ease-out 1080ms both;
+}
+
+.kinetic-note-top { top: 11%; right: 25%; font-weight: 700; }
+.kinetic-word-motion { display: inline-block; }
+.kinetic-letter {
+  display: inline-block;
+  will-change: transform;
+  animation: kineticLetterFloat var(--float-duration, 7s) ease-in-out var(--float-delay, 1.3s) infinite alternate;
+}
+
+@keyframes kineticWord { from { opacity: 0; transform: translate3d(0, 34px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
+@keyframes kineticLine { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes kineticRule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes kineticNote { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes kineticLetterFloat {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  26% { transform: translate3d(calc(var(--drift-x, 2px) * .75), calc(var(--rise-y, 7px) * -.25), 0); }
+  54% { transform: translate3d(calc(var(--drop-x, 2px) * -1.5), calc(var(--drop-y, 15px) * .2), 0); }
+  78% { transform: translate3d(calc(var(--drift-x, 2px) * 1.4), calc(var(--rise-y, 7px) * .35), 0); }
+}
+
+.ja-hero-words-below {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 5vw 8px;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
+  font-size: clamp(24px, 4vw, 56px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.08em;
+}
+
+.ja-hero-words-below span {
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .hero-kinetic { height: 230px; }
+  .hero-kinetic-video { opacity: .25; }
+  .hero-kinetic::before { left: 5vw; }
+  .hero-kinetic::after { top: 13%; right: 5vw; width: 74px; }
+  .kinetic-word { font-size: clamp(60px, 18vw, 88px); }
+  .kinetic-word-atelier { top: 10%; left: -2%; }
+  .kinetic-word-composition { top: 39%; left: 4%; }
+  .kinetic-word-son { right: 9%; bottom: 10%; }
+  .kinetic-note { font-size: 9px; }
+  .kinetic-note-top { top: 13%; right: 23%; }
+  .ja-hero-words-below { padding: 20px 6vw 4px; font-size: clamp(22px, 7vw, 32px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-kinetic::before,
+  .hero-kinetic::after,
+  .hero-kinetic-video,
+  .kinetic-word,
+  .kinetic-letter,
+  .kinetic-note,
+  .ja-hero-words-below span { animation: none; }
+  .kinetic-word,
+  .kinetic-note { opacity: 1; transform: none; }
+}
+
 .image-sequence {
   padding: 0 5vw 72px;
   border-top: 0;
@@ -2289,6 +2612,43 @@ body {
 
 <main id="top">
 <section class="hero">
+  <div class="hero-kinetic" aria-hidden="true">
+    <video class="hero-kinetic-video" autoplay muted loop playsinline preload="metadata">
+      <source src="../assets/video/fr-hero-micro-movement.mp4" type="video/mp4">
+    </video>
+    <span class="kinetic-word kinetic-word-atelier"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.35s;--float-duration:7.6s;--drift-x:2px;--rise-y:7px;--drop-x:3px;--drop-y:13px;">a</span><span class="kinetic-letter" style="--float-delay:1.7s;--float-duration:6.8s;--drift-x:-2px;--rise-y:10px;--drop-x:-2px;--drop-y:17px;">t</span><span class="kinetic-letter" style="--float-delay:2.05s;--float-duration:8.2s;--drift-x:3px;--rise-y:6px;--drop-x:2px;--drop-y:11px;">e</span><span class="kinetic-letter" style="--float-delay:1.5s;--float-duration:7.1s;--drift-x:-3px;--rise-y:8px;--drop-x:-2px;--drop-y:16px;">l</span><span class="kinetic-letter" style="--float-delay:2.3s;--float-duration:6.6s;--drift-x:2px;--rise-y:11px;--drop-x:3px;--drop-y:14px;">i</span><span class="kinetic-letter" style="--float-delay:1.9s;--float-duration:8.4s;--drift-x:-2px;--rise-y:7px;--drop-x:-3px;--drop-y:18px;">e</span><span class="kinetic-letter" style="--float-delay:2.55s;--float-duration:7.4s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:12px;">r</span></span></span>
+    <span class="kinetic-word kinetic-word-composition"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.55s;--float-duration:7.8s;--drift-x:-2px;--rise-y:9px;--drop-x:-3px;--drop-y:15px;">c</span><span class="kinetic-letter" style="--float-delay:2.15s;--float-duration:6.9s;--drift-x:3px;--rise-y:7px;--drop-x:2px;--drop-y:18px;">o</span><span class="kinetic-letter" style="--float-delay:1.8s;--float-duration:8.5s;--drift-x:-3px;--rise-y:11px;--drop-x:-2px;--drop-y:13px;">m</span><span class="kinetic-letter" style="--float-delay:2.45s;--float-duration:7.2s;--drift-x:2px;--rise-y:6px;--drop-x:3px;--drop-y:16px;">p</span><span class="kinetic-letter" style="--float-delay:1.4s;--float-duration:6.7s;--drift-x:-2px;--rise-y:8px;--drop-x:-3px;--drop-y:12px;">o</span><span class="kinetic-letter" style="--float-delay:2.7s;--float-duration:8.1s;--drift-x:3px;--rise-y:10px;--drop-x:2px;--drop-y:19px;">s</span><span class="kinetic-letter" style="--float-delay:2s;--float-duration:7.5s;--drift-x:-3px;--rise-y:7px;--drop-x:-2px;--drop-y:14px;">i</span><span class="kinetic-letter" style="--float-delay:1.65s;--float-duration:6.5s;--drift-x:2px;--rise-y:11px;--drop-x:3px;--drop-y:17px;">t</span><span class="kinetic-letter" style="--float-delay:2.35s;--float-duration:8.3s;--drift-x:-2px;--rise-y:6px;--drop-x:-3px;--drop-y:13px;">i</span><span class="kinetic-letter" style="--float-delay:1.95s;--float-duration:7s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:18px;">o</span><span class="kinetic-letter" style="--float-delay:2.6s;--float-duration:7.7s;--drift-x:-3px;--rise-y:8px;--drop-x:-2px;--drop-y:15px;">n</span></span></span>
+    <span class="kinetic-word kinetic-word-son"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.6s;--float-duration:7.3s;--drift-x:2px;--rise-y:10px;--drop-x:3px;--drop-y:16px;">s</span><span class="kinetic-letter" style="--float-delay:2.2s;--float-duration:8s;--drift-x:-3px;--rise-y:7px;--drop-x:-2px;--drop-y:19px;">o</span><span class="kinetic-letter" style="--float-delay:1.85s;--float-duration:6.8s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:14px;">n</span></span></span>
+    <span class="kinetic-note kinetic-note-top">cours<br>individuels<br>en ligne</span>
+  </div>
+
+  <div class="ja-hero-words-below" aria-label="聴く、つくる、ひらく">
+    <span>聴く</span><span>つくる</span><span>ひらく</span>
+  </div>
+
+  <div class="ja-hero-kinetic" aria-label="Atelier Composition Son のメインビジュアル">
+    <div class="ja-hero-rule" aria-hidden="true"></div>
+    <div class="ja-hero-note">作曲<br>DTM<br>音楽理論</div>
+    <div class="ja-hero-word ja-hero-word-listen" aria-hidden="true">
+      <span style="--float-delay:1.3s;--float-duration:7.4s;--drift-x:2px;--rise-y:7px;--drop-y:10px;">聴</span><span style="--float-delay:1.8s;--float-duration:6.8s;--drift-x:-2px;--rise-y:9px;--drop-y:14px;">く</span>
+    </div>
+    <div class="ja-hero-word ja-hero-word-make" aria-hidden="true">
+      <span style="--float-delay:1.6s;--float-duration:7.8s;--drift-x:-2px;--rise-y:8px;--drop-y:12px;">つ</span><span style="--float-delay:2.1s;--float-duration:6.9s;--drift-x:3px;--rise-y:7px;--drop-y:15px;">く</span><span style="--float-delay:1.9s;--float-duration:8.2s;--drift-x:-3px;--rise-y:10px;--drop-y:11px;">る</span>
+    </div>
+    <div class="ja-hero-word ja-hero-word-open" aria-hidden="true">
+      <span style="--float-delay:1.5s;--float-duration:7.2s;--drift-x:2px;--rise-y:9px;--drop-y:13px;">ひ</span><span style="--float-delay:2.2s;--float-duration:8s;--drift-x:-3px;--rise-y:7px;--drop-y:16px;">ら</span><span style="--float-delay:1.85s;--float-duration:6.7s;--drift-x:3px;--rise-y:8px;--drop-y:12px;">く</span>
+    </div>
+  </div>
+
+  <div class="ja-hero-copy">
+    <h1>作曲・DTM・音楽理論を、<br>自分の作品につなげる。</h1>
+    <p>Atelier Composition Son は、作曲・理論・音の実践を、個々の制作や学習に合わせて扱う小さなオンラインアトリエです。</p>
+    <div class="button-row">
+      <a class="btn primary" href="booking.html" data-track="click_free_consultation">無料相談を予約する</a>
+      <a class="btn" href="#modules" data-track="click_lesson_content">レッスン内容を見る</a>
+    </div>
+  </div>
+
   <div class="hero-quote">
     <p>
       音楽を学ぶことは、音をもう一度聴き直すことから始まる。
