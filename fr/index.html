@@ -1642,6 +1642,19 @@
     isolation: isolate;
   }
 
+  .hero-kinetic-video {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: .25;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+
   .hero-kinetic::before,
   .hero-kinetic::after {
     position: absolute;
@@ -1761,6 +1774,10 @@
       height: 230px;
     }
 
+    .hero-kinetic-video {
+      opacity: .21;
+    }
+
     .hero-kinetic::before {
       left: 5vw;
     }
@@ -1804,11 +1821,16 @@
   @media (prefers-reduced-motion: reduce) {
     .hero-kinetic::before,
     .hero-kinetic::after,
+    .hero-kinetic-video,
     .kinetic-word,
     .kinetic-word-motion,
     .kinetic-letter,
     .kinetic-note {
       animation: none;
+    }
+
+    .hero-kinetic-video {
+      display: none;
     }
 
     .kinetic-word,
@@ -1904,6 +1926,9 @@
       </div>
 
       <div class="hero-kinetic" aria-hidden="true">
+        <video class="hero-kinetic-video" autoplay muted loop playsinline preload="metadata">
+          <source src="../assets/video/fr-hero-micro-movement.mp4" type="video/mp4">
+        </video>
         <span class="kinetic-word kinetic-word-atelier"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.35s;--float-duration:7.6s;--drift-x:2px;--rise-y:7px;--drop-x:3px;--drop-y:13px;">a</span><span class="kinetic-letter" style="--float-delay:1.7s;--float-duration:6.8s;--drift-x:-2px;--rise-y:10px;--drop-x:-2px;--drop-y:17px;">t</span><span class="kinetic-letter" style="--float-delay:2.05s;--float-duration:8.2s;--drift-x:3px;--rise-y:6px;--drop-x:2px;--drop-y:11px;">e</span><span class="kinetic-letter" style="--float-delay:1.5s;--float-duration:7.1s;--drift-x:-3px;--rise-y:8px;--drop-x:-2px;--drop-y:16px;">l</span><span class="kinetic-letter" style="--float-delay:2.3s;--float-duration:6.6s;--drift-x:2px;--rise-y:11px;--drop-x:3px;--drop-y:14px;">i</span><span class="kinetic-letter" style="--float-delay:1.9s;--float-duration:8.4s;--drift-x:-2px;--rise-y:7px;--drop-x:-3px;--drop-y:18px;">e</span><span class="kinetic-letter" style="--float-delay:2.55s;--float-duration:7.4s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:12px;">r</span></span></span>
         <span class="kinetic-word kinetic-word-composition"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.55s;--float-duration:7.8s;--drift-x:-2px;--rise-y:9px;--drop-x:-3px;--drop-y:15px;">c</span><span class="kinetic-letter" style="--float-delay:2.15s;--float-duration:6.9s;--drift-x:3px;--rise-y:7px;--drop-x:2px;--drop-y:18px;">o</span><span class="kinetic-letter" style="--float-delay:1.8s;--float-duration:8.5s;--drift-x:-3px;--rise-y:11px;--drop-x:-2px;--drop-y:13px;">m</span><span class="kinetic-letter" style="--float-delay:2.45s;--float-duration:7.2s;--drift-x:2px;--rise-y:6px;--drop-x:3px;--drop-y:16px;">p</span><span class="kinetic-letter" style="--float-delay:1.4s;--float-duration:6.7s;--drift-x:-2px;--rise-y:8px;--drop-x:-3px;--drop-y:12px;">o</span><span class="kinetic-letter" style="--float-delay:2.7s;--float-duration:8.1s;--drift-x:3px;--rise-y:10px;--drop-x:2px;--drop-y:19px;">s</span><span class="kinetic-letter" style="--float-delay:2s;--float-duration:7.5s;--drift-x:-3px;--rise-y:7px;--drop-x:-2px;--drop-y:14px;">i</span><span class="kinetic-letter" style="--float-delay:1.65s;--float-duration:6.5s;--drift-x:2px;--rise-y:11px;--drop-x:3px;--drop-y:17px;">t</span><span class="kinetic-letter" style="--float-delay:2.35s;--float-duration:8.3s;--drift-x:-2px;--rise-y:6px;--drop-x:-3px;--drop-y:13px;">i</span><span class="kinetic-letter" style="--float-delay:1.95s;--float-duration:7s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:18px;">o</span><span class="kinetic-letter" style="--float-delay:2.6s;--float-duration:7.7s;--drift-x:-3px;--rise-y:8px;--drop-x:-2px;--drop-y:15px;">n</span></span></span>
         <span class="kinetic-word kinetic-word-son"><span class="kinetic-word-motion"><span class="kinetic-letter" style="--float-delay:1.6s;--float-duration:7.3s;--drift-x:2px;--rise-y:10px;--drop-x:3px;--drop-y:16px;">s</span><span class="kinetic-letter" style="--float-delay:2.2s;--float-duration:8s;--drift-x:-3px;--rise-y:7px;--drop-x:-2px;--drop-y:19px;">o</span><span class="kinetic-letter" style="--float-delay:1.85s;--float-duration:6.8s;--drift-x:3px;--rise-y:9px;--drop-x:2px;--drop-y:14px;">n</span></span></span>
@@ -1925,33 +1950,48 @@
     </header>
 
     <section id="entrypoints">
-      <div class="section-label">points d’entrée</div>
+      <div class="section-label">pour qui</div>
       <div class="content">
-        <h2>Pour commencer</h2>
+        <h2>Est-ce pour vous&nbsp;?</h2>
         <div class="entry-grid">
           <article class="entry-card">
-            <h3>Développer une pièce</h3>
-            <p>Vous avez une idée, une maquette, une partition ou un matériau sonore à structurer.</p>
+            <h3>Commencer une pratique</h3>
+            <p>Vous souhaitez commencer la composition ou la MAO à partir d&rsquo;un premier projet concret.</p>
             <div class="entry-links">
               <a class="text-link" href="composition-lesson.html" data-track="entry_composition_click">Composition</a>
               <a class="text-link" href="electroacoustic-lesson.html" data-track="course_detail_electroacoustique_fr">Électroacoustique</a>
             </div>
           </article>
           <article class="entry-card">
-            <h3>Clarifier une question</h3>
-            <p>Vous souhaitez comprendre une difficulté d’harmonie, de forme, de production ou d’écriture.</p>
+            <h3>Organiser l&rsquo;autodidaxie</h3>
+            <p>Vous avez appris seul et souhaitez structurer vos outils, vos questions et votre prochaine étape.</p>
             <div class="entry-links">
               <a class="text-link" href="harmony-analysis-lesson.html" data-track="entry_question_click">Harmonie et analyse</a>
               <a class="text-link" href="mao-lesson.html" data-track="course_detail_mao_fr">MAO</a>
             </div>
           </article>
           <article class="entry-card">
-            <h3>Organiser votre pratique</h3>
-            <p>Vous avez commencé seul et souhaitez trouver une direction, un exercice ou un premier projet.</p>
+            <h3>Développer une idée</h3>
+            <p>Vous avez une esquisse, une écoute, une partition ou une idée que vous souhaitez faire évoluer.</p>
             <div class="entry-links">
               <a class="text-link" href="#ressources" data-track="entry_resources_click">Ressources en français</a>
             </div>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="section-label">échange gratuit</div>
+      <div class="content">
+        <h2>Ce que nous clarifions en 30 minutes</h2>
+        <div class="process-list">
+          <article class="process-item"><span class="process-number">01</span><p>Votre situation, vos outils et ce que vous souhaitez apprendre.</p></article>
+          <article class="process-item"><span class="process-number">02</span><p>Un premier axe de travail concret pour avancer.</p></article>
+          <article class="process-item"><span class="process-number">03</span><p>Un rythme possible, sans engagement.</p></article>
+        </div>
+        <div class="hero-actions process-actions">
+          <a class="btn primary" href="booking.html" data-track="process_booking_click">Réserver un échange gratuit</a>
         </div>
       </div>
     </section>
@@ -1990,19 +2030,6 @@
           </article>
         </div>
         <p class="resources-note">Pour un travail accompagn&eacute;, vous pouvez aussi <a href="booking.html" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">r&eacute;server un &eacute;change individuel</a>.</p>
-      </div>
-    </section>
-
-    <section id="process">
-      <div class="section-label">accompagnement</div>
-      <div class="content">
-        <h2>Comment se déroule l’accompagnement</h2>
-        <div class="process-list">
-          <article class="process-item"><span class="process-number">01</span><p>Nous clarifions votre situation, vos outils et vos envies actuelles.</p></article>
-          <article class="process-item"><span class="process-number">02</span><p>Nous identifions un premier axe de travail concret.</p></article>
-          <article class="process-item"><span class="process-number">03</span><p>Nous voyons si un rythme d&rsquo;accompagnement vous convient, sans engagement.</p></article>
-        </div>
-        <p class="section-intro">Le travail peut être ponctuel, mensuel ou régulier.</p>
       </div>
     </section>
 
@@ -2083,10 +2110,10 @@
     </section>
 
     <section id="format">
-      <div class="section-label">format</div>
+      <div class="section-label">cours individuels</div>
       <div class="content">
-        <h2>Format</h2>
-        <p class="section-intro">Un premier échange de 30 minutes permet de clarifier votre projet avant de commencer.</p>
+        <h2>Un accompagnement à votre rythme</h2>
+        <p class="section-intro">Après l&rsquo;échange gratuit, les séances individuelles permettent d&rsquo;approfondir votre pratique avec une direction claire.</p>
         <div class="format-summary">
           <div class="format-price"><span class="section-label">cours individuel</span><div class="price">70€</div><p>par séance</p></div>
           <div class="format-details">
