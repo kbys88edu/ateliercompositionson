@@ -639,20 +639,49 @@ h1 {
 }
 
 .ja-hero-words-below {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
   padding: 28px 5vw 8px;
-  overflow: hidden;
   font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
-  font-size: clamp(24px, 4vw, 56px);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -.08em;
 }
 
-.ja-hero-words-below span {
-  display: inline-block;
+.ja-hero-entry {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.ja-hero-entry small {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .12em;
+}
+
+.ja-hero-entry strong {
+  font-size: clamp(22px, 3vw, 42px);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.ja-hero-entry p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .ja-hero-words-below {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 20px 6vw 4px;
+  }
+
+  .ja-hero-entry strong {
+    font-size: 28px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -666,7 +695,6 @@ h1 {
   .kinetic-word-son { right: 9%; bottom: 10%; }
   .kinetic-note { font-size: 9px; }
   .kinetic-note-top { top: 13%; right: 23%; }
-  .ja-hero-words-below { padding: 20px 6vw 4px; font-size: clamp(22px, 7vw, 32px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2622,8 +2650,31 @@ body {
     <span class="kinetic-note kinetic-note-top">cours<br>individuels<br>en ligne</span>
   </div>
 
+  <div class="ja-hero-copy">
+    <h1>作曲・DTM・音楽理論を、<br>自分の作品につなげる。</h1>
+    <p>Atelier Composition Son は、作曲・理論・音の実践を、個々の制作や学習に合わせて扱う小さなオンラインアトリエです。</p>
+    <div class="button-row">
+      <a class="btn primary" href="booking.html" data-track="click_free_consultation">無料相談を予約する</a>
+      <a class="btn" href="#modules" data-track="click_lesson_content">レッスン内容を見る</a>
+    </div>
+  </div>
+
   <div class="ja-hero-words-below" aria-label="聴く、つくる、ひらく">
-    <span>聴く</span><span>つくる</span><span>ひらく</span>
+    <div class="ja-hero-entry">
+      <small>01</small>
+      <strong>聴く</strong>
+      <p>音の変化を<br>見つめる</p>
+    </div>
+    <div class="ja-hero-entry">
+      <small>02</small>
+      <strong>つくる</strong>
+      <p>アイデアを<br>形にする</p>
+    </div>
+    <div class="ja-hero-entry">
+      <small>03</small>
+      <strong>ひらく</strong>
+      <p>作品として<br>展開する</p>
+    </div>
   </div>
 
   <div class="ja-hero-kinetic" aria-label="Atelier Composition Son のメインビジュアル">
@@ -2637,15 +2688,6 @@ body {
     </div>
     <div class="ja-hero-word ja-hero-word-open" aria-hidden="true">
       <span style="--float-delay:1.5s;--float-duration:7.2s;--drift-x:2px;--rise-y:9px;--drop-y:13px;">ひ</span><span style="--float-delay:2.2s;--float-duration:8s;--drift-x:-3px;--rise-y:7px;--drop-y:16px;">ら</span><span style="--float-delay:1.85s;--float-duration:6.7s;--drift-x:3px;--rise-y:8px;--drop-y:12px;">く</span>
-    </div>
-  </div>
-
-  <div class="ja-hero-copy">
-    <h1>作曲・DTM・音楽理論を、<br>自分の作品につなげる。</h1>
-    <p>Atelier Composition Son は、作曲・理論・音の実践を、個々の制作や学習に合わせて扱う小さなオンラインアトリエです。</p>
-    <div class="button-row">
-      <a class="btn primary" href="booking.html" data-track="click_free_consultation">無料相談を予約する</a>
-      <a class="btn" href="#modules" data-track="click_lesson_content">レッスン内容を見る</a>
     </div>
   </div>
 
