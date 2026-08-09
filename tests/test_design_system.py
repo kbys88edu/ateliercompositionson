@@ -139,8 +139,11 @@ class DesignSystemTests(unittest.TestCase):
         index = re.search(r"\.ja-trust__index\s*\{([^}]*)\}", css)
         self.assertIsNotNone(desktop_grid)
         self.assertIn("grid-template-columns: repeat(4, minmax(0, 1fr))", desktop_grid.group(1))
+        self.assertIn("gap: 16px", desktop_grid.group(1))
+        self.assertNotIn("border-left", desktop_grid.group(1))
         self.assertIsNotNone(item)
-        self.assertIn("border-top: var(--acs-rule)", item.group(1))
+        self.assertIn("border: var(--acs-rule)", item.group(1))
+        self.assertNotIn("border-right", item.group(1))
         self.assertIsNotNone(index)
         self.assertIn("color: var(--acs-muted)", index.group(1))
 
@@ -148,6 +151,7 @@ class DesignSystemTests(unittest.TestCase):
         mobile_grid = re.search(r"\.ja-trust__grid\s*\{([^}]*)\}", mobile_css)
         self.assertIsNotNone(mobile_grid)
         self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", mobile_grid.group(1))
+        self.assertIn("gap: 8px", mobile_grid.group(1))
 
     def test_lower_page_compatibility_layer_covers_retained_markup(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
