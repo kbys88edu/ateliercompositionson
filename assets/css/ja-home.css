@@ -61,6 +61,7 @@
 .ja-home-instructor { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--acs-space-8); align-items: start; }
 .ja-home-instructor__media { aspect-ratio: 4 / 5; }
 .ja-home-instructor__meta { margin: var(--acs-space-4) 0 0; padding-top: var(--acs-space-4); border-top: var(--acs-rule-soft); color: var(--acs-muted); font-size: var(--acs-text-sm); }
+.ja-home-instructor__actions .acs-text-link { min-height: 44px; display: inline-flex; align-items: center; }
 
 .ja-concept__grid { display: grid; grid-template-columns: minmax(180px, 0.36fr) minmax(0, 1fr); gap: var(--acs-space-8); align-items: start; }
 .ja-concept__grid h2, .ja-tools h2 { margin: 0; font-size: var(--acs-h2); font-weight: 500; line-height: 1.2; }

@@ -96,6 +96,18 @@ class JapaneseHomepageTests(unittest.TestCase):
         for credential in ("Master of Arts HES-SO", "2021–2022年", "Klangforum Wien", "impuls International Composition Competition 2023"):
             self.assertIn(credential, profile)
 
+    def test_teacher_profile_link_has_a_44px_touch_target(self):
+        profile_link = next(
+            link for link in self.page.links
+            if link.get("href") == "profile.html"
+        )
+        self.assertIn("acs-text-link", profile_link.get("class", "").split())
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        self.assertIn(".ja-home-instructor__actions .acs-text-link", css)
+        selector_start = css.index(".ja-home-instructor__actions .acs-text-link")
+        selector_block = css[selector_start:css.index("}", selector_start)]
+        self.assertIn("min-height: 44px", selector_block)
+
     def test_task_four_sections_use_connected_design_system_selectors(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
         for selector in (
