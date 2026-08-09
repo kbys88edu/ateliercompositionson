@@ -148,18 +148,37 @@ class JapaneseHomepageTests(unittest.TestCase):
 
     def test_homepage_has_three_selected_works(self):
         self.assertEqual(3, self.html.count('class="ja-work"'))
-        for title in (
-            "Émergences Résurgences pour orchestre",
-            "Techno Pop / AI Workflow / TouchDesigner MV",
-            "The Cosmic Microwaves Background / Le Fresnoy",
-        ):
-            self.assertIn(title, self.html)
-        self.assertEqual(3, len(self.page.iframes))
-        self.assertTrue(all(frame.get("loading") == "lazy" for frame in self.page.iframes))
+        self.assertEqual(
+            [
+                (
+                    "https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Femergences-resurgences-pour-orchestre&color=%23111111&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false",
+                    "Émergences Résurgences pour orchestre",
+                    "lazy",
+                ),
+                (
+                    "https://www.youtube.com/embed/SgYGcZS1Mp4",
+                    "Techno Pop / AI Workflow / TouchDesigner MV",
+                    "lazy",
+                ),
+                (
+                    "https://player.vimeo.com/video/1038238939",
+                    "The Cosmic Microwaves Background / Le Fresnoy",
+                    "lazy",
+                ),
+            ],
+            [
+                (frame.get("src"), frame.get("title"), frame.get("loading"))
+                for frame in self.page.iframes
+            ],
+        )
 
     def test_homepage_preserves_three_testimonials(self):
-        for profile in ("50代女性", "30代男性", "10代女性"):
-            self.assertIn(profile, self.html)
+        for testimonial in (
+            "オンラインでも通信環境が安定していて、安心して受講できました。こちらの希望や学びたい内容を丁寧に聞いていただき、レッスンに反映してもらえた点がとても良かったです。",
+            "自分の現在のレベルや目的に合わせて、必要な内容を整理しながら教えていただけたのが印象的でした。短い時間の中でも、今後どのように学んでいけばよいかが明確になりました。",
+            "限られた時間の中でも、とても分かりやすく丁寧に教えていただきました。初めて学ぶ内容でしたが、楽典の面白さや奥深さを感じることができました。",
+        ):
+            self.assertIn(testimonial, self.html)
 
     def test_pricing_uses_current_plan_names(self):
         for plan in ("Foundation", "Individual Session", "Monthly Atelier", "Text Feedback"):
@@ -169,7 +188,47 @@ class JapaneseHomepageTests(unittest.TestCase):
 
     def test_homepage_faq_has_four_questions_and_full_faq_link(self):
         self.assertEqual(4, self.html.count("<details"))
+        for question in (
+            "これから制作を始める段階でも相談できますか？",
+            "受験やポートフォリオにも対応していますか？",
+            "単発相談はできますか？",
+            "どのソフトに対応していますか？",
+        ):
+            self.assertIn(f"<summary>{question}</summary>", self.html)
         self.assertIn('href="faq.html"', self.html)
+
+    def test_full_faq_preserves_all_eight_topics(self):
+        faq_html = repo_path("ja/faq.html").read_text(encoding="utf-8")
+        self.assertEqual(8, faq_html.count("<details"))
+        for question in (
+            "これから制作を始める段階でも相談できますか？",
+            "受験やポートフォリオにも対応していますか？",
+            "どのくらいの頻度で受けるのがよいですか？",
+            "単発相談はできますか？",
+            "どのソフトに対応していますか？",
+            "外部スクール経由のレッスンとは何が違いますか？",
+            "SunoやElevenLabsで作った音源の相談もできますか？",
+            "和声チェッカーや対位法チェッカーの結果について相談できますか？",
+        ):
+            self.assertIn(f"<summary>{question}</summary>", faq_html)
+
+    def test_images_have_complete_loading_contracts(self):
+        hero = self.page.images[0]
+        self.assertEqual("../images/sachie_studio.jpg", hero.get("src"))
+        self.assertEqual("スタジオで制作する講師 Sachie Kobayashi", hero.get("alt"))
+        self.assertEqual("1200", hero.get("width"))
+        self.assertEqual("900", hero.get("height"))
+        self.assertEqual("high", hero.get("fetchpriority"))
+        self.assertEqual("async", hero.get("decoding"))
+        self.assertNotIn("loading", hero)
+
+        for image in self.page.images:
+            self.assertIn("alt", image)
+            self.assertTrue(image.get("width") and image.get("height"), image.get("src"))
+
+        for image in self.page.images[1:]:
+            self.assertEqual("lazy", image.get("loading"), image.get("src"))
+            self.assertEqual("async", image.get("decoding"), image.get("src"))
 
     def test_mail_feedback_is_secondary(self):
         tracked = {link.get("data-track"): link.get("href") for link in self.page.links if link.get("data-track")}
