@@ -277,4 +277,3 @@ Link to `faq.html` for the complete current FAQ after terminology reconciliation
 2. Japanese lesson detail pages, booking, mail correction, terms, and resources.
 3. French homepage, lesson pages, Calendly booking, and language routing.
 4. Root chooser, final multilingual SEO, asset cleanup, terms PDF regeneration, and full QA.
-

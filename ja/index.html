@@ -23,7 +23,7 @@
 <body>
 <header class="acs-site-header" data-menu>
   <div class="acs-container--wide acs-site-header__inner">
-    <a class="acs-site-header__brand" href="#top">Atelier Composition Son</a>
+    <a class="acs-site-header__brand" aria-label="Atelier Composition Son" href="#top"><span class="acs-site-header__brand-full" aria-hidden="true">Atelier Composition Son</span><span class="acs-site-header__brand-short" aria-hidden="true">ACS</span></a>
     <nav class="acs-site-nav" aria-label="メインメニュー">
       <a href="#study">レッスン</a>
       <a href="#instructor">講師</a>
@@ -32,6 +32,7 @@
       <a href="../fr/" lang="fr">JA / FR</a>
       <a class="acs-btn acs-btn--primary" href="booking.html">無料相談</a>
     </nav>
+    <a class="acs-mobile-consultation" href="booking.html">無料相談</a>
     <button class="acs-menu-toggle" type="button" aria-label="メニュー" aria-expanded="false" aria-controls="site-menu" data-menu-toggle>メニュー</button>
   </div>
   <div class="acs-menu-panel" id="site-menu" data-menu-panel hidden>
@@ -159,24 +160,15 @@
       <div class="ja-concept__copy">
         <p>このアトリエでは、「正しい作曲法」を一方向に伝えるだけではなく、受講者自身の感覚・関心・音の記憶から出発します。楽譜を書くこと、DAWで音を編集すること、録音素材を変形すること、アルゴリズム、AI、音楽プログラミング、PythonやChatGPTのような思考ツールを使うこと。そのすべてを、作品をつくるための手段として扱います。</p>
         <p>一般的な作曲・DTMレッスンよりも、個人の創作プロセスに深く関わります。まだ何を作りたいかわからない段階でも、すでに作品やポートフォリオを持っている段階でも、目的に応じて内容を組み立てます。</p>
+        <blockquote class="ja-concept__quote">
+          <p>音楽を学ぶことは、音をもう一度聴き直すことから始まる。</p>
+          <cite>inspired by Pierre Schaeffer</cite>
+        </blockquote>
         <div class="ja-concept__approaches">
           <article><p class="ja-index">01</p><h3>創作中心</h3><p>理論やソフト操作を目的化せず、作品を作るために必要な知識と技術を選びます。</p></article>
           <article><p class="ja-index">02</p><h3>音を聴くことから始める</h3><p>音色、質感、空間、身体性、時間感覚を丁寧に扱い、音楽以前の感覚を作品へ接続します。</p></article>
           <article><p class="ja-index">03</p><h3>現代的な制作環境</h3><p>DAW、Max/MSP、録音、AI、Python、ChatGPT、Codex、電子音響、映像との関係など、現在の制作環境に対応します。</p></article>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="tools" class="acs-section ja-tools" aria-labelledby="tools-title">
-    <div class="acs-container">
-      <p class="acs-kicker">LEARNING TOOLS / THINKING TOOLS</p>
-      <h2 id="tools-title">学ぶため・考えるためのツール</h2>
-      <p class="ja-tools__intro">和声課題や対位法課題を自分で確認できる、無料の learning tools / thinking tools を公開しています。検出結果はあくまで機械的な確認であり、音楽的な判断や作曲上の意図までは完全には扱えません。「なぜ指摘されたのか分からない」「修正方法を知りたい」「受験課題として確認したい」場合は、メール添削レッスンまたは通常レッスンで、考え方から個別に扱います。</p>
-      <div class="ja-tools__list">
-        <article class="ja-tools__item"><p class="ja-index">01</p><h3>和声チェッカー</h3><p>SATB 4声体のMusicXMLファイルを使って、連続5度・連続8度などを確認する学習補助ツールです。</p><a href="../harmony-checker.html" data-track="harmony_checker_click">和声チェッカーを使う</a></article>
-        <article class="ja-tools__item"><p class="ja-index">02</p><h3>対位法チェッカー</h3><p>2声対位法の基礎的な進行、音程、禁則を確認するための学習補助ツールです。</p><a href="../counterpoint/" data-track="counterpoint_checker_click">対位法チェッカーを使う</a></article>
-        <article class="ja-tools__item"><p class="ja-index">03</p><h3>簡易シンセサイザー</h3><p>波形、フィルター、エンベロープ、LFOなどをブラウザ上で試しながら、音の合成について学べる学習用シンセサイザーです。</p><a href="simple-synth.html" data-track="simple_synth_click">簡易シンセサイザーを使う</a></article>
       </div>
     </div>
   </section>
@@ -283,11 +275,24 @@
       </div>
     </div>
   </section>
+
+  <section id="tools" class="acs-section ja-tools" aria-labelledby="tools-title">
+    <div class="acs-container">
+      <p class="acs-kicker">FREE RESOURCES</p>
+      <h2 id="tools-title">学習ツール</h2>
+      <p class="ja-tools__intro">和声・対位法・音づくりを自分で試せる無料リソースです。結果の解釈や修正は、レッスンやメール添削で個別に扱います。</p>
+      <div class="ja-tools__list">
+        <article class="ja-tools__item"><p class="ja-index">01</p><h3>和声チェッカー</h3><p>SATB 4声体のMusicXMLファイルを使って、連続5度・連続8度などを確認する学習補助ツールです。</p><a href="../harmony-checker.html" data-track="harmony_checker_click">使う</a></article>
+        <article class="ja-tools__item"><p class="ja-index">02</p><h3>対位法チェッカー</h3><p>2声対位法の基礎的な進行、音程、禁則を確認するための学習補助ツールです。</p><a href="../counterpoint/" data-track="counterpoint_checker_click">使う</a></article>
+        <article class="ja-tools__item"><p class="ja-index">03</p><h3>簡易シンセサイザー</h3><p>波形、フィルター、エンベロープ、LFOなどをブラウザ上で試しながら、音の合成について学べる学習用シンセサイザーです。</p><a href="simple-synth.html" data-track="simple_synth_click">使う</a></article>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
   <div>© Atelier Composition Son</div>
-  <div><a href="../ja/">Japanese</a> / <a href="../fr/">Français</a> / <a href="../">English</a><br><a href="terms.html" data-track="click_terms_page">Terms &amp; Policies / レッスン規約</a></div>
+  <div><a href="../ja/">Japanese</a> / <a href="../fr/">Français</a> / <a href="../">言語選択</a><br><a href="terms.html" data-track="click_terms_page">Terms &amp; Policies / レッスン規約</a></div>
 </footer>
 
 <script defer src="../assets/js/acs-ui.js"></script>

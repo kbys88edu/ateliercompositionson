@@ -1,4 +1,5 @@
 import json
+import re
 import shutil
 import subprocess
 import unittest
@@ -6,6 +7,106 @@ from tests.site_test_utils import load_page, repo_path
 
 
 class DesignSystemTests(unittest.TestCase):
+    def test_homepage_h1_uses_h1_token_and_tablet_geometry_contract(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        h1_rule = re.search(r"\.ja-home-hero h1\s*\{([^}]*)\}", css)
+        self.assertIsNotNone(h1_rule)
+        self.assertIn("font-size: var(--acs-h1)", h1_rule.group(1))
+        self.assertNotIn("--acs-display", h1_rule.group(1))
+        hero_media = re.search(r"\.ja-home-hero__media\s*\{([^}]*)\}", css)
+        self.assertIn("margin: 0", hero_media.group(1))
+
+        tablet_query = "@media (min-width: 768px) and (max-width: 1023px)"
+        self.assertIn(tablet_query, css)
+        tablet_css = css.split(tablet_query, 1)[1]
+        tablet_grid = re.search(r"\.ja-home-hero__grid\s*\{([^}]*)\}", tablet_css)
+        tablet_media = re.search(r"\.ja-home-hero__media\s*\{([^}]*)\}", tablet_css)
+        self.assertIn("grid-template-columns: 1fr", tablet_grid.group(1))
+        self.assertIn("order: -1", tablet_media.group(1))
+        self.assertIn("aspect-ratio: 16 / 9", tablet_media.group(1))
+
+    def test_profile_portrait_uses_intrinsic_ratio_without_fixed_height(self):
+        profile = load_page("ja/profile.html")
+        portrait = next(
+            image for image in profile.images
+            if "teacher-photo" in image.get("class", "").split()
+        )
+        self.assertEqual(("2080", "1170"), (portrait.get("width"), portrait.get("height")))
+
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        portrait_rules = re.findall(r"main \.teacher-photo\s*\{([^}]*)\}", css)
+        self.assertTrue(portrait_rules)
+        self.assertTrue(all("aspect-ratio" not in rule for rule in portrait_rules))
+        self.assertTrue(any("height: auto" in rule for rule in portrait_rules))
+
+    def test_japanese_mobile_headers_and_reviewed_links_have_44px_targets(self):
+        for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
+            html = repo_path(page_path).read_text(encoding="utf-8")
+            self.assertEqual(
+                1,
+                html.count('<a class="acs-mobile-consultation" href="booking.html">無料相談</a>'),
+                page_path,
+            )
+
+        core_css = repo_path("assets/css/acs-core.css").read_text(encoding="utf-8")
+        home_css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        for css, selector in (
+            (core_css, ".acs-site-header__brand"),
+            (core_css, ".acs-site-nav > a:not(.acs-btn)"),
+            (core_css, ".acs-mobile-consultation"),
+            (home_css, ".ja-who__paths .acs-text-link"),
+            (home_css, ".ja-tools__item a"),
+            (home_css, "body > footer a"),
+        ):
+            rule = re.search(re.escape(selector) + r"\s*\{([^}]*)\}", css)
+            self.assertIsNotNone(rule, selector)
+            self.assertIn("min-width: 44px", rule.group(1), selector)
+            self.assertIn("min-height: 44px", rule.group(1), selector)
+
+        mobile_css = core_css.split("@media (max-width: 767px)", 1)[1]
+        mobile_cta = re.search(r"\.acs-mobile-consultation\s*\{([^}]*)\}", mobile_css)
+        self.assertIsNotNone(mobile_cta)
+        self.assertIn("display: inline-flex", mobile_cta.group(1))
+        mobile_header = re.search(r"\.acs-site-header__inner\s*\{([^}]*)\}", mobile_css)
+        self.assertIn("gap: var(--acs-space-1)", mobile_header.group(1))
+
+        menu_toggle = re.search(r"\.acs-menu-toggle\s*\{([^}]*)\}", core_css)
+        self.assertIn("white-space: nowrap", menu_toggle.group(1))
+
+    def test_japanese_header_uses_accessible_compact_brand_below_360px(self):
+        for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
+            html = repo_path(page_path).read_text(encoding="utf-8")
+            self.assertIn(
+                'class="acs-site-header__brand" aria-label="Atelier Composition Son"',
+                html,
+                page_path,
+            )
+            self.assertIn(
+                '<span class="acs-site-header__brand-full" aria-hidden="true">Atelier Composition Son</span>',
+                html,
+                page_path,
+            )
+            self.assertIn(
+                '<span class="acs-site-header__brand-short" aria-hidden="true">ACS</span>',
+                html,
+                page_path,
+            )
+
+        core_css = repo_path("assets/css/acs-core.css").read_text(encoding="utf-8")
+        compact_query = "@media (max-width: 359px)"
+        self.assertIn(compact_query, core_css)
+        default_short = re.search(r"\.acs-site-header__brand-short\s*\{([^}]*)\}", core_css)
+        self.assertIsNotNone(default_short)
+        self.assertIn("display: none", default_short.group(1))
+
+        compact_css = core_css.split(compact_query, 1)[1]
+        compact_full = re.search(r"\.acs-site-header__brand-full\s*\{([^}]*)\}", compact_css)
+        compact_short = re.search(r"\.acs-site-header__brand-short\s*\{([^}]*)\}", compact_css)
+        self.assertIsNotNone(compact_full)
+        self.assertIsNotNone(compact_short)
+        self.assertIn("display: none", compact_full.group(1))
+        self.assertIn("display: inline", compact_short.group(1))
+
     def test_task_3_opening_markup_uses_composed_styles(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
         html = repo_path("ja/index.html").read_text(encoding="utf-8")

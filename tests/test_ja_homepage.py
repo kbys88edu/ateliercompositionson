@@ -16,7 +16,7 @@ class JapaneseHomepageTests(unittest.TestCase):
     def test_primary_sections_are_present_once_and_ordered(self):
         expected = [
             "top", "trust", "who", "study", "process", "instructor",
-            "works", "voices", "price", "faq", "contact",
+            "concept", "works", "voices", "price", "faq", "contact", "tools",
         ]
         self.assertEqual(len(self.page.ids), len(set(self.page.ids)))
         positions = [self.page.ids.index(section_id) for section_id in expected]
@@ -137,14 +137,49 @@ class JapaneseHomepageTests(unittest.TestCase):
             "受講者自身の感覚・関心・音の記憶から出発します。",
             "そのすべてを、作品をつくるための手段として扱います。",
             "一般的な作曲・DTMレッスンよりも、個人の創作プロセスに深く関わります。",
-            "音楽的な判断や作曲上の意図までは完全には扱えません。",
-            "メール添削レッスンまたは通常レッスンで、考え方から個別に扱います。",
+            "SATB 4声体のMusicXMLファイルを使って、連続5度・連続8度などを確認する学習補助ツールです。",
+            "2声対位法の基礎的な進行、音程、禁則を確認するための学習補助ツールです。",
+            "波形、フィルター、エンベロープ、LFOなどをブラウザ上で試しながら、音の合成について学べる学習用シンセサイザーです。",
         ):
             self.assertIn(text, self.html)
         hrefs = {link.get("href") for link in self.page.links}
         self.assertTrue({
             "../harmony-checker.html", "../counterpoint/", "simple-synth.html",
         }.issubset(hrefs))
+        self.assertEqual(3, self.html.count('class="ja-tools__item"'))
+
+    def test_brand_background_and_scope_remain_visible(self):
+        for text in (
+            "音楽を学ぶことは、音をもう一度聴き直すことから始まる。",
+            "inspired by Pierre Schaeffer",
+        ):
+            self.assertIn(text, self.html.split("<body>", 1)[1])
+
+        profile_body = repo_path("ja/profile.html").read_text(encoding="utf-8").split("<body>", 1)[1]
+        for text in (
+            "東京、スイス、フランス",
+            "アーティストビザを取得してパリを中心に活動",
+            "places / traditions / technologies",
+            "listening / sound practices",
+        ):
+            self.assertIn(text, profile_body)
+
+    def test_tools_are_compact_resources_after_the_primary_journey(self):
+        positions = {section_id: self.page.ids.index(section_id) for section_id in (
+            "works", "voices", "price", "faq", "contact", "tools",
+        )}
+        for section_id in ("works", "voices", "price", "faq", "contact"):
+            self.assertLess(positions[section_id], positions["tools"])
+
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        self.assertIn(".ja-tools { padding-block: var(--acs-space-7);", css)
+        self.assertIn(".ja-tools__list { display: grid; grid-template-columns: 1fr;", css)
+
+    def test_footer_language_route_is_labeled_as_language_selection(self):
+        for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
+            html = repo_path(page_path).read_text(encoding="utf-8")
+            self.assertIn('<a href="../">言語選択</a>', html, page_path)
+            self.assertNotIn('>English</a>', html, page_path)
 
     def test_homepage_has_three_selected_works(self):
         self.assertEqual(3, self.html.count('class="ja-work"'))

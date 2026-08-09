@@ -2269,19 +2269,6 @@
   </div>
 
 <script>
-  document.querySelectorAll('[data-track]').forEach(function(element) {
-    element.addEventListener('click', function() {
-      if (typeof gtag === 'function') {
-        gtag('event', element.dataset.track, {
-          page_location: window.location.href,
-          link_text: element.textContent.trim()
-        });
-      }
-    });
-  });
-</script>
-
-<script>
   const FREE_PDF_URL = "../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf";
   const GUMROAD_CARNET_URL = "https://sonata14.gumroad.com/l/gvbzop";
   const MINI_FEEDBACK_URL = "mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore";

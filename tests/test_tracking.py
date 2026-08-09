@@ -1,9 +1,35 @@
 import json
+import re
 import shutil
 import subprocess
 import unittest
+from html.parser import HTMLParser
 
 from tests.site_test_utils import repo_path
+
+
+class TrackingPageParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.links = []
+        self.scripts = []
+        self._script = None
+
+    def handle_starttag(self, tag, attrs):
+        values = dict(attrs)
+        if tag == "a" and values.get("href") and values.get("data-track"):
+            self.links.append(values)
+        if tag == "script":
+            self._script = {"src": values.get("src"), "code": ""}
+            self.scripts.append(self._script)
+
+    def handle_data(self, data):
+        if self._script is not None:
+            self._script["code"] += data
+
+    def handle_endtag(self, tag):
+        if tag == "script":
+            self._script = None
 
 
 class TrackingTests(unittest.TestCase):
@@ -17,11 +43,125 @@ class TrackingTests(unittest.TestCase):
         self.assertIn('link.getAttribute("data-track")', script)
         self.assertIn("sendGaEvent(explicitEvent", script)
 
-    def test_changed_pages_do_not_bind_inline_data_track_handlers(self):
-        for page in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
-            html = repo_path(page).read_text(encoding="utf-8")
-            self.assertNotIn("querySelectorAll('[data-track]')", html)
-            self.assertNotIn('querySelectorAll("[data-track]")', html)
+    def test_all_pages_using_shared_tracker_have_no_local_data_track_click_listener(self):
+        duplicate_listener = re.compile(
+            r"querySelectorAll\(\s*(['\"])\[data-track\]\1\s*\)"
+            r"[\s\S]*?addEventListener\(\s*(['\"])click\2"
+        )
+        tracker_pages = []
+        for page_path in sorted(repo_path(".").rglob("*.html")):
+            html = page_path.read_text(encoding="utf-8")
+            if "acs-tracking.js" not in html:
+                continue
+            tracker_pages.append(page_path)
+            self.assertIsNone(
+                duplicate_listener.search(html),
+                str(page_path.relative_to(repo_path("."))),
+            )
+        self.assertGreaterEqual(len(tracker_pages), 33)
+
+    def test_french_pages_emit_explicit_event_once_in_actual_script_order(self):
+        node = shutil.which("node")
+        self.assertIsNotNone(node, "Node.js is required for the FR tracking contract")
+        pages = (
+            "fr/index.html",
+            "fr/composition-lesson.html",
+            "fr/harmony-analysis-lesson.html",
+            "fr/electroacoustic-lesson.html",
+            "fr/mao-lesson.html",
+            "fr/booking.html",
+        )
+        harness = r'''
+const fs = require("fs");
+const vm = require("vm");
+
+const config = JSON.parse(fs.readFileSync(0, "utf8"));
+const attributes = config.attributes;
+const events = [];
+const targetHandlers = {};
+const documentHandlers = {};
+let currentHref = config.pageUrl;
+
+const window = {
+  location: {
+    get href() { return currentHref; },
+    set href(value) { currentHref = value; },
+    get search() { return new URL(currentHref).search; },
+    get origin() { return new URL(currentHref).origin; },
+  },
+  setTimeout() {},
+};
+const link = {
+  dataset: { track: attributes["data-track"] },
+  textContent: config.linkText,
+  getAttribute(name) { return Object.prototype.hasOwnProperty.call(attributes, name) ? attributes[name] : null; },
+  setAttribute(name, value) { attributes[name] = String(value); },
+  hasAttribute(name) { return Object.prototype.hasOwnProperty.call(attributes, name); },
+  get href() { return new URL(attributes.href, currentHref).href; },
+  addEventListener(type, handler) { (targetHandlers[type] ||= []).push(handler); },
+  closest(selector) { return selector === "a[href]" ? this : null; },
+};
+const document = {
+  readyState: "complete",
+  querySelectorAll(selector) {
+    if (selector === "a[href]" || selector === "[data-track]") return [link];
+    if (selector === "form") return [];
+    return [];
+  },
+  addEventListener(type, handler, capture) {
+    (documentHandlers[type] ||= []).push({ handler, capture: Boolean(capture) });
+  },
+};
+const sessionStorage = { setItem() {}, getItem() { return null; } };
+function gtag(kind, name, payload = {}) {
+  if (kind === "event") events.push(name);
+  if (typeof payload.event_callback === "function") payload.event_callback();
+}
+
+const context = { URL, URLSearchParams, document, gtag, sessionStorage, window };
+vm.createContext(context);
+config.scripts.forEach((script) => vm.runInContext(script, context));
+const event = {
+  target: link,
+  defaultPrevented: false,
+  preventDefault() { this.defaultPrevented = true; },
+};
+(documentHandlers.click || []).filter((entry) => entry.capture).forEach((entry) => entry.handler(event));
+(targetHandlers.click || []).forEach((handler) => handler(event));
+(documentHandlers.click || []).filter((entry) => !entry.capture).forEach((entry) => entry.handler(event));
+console.log(JSON.stringify({ events, explicit: attributes["data-track"] }));
+'''
+
+        for page in pages:
+            with self.subTest(page=page):
+                page_path = repo_path(page)
+                parser = TrackingPageParser()
+                parser.feed(page_path.read_text(encoding="utf-8"))
+                link = next(
+                    item for item in parser.links
+                    if "data-resource-track" not in item
+                )
+                scripts = []
+                for script in parser.scripts:
+                    if script["src"] and script["src"].split("?", 1)[0].endswith("acs-tracking.js"):
+                        source_path = page_path.parent.joinpath(script["src"].split("?", 1)[0]).resolve()
+                        scripts.append(source_path.read_text(encoding="utf-8"))
+                    elif "[data-track]" in script["code"] and "addEventListener" in script["code"]:
+                        scripts.append(script["code"])
+                result = subprocess.run(
+                    [node, "-e", harness],
+                    input=json.dumps({
+                        "attributes": link,
+                        "linkText": link.get("data-track", ""),
+                        "pageUrl": f"https://atelier.example/{page}",
+                        "scripts": scripts,
+                    }),
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(0, result.returncode, result.stderr)
+                payload = json.loads(result.stdout)
+                self.assertEqual(1, payload["events"].count(payload["explicit"]), payload)
 
     def test_tracker_sends_explicit_and_canonical_events_once_with_utm(self):
         node = shutil.which("node")
