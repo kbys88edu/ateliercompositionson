@@ -65,16 +65,14 @@
 
   function isContact(link) {
     var href = link.getAttribute("href") || "";
-    var text = (link.textContent || "").toLowerCase();
     var track = link.getAttribute("data-track") || "";
-    return href.indexOf("mailto:") === 0 || href.indexOf("#contact") >= 0 || track.indexOf("email") >= 0 || track.indexOf("contact") >= 0 || text.indexOf("contact") >= 0 || text.indexOf("?????") >= 0;
+    return href.indexOf("mailto:") === 0 || href.indexOf("#contact") >= 0 || track.indexOf("email") >= 0 || track.indexOf("contact") >= 0;
   }
 
   function isFreeConsultation(link) {
     var href = link.getAttribute("href") || "";
-    var text = (link.textContent || "").toLowerCase();
     var track = link.getAttribute("data-track") || "";
-    return href.indexOf("booking.html") >= 0 || track.indexOf("free_consultation") >= 0 || track.indexOf("booking") >= 0 || text.indexOf("????") >= 0 || text.indexOf("?change gratuit") >= 0 || text.indexOf("30???") >= 0;
+    return href.indexOf("booking.html") >= 0 || track.indexOf("consultation") >= 0 || track.indexOf("booking") >= 0;
   }
 
   function eventParams(link) {
@@ -94,7 +92,8 @@
       if (typeof callback === "function") callback();
     }
     if (typeof gtag !== "function") { finish(); return; }
-    var payload = params || {};
+    var payload = {};
+    Object.keys(params || {}).forEach(function (key) { payload[key] = params[key]; });
     payload.event_callback = finish;
     payload.event_timeout = 800;
     gtag("event", name, payload);
@@ -110,20 +109,31 @@
     return isFreeConsultation(link) || isContact(link) || isOutbound(link);
   }
 
+  function uniqueEventNames(names) {
+    return names.filter(function (name, index) {
+      return name && names.indexOf(name) === index;
+    });
+  }
+
   function bindTracking() {
     document.addEventListener("click", function (event) {
       var link = event.target.closest ? event.target.closest("a[href]") : null;
       if (!link) return;
       if (link.hasAttribute("data-resource-track")) return;
+      var explicitEvent = link.getAttribute("data-track") || "";
       var canonicalEvents = [];
       if (isFreeConsultation(link)) canonicalEvents.push("free_consultation_click");
       if (isContact(link)) canonicalEvents.push("contact_click");
       if (isOutbound(link)) canonicalEvents.push("outbound_link_click");
-      if (!canonicalEvents.length) return;
+      var eventNames = uniqueEventNames((explicitEvent ? [explicitEvent] : []).concat(canonicalEvents));
+      if (!eventNames.length) return;
       preserveUtmOnInternalLinks();
       var params = eventParams(link);
       if (!shouldDelayNavigation(link, event)) {
-        canonicalEvents.forEach(function (name) { sendGaEvent(name, params); });
+        if (explicitEvent) sendGaEvent(explicitEvent, params);
+        eventNames.forEach(function (name) {
+          if (name !== explicitEvent) sendGaEvent(name, params);
+        });
         return;
       }
       event.preventDefault();
@@ -131,9 +141,12 @@
       var sent = 0;
       function next() {
         sent += 1;
-        if (sent >= canonicalEvents.length) window.location.href = href;
+        if (sent >= eventNames.length) window.location.href = href;
       }
-      canonicalEvents.forEach(function (name) { sendGaEvent(name, params, next); });
+      if (explicitEvent) sendGaEvent(explicitEvent, params, next);
+      eventNames.forEach(function (name) {
+        if (name !== explicitEvent) sendGaEvent(name, params, next);
+      });
     }, true);
 
     document.querySelectorAll("form").forEach(function (form) {
