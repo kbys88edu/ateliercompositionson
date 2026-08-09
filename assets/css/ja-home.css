@@ -148,7 +148,7 @@
 .ja-concept__quote p { margin: 0; font-size: var(--acs-text-lg); }
 .ja-concept__quote cite { display: block; margin-top: var(--acs-space-2); color: var(--acs-muted); font-size: var(--acs-text-sm); font-style: normal; }
 .ja-concept__approaches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--acs-space-5); margin-top: var(--acs-space-7); }
-.ja-concept__approaches article { min-width: 0; padding-top: var(--acs-space-4); border-top: var(--acs-rule); }
+.ja-concept__approaches article { min-width: 0; padding: var(--acs-space-5); border: var(--acs-rule); }
 .ja-concept__approaches h3 { margin: var(--acs-space-5) 0 0; font-size: var(--acs-h3); font-weight: 500; line-height: 1.35; }
 .ja-concept__approaches p { margin: var(--acs-space-3) 0 0; color: var(--acs-muted); }
 

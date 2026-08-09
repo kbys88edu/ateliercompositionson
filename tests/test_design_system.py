@@ -153,6 +153,21 @@ class DesignSystemTests(unittest.TestCase):
         self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", mobile_grid.group(1))
         self.assertIn("gap: 8px", mobile_grid.group(1))
 
+    def test_concept_approaches_use_complete_square_frames(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        grid = re.search(r"\.ja-concept__approaches\s*\{([^}]*)\}", css)
+        item = re.search(r"\.ja-concept__approaches article\s*\{([^}]*)\}", css)
+        self.assertIsNotNone(grid)
+        self.assertIn("grid-template-columns: repeat(3, minmax(0, 1fr))", grid.group(1))
+        self.assertIsNotNone(item)
+        self.assertIn("border: var(--acs-rule)", item.group(1))
+        self.assertIn("padding: var(--acs-space-5)", item.group(1))
+        self.assertNotIn("border-radius", item.group(1))
+        self.assertNotIn("box-shadow", item.group(1))
+
+        mobile_css = css.split("@media (max-width: 767px)", 1)[1]
+        self.assertIn(".ja-concept__approaches", mobile_css)
+
     def test_lower_page_compatibility_layer_covers_retained_markup(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
