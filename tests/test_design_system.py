@@ -2,7 +2,7 @@ import json
 import shutil
 import subprocess
 import unittest
-from tests.site_test_utils import repo_path
+from tests.site_test_utils import load_page, repo_path
 
 
 class DesignSystemTests(unittest.TestCase):
@@ -182,6 +182,32 @@ console.log(JSON.stringify({ initial, closedEscapeDoesNotFocus, bothOpen, closeK
             self.assertIn(token, css)
         self.assertIn("prefers-reduced-motion: reduce", css)
         self.assertIn(":focus-visible", css)
+
+    def test_reduced_motion_contract_disables_smooth_scroll_and_animation(self):
+        css = repo_path("assets/css/acs-core.css").read_text(encoding="utf-8")
+        reduced_motion = css.split("@media (prefers-reduced-motion: reduce)", 1)[1]
+        for declaration in (
+            "scroll-behavior: auto",
+            "animation-duration: 0.01ms !important",
+            "animation-iteration-count: 1 !important",
+            "transition-duration: 0.01ms !important",
+        ):
+            self.assertIn(declaration, reduced_motion)
+
+    def test_japanese_menu_and_faq_use_native_keyboard_controls(self):
+        for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
+            page = load_page(page_path)
+            menu_toggles = [
+                element["attrs"]
+                for element in page.elements
+                if element["tag"] == "button" and "data-menu-toggle" in element["attrs"]
+            ]
+            self.assertEqual(1, len(menu_toggles), page_path)
+            self.assertEqual("button", menu_toggles[0].get("type"))
+
+        for page_path in ("ja/index.html", "ja/faq.html"):
+            html = repo_path(page_path).read_text(encoding="utf-8")
+            self.assertRegex(html, r"<details>\s*<summary>")
 
     def test_site_header_uses_required_mobile_and_desktop_heights(self):
         css = repo_path("assets/css/acs-core.css").read_text(encoding="utf-8")

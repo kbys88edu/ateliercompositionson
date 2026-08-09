@@ -25,8 +25,11 @@ class InternalReferenceTests(unittest.TestCase):
                 if target is not None:
                     self.assertTrue(target.exists(), f"{page_path}: {raw_target}")
 
-    def test_changed_pages_declare_the_shared_favicon(self):
-        for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
+    def test_qa_and_cta_pages_declare_the_shared_favicon(self):
+        for page_path in (
+            "ja/index.html", "ja/profile.html", "ja/faq.html",
+            "ja/booking.html", "ja/mail-correction.html",
+        ):
             page = load_page(page_path)
             icons = [
                 element["attrs"].get("href")
