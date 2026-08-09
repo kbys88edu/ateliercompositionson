@@ -1,13 +1,21 @@
 (function () {
+  var openMenuCount = 0;
+
   function initMenu(root) {
     var toggle = root.querySelector("[data-menu-toggle]");
     var panel = root.querySelector("[data-menu-panel]");
     if (!toggle || !panel) return;
 
+    var isOpen = false;
+
     function setOpen(open) {
+      if (isOpen !== open) {
+        isOpen = open;
+        openMenuCount += open ? 1 : -1;
+      }
       toggle.setAttribute("aria-expanded", String(open));
       panel.hidden = !open;
-      document.documentElement.classList.toggle("acs-menu-open", open);
+      document.documentElement.classList.toggle("acs-menu-open", openMenuCount > 0);
     }
 
     toggle.addEventListener("click", function () {
@@ -19,7 +27,7 @@
     });
 
     document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && isOpen) {
         setOpen(false);
         toggle.focus();
       }
