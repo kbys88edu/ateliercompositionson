@@ -25,6 +25,16 @@ class InternalReferenceTests(unittest.TestCase):
                 if target is not None:
                     self.assertTrue(target.exists(), f"{page_path}: {raw_target}")
 
+    def test_changed_pages_declare_the_shared_favicon(self):
+        for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
+            page = load_page(page_path)
+            icons = [
+                element["attrs"].get("href")
+                for element in page.elements
+                if element["tag"] == "link" and element["attrs"].get("rel") == "icon"
+            ]
+            self.assertEqual(["../images/acs-logo.png"], icons)
+
     def test_profile_and_faq_have_unique_japanese_metadata_and_booking_ctas(self):
         expected = {
             "ja/profile.html": {

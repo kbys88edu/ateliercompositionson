@@ -183,6 +183,13 @@ console.log(JSON.stringify({ initial, closedEscapeDoesNotFocus, bothOpen, closeK
         self.assertIn("prefers-reduced-motion: reduce", css)
         self.assertIn(":focus-visible", css)
 
+    def test_site_header_uses_required_mobile_and_desktop_heights(self):
+        css = repo_path("assets/css/acs-core.css").read_text(encoding="utf-8")
+        self.assertIn(".acs-site-header { position: sticky; top: 0; z-index: 10; height: 76px;", css)
+        self.assertIn(".acs-site-header__inner { height: 100%;", css)
+        mobile_css = css.split("@media (max-width: 767px)", 1)[1]
+        self.assertIn(".acs-site-header { height: 64px; }", mobile_css)
+
     def test_shared_ui_script_contains_accessible_menu_contract(self):
         script_path = repo_path("assets/js/acs-ui.js")
         self.assertTrue(script_path.exists())
