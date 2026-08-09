@@ -145,3 +145,32 @@ class JapaneseHomepageTests(unittest.TestCase):
         self.assertTrue({
             "../harmony-checker.html", "../counterpoint/", "simple-synth.html",
         }.issubset(hrefs))
+
+    def test_homepage_has_three_selected_works(self):
+        self.assertEqual(3, self.html.count('class="ja-work"'))
+        for title in (
+            "Émergences Résurgences pour orchestre",
+            "Techno Pop / AI Workflow / TouchDesigner MV",
+            "The Cosmic Microwaves Background / Le Fresnoy",
+        ):
+            self.assertIn(title, self.html)
+        self.assertEqual(3, len(self.page.iframes))
+        self.assertTrue(all(frame.get("loading") == "lazy" for frame in self.page.iframes))
+
+    def test_homepage_preserves_three_testimonials(self):
+        for profile in ("50代女性", "30代男性", "10代女性"):
+            self.assertIn(profile, self.html)
+
+    def test_pricing_uses_current_plan_names(self):
+        for plan in ("Foundation", "Individual Session", "Monthly Atelier", "Text Feedback"):
+            self.assertIn(plan, self.html)
+        for old_plan in (">Beginner<", ">Advanced 単発<", ">Advanced 月謝<"):
+            self.assertNotIn(old_plan, self.html)
+
+    def test_homepage_faq_has_four_questions_and_full_faq_link(self):
+        self.assertEqual(4, self.html.count("<details"))
+        self.assertIn('href="faq.html"', self.html)
+
+    def test_mail_feedback_is_secondary(self):
+        tracked = {link.get("data-track"): link.get("href") for link in self.page.links if link.get("data-track")}
+        self.assertEqual("mail-correction.html?request=mail-correction#form", tracked["mail_feedback"])
