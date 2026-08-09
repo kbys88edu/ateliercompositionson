@@ -65,3 +65,25 @@ class JapaneseHomepageTests(unittest.TestCase):
             "これから始める / 基礎から", "独学・制作中", "専門・受験・ポートフォリオ",
         ):
             self.assertIn(text, self.html)
+
+    def test_study_groups_preserve_six_lesson_routes(self):
+        expected = {
+            "composition-lesson.html", "dtm-lesson.html",
+            "music-theory-lesson_with_pdf-link.html", "solfege.html",
+            "electroacoustic-lesson.html", "sound-technology-ai-lesson.html",
+        }
+        hrefs = {link.get("href") for link in self.page.links}
+        self.assertTrue(expected.issubset(hrefs))
+        self.assertEqual(3, self.html.count('class="ja-study-family"'))
+
+    def test_process_has_exactly_three_steps(self):
+        self.assertEqual(3, self.html.count('class="ja-process__step"'))
+        for label in ("相談", "個別レッスン", "次の制作・学習へ"):
+            self.assertIn(label, self.html)
+
+    def test_teacher_summary_links_to_full_profile(self):
+        self.assertIn('src="../images/profile.png"', self.html)
+        self.assertIn('href="profile.html"', self.html)
+        profile = repo_path("ja/profile.html").read_text(encoding="utf-8")
+        for credential in ("Master of Arts HES-SO", "2021–2022年", "Klangforum Wien", "impuls International Composition Competition 2023"):
+            self.assertIn(credential, profile)
