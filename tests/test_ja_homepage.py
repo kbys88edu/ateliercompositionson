@@ -48,6 +48,36 @@ class JapaneseHomepageTests(unittest.TestCase):
         ):
             self.assertNotIn(class_name, self.html)
 
+    def test_kinetic_hero_uses_shared_video(self):
+        visual = next(
+            element["attrs"] for element in self.page.elements
+            if element["tag"] == "div"
+            and "ja-kinetic-hero__visual" in element["attrs"].get("class", "").split()
+        )
+        self.assertEqual("true", visual.get("aria-hidden"))
+
+        video = next(
+            element["attrs"] for element in self.page.elements
+            if element["tag"] == "video"
+            and "ja-kinetic-hero__video" in element["attrs"].get("class", "").split()
+        )
+        for attribute in ("autoplay", "muted", "loop", "playsinline"):
+            self.assertIn(attribute, video)
+        self.assertEqual("metadata", video.get("preload"))
+
+        source = next(
+            element["attrs"] for element in self.page.elements
+            if element["tag"] == "source"
+            and element["attrs"].get("type") == "video/mp4"
+        )
+        self.assertEqual("../assets/video/fr-hero-micro-movement.mp4", source.get("src"))
+        for text in (
+            "作曲 / DTM / 音楽理論 / 電子音響",
+            "オンライン個人レッスン · 60分 · 4800円から",
+            "無料相談では、現在の課題、最初に取り組む内容、無理のない学習ペースを一緒に整理します。",
+        ):
+            self.assertIn(text, self.html)
+
     def test_header_has_restrained_navigation(self):
         for label in ("レッスン", "講師", "料金", "受講者の声", "無料相談"):
             self.assertIn(label, self.html)
@@ -61,10 +91,23 @@ class JapaneseHomepageTests(unittest.TestCase):
     def test_trust_and_audience_are_concise(self):
         for text in (
             "ジュネーブ高等音楽院", "IRCAM作曲研究課程",
-            "スイスの音楽院での指導経験", "日本・スイス・フランスでの制作実践",
+            "スイスの音楽院での", "指導経験", "日本・スイス・フランスでの", "制作実践",
             "これから始める / 基礎から", "独学・制作中", "専門・受験・ポートフォリオ",
         ):
             self.assertIn(text, self.html)
+
+    def test_trust_strip_uses_numbered_caption_items(self):
+        self.assertEqual(4, self.html.count('class="ja-trust__item"'))
+        for index in ("01", "02", "03", "04"):
+            self.assertIn(f'<span class="ja-trust__index" aria-hidden="true">{index}</span>', self.html)
+        for text in (
+            "ジュネーブ高等音楽院", "音楽教育修士",
+            "IRCAM作曲研究課程", "2021-2022",
+            "スイスの音楽院での", "指導経験",
+            "日本・スイス・フランスでの", "制作実践",
+        ):
+            self.assertIn(text, self.html)
+        self.assertNotIn("BACKGROUND / PRACTICE", self.html)
 
     def test_study_groups_preserve_six_lesson_routes(self):
         expected = {
@@ -248,20 +291,9 @@ class JapaneseHomepageTests(unittest.TestCase):
             self.assertIn(f"<summary>{question}</summary>", faq_html)
 
     def test_images_have_complete_loading_contracts(self):
-        hero = self.page.images[0]
-        self.assertEqual("../images/sachie_studio.jpg", hero.get("src"))
-        self.assertEqual("スタジオで制作する講師 Sachie Kobayashi", hero.get("alt"))
-        self.assertEqual("1200", hero.get("width"))
-        self.assertEqual("900", hero.get("height"))
-        self.assertEqual("high", hero.get("fetchpriority"))
-        self.assertEqual("async", hero.get("decoding"))
-        self.assertNotIn("loading", hero)
-
         for image in self.page.images:
             self.assertIn("alt", image)
             self.assertTrue(image.get("width") and image.get("height"), image.get("src"))
-
-        for image in self.page.images[1:]:
             self.assertEqual("lazy", image.get("loading"), image.get("src"))
             self.assertEqual("async", image.get("decoding"), image.get("src"))
 

@@ -23,7 +23,7 @@
 <body>
 <header class="acs-site-header" data-menu>
   <div class="acs-container--wide acs-site-header__inner">
-    <a class="acs-site-header__brand" aria-label="Atelier Composition Son" href="#top"><span class="acs-site-header__brand-full" aria-hidden="true">Atelier Composition Son</span><span class="acs-site-header__brand-short" aria-hidden="true">ACS</span></a>
+    <a class="acs-site-header__brand" aria-label="Atelier Composition Son" href="#top"><img class="acs-site-header__logo" src="../images/acs-logo.png" alt="" width="306" height="509" loading="lazy" decoding="async"><span class="acs-site-header__brand-full" aria-hidden="true">Atelier Composition Son</span><span class="acs-site-header__brand-short" aria-hidden="true">ACS</span></a>
     <nav class="acs-site-nav" aria-label="メインメニュー">
       <a href="#study">レッスン</a>
       <a href="#instructor">講師</a>
@@ -48,35 +48,50 @@
 </header>
 
 <main id="top">
-  <section class="ja-home-hero" aria-labelledby="home-title">
-    <div class="acs-container--wide ja-home-hero__grid">
-      <div class="ja-home-hero__copy">
+  <section class="ja-kinetic-hero" aria-labelledby="home-title">
+    <div class="ja-kinetic-hero__visual" aria-hidden="true">
+      <video class="ja-kinetic-hero__video" autoplay muted loop playsinline preload="metadata">
+        <source src="../assets/video/fr-hero-micro-movement.mp4" type="video/mp4">
+      </video>
+      <span class="ja-kinetic-word ja-kinetic-word--atelier"><span class="ja-kinetic-word__motion"><span class="ja-kinetic-letter">a</span><span class="ja-kinetic-letter">t</span><span class="ja-kinetic-letter">e</span><span class="ja-kinetic-letter">l</span><span class="ja-kinetic-letter">i</span><span class="ja-kinetic-letter">e</span><span class="ja-kinetic-letter">r</span></span></span>
+      <span class="ja-kinetic-word ja-kinetic-word--composition"><span class="ja-kinetic-word__motion"><span class="ja-kinetic-letter">c</span><span class="ja-kinetic-letter">o</span><span class="ja-kinetic-letter">m</span><span class="ja-kinetic-letter">p</span><span class="ja-kinetic-letter">o</span><span class="ja-kinetic-letter">s</span><span class="ja-kinetic-letter">i</span><span class="ja-kinetic-letter">t</span><span class="ja-kinetic-letter">i</span><span class="ja-kinetic-letter">o</span><span class="ja-kinetic-letter">n</span></span></span>
+      <span class="ja-kinetic-word ja-kinetic-word--son"><span class="ja-kinetic-word__motion"><span class="ja-kinetic-letter">s</span><span class="ja-kinetic-letter">o</span><span class="ja-kinetic-letter">n</span></span></span>
+      <span class="ja-kinetic-note">作曲 / DTM / 音楽理論 / 電子音響</span>
+    </div>
+
+    <div class="ja-kinetic-hero__copy">
+      <div class="acs-container--wide">
         <p class="acs-kicker">ATELIER COMPOSITION SON</p>
         <h1 id="home-title">作曲・DTM・音楽理論を、自分の作品につなげる。</h1>
-        <p class="ja-home-hero__lead">Atelier Composition Son は、作曲・理論・音の実践を、個々の制作や学習に合わせて扱う小さなオンラインアトリエです。</p>
-        <div class="ja-home-hero__actions">
-          <a class="acs-btn acs-btn--primary" href="booking.html" data-track="hero_consultation">30分無料相談を予約する</a>
-          <a class="acs-text-link" href="#study" data-track="hero_lessons">レッスンを見る</a>
+        <p class="ja-kinetic-hero__lead">作曲・理論・音の実践を、個々の制作や学習に合わせて扱う小さなオンラインアトリエです。</p>
+        <p class="ja-kinetic-hero__meta">オンライン個人レッスン · 60分 · 4800円から</p>
+        <div class="ja-kinetic-hero__actions">
+          <a class="acs-btn acs-btn--primary" href="booking.html" data-track="hero_consultation">30分無料相談</a>
+          <a class="acs-btn acs-btn--secondary" href="#study" data-track="hero_lessons">レッスンを見る</a>
         </div>
-        <dl class="ja-home-hero__facts" aria-label="レッスン概要">
-          <div><dt>FORMAT</dt><dd>ONLINE</dd></div>
-          <div><dt>STYLE</dt><dd>個人レッスン</dd></div>
-          <div><dt>TIME</dt><dd>60 MIN</dd></div>
-          <div><dt>PRICE</dt><dd>4800円から</dd></div>
-        </dl>
+        <p class="ja-kinetic-hero__note">無料相談では、現在の課題、最初に取り組む内容、無理のない学習ペースを一緒に整理します。</p>
       </div>
-      <figure class="acs-media ja-home-hero__media">
-        <img src="../images/sachie_studio.jpg" width="1200" height="900" alt="スタジオで制作する講師 Sachie Kobayashi" fetchpriority="high" decoding="async">
-      </figure>
     </div>
   </section>
 
   <section id="trust" class="ja-trust" aria-label="講師の背景">
     <div class="acs-container--wide ja-trust__grid">
-      <p>ジュネーブ高等音楽院<br>音楽教育修士</p>
-      <p>IRCAM作曲研究課程<br>2021-2022</p>
-      <p aria-label="スイスの音楽院での指導経験">スイスの音楽院での<br>指導経験</p>
-      <p aria-label="日本・スイス・フランスでの制作実践">日本・スイス・フランスでの<br>制作実践</p>
+      <div class="ja-trust__item">
+        <span class="ja-trust__index" aria-hidden="true">01</span>
+        <p class="ja-trust__copy">ジュネーブ高等音楽院<span>音楽教育修士</span></p>
+      </div>
+      <div class="ja-trust__item">
+        <span class="ja-trust__index" aria-hidden="true">02</span>
+        <p class="ja-trust__copy">IRCAM作曲研究課程<span>2021-2022</span></p>
+      </div>
+      <div class="ja-trust__item">
+        <span class="ja-trust__index" aria-hidden="true">03</span>
+        <p class="ja-trust__copy">スイスの音楽院での<span>指導経験</span></p>
+      </div>
+      <div class="ja-trust__item">
+        <span class="ja-trust__index" aria-hidden="true">04</span>
+        <p class="ja-trust__copy">日本・スイス・フランスでの<span>制作実践</span></p>
+      </div>
     </div>
   </section>
 
@@ -95,7 +110,7 @@
   <section id="study" class="acs-section ja-study" aria-labelledby="study-title">
     <div class="acs-container">
       <p class="acs-kicker">WHAT YOU CAN STUDY</p>
-      <h2 id="study-title">扱う領域</h2>
+      <h2 id="study-title">レッスン科目</h2>
       <div class="ja-study__families">
         <article class="ja-study-family" data-track-group="composition-theory">
           <p class="ja-index">01</p><h3>COMPOSITION / THEORY</h3>

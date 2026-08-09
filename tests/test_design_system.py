@@ -9,21 +9,10 @@ from tests.site_test_utils import load_page, repo_path
 class DesignSystemTests(unittest.TestCase):
     def test_homepage_h1_uses_h1_token_and_tablet_geometry_contract(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
-        h1_rule = re.search(r"\.ja-home-hero h1\s*\{([^}]*)\}", css)
+        h1_rule = re.search(r"\.ja-kinetic-hero h1\s*\{([^}]*)\}", css)
         self.assertIsNotNone(h1_rule)
         self.assertIn("font-size: var(--acs-h1)", h1_rule.group(1))
         self.assertNotIn("--acs-display", h1_rule.group(1))
-        hero_media = re.search(r"\.ja-home-hero__media\s*\{([^}]*)\}", css)
-        self.assertIn("margin: 0", hero_media.group(1))
-
-        tablet_query = "@media (min-width: 768px) and (max-width: 1023px)"
-        self.assertIn(tablet_query, css)
-        tablet_css = css.split(tablet_query, 1)[1]
-        tablet_grid = re.search(r"\.ja-home-hero__grid\s*\{([^}]*)\}", tablet_css)
-        tablet_media = re.search(r"\.ja-home-hero__media\s*\{([^}]*)\}", tablet_css)
-        self.assertIn("grid-template-columns: 1fr", tablet_grid.group(1))
-        self.assertIn("order: -1", tablet_media.group(1))
-        self.assertIn("aspect-ratio: 16 / 9", tablet_media.group(1))
 
     def test_profile_portrait_uses_intrinsic_ratio_without_fixed_height(self):
         profile = load_page("ja/profile.html")
@@ -111,22 +100,54 @@ class DesignSystemTests(unittest.TestCase):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
         html = repo_path("ja/index.html").read_text(encoding="utf-8")
         for class_name in (
-            "acs-kicker", "ja-home-hero__facts", "ja-trust",
+            "acs-kicker", "ja-kinetic-hero", "ja-kinetic-hero__visual", "ja-trust",
             "ja-trust__grid", "ja-who", "ja-who__paths", "ja-index",
         ):
             self.assertIn(class_name, html)
         for selector in (
-            ".acs-kicker", ".ja-home-hero h1", ".ja-home-hero__facts",
-            ".ja-home-hero__facts > div", ".ja-trust", ".ja-trust__grid",
+            ".acs-kicker", ".ja-kinetic-hero h1", ".ja-kinetic-hero__visual",
+            ".ja-kinetic-hero__copy", ".ja-trust", ".ja-trust__grid",
             ".ja-who", ".ja-who__paths", ".ja-who__paths article", ".ja-index",
         ):
             self.assertIn(selector, css)
 
-    def test_mobile_hero_explicitly_orders_media_before_copy(self):
+    def test_japanese_kinetic_hero_respects_motion_and_mobile_contract(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        visual = re.search(r"\.ja-kinetic-hero__visual\s*\{([^}]*)\}", css)
+        self.assertIsNotNone(visual)
+        self.assertIn("height: clamp(390px, 42.85vw, 720px)", visual.group(1))
+
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
-        self.assertIn(".ja-home-hero__media { order: -1;", mobile_css)
-        self.assertIn(".ja-home-hero__copy { order: 0;", mobile_css)
+        mobile_visual = re.search(r"\.ja-kinetic-hero__visual\s*\{([^}]*)\}", mobile_css)
+        mobile_actions = re.search(r"\.ja-kinetic-hero__actions\s*\{([^}]*)\}", mobile_css)
+        mobile_button = re.search(r"\.ja-kinetic-hero__actions \.acs-btn\s*\{([^}]*)\}", mobile_css)
+        self.assertIn("height: 230px", mobile_visual.group(1))
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", mobile_actions.group(1))
+        self.assertIn("min-height: 44px", mobile_button.group(1))
+
+        reduced_query = "@media (prefers-reduced-motion: reduce)"
+        self.assertIn(reduced_query, css)
+        reduced_css = css.split(reduced_query, 1)[1]
+        reduced_video = re.search(r"\.ja-kinetic-hero__video\s*\{([^}]*)\}", reduced_css)
+        self.assertIn("display: none", reduced_video.group(1))
+        self.assertIn("animation: none", reduced_css)
+
+    def test_trust_strip_uses_caption_grid_geometry(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        desktop_grid = re.search(r"\.ja-trust__grid\s*\{([^}]*)\}", css)
+        item = re.search(r"\.ja-trust__item\s*\{([^}]*)\}", css)
+        index = re.search(r"\.ja-trust__index\s*\{([^}]*)\}", css)
+        self.assertIsNotNone(desktop_grid)
+        self.assertIn("grid-template-columns: repeat(4, minmax(0, 1fr))", desktop_grid.group(1))
+        self.assertIsNotNone(item)
+        self.assertIn("border-top: var(--acs-rule)", item.group(1))
+        self.assertIsNotNone(index)
+        self.assertIn("color: var(--acs-muted)", index.group(1))
+
+        mobile_css = css.split("@media (max-width: 767px)", 1)[1]
+        mobile_grid = re.search(r"\.ja-trust__grid\s*\{([^}]*)\}", mobile_css)
+        self.assertIsNotNone(mobile_grid)
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", mobile_grid.group(1))
 
     def test_lower_page_compatibility_layer_covers_retained_markup(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
@@ -150,7 +171,7 @@ class DesignSystemTests(unittest.TestCase):
         self.assertTrue(css_path.exists())
         css = css_path.read_text(encoding="utf-8")
         for selector in (
-            ".ja-home-hero__eyebrow", ".ja-home-hero__copy",
+            ".ja-kinetic-hero__visual", ".ja-kinetic-hero__copy",
             ".ja-home-trust__title", ".ja-home-trust__copy",
             ".ja-home-audience__item", ".ja-home-audience__title",
             ".ja-home-audience__copy", ".ja-home-audience__link",
