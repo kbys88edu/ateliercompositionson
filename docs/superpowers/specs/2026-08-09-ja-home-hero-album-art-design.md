@@ -16,10 +16,19 @@ Replace the current portrait-led homepage hero with an anonymous, contemporary c
 
 - Use a seamless pure-white background that blends into the website.
 - Build the image primarily from neutral black, white, and cool gray.
-- Introduce rainbow color through optical interference, spectral refraction, translucent light bands, and subtle chromatic aberration.
-- Keep the color luminous and restrained within the monochrome composition.
-- Use fine grids, waveform fragments, spectrogram traces, score fragments, patch cables, and precise digital glitch structures.
+- Organize the composition into three clear visual layers: solid black forms, white negative space, and spectral light.
+- Introduce rainbow color as one decisive spectral band that crosses the composition and binds the musical information together.
+- Integrate spectrogram traces, waveform fragments, abstract five-line notation, and chromatic aberration into that band rather than scattering them as separate decoration.
+- Use cyan, electric blue, violet, and magenta as the main spectral colors. Limit red, yellow, and amber to very small high-frequency accents.
+- Reduce minor dots, grids, and thin construction lines so each remaining element carries visual weight.
 - Prefer asymmetry, layered depth, negative space, and cropped forms associated with contemporary experimental-music packaging.
+
+## Musical Hierarchy
+
+- Crop the modular synthesizer, patch cables, control knobs, and performing hands slightly larger than in the current version.
+- Make the performer a fragmented black shape rather than a photographic portrait.
+- Let the spectral band behave like a visual score: waveform density, spectrogram energy, and notation fragments should change rhythmically across its length.
+- Keep one primary visual event instead of several equally weighted decorative clusters.
 
 ## Avoid
 
