@@ -480,17 +480,6 @@
 
       error.classList.remove("is-visible");
     });
-
-    document.querySelectorAll("[data-track]").forEach(function(element) {
-      element.addEventListener("click", function() {
-        if (typeof gtag === "function") {
-          gtag("event", element.dataset.track, {
-            page_location: window.location.href,
-            link_text: element.textContent.trim()
-          });
-        }
-      });
-    });
   </script>
   <script defer src="../assets/js/acs-tracking.js"></script>
 </body>

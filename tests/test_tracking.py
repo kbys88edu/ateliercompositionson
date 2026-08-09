@@ -278,3 +278,125 @@ console.log(JSON.stringify({ events }));
             },
             json.loads(result.stdout),
         )
+
+    def test_form_pages_emit_only_shared_tracking_after_page_validation(self):
+        node = shutil.which("node")
+        self.assertIsNotNone(node, "Node.js is required for the tracking behavior contract")
+        tracking_path = repo_path("assets/js/acs-tracking.js")
+        booking_path = repo_path("ja/booking.html")
+        correction_path = repo_path("ja/mail-correction.html")
+        harness = r'''
+const fs = require("fs");
+const vm = require("vm");
+
+function makeElement(attributes = {}) {
+  return {
+    attributes,
+    handlers: {},
+    checked: false,
+    dataset: { track: attributes["data-track"] || "" },
+    textContent: attributes.text || "",
+    id: attributes.id || "",
+    classList: { add() {}, contains() { return false; }, remove() {} },
+    getAttribute(name) { return Object.prototype.hasOwnProperty.call(this.attributes, name) ? this.attributes[name] : null; },
+    addEventListener(type, handler) { (this.handlers[type] ||= []).push(handler); },
+    dispatch(type, event) { (this.handlers[type] || []).forEach((handler) => handler(event)); },
+    reportValidity() {},
+    setCustomValidity() {},
+    scrollIntoView() {},
+  };
+}
+
+function inlineScripts(path) {
+  return [...fs.readFileSync(path, "utf8").matchAll(/<script>([\s\S]*?)<\/script>/g)].map((match) => match[1]);
+}
+
+function runFormPage(pagePath, type) {
+  const events = [];
+  const form = makeElement({ id: type === "booking" ? "booking-form" : "" });
+  const submitter = makeElement({
+    "data-track": type === "booking" ? "free_consultation_submit_click" : "submit_mail_correction",
+    text: "Submit",
+  });
+  const interest = makeElement();
+  const error = makeElement({ id: "interest-error" });
+  const requestCheckbox = makeElement({ id: "mail-correction-request" });
+  const documentHandlers = {};
+  const document = {
+    readyState: "complete",
+    documentElement: { classList: { toggle() {} } },
+    getElementById(id) {
+      if (id === "booking-form") return form;
+      if (id === "interest-error") return error;
+      if (id === "mail-correction-request") return requestCheckbox;
+      return null;
+    },
+    querySelector(selector) {
+      return selector === ".correction-form" ? form : null;
+    },
+    querySelectorAll(selector) {
+      if (selector === "a[href]") return [];
+      if (selector === "form") return [form];
+      if (selector === "[data-track]") return [submitter];
+      if (selector === 'input[name="interests[]"]:checked') return interest.checked ? [interest] : [];
+      if (selector === 'input[name="添削したい内容[]"]') return [interest];
+      return [];
+    },
+    addEventListener(type, handler) { (documentHandlers[type] ||= []).push(handler); },
+  };
+  const window = {
+    location: { href: "https://atelier.example/ja/", search: "", origin: "https://atelier.example" },
+    setTimeout() {},
+  };
+  const sessionStorage = { setItem() {}, getItem() { return null; } };
+  const dataLayer = {
+    push(args) {
+      if (args[0] === "event") events.push(args[1]);
+    },
+  };
+  const context = { URL, URLSearchParams, dataLayer, document, sessionStorage, window };
+  vm.createContext(context);
+  inlineScripts(pagePath).forEach((script) => vm.runInContext(script, context));
+  vm.runInContext(fs.readFileSync(process.argv[1], "utf8"), context);
+
+  function submit(valid) {
+    interest.checked = valid;
+    submitter.dispatch("click", { target: submitter });
+    const event = {
+      defaultPrevented: false,
+      submitter,
+      preventDefault() { this.defaultPrevented = true; },
+    };
+    form.dispatch("submit", event);
+  }
+
+  submit(false);
+  const cancelled = events.splice(0);
+  submit(true);
+  return { cancelled, valid: events };
+}
+
+console.log(JSON.stringify({
+  booking: runFormPage(process.argv[2], "booking"),
+  correction: runFormPage(process.argv[3], "correction"),
+}));
+'''
+        result = subprocess.run(
+            [node, "-e", harness, str(tracking_path), str(booking_path), str(correction_path)],
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(
+            {
+                "booking": {
+                    "cancelled": [],
+                    "valid": ["free_consultation_submit_click", "free_consultation_click"],
+                },
+                "correction": {
+                    "cancelled": [],
+                    "valid": ["submit_mail_correction"],
+                },
+            },
+            json.loads(result.stdout),
+        )
