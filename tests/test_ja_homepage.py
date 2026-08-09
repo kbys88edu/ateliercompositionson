@@ -230,6 +230,12 @@ class JapaneseHomepageTests(unittest.TestCase):
             self.assertEqual("lazy", image.get("loading"), image.get("src"))
             self.assertEqual("async", image.get("decoding"), image.get("src"))
 
+    def test_shared_assets_are_loaded_once(self):
+        self.assertEqual(1, self.page.stylesheets.count("../assets/css/acs-core.css"))
+        self.assertEqual(1, self.page.stylesheets.count("../assets/css/ja-home.css"))
+        self.assertEqual(1, self.page.scripts.count("../assets/js/acs-ui.js"))
+        self.assertEqual(1, self.page.scripts.count("../assets/js/acs-tracking.js"))
+
     def test_mail_feedback_is_secondary(self):
         tracked = {link.get("data-track"): link.get("href") for link in self.page.links if link.get("data-track")}
         self.assertEqual("mail-correction.html?request=mail-correction#form", tracked["mail_feedback"])
