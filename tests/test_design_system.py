@@ -3,6 +3,17 @@ from tests.site_test_utils import repo_path
 
 
 class DesignSystemTests(unittest.TestCase):
+    def test_shared_stylesheet_exposes_required_components(self):
+        css_path = repo_path("assets/css/acs-core.css")
+        self.assertTrue(css_path.exists())
+        css = css_path.read_text(encoding="utf-8")
+        for selector in (
+            ".acs-container", ".acs-section", ".acs-btn", ".acs-btn--primary",
+            ".acs-text-link", ".acs-site-header", ".acs-menu-toggle",
+            ".acs-rule-list", ".acs-media", ".acs-faq",
+        ):
+            self.assertIn(selector, css)
+
     def test_shared_stylesheet_defines_approved_tokens(self):
         css_path = repo_path("assets/css/acs-core.css")
         self.assertTrue(css_path.exists())
