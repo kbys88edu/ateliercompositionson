@@ -8,6 +8,7 @@ class ParsedPage(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.ids = []
+        self.elements = []
         self.headings = []
         self.links = []
         self.images = []
@@ -18,6 +19,7 @@ class ParsedPage(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
+        self.elements.append({"tag": tag, "attrs": values})
         if values.get("id"):
             self.ids.append(values["id"])
         if tag in {"h1", "h2", "h3"}:

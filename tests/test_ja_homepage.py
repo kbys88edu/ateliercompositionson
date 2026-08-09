@@ -74,10 +74,18 @@ class JapaneseHomepageTests(unittest.TestCase):
         }
         hrefs = {link.get("href") for link in self.page.links}
         self.assertTrue(expected.issubset(hrefs))
-        self.assertEqual(3, self.html.count('class="ja-study-family"'))
+        families = [
+            element for element in self.page.elements
+            if "ja-study-family" in element["attrs"].get("class", "").split()
+        ]
+        self.assertEqual(3, len(families))
 
     def test_process_has_exactly_three_steps(self):
-        self.assertEqual(3, self.html.count('class="ja-process__step"'))
+        steps = [
+            element for element in self.page.elements
+            if "ja-process__step" in element["attrs"].get("class", "").split()
+        ]
+        self.assertEqual(3, len(steps))
         for label in ("相談", "個別レッスン", "次の制作・学習へ"):
             self.assertIn(label, self.html)
 
@@ -87,3 +95,41 @@ class JapaneseHomepageTests(unittest.TestCase):
         profile = repo_path("ja/profile.html").read_text(encoding="utf-8")
         for credential in ("Master of Arts HES-SO", "2021–2022年", "Klangforum Wien", "impuls International Composition Competition 2023"):
             self.assertIn(credential, profile)
+
+    def test_task_four_sections_use_connected_design_system_selectors(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        for selector in (
+            ".ja-study__families", ".ja-study-family", ".ja-study-family > a",
+            ".ja-process__list", ".ja-process__step",
+        ):
+            self.assertIn(selector, css)
+        self.assertIn("min-height: 44px", css)
+
+    def test_instructor_uses_one_constrained_grid(self):
+        instructor = next(
+            element for element in self.page.elements
+            if element["attrs"].get("id") == "instructor"
+        )
+        self.assertNotIn("ja-home-instructor", instructor["attrs"].get("class", "").split())
+        grids = [
+            element for element in self.page.elements
+            if "ja-home-instructor" in element["attrs"].get("class", "").split()
+        ]
+        self.assertEqual(1, len(grids))
+
+    def test_concept_and_tools_keep_unique_homepage_paths(self):
+        self.assertIn("concept", self.page.ids)
+        self.assertIn("tools", self.page.ids)
+        for text in (
+            "レッスンを、創作の場として。",
+            "受講者自身の感覚・関心・音の記憶から出発します。",
+            "そのすべてを、作品をつくるための手段として扱います。",
+            "一般的な作曲・DTMレッスンよりも、個人の創作プロセスに深く関わります。",
+            "音楽的な判断や作曲上の意図までは完全には扱えません。",
+            "メール添削レッスンまたは通常レッスンで、考え方から個別に扱います。",
+        ):
+            self.assertIn(text, self.html)
+        hrefs = {link.get("href") for link in self.page.links}
+        self.assertTrue({
+            "../harmony-checker.html", "../counterpoint/", "simple-synth.html",
+        }.issubset(hrefs))
