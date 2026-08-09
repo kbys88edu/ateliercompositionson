@@ -54,6 +54,10 @@ class JapaneseHomepageTests(unittest.TestCase):
         for old_primary_label in ("AI添削", "学習ツール", "規約", "お問い合わせ"):
             self.assertNotIn(f">{old_primary_label}</a>", self.html)
 
+    def test_mobile_menu_uses_stable_accessible_label(self):
+        self.assertIn('aria-label="メニュー"', self.html)
+        self.assertNotIn('aria-label="メニューを開く"', self.html)
+
     def test_trust_and_audience_are_concise(self):
         for text in (
             "ジュネーブ高等音楽院", "IRCAM作曲研究課程",

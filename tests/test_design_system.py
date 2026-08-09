@@ -6,6 +6,44 @@ from tests.site_test_utils import repo_path
 
 
 class DesignSystemTests(unittest.TestCase):
+    def test_task_3_opening_markup_uses_composed_styles(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        html = repo_path("ja/index.html").read_text(encoding="utf-8")
+        for class_name in (
+            "acs-kicker", "ja-home-hero__facts", "ja-trust",
+            "ja-trust__grid", "ja-who", "ja-who__paths", "ja-index",
+        ):
+            self.assertIn(class_name, html)
+        for selector in (
+            ".acs-kicker", ".ja-home-hero h1", ".ja-home-hero__facts",
+            ".ja-home-hero__facts > div", ".ja-trust", ".ja-trust__grid",
+            ".ja-who", ".ja-who__paths", ".ja-who__paths article", ".ja-index",
+        ):
+            self.assertIn(selector, css)
+
+    def test_mobile_hero_explicitly_orders_media_before_copy(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        mobile_css = css.split("@media (max-width: 767px)", 1)[1]
+        self.assertIn(".ja-home-hero__media { order: -1;", mobile_css)
+        self.assertIn(".ja-home-hero__copy { order: 0;", mobile_css)
+
+    def test_lower_page_compatibility_layer_covers_retained_markup(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        mobile_css = css.split("@media (max-width: 767px)", 1)[1]
+        for selector in (
+            "main .section-grid", "main .section-grid h2", "main .section-kicker",
+            "main .text-block", "main .cards", "main .card", "main .modules",
+            "main .module", "main .voices-grid", "main .voice-card",
+            "main .price-grid", "main .price-card", "main .btn", "main .faq",
+            "main .teacher-photo",
+        ):
+            self.assertIn(selector, css)
+        for selector in (
+            "main .section-grid", "main .cards", "main .modules",
+            "main .voices-grid", "main .price-grid",
+        ):
+            self.assertIn(selector, mobile_css)
+
     def test_ja_home_stylesheet_composes_all_homepage_sections(self):
         css_path = repo_path("assets/css/ja-home.css")
         self.assertTrue(css_path.exists())
