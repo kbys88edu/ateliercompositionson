@@ -136,7 +136,7 @@ documentHandlers.click({
   target: { closest(selector) { return selector === "a[href]" ? link : null; } },
   preventDefault() { prevented = true; },
 });
-formHandlers.submit();
+formHandlers.submit({ defaultPrevented: false, submitter: null });
 console.log(JSON.stringify({ events, prevented }));
 '''
         result = subprocess.run(
@@ -207,6 +207,74 @@ console.log(JSON.stringify({ callbackCount: callbacks.length, afterFirstCallback
                 "callbackCount": 2,
                 "afterFirstCallback": "https://atelier.example/ja/",
                 "finalHref": "https://atelier.example/ja/booking.html",
+            },
+            json.loads(result.stdout),
+        )
+
+    def test_form_tracking_skips_cancelled_submits_and_uses_explicit_events(self):
+        node = shutil.which("node")
+        self.assertIsNotNone(node, "Node.js is required for the tracking behavior contract")
+        script_path = repo_path("assets/js/acs-tracking.js")
+        harness = r'''
+const fs = require("fs");
+const vm = require("vm");
+
+const events = [];
+function makeElement(attributes = {}) {
+  return {
+    attributes,
+    id: attributes.id || "",
+    classList: { contains(name) { return name === "contact-form" && attributes.contactForm; } },
+    getAttribute(name) { return Object.prototype.hasOwnProperty.call(this.attributes, name) ? this.attributes[name] : null; },
+    addEventListener(type, handler) { this.submitHandler = handler; },
+  };
+}
+const cancelledForm = makeElement({ id: "cancelled" });
+const consultationForm = makeElement({ id: "consultation" });
+const contactForm = makeElement({ id: "contact", "data-track": "contact_form_submit" });
+const consultationSubmitter = makeElement({ "data-track": "free_consultation_submit_click" });
+const cancelledSubmitter = makeElement({ "data-track": "free_consultation_submit_click" });
+const window = {
+  location: { href: "https://atelier.example/ja/booking.html", search: "", origin: "https://atelier.example" },
+  setTimeout() {},
+};
+const document = {
+  readyState: "complete",
+  querySelectorAll(selector) {
+    if (selector === "a[href]") return [];
+    if (selector === "form") return [cancelledForm, consultationForm, contactForm];
+    return [];
+  },
+  addEventListener() {},
+};
+const sessionStorage = { setItem() {}, getItem() { return null; } };
+function gtag(kind, name, payload) {
+  events.push(name);
+  payload.event_callback();
+}
+
+vm.runInNewContext(fs.readFileSync(process.argv[1], "utf8"), {
+  URL, URLSearchParams, document, gtag, sessionStorage, window,
+});
+cancelledForm.submitHandler({ defaultPrevented: true, submitter: cancelledSubmitter });
+consultationForm.submitHandler({ defaultPrevented: false, submitter: consultationSubmitter });
+contactForm.submitHandler({ defaultPrevented: false, submitter: null });
+console.log(JSON.stringify({ events }));
+'''
+        result = subprocess.run(
+            [node, "-e", harness, str(script_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(
+            {
+                "events": [
+                    "free_consultation_submit_click",
+                    "free_consultation_click",
+                    "contact_form_submit",
+                    "contact_click",
+                ],
             },
             json.loads(result.stdout),
         )

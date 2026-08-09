@@ -63,15 +63,15 @@
     try { return new URL(href, window.location.href).origin !== window.location.origin; } catch (error) { return false; }
   }
 
-  function isContact(link) {
+  function isContact(link, explicitEvent) {
     var href = link.getAttribute("href") || "";
-    var track = link.getAttribute("data-track") || "";
+    var track = explicitEvent || link.getAttribute("data-track") || "";
     return href.indexOf("mailto:") === 0 || href.indexOf("#contact") >= 0 || track.indexOf("email") >= 0 || track.indexOf("contact") >= 0;
   }
 
-  function isFreeConsultation(link) {
+  function isFreeConsultation(link, explicitEvent) {
     var href = link.getAttribute("href") || "";
-    var track = link.getAttribute("data-track") || "";
+    var track = explicitEvent || link.getAttribute("data-track") || "";
     return href.indexOf("booking.html") >= 0 || track.indexOf("consultation") >= 0 || track.indexOf("booking") >= 0;
   }
 
@@ -150,13 +150,23 @@
     }, true);
 
     document.querySelectorAll("form").forEach(function (form) {
-      form.addEventListener("submit", function () {
-        var name = form.getAttribute("data-track-submit") || (form.classList.contains("contact-form") ? "contact_click" : "form_submit");
-        sendGaEvent(name, {
+      form.addEventListener("submit", function (event) {
+        if (event.defaultPrevented) return;
+        var submitter = event.submitter;
+        var submitterTrack = submitter && submitter.getAttribute ? submitter.getAttribute("data-track") || "" : "";
+        var explicitEvent = submitterTrack || form.getAttribute("data-track") || "";
+        var fallbackEvent = form.getAttribute("data-track-submit") || (form.classList.contains("contact-form") ? "contact_click" : "form_submit");
+        var eventName = explicitEvent || fallbackEvent;
+        var canonicalEvents = [];
+        if (isFreeConsultation(form, eventName)) canonicalEvents.push("free_consultation_click");
+        if (isContact(form, eventName)) canonicalEvents.push("contact_click");
+        uniqueEventNames([eventName].concat(canonicalEvents)).forEach(function (name) {
+          sendGaEvent(name, {
           page_location: window.location.href,
           form_id: form.id || "",
           form_name: form.getAttribute("name") || "",
           transport_type: "beacon"
+          });
         });
       });
     });
