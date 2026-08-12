@@ -2,7 +2,7 @@
 
 .ja-kinetic-hero { border-bottom: var(--acs-rule); background: var(--acs-surface); }
 .ja-kinetic-hero__visual { position: relative; height: clamp(390px, 42.85vw, 720px); overflow: hidden; border-bottom: var(--acs-rule); background: var(--acs-surface); isolation: isolate; }
-.ja-kinetic-hero__video { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0.3; mix-blend-mode: multiply; pointer-events: none; }
+.ja-kinetic-hero__video { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0.42; mix-blend-mode: multiply; pointer-events: none; }
 .ja-kinetic-hero__visual::before, .ja-kinetic-hero__visual::after { position: absolute; z-index: 1; content: ""; background: var(--acs-ink); }
 .ja-kinetic-hero__visual::before { top: 10%; bottom: 0; left: 7%; width: 1px; transform-origin: top; animation: jaKineticLine 900ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both; }
 .ja-kinetic-hero__visual::after { top: 15%; right: 5vw; width: clamp(100px, 15vw, 230px); height: 1px; transform-origin: right; animation: jaKineticRule 900ms cubic-bezier(0.16, 1, 0.3, 1) 640ms both; }
@@ -69,7 +69,12 @@
 .ja-index { margin: 0; color: var(--acs-muted); font-size: var(--acs-text-sm); }
 
 .ja-study__families { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: var(--acs-space-7); border-top: var(--acs-rule); border-left: var(--acs-rule); }
-.ja-study-family { min-width: 0; padding: var(--acs-space-5); border-right: var(--acs-rule); border-bottom: var(--acs-rule); }
+.ja-study-family { position: relative; min-width: 0; overflow: hidden; padding: var(--acs-space-5); border-right: var(--acs-rule); border-bottom: var(--acs-rule); isolation: isolate; }
+.ja-study-family::before { position: absolute; z-index: 0; inset: 0; content: ""; background-repeat: no-repeat; background-position: center; background-size: cover; opacity: 0.2; filter: grayscale(1); pointer-events: none; }
+.ja-study-family:nth-child(1)::before { background-image: url(../../images/lesson-field-01.jpg); }
+.ja-study-family:nth-child(2)::before { background-image: url(../../images/lesson-field-02.jpg); }
+.ja-study-family:nth-child(3)::before { background-image: url(../../images/lesson-field-03.jpg); }
+.ja-study-family > * { position: relative; z-index: 1; }
 .ja-study-family h3 { margin: var(--acs-space-6) 0 var(--acs-space-4); font-size: var(--acs-h3); font-weight: 500; line-height: 1.35; }
 .ja-study-family > a { min-height: 44px; display: flex; align-items: center; padding-block: var(--acs-space-2); border-top: var(--acs-rule-soft); text-underline-offset: 5px; text-decoration-thickness: 1px; }
 .ja-study-family > p:last-child { margin: var(--acs-space-4) 0 0; color: var(--acs-muted); }
@@ -248,7 +253,7 @@ main .teacher-link a { min-width: 44px; min-height: 44px; display: inline-flex; 
   .ja-home-audience, .ja-home-instructor, .ja-home-pricing { grid-template-columns: 1fr; gap: var(--acs-space-6); }
   .ja-home-trust, .ja-home-study-family, .ja-home-works, .ja-home-voices, .ja-study__families, .ja-concept__approaches, .ja-works__grid, .ja-voices__grid, .ja-pricing__grid, .ja-faq__grid, .ja-final-cta__grid { grid-template-columns: 1fr; }
   .ja-kinetic-hero__visual { height: 230px; }
-  .ja-kinetic-hero__video { opacity: 0.25; }
+  .ja-kinetic-hero__video { opacity: 0.36; }
   .ja-kinetic-hero__visual::before { left: 5vw; }
   .ja-kinetic-hero__visual::after { top: 13%; right: 5vw; width: 74px; }
   .ja-kinetic-word { font-size: clamp(60px, 18vw, 88px); }
@@ -267,7 +272,6 @@ main .teacher-link a { min-width: 44px; min-height: 44px; display: inline-flex; 
   .ja-trust__copy { font-size: 15px; }
   .ja-trust__copy span { font-size: 12px; }
   .ja-who__paths { grid-template-columns: 1fr; gap: var(--acs-space-6); }
-  .ja-study-family { padding-inline: 0; border-inline: 0; }
   .ja-process__step { grid-template-columns: 2.5rem minmax(0, 1fr); row-gap: var(--acs-space-2); }
   .ja-process__step h3, .ja-process__step p { grid-column: 2; }
   .ja-concept__grid { grid-template-columns: 1fr; gap: var(--acs-space-5); }

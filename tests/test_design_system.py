@@ -168,6 +168,39 @@ class DesignSystemTests(unittest.TestCase):
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
         self.assertIn(".ja-concept__approaches", mobile_css)
 
+    def test_study_cards_keep_padding_and_closed_sides_on_mobile(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        grid = re.search(r"\.ja-study__families\s*\{([^}]*)\}", css)
+        card = re.search(r"\.ja-study-family\s*\{([^}]*)\}", css)
+        self.assertIsNotNone(grid)
+        self.assertIsNotNone(card)
+        self.assertIn("border-left: var(--acs-rule)", grid.group(1))
+        self.assertIn("padding: var(--acs-space-5)", card.group(1))
+        self.assertIn("border-right: var(--acs-rule)", card.group(1))
+
+        mobile_css = css.split("@media (max-width: 767px)", 1)[1]
+        mobile_card = re.search(r"\.ja-study-family\s*\{([^}]*)\}", mobile_css)
+        if mobile_card:
+            self.assertNotIn("padding-inline: 0", mobile_card.group(1))
+            self.assertNotIn("border-inline: 0", mobile_card.group(1))
+
+    def test_study_cards_use_independent_high_transparency_backgrounds(self):
+        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        background = re.search(r"\.ja-study-family::before\s*\{([^}]*)\}", css)
+        self.assertIsNotNone(background)
+        self.assertIn("opacity: 0.2", background.group(1))
+        self.assertIn("filter: grayscale(1)", background.group(1))
+        self.assertIn("background-size: cover", background.group(1))
+        for index in (1, 2, 3):
+            asset = f"lesson-field-{index:02d}.jpg"
+            rule = re.search(
+                rf"\.ja-study-family:nth-child\({index}\)::before\s*\{{([^}}]*)\}}",
+                css,
+            )
+            self.assertIsNotNone(rule)
+            self.assertIn(f"url(../../images/{asset})", rule.group(1))
+            self.assertTrue(repo_path(f"images/{asset}").is_file())
+
     def test_lower_page_compatibility_layer_covers_retained_markup(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
