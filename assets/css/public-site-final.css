@@ -1,0 +1,259 @@
+.atelier-split-hero {
+  width: min(100%, 1480px);
+  min-height: clamp(620px, calc(100svh - 76px), 820px);
+  display: grid;
+  grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
+  margin-inline: auto;
+  border-bottom: 1px solid #111;
+  background: #fff;
+  color: #111;
+}
+
+.atelier-split-hero__copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(56px, 7vw, 112px) clamp(32px, 6.5vw, 104px);
+}
+
+.atelier-split-hero__eyebrow {
+  margin: 0 0 28px;
+  color: #626262;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.atelier-split-hero h1 {
+  max-width: 10em;
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 5.8rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.atelier-split-hero--fr h1 {
+  max-width: 11em;
+  font-size: clamp(2.5rem, 4.3vw, 4.9rem);
+  line-height: 1.04;
+}
+
+.atelier-split-hero__lead {
+  max-width: 38rem;
+  margin: 32px 0 0;
+  color: #3f3f3f;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  line-height: 1.9;
+}
+
+.atelier-split-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 38px;
+}
+
+.atelier-split-hero__actions a {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 13px 18px;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.atelier-split-hero__actions a::after {
+  content: "→";
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.atelier-split-hero__actions .acs-btn--primary,
+.atelier-split-hero__actions .primary {
+  background: #111;
+  color: #fff;
+}
+
+.atelier-split-hero__actions a:hover,
+.atelier-split-hero__actions a:focus-visible {
+  background: #e9e9e9;
+  color: #111;
+}
+
+.atelier-split-hero__actions .acs-btn--primary:hover,
+.atelier-split-hero__actions .acs-btn--primary:focus-visible,
+.atelier-split-hero__actions .primary:hover,
+.atelier-split-hero__actions .primary:focus-visible {
+  background: #303030;
+  color: #fff;
+}
+
+.atelier-split-hero__media {
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-left: 1px solid #111;
+  background: #ededed;
+}
+
+.atelier-split-hero__media picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.atelier-split-hero__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 56% center;
+}
+
+.atelier-proof-strip {
+  width: min(100% - 48px, 1380px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 auto;
+  border-bottom: 1px solid #111;
+}
+
+.atelier-proof-strip > * {
+  min-width: 0;
+  margin: 0;
+  padding: 18px 20px;
+  border-left: 1px solid #c9c9c9;
+  color: #333;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.atelier-proof-strip > :first-child {
+  border-left: 0;
+}
+
+.atelier-proof-strip strong {
+  display: block;
+  color: #111;
+  font-weight: 600;
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #1769ff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 980px) {
+  .atelier-split-hero__copy {
+    padding-inline: clamp(28px, 5vw, 56px);
+  }
+
+  .atelier-split-hero h1,
+  .atelier-split-hero--fr h1 {
+    font-size: clamp(2.35rem, 5.3vw, 4.5rem);
+  }
+}
+
+@media (max-width: 767px) {
+  body {
+    font-size: 16px;
+  }
+
+  .atelier-split-hero {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    border-bottom: 0;
+  }
+
+  .atelier-split-hero__copy {
+    padding: 42px 6vw 36px;
+  }
+
+  .atelier-split-hero__eyebrow {
+    margin-bottom: 20px;
+    font-size: 10px;
+  }
+
+  .atelier-split-hero h1,
+  .atelier-split-hero--fr h1 {
+    max-width: 12em;
+    font-size: clamp(2.3rem, 11.5vw, 3.45rem);
+    line-height: 1.08;
+  }
+
+  .atelier-split-hero--fr h1 {
+    font-size: clamp(2.05rem, 9.7vw, 3.05rem);
+  }
+
+  .atelier-split-hero__lead {
+    margin-top: 24px;
+    font-size: 16px;
+    line-height: 1.85;
+  }
+
+  .atelier-split-hero__actions {
+    display: grid;
+    gap: 8px;
+    margin-top: 28px;
+  }
+
+  .atelier-split-hero__actions a {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .atelier-split-hero__media {
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    border-top: 1px solid #111;
+    border-left: 0;
+  }
+
+  .atelier-split-hero__image {
+    object-position: 53% center;
+  }
+
+  .atelier-proof-strip {
+    width: calc(100% - 12vw);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .atelier-proof-strip > * {
+    min-height: 82px;
+    padding: 14px 12px;
+    border-top: 1px solid #c9c9c9;
+    font-size: 11px;
+  }
+
+  .atelier-proof-strip > :nth-child(odd) {
+    border-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atelier-split-hero *,
+  .atelier-proof-strip * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
