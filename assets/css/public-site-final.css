@@ -110,7 +110,7 @@
   margin: 0;
   overflow: hidden;
   border-left: 1px solid #111;
-  background: #ededed;
+  background: #050505;
 }
 
 .atelier-split-hero__media picture {
@@ -124,7 +124,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: 56% center;
+  object-position: left center;
 }
 
 .atelier-proof-strip {
@@ -277,7 +277,7 @@ textarea:focus-visible {
   }
 
   .atelier-split-hero__image {
-    object-position: 53% center;
+    object-position: left center;
   }
 
   .atelier-proof-strip {

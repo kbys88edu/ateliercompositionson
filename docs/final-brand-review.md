@@ -47,12 +47,13 @@ Pricing/resource buttons keep their distinct commercial or utility purpose; repe
 
 ## Image Use
 
-Primary home imagery is documentary photography derived from `images/sachie_studio.jpg` and delivered as:
+Primary home imagery is the supplied performance photograph of Sachie Kobayashi working in front of professional audio equipment, delivered as:
 
-- `images/hero-atelier-documentary.avif`
-- `images/hero-atelier-documentary.webp`
-- `images/hero-atelier-documentary-mobile.avif`
-- `images/hero-atelier-documentary-mobile.webp`
+- `images/hero-atelier-performance.avif`
+- `images/hero-atelier-performance.webp`
+- `images/hero-atelier-performance.png`
+- `images/hero-atelier-performance-mobile.avif`
+- `images/hero-atelier-performance-mobile.webp`
 
 French lesson media uses actual concert, DAW, score, and Max/MSP documentation. The generated collage files `images/computer-music-synth-composition.jpeg` and `images/music-theory-hero.jpeg` are no longer primary French lesson media. Japanese composition and DTM pages retain their subject-specific typographic headers, as requested.
 

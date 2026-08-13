@@ -56,7 +56,7 @@ class JapaneseHomepageTests(unittest.TestCase):
         self.assertEqual("eager", hero_image.get("loading"))
         self.assertEqual("high", hero_image.get("fetchpriority"))
         self.assertEqual("async", hero_image.get("decoding"))
-        self.assertEqual(("2080", "1170"), (hero_image.get("width"), hero_image.get("height")))
+        self.assertEqual(("1200", "1200"), (hero_image.get("width"), hero_image.get("height")))
         for text in (
             "音から考え、作品へ進む。",
             "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。",

@@ -50,6 +50,22 @@ def local_target(page_path, raw_href):
 
 
 class JapaneseFinalTests(unittest.TestCase):
+    def test_japanese_home_uses_performance_hero_photo(self):
+        html = page_html("ja/index.html")
+        for asset in (
+            "hero-atelier-performance-mobile.avif",
+            "hero-atelier-performance-mobile.webp",
+            "hero-atelier-performance.avif",
+            "hero-atelier-performance.webp",
+            "hero-atelier-performance.png",
+        ):
+            self.assertIn(asset, html)
+        self.assertIn(
+            "作曲家Sachie Kobayashiが音響機材を前に制作について説明する様子",
+            html,
+        )
+        self.assertNotIn("hero-atelier-documentary", html)
+
     def test_japanese_home_uses_approved_documentary_split_hero(self):
         page = load_page("ja/index.html")
         html = page_html("ja/index.html")
@@ -59,12 +75,12 @@ class JapaneseFinalTests(unittest.TestCase):
             "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。",
             "制作について相談する",
             "進め方と料金を見る",
-            "作曲家Sachie Kobayashiがスタジオで楽譜と音響制作に取り組む様子",
+            "作曲家Sachie Kobayashiが音響機材を前に制作について説明する様子",
         ):
             self.assertIn(text, html)
         self.assertIn("<picture", html)
-        self.assertIn("hero-atelier-documentary-mobile.avif", html)
-        self.assertIn("hero-atelier-documentary.webp", html)
+        self.assertIn("hero-atelier-performance-mobile.avif", html)
+        self.assertIn("hero-atelier-performance.webp", html)
         self.assertIn('fetchpriority="high"', html)
         self.assertNotIn("ja-kinetic-hero", html)
 
@@ -104,6 +120,22 @@ class JapaneseFinalTests(unittest.TestCase):
 
 
 class FrenchFinalTests(unittest.TestCase):
+    def test_french_home_uses_performance_hero_photo(self):
+        html = page_html("fr/index.html")
+        for asset in (
+            "hero-atelier-performance-mobile.avif",
+            "hero-atelier-performance-mobile.webp",
+            "hero-atelier-performance.avif",
+            "hero-atelier-performance.webp",
+            "hero-atelier-performance.png",
+        ):
+            self.assertIn(asset, html)
+        self.assertIn(
+            "Sachie Kobayashi présentant un travail sonore devant du matériel audio",
+            html,
+        )
+        self.assertNotIn("hero-atelier-documentary", html)
+
     def test_french_home_uses_approved_documentary_split_hero(self):
         page = load_page("fr/index.html")
         html = page_html("fr/index.html")
@@ -116,7 +148,7 @@ class FrenchFinalTests(unittest.TestCase):
             "Atelier individuel de composition, MAO et pratiques sonores, à partir de vos partitions, maquettes, sessions DAW ou questions précises.",
             "Parler d’un projet",
             "Voir le format et le tarif",
-            "Sachie Kobayashi travaillant sur une partition et une production sonore dans son studio",
+            "Sachie Kobayashi présentant un travail sonore devant du matériel audio",
         ):
             self.assertIn(text, html)
         self.assertIn("<picture", html)
