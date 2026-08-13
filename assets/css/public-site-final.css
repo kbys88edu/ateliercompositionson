@@ -9,6 +9,10 @@
   color: #111;
 }
 
+.page .atelier-split-hero {
+  margin-top: 66px;
+}
+
 .atelier-split-hero__copy {
   min-width: 0;
   display: flex;
@@ -212,10 +216,18 @@ textarea:focus-visible {
     font-size: 16px;
   }
 
+  .acs-site-header .acs-mobile-consultation {
+    display: none;
+  }
+
   .atelier-split-hero {
     min-height: 0;
     grid-template-columns: 1fr;
     border-bottom: 0;
+  }
+
+  .page .atelier-split-hero {
+    margin-top: 0;
   }
 
   .atelier-split-hero__copy {

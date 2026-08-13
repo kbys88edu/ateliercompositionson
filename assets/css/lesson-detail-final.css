@@ -28,6 +28,10 @@ body {
   border-bottom: 1px solid var(--detail-ink);
 }
 
+.hero > * {
+  min-width: 0;
+}
+
 .hero h1,
 .hero-copy h1,
 h1,
@@ -102,7 +106,58 @@ main > section:not(.hero) {
   }
 
   .site-header {
+    min-height: 64px;
     padding-inline: 6vw;
+  }
+
+  .site-header .nav {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
+    padding: 0;
+  }
+
+  .site-header .nav > a:not(.nav-cta) {
+    display: none;
+  }
+
+  .site-header .nav > a.brand {
+    display: inline-flex;
+    margin-right: auto;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .site-header > a.brand {
+    display: inline-flex;
+    margin-right: auto;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .site-header > a.brand + .nav {
+    width: auto;
+    flex: 0 0 auto;
+  }
+
+  .site-header .nav-links {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .site-header .nav-links > a:not(.nav-cta) {
+    display: none;
+  }
+
+  .site-header .nav .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .hero {
@@ -115,6 +170,7 @@ main > section:not(.hero) {
   h1 {
     font-size: clamp(2.35rem, 11vw, 4rem);
     line-height: 1.08;
+    overflow-wrap: break-word;
   }
 
   h2 {
