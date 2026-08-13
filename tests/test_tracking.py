@@ -225,6 +225,57 @@ console.log(JSON.stringify({ events, href: attributes.href, prevented }));
             json.loads(result.stdout),
         )
 
+    def test_mailto_uses_one_email_contact_event_with_location(self):
+        node = shutil.which("node")
+        self.assertIsNotNone(node, "Node.js is required for the email tracking contract")
+        script_path = repo_path("assets/js/acs-tracking.js")
+        harness = r'''
+const fs = require("fs");
+const events = [];
+const attributes = {
+  href: "mailto:info@sachiekobayashi.com",
+  "data-track": "email_contact_click",
+  "data-cta-location": "footer"
+};
+const link = {
+  textContent: "Email",
+  getAttribute(name) { return Object.prototype.hasOwnProperty.call(attributes, name) ? attributes[name] : null; },
+  setAttribute(name, value) { attributes[name] = String(value); },
+  hasAttribute(name) { return Object.prototype.hasOwnProperty.call(attributes, name); },
+  get href() { return attributes.href; },
+};
+const window = {
+  location: { href: "https://atelier.example/fr/", search: "", origin: "https://atelier.example" },
+  setTimeout() {},
+};
+const document = {
+  readyState: "complete",
+  querySelectorAll(selector) { return selector === "a[href]" ? [link] : []; },
+  addEventListener(type, handler) { this.clickHandler = handler; },
+};
+const sessionStorage = { setItem() {}, getItem() { return null; } };
+function gtag(kind, name, payload) {
+  events.push({ name, location: payload.cta_location });
+  payload.event_callback();
+}
+eval(fs.readFileSync(process.argv[1], "utf8"));
+document.clickHandler({
+  target: { closest(selector) { return selector === "a[href]" ? link : null; } },
+  preventDefault() {},
+});
+console.log(JSON.stringify(events));
+'''
+        result = subprocess.run(
+            [node, "-e", harness, str(script_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(
+            [{"name": "email_contact_click", "location": "footer"}],
+            json.loads(result.stdout),
+        )
+
     def test_tracker_keeps_outbound_and_form_events(self):
         node = shutil.which("node")
         self.assertIsNotNone(node, "Node.js is required for the tracking behavior contract")
