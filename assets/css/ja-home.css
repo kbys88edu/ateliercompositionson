@@ -108,7 +108,8 @@
 .ja-home-instructor__meta { margin: var(--acs-space-4) 0 0; padding-top: var(--acs-space-4); border-top: var(--acs-rule-soft); color: var(--acs-muted); font-size: var(--acs-text-sm); }
 .ja-home-instructor__actions .acs-text-link { min-height: 44px; display: inline-flex; align-items: center; }
 
-.ja-works__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--acs-space-5); margin-top: var(--acs-space-7); }
+.ja-works__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--acs-space-5); margin-top: var(--acs-space-7); }
+.ja-works__grid > :first-child { grid-column: 1 / -1; }
 .ja-work { min-width: 0; padding-top: var(--acs-space-4); border-top: var(--acs-rule); }
 .ja-work__embed { aspect-ratio: 16 / 9; overflow: hidden; background: var(--acs-paper); }
 .ja-work__embed iframe { width: 100%; height: 100%; border: 0; }
@@ -117,9 +118,11 @@
 .ja-work h3 { margin: var(--acs-space-4) 0 0; font-size: var(--acs-text-lg); font-weight: 500; line-height: 1.4; }
 .ja-works > .acs-container--wide > .acs-text-link, .ja-faq__more { min-height: 44px; display: inline-flex; align-items: center; margin-top: var(--acs-space-5); }
 
-.ja-voices__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--acs-space-5); margin-top: var(--acs-space-7); }
+.ja-voices__grid { display: grid; grid-template-columns: 1fr; margin-top: var(--acs-space-7); border-top: var(--acs-rule); }
 .ja-voice { min-width: 0; padding-top: var(--acs-space-4); border-top: var(--acs-rule); }
+.ja-voices__grid .ja-voice { display: grid; grid-template-columns: minmax(160px, 0.3fr) minmax(220px, 0.5fr) minmax(0, 1fr); gap: var(--acs-space-5); padding-block: var(--acs-space-5); border-top: 0; border-bottom: var(--acs-rule-soft); }
 .ja-voice__profile { margin: 0; color: var(--acs-muted); font-size: var(--acs-text-sm); }
+.ja-voice__detail { display: block; margin-top: var(--acs-space-1); font-size: var(--acs-text-xs); }
 .ja-voice h3 { margin: var(--acs-space-4) 0 0; font-size: var(--acs-h3); font-weight: 500; line-height: 1.35; }
 .ja-voice > p:last-child { margin: var(--acs-space-4) 0 0; color: var(--acs-muted); }
 
@@ -152,10 +155,11 @@
 .ja-concept__quote { margin: var(--acs-space-6) 0 0; padding: var(--acs-space-5) 0; border-block: var(--acs-rule-soft); }
 .ja-concept__quote p { margin: 0; font-size: var(--acs-text-lg); }
 .ja-concept__quote cite { display: block; margin-top: var(--acs-space-2); color: var(--acs-muted); font-size: var(--acs-text-sm); font-style: normal; }
-.ja-concept__approaches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--acs-space-5); margin-top: var(--acs-space-7); }
-.ja-concept__approaches article { min-width: 0; padding: var(--acs-space-5); border: var(--acs-rule); }
+.ja-concept__approaches { display: grid; grid-template-columns: 1fr; margin-top: var(--acs-space-7); border-top: var(--acs-rule); }
+.ja-concept__approaches article { min-width: 0; display: grid; grid-template-columns: 3rem minmax(180px, 0.45fr) minmax(0, 1fr); gap: var(--acs-space-4); align-items: start; padding-block: var(--acs-space-5); border: 0; border-bottom: var(--acs-rule-soft); }
 .ja-concept__approaches h3 { margin: var(--acs-space-5) 0 0; font-size: var(--acs-h3); font-weight: 500; line-height: 1.35; }
 .ja-concept__approaches p { margin: var(--acs-space-3) 0 0; color: var(--acs-muted); }
+.ja-concept__approaches h3, .ja-concept__approaches p { margin-top: 0; }
 
 .ja-tools { padding-block: var(--acs-space-7); background: var(--acs-paper); }
 .ja-tools h2 { margin: 0; font-size: var(--acs-h3); font-weight: 500; line-height: 1.35; }
@@ -193,7 +197,7 @@
 .ja-home-final-cta__title { max-width: 12em; margin: 0; font-size: var(--acs-h1); font-weight: 500; line-height: 1.15; }
 
 /* Temporary bridge for lower homepage sections retained until Tasks 4-5. */
-main > section:not(.ja-kinetic-hero):not(.ja-trust):not(.ja-who):not(.ja-tools):not(.visual-break) { padding-block: var(--acs-space-9); border-top: var(--acs-rule-soft); }
+main > section:not(.ja-kinetic-hero):not(.atelier-split-hero):not(.ja-trust):not(.ja-who):not(.ja-tools):not(.visual-break) { padding-block: var(--acs-space-9); border-top: var(--acs-rule-soft); }
 main .section-grid, main .teacher-inner, main .modules, main .price-section > .container, main .policy-section > .container { width: min(100% - (2 * var(--acs-gutter)), var(--acs-container)); margin-inline: auto; }
 main .section-grid { display: grid; grid-template-columns: minmax(180px, 0.36fr) minmax(0, 1fr); gap: var(--acs-space-8); align-items: start; }
 main .section-grid h2, main .teacher h2, main .section-title { margin: 0; font-size: var(--acs-h2); font-weight: 500; line-height: 1.2; }
@@ -275,6 +279,9 @@ main .teacher-link a { min-width: 44px; min-height: 44px; display: inline-flex; 
   .ja-process__step { grid-template-columns: 2.5rem minmax(0, 1fr); row-gap: var(--acs-space-2); }
   .ja-process__step h3, .ja-process__step p { grid-column: 2; }
   .ja-concept__grid { grid-template-columns: 1fr; gap: var(--acs-space-5); }
+  .ja-concept__approaches article { grid-template-columns: 2.5rem minmax(0, 1fr); row-gap: var(--acs-space-2); }
+  .ja-concept__approaches h3, .ja-concept__approaches p { grid-column: 2; }
+  .ja-voices__grid .ja-voice { grid-template-columns: 1fr; gap: var(--acs-space-3); }
   .ja-tools__item { grid-template-columns: 2rem minmax(0, 1fr); row-gap: var(--acs-space-2); }
   .ja-tools__item h3, .ja-tools__item > p:not(.ja-index), .ja-tools__item a { grid-column: 2; }
   .ja-home-audience__item, .ja-home-study-family__item { padding: var(--acs-space-5) 0; border-inline: 0; }
@@ -288,7 +295,7 @@ main .teacher-link a { min-width: 44px; min-height: 44px; display: inline-flex; 
   .ja-pricing__list > li { grid-template-columns: 1fr; gap: var(--acs-space-2); }
   .ja-pricing__actions { display: grid; }
   .ja-pricing__actions .acs-text-link { width: fit-content; }
-  main > section:not(.ja-kinetic-hero):not(.ja-trust):not(.ja-who):not(.ja-tools):not(.visual-break) { padding-block: var(--acs-space-8); }
+  main > section:not(.ja-kinetic-hero):not(.atelier-split-hero):not(.ja-trust):not(.ja-who):not(.ja-tools):not(.visual-break) { padding-block: var(--acs-space-8); }
   main .section-grid { grid-template-columns: 1fr; gap: var(--acs-space-5); }
   main .cards, main .modules, main .voices-grid, main .price-grid { grid-template-columns: 1fr; }
   main .cards, main .modules, main .price-grid { margin-top: var(--acs-space-6); }

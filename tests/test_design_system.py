@@ -143,15 +143,16 @@ class DesignSystemTests(unittest.TestCase):
         self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", mobile_grid.group(1))
         self.assertIn("gap: 8px", mobile_grid.group(1))
 
-    def test_concept_approaches_use_complete_square_frames(self):
+    def test_concept_approaches_use_editorial_rule_rows(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
         grid = re.search(r"\.ja-concept__approaches\s*\{([^}]*)\}", css)
         item = re.search(r"\.ja-concept__approaches article\s*\{([^}]*)\}", css)
         self.assertIsNotNone(grid)
-        self.assertIn("grid-template-columns: repeat(3, minmax(0, 1fr))", grid.group(1))
+        self.assertIn("grid-template-columns: 1fr", grid.group(1))
+        self.assertIn("border-top: var(--acs-rule)", grid.group(1))
         self.assertIsNotNone(item)
-        self.assertIn("border: var(--acs-rule)", item.group(1))
-        self.assertIn("padding: var(--acs-space-5)", item.group(1))
+        self.assertIn("border-bottom: var(--acs-rule-soft)", item.group(1))
+        self.assertIn("padding-block: var(--acs-space-5)", item.group(1))
         self.assertNotIn("border-radius", item.group(1))
         self.assertNotIn("box-shadow", item.group(1))
 
@@ -211,7 +212,7 @@ class DesignSystemTests(unittest.TestCase):
     def test_ja_home_stylesheet_composes_all_homepage_sections(self):
         css_path = repo_path("assets/css/ja-home.css")
         self.assertTrue(css_path.exists())
-        css = css_path.read_text(encoding="utf-8")
+        css = css_path.read_text(encoding="utf-8") + repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")
         for selector in (
             ".atelier-split-hero", ".atelier-split-hero__copy",
             ".ja-home-trust__title", ".ja-home-trust__copy",

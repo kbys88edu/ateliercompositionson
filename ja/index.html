@@ -10,8 +10,11 @@
   <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/">
   <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/">
   <link rel="icon" href="../images/acs-logo.png" type="image/png">
+  <link rel="preload" as="image" href="../images/hero-atelier-documentary.avif" type="image/avif" media="(min-width: 768px)">
+  <link rel="preload" as="image" href="../images/hero-atelier-documentary-mobile.avif" type="image/avif" media="(max-width: 767px)">
   <link rel="stylesheet" href="../assets/css/acs-core.css">
   <link rel="stylesheet" href="../assets/css/ja-home.css">
+  <link rel="stylesheet" href="../assets/css/public-site-final.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -48,30 +51,25 @@
 </header>
 
 <main id="top">
-  <section class="ja-kinetic-hero" aria-labelledby="home-title">
-    <div class="ja-kinetic-hero__visual" aria-hidden="true">
-      <video class="ja-kinetic-hero__video" autoplay muted loop playsinline preload="metadata">
-        <source src="../assets/video/fr-hero-micro-movement.mp4" type="video/mp4">
-      </video>
-      <span class="ja-kinetic-word ja-kinetic-word--atelier"><span class="ja-kinetic-word__motion"><span class="ja-kinetic-letter">a</span><span class="ja-kinetic-letter">t</span><span class="ja-kinetic-letter">e</span><span class="ja-kinetic-letter">l</span><span class="ja-kinetic-letter">i</span><span class="ja-kinetic-letter">e</span><span class="ja-kinetic-letter">r</span></span></span>
-      <span class="ja-kinetic-word ja-kinetic-word--composition"><span class="ja-kinetic-word__motion"><span class="ja-kinetic-letter">c</span><span class="ja-kinetic-letter">o</span><span class="ja-kinetic-letter">m</span><span class="ja-kinetic-letter">p</span><span class="ja-kinetic-letter">o</span><span class="ja-kinetic-letter">s</span><span class="ja-kinetic-letter">i</span><span class="ja-kinetic-letter">t</span><span class="ja-kinetic-letter">i</span><span class="ja-kinetic-letter">o</span><span class="ja-kinetic-letter">n</span></span></span>
-      <span class="ja-kinetic-word ja-kinetic-word--son"><span class="ja-kinetic-word__motion"><span class="ja-kinetic-letter">s</span><span class="ja-kinetic-letter">o</span><span class="ja-kinetic-letter">n</span></span></span>
-      <span class="ja-kinetic-note">作曲 / DTM / 音楽理論 / 電子音響</span>
-    </div>
-
-    <div class="ja-kinetic-hero__copy">
-      <div class="acs-container--wide">
-        <p class="acs-kicker">ATELIER COMPOSITION SON</p>
-        <h1 id="home-title">作曲・DTM・音楽理論の、基礎から実践まで</h1>
-        <p class="ja-kinetic-hero__lead">作曲を始めたい方から、作品を制作している方まで。経験や目的に合わせて、一対一でレッスンします。</p>
-        <p class="ja-kinetic-hero__meta">オンライン個人レッスン · 60分 · 4800円から</p>
-        <div class="ja-kinetic-hero__actions">
-          <a class="acs-btn acs-btn--primary" href="booking.html" data-track="hero_consultation">30分無料相談を予約する</a>
-          <a class="acs-btn acs-btn--secondary" href="#study" data-track="hero_lessons">レッスン内容を見る</a>
-        </div>
-        <p class="ja-kinetic-hero__note">無料相談では、学びたいことや現在のお悩みを伺い、レッスン内容をご提案します。</p>
+  <section class="atelier-split-hero atelier-split-hero--ja" aria-labelledby="home-title">
+    <div class="atelier-split-hero__copy">
+      <p class="atelier-split-hero__eyebrow">ATELIER COMPOSITION SON / ONLINE INDIVIDUAL LESSONS</p>
+      <h1 id="home-title">音から考え、作品へ進む。</h1>
+      <p class="atelier-split-hero__lead">作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。</p>
+      <div class="atelier-split-hero__actions">
+        <a class="acs-btn acs-btn--primary" href="booking.html" data-track="hero_booking_click">制作について相談する</a>
+        <a class="acs-btn acs-btn--secondary" href="#price" data-track="hero_format_price">進め方と料金を見る</a>
       </div>
     </div>
+    <figure class="atelier-split-hero__media">
+      <picture>
+        <source media="(max-width: 767px)" type="image/avif" srcset="../images/hero-atelier-documentary-mobile.avif" width="936" height="1170">
+        <source media="(max-width: 767px)" type="image/webp" srcset="../images/hero-atelier-documentary-mobile.webp" width="936" height="1170">
+        <source type="image/avif" srcset="../images/hero-atelier-documentary.avif" width="1600" height="900">
+        <source type="image/webp" srcset="../images/hero-atelier-documentary.webp" width="1600" height="900">
+        <img class="atelier-split-hero__image" src="../images/sachie_studio.jpg" width="2080" height="1170" alt="作曲家Sachie Kobayashiがスタジオで楽譜と音響制作に取り組む様子" loading="eager" decoding="async" fetchpriority="high">
+      </picture>
+    </figure>
   </section>
 
   <section id="trust" class="ja-trust" aria-label="講師の背景">
@@ -98,11 +96,11 @@
   <section id="who" class="acs-section ja-who" aria-labelledby="who-title">
     <div class="acs-container">
       <p class="acs-kicker">WHO THIS IS FOR</p>
-      <h2 id="who-title">初めて学ぶ方から、専門的に取り組む方まで</h2>
+      <h2 id="who-title">制作の段階に応じて。</h2>
       <div class="ja-who__paths">
-        <article><p class="ja-index">01</p><h3>初めて学ぶ方</h3><p>作曲やDTMを始めたい方、楽譜の読み方や音楽理論から学びたい方。</p><a class="acs-text-link" href="composition-lesson.html">作曲レッスンを見る</a></article>
-        <article><p class="ja-index">02</p><h3>独学・制作中</h3><p>制作中の曲や楽譜、DAWプロジェクトをもとに、構成や技術を見直したい方。</p><a class="acs-text-link" href="dtm-lesson.html">DTMレッスンを見る</a></article>
-        <article><p class="ja-index">03</p><h3>受験・ポートフォリオ</h3><p>音大・芸大受験、海外音楽院、公募、ポートフォリオの準備を進めたい方。</p><a class="acs-text-link" href="music-theory-lesson_with_pdf-link.html">音楽理論・受験対策を見る</a></article>
+        <article><p class="ja-index">01</p><h3>制作を始める</h3><p>作曲やDTMを始めたい方。楽譜の読み方や音楽理論からでも進められます。</p><a class="acs-text-link" href="composition-lesson.html">作曲レッスンを見る</a></article>
+        <article><p class="ja-index">02</p><h3>基礎と制作環境を整える</h3><p>独学で曖昧になった理論や、DAW・録音環境を、制作中の作品に沿って整理します。</p><a class="acs-text-link" href="dtm-lesson.html">DTMレッスンを見る</a></article>
+        <article><p class="ja-index">03</p><h3>作品・提出物を深める</h3><p>作品、音源、ポートフォリオ、音大・芸大受験や海外音楽院への提出物を検討します。</p><a class="acs-text-link" href="music-theory-lesson_with_pdf-link.html">音楽理論・受験対策を見る</a></article>
       </div>
     </div>
   </section>
@@ -201,9 +199,9 @@
         </article>
         <article class="ja-work">
           <div class="ja-work__embed">
-            <iframe title="Techno Pop / AI Workflow / TouchDesigner MV" loading="lazy" src="https://www.youtube.com/embed/SgYGcZS1Mp4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe title="Digi Ugi" loading="lazy" src="https://www.youtube.com/embed/SgYGcZS1Mp4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
-          <h3>Techno Pop / AI Workflow / TouchDesigner MV</h3>
+          <h3>Digi Ugi</h3>
         </article>
         <article class="ja-work">
           <div class="ja-work__embed">
@@ -222,17 +220,17 @@
       <h2 id="voices-title">受講者の声</h2>
       <div class="ja-voices__grid">
         <article class="ja-voice">
-          <p class="ja-voice__profile">50代女性</p>
+          <p class="ja-voice__profile">作曲・理論を受講 <span class="ja-voice__detail">50代女性</span></p>
           <h3>希望に合わせて丁寧に進めてもらえました</h3>
           <p>オンラインでも通信環境が安定していて、安心して受講できました。こちらの希望や学びたい内容を丁寧に聞いていただき、レッスンに反映してもらえた点がとても良かったです。</p>
         </article>
         <article class="ja-voice">
-          <p class="ja-voice__profile">30代男性</p>
+          <p class="ja-voice__profile">DTM・制作相談を受講 <span class="ja-voice__detail">30代男性</span></p>
           <h3>独学で曖昧だった部分が整理できました</h3>
           <p>自分の現在のレベルや目的に合わせて、必要な内容を整理しながら教えていただけたのが印象的でした。短い時間の中でも、今後どのように学んでいけばよいかが明確になりました。</p>
         </article>
         <article class="ja-voice">
-          <p class="ja-voice__profile">10代女性</p>
+          <p class="ja-voice__profile">受験・基礎理論を受講 <span class="ja-voice__detail">10代女性</span></p>
           <h3>初めてでも楽しく学べました</h3>
           <p>限られた時間の中でも、とても分かりやすく丁寧に教えていただきました。初めて学ぶ内容でしたが、楽典の面白さや奥深さを感じることができました。</p>
         </article>
@@ -255,7 +253,7 @@
           <li><div><h3>Text Feedback</h3><p>楽譜、音源、課題に文章でフィードバックします。</p></div><p class="ja-pricing__amount">1800円〜</p></li>
         </ul>
         <div class="ja-pricing__actions">
-          <a class="acs-btn acs-btn--primary" href="booking.html" data-track="pricing_consultation">30分無料相談を予約する</a>
+          <a class="acs-text-link" href="booking.html" data-track="pricing_consultation">制作内容とプランについて相談する</a>
           <a class="acs-text-link" href="mail-correction.html?request=mail-correction#form" data-track="mail_feedback">メール添削</a>
         </div>
       </div>
@@ -280,17 +278,6 @@
     </div>
   </section>
 
-  <section id="contact" class="acs-section ja-final-cta" aria-labelledby="contact-title">
-    <div class="acs-container ja-final-cta__grid">
-      <div><p class="acs-kicker">FREE CONSULTATION</p><h2 id="contact-title">まずは30分、無料でご相談ください</h2></div>
-      <div>
-        <p>学びたいこと、制作中の作品、使っているDAW、困っていることなどを伺います。相談後に受講を決めていただけます。</p>
-        <a class="acs-btn acs-btn--primary" href="booking.html" data-track="final_consultation">30分無料相談を予約する</a>
-        <p class="ja-final-cta__links"><a class="acs-text-link" href="mail-correction.html?request=mail-correction#form" data-track="mail_feedback">メール添削</a> / <a class="acs-text-link" href="mailto:info@sachiekobayashi.com" data-track="email_contact">メールで問い合わせる</a> / <a class="acs-text-link" href="terms.html" data-track="terms_open">規約を見る</a></p>
-      </div>
-    </div>
-  </section>
-
   <section id="tools" class="acs-section ja-tools" aria-labelledby="tools-title">
     <div class="acs-container">
       <p class="acs-kicker">FREE RESOURCES</p>
@@ -300,6 +287,17 @@
         <article class="ja-tools__item"><p class="ja-index">01</p><h3>和声チェッカー</h3><p>SATB 4声体のMusicXMLファイルを使って、連続5度・連続8度などを確認する学習補助ツールです。</p><a href="../harmony-checker.html" data-track="harmony_checker_click">使う</a></article>
         <article class="ja-tools__item"><p class="ja-index">02</p><h3>対位法チェッカー</h3><p>2声対位法の基礎的な進行、音程、禁則を確認するための学習補助ツールです。</p><a href="../counterpoint/" data-track="counterpoint_checker_click">使う</a></article>
         <article class="ja-tools__item"><p class="ja-index">03</p><h3>簡易シンセサイザー</h3><p>波形、フィルター、エンベロープ、LFOなどをブラウザ上で試しながら、音の合成について学べる学習用シンセサイザーです。</p><a href="simple-synth.html" data-track="simple_synth_click">使う</a></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="acs-section ja-final-cta" aria-labelledby="contact-title">
+    <div class="acs-container ja-final-cta__grid">
+      <div><p class="acs-kicker">FIRST CONVERSATION</p><h2 id="contact-title">まずは30分、制作についてお聞かせください</h2></div>
+      <div>
+        <p>完成した作品や楽譜は必要ありません。現在取り組んでいることや、まだ言葉になっていない疑問から、次に進める内容を一緒に整理します。</p>
+        <a class="acs-btn acs-btn--primary" href="booking.html" data-track="final_consultation">30分相談を予約する</a>
+        <p class="ja-final-cta__links"><a class="acs-text-link" href="mail-correction.html?request=mail-correction#form" data-track="mail_feedback">メール添削</a> / <a class="acs-text-link" href="mailto:info@sachiekobayashi.com" data-track="email_contact_click" data-cta-location="ja_final_section">メールで問い合わせる</a> / <a class="acs-text-link" href="terms.html" data-track="terms_open">規約を見る</a></p>
       </div>
     </div>
   </section>

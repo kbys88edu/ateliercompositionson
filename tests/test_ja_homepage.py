@@ -16,7 +16,7 @@ class JapaneseHomepageTests(unittest.TestCase):
     def test_primary_sections_are_present_once_and_ordered(self):
         expected = [
             "top", "trust", "who", "study", "process", "instructor",
-            "concept", "works", "voices", "price", "faq", "contact", "tools",
+            "concept", "works", "voices", "price", "faq", "tools", "contact",
         ]
         self.assertEqual(len(self.page.ids), len(set(self.page.ids)))
         positions = [self.page.ids.index(section_id) for section_id in expected]
@@ -213,12 +213,13 @@ class JapaneseHomepageTests(unittest.TestCase):
         ):
             self.assertIn(text, profile_body)
 
-    def test_tools_are_compact_resources_after_the_primary_journey(self):
+    def test_tools_are_compact_resources_before_the_final_consultation(self):
         positions = {section_id: self.page.ids.index(section_id) for section_id in (
             "works", "voices", "price", "faq", "contact", "tools",
         )}
-        for section_id in ("works", "voices", "price", "faq", "contact"):
+        for section_id in ("works", "voices", "price", "faq"):
             self.assertLess(positions[section_id], positions["tools"])
+        self.assertLess(positions["tools"], positions["contact"])
 
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
         self.assertIn(".ja-tools { padding-block: var(--acs-space-7);", css)
