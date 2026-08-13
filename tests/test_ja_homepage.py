@@ -11,7 +11,7 @@ class JapaneseHomepageTests(unittest.TestCase):
     def test_has_one_h1(self):
         h1s = [heading for heading in self.page.headings if heading["tag"] == "h1"]
         self.assertEqual(1, len(h1s))
-        self.assertEqual("作曲・DTM・音楽理論の、基礎から実践まで", h1s[0]["text"])
+        self.assertEqual("音から考え、作品へ進む。", h1s[0]["text"])
 
     def test_primary_sections_are_present_once_and_ordered(self):
         expected = [
@@ -27,10 +27,10 @@ class JapaneseHomepageTests(unittest.TestCase):
             link.get("data-track"): link.get("href")
             for link in self.page.links if link.get("data-track")
         }
-        self.assertEqual("booking.html", tracked["hero_consultation"])
+        self.assertEqual("booking.html", tracked["hero_booking_click"])
         self.assertEqual("booking.html", tracked["pricing_consultation"])
         self.assertEqual("booking.html", tracked["final_consultation"])
-        self.assertEqual("#study", tracked["hero_lessons"])
+        self.assertEqual("#price", tracked["hero_format_price"])
 
     def test_current_prices_are_present_without_commas(self):
         for text in ("4800円", "7500円", "28000円", "1800円〜"):
@@ -48,44 +48,31 @@ class JapaneseHomepageTests(unittest.TestCase):
         ):
             self.assertNotIn(class_name, self.html)
 
-    def test_kinetic_hero_uses_shared_video(self):
-        visual = next(
-            element["attrs"] for element in self.page.elements
-            if element["tag"] == "div"
-            and "ja-kinetic-hero__visual" in element["attrs"].get("class", "").split()
+    def test_documentary_hero_uses_responsive_picture(self):
+        hero_image = next(
+            image for image in self.page.images
+            if "atelier-split-hero__image" in image.get("class", "").split()
         )
-        self.assertEqual("true", visual.get("aria-hidden"))
-
-        video = next(
-            element["attrs"] for element in self.page.elements
-            if element["tag"] == "video"
-            and "ja-kinetic-hero__video" in element["attrs"].get("class", "").split()
-        )
-        for attribute in ("autoplay", "muted", "loop", "playsinline"):
-            self.assertIn(attribute, video)
-        self.assertEqual("metadata", video.get("preload"))
-
-        source = next(
-            element["attrs"] for element in self.page.elements
-            if element["tag"] == "source"
-            and element["attrs"].get("type") == "video/mp4"
-        )
-        self.assertEqual("../assets/video/fr-hero-micro-movement.mp4", source.get("src"))
+        self.assertEqual("eager", hero_image.get("loading"))
+        self.assertEqual("high", hero_image.get("fetchpriority"))
+        self.assertEqual("async", hero_image.get("decoding"))
+        self.assertEqual(("2080", "1170"), (hero_image.get("width"), hero_image.get("height")))
         for text in (
-            "作曲 / DTM / 音楽理論 / 電子音響",
-            "オンライン個人レッスン · 60分 · 4800円から",
-            "無料相談では、学びたいことや現在のお悩みを伺い、レッスン内容をご提案します。",
+            "音から考え、作品へ進む。",
+            "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。",
+            "制作について相談する",
+            "進め方と料金を見る",
         ):
             self.assertIn(text, self.html)
 
     def test_homepage_copy_is_natural_and_specific(self):
         for text in (
-            "作曲を始めたい方から、作品を制作している方まで。",
-            "初めて学ぶ方から、専門的に取り組む方まで",
+            "音から考え、作品へ進む。",
+            "制作の段階に応じて。",
             "無料相談からレッスンまで",
             "学びたいこと、作りたい音に合わせて",
             "講師の作品",
-            "まずは30分、無料でご相談ください",
+            "まずは30分、制作についてお聞かせください",
         ):
             self.assertIn(text, self.html)
 
@@ -112,7 +99,7 @@ class JapaneseHomepageTests(unittest.TestCase):
         for text in (
             "ジュネーブ高等音楽院", "IRCAM作曲研究課程",
             "スイスの音楽院での", "指導経験", "日本・スイス・フランスでの", "制作実践",
-            "初めて学ぶ方", "独学・制作中", "受験・ポートフォリオ",
+            "制作を始める", "基礎と制作環境を整える", "作品・提出物を深める",
         ):
             self.assertIn(text, self.html)
 
@@ -254,7 +241,7 @@ class JapaneseHomepageTests(unittest.TestCase):
                 ),
                 (
                     "https://www.youtube.com/embed/SgYGcZS1Mp4",
-                    "Techno Pop / AI Workflow / TouchDesigner MV",
+                    "Digi Ugi",
                     "lazy",
                 ),
                 (
@@ -313,12 +300,16 @@ class JapaneseHomepageTests(unittest.TestCase):
         for image in self.page.images:
             self.assertIn("alt", image)
             self.assertTrue(image.get("width") and image.get("height"), image.get("src"))
-            self.assertEqual("lazy", image.get("loading"), image.get("src"))
+            if "atelier-split-hero__image" in image.get("class", "").split():
+                self.assertEqual("eager", image.get("loading"), image.get("src"))
+            else:
+                self.assertEqual("lazy", image.get("loading"), image.get("src"))
             self.assertEqual("async", image.get("decoding"), image.get("src"))
 
     def test_shared_assets_are_loaded_once(self):
         self.assertEqual(1, self.page.stylesheets.count("../assets/css/acs-core.css"))
         self.assertEqual(1, self.page.stylesheets.count("../assets/css/ja-home.css"))
+        self.assertEqual(1, self.page.stylesheets.count("../assets/css/public-site-final.css"))
         self.assertEqual(1, self.page.scripts.count("../assets/js/acs-ui.js"))
         self.assertEqual(1, self.page.scripts.count("../assets/js/acs-tracking.js"))
 

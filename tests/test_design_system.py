@@ -8,11 +8,10 @@ from tests.site_test_utils import load_page, repo_path
 
 class DesignSystemTests(unittest.TestCase):
     def test_homepage_h1_uses_h1_token_and_tablet_geometry_contract(self):
-        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
-        h1_rule = re.search(r"\.ja-kinetic-hero h1\s*\{([^}]*)\}", css)
+        css = repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")
+        h1_rule = re.search(r"\.atelier-split-hero h1\s*\{([^}]*)\}", css)
         self.assertIsNotNone(h1_rule)
-        self.assertIn("font-size: var(--acs-h1)", h1_rule.group(1))
-        self.assertNotIn("--acs-display", h1_rule.group(1))
+        self.assertIn("font-size: clamp(2.5rem, 5vw, 5.8rem)", h1_rule.group(1))
 
     def test_profile_portrait_uses_intrinsic_ratio_without_fixed_height(self):
         profile = load_page("ja/profile.html")
@@ -97,40 +96,31 @@ class DesignSystemTests(unittest.TestCase):
         self.assertIn("display: inline", compact_short.group(1))
 
     def test_task_3_opening_markup_uses_composed_styles(self):
-        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
+        css = repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")
         html = repo_path("ja/index.html").read_text(encoding="utf-8")
         for class_name in (
-            "acs-kicker", "ja-kinetic-hero", "ja-kinetic-hero__visual", "ja-trust",
+            "acs-kicker", "atelier-split-hero", "atelier-split-hero__media", "ja-trust",
             "ja-trust__grid", "ja-who", "ja-who__paths", "ja-index",
         ):
             self.assertIn(class_name, html)
         for selector in (
-            ".acs-kicker", ".ja-kinetic-hero h1", ".ja-kinetic-hero__visual",
-            ".ja-kinetic-hero__copy", ".ja-trust", ".ja-trust__grid",
-            ".ja-who", ".ja-who__paths", ".ja-who__paths article", ".ja-index",
+            ".atelier-split-hero", ".atelier-split-hero h1", ".atelier-split-hero__media",
+            ".atelier-split-hero__copy", ".atelier-split-hero__actions",
         ):
             self.assertIn(selector, css)
 
-    def test_japanese_kinetic_hero_respects_motion_and_mobile_contract(self):
-        css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
-        visual = re.search(r"\.ja-kinetic-hero__visual\s*\{([^}]*)\}", css)
-        self.assertIsNotNone(visual)
-        self.assertIn("height: clamp(390px, 42.85vw, 720px)", visual.group(1))
+    def test_split_hero_respects_desktop_and_mobile_contract(self):
+        css = repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")
+        hero = re.search(r"\.atelier-split-hero\s*\{([^}]*)\}", css)
+        self.assertIsNotNone(hero)
+        self.assertIn("grid-template-columns: minmax(0, 54fr) minmax(0, 46fr)", hero.group(1))
 
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
-        mobile_visual = re.search(r"\.ja-kinetic-hero__visual\s*\{([^}]*)\}", mobile_css)
-        mobile_actions = re.search(r"\.ja-kinetic-hero__actions\s*\{([^}]*)\}", mobile_css)
-        mobile_button = re.search(r"\.ja-kinetic-hero__actions \.acs-btn\s*\{([^}]*)\}", mobile_css)
-        self.assertIn("height: 230px", mobile_visual.group(1))
-        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", mobile_actions.group(1))
+        mobile_hero = re.search(r"\.atelier-split-hero\s*\{([^}]*)\}", mobile_css)
+        mobile_button = re.search(r"\.atelier-split-hero__actions a\s*\{([^}]*)\}", mobile_css)
+        self.assertIn("grid-template-columns: 1fr", mobile_hero.group(1))
         self.assertIn("min-height: 44px", mobile_button.group(1))
-
-        reduced_query = "@media (prefers-reduced-motion: reduce)"
-        self.assertIn(reduced_query, css)
-        reduced_css = css.split(reduced_query, 1)[1]
-        reduced_video = re.search(r"\.ja-kinetic-hero__video\s*\{([^}]*)\}", reduced_css)
-        self.assertIn("display: none", reduced_video.group(1))
-        self.assertIn("animation: none", reduced_css)
+        self.assertIn("font-size: 16px", mobile_css)
 
     def test_trust_strip_uses_caption_grid_geometry(self):
         css = repo_path("assets/css/ja-home.css").read_text(encoding="utf-8")
@@ -223,7 +213,7 @@ class DesignSystemTests(unittest.TestCase):
         self.assertTrue(css_path.exists())
         css = css_path.read_text(encoding="utf-8")
         for selector in (
-            ".ja-kinetic-hero__visual", ".ja-kinetic-hero__copy",
+            ".atelier-split-hero", ".atelier-split-hero__copy",
             ".ja-home-trust__title", ".ja-home-trust__copy",
             ".ja-home-audience__item", ".ja-home-audience__title",
             ".ja-home-audience__copy", ".ja-home-audience__link",
