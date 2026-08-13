@@ -49,11 +49,9 @@ Pricing/resource buttons keep their distinct commercial or utility purpose; repe
 
 Primary home imagery is the supplied performance photograph of Sachie Kobayashi working in front of professional audio equipment, delivered as:
 
-- `images/hero-atelier-performance.avif`
-- `images/hero-atelier-performance.webp`
-- `images/hero-atelier-performance.png`
-- `images/hero-atelier-performance-mobile.avif`
-- `images/hero-atelier-performance-mobile.webp`
+- `images/hero-atelier-performance-supplied.png`
+
+The supplied retouched photograph is used directly. The original photograph and the person shown in it are unchanged; no image generation was used.
 
 French lesson media uses actual concert, DAW, score, and Max/MSP documentation. The generated collage files `images/computer-music-synth-composition.jpeg` and `images/music-theory-hero.jpeg` are no longer primary French lesson media. Japanese composition and DTM pages retain their subject-specific typographic headers, as requested.
 

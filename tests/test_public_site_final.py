@@ -50,37 +50,30 @@ def local_target(page_path, raw_href):
 
 
 class JapaneseFinalTests(unittest.TestCase):
-    def test_japanese_home_uses_performance_hero_photo(self):
+    def test_japanese_home_uses_supplied_collage_hero(self):
         html = page_html("ja/index.html")
-        for asset in (
-            "hero-atelier-performance-mobile.avif",
-            "hero-atelier-performance-mobile.webp",
-            "hero-atelier-performance.avif",
-            "hero-atelier-performance.webp",
-            "hero-atelier-performance.png",
-        ):
-            self.assertIn(asset, html)
+        self.assertIn("hero-collage2.png", html)
         self.assertIn(
-            "作曲家Sachie Kobayashiが音響機材を前に制作について説明する様子",
+            "講師の電子音響制作、舞台制作、弦楽器とデジタル制作環境のコラージュ",
             html,
         )
-        self.assertNotIn("hero-atelier-documentary", html)
+        self.assertNotIn("hero-atelier-performance-supplied.png", html)
 
     def test_japanese_home_uses_approved_documentary_split_hero(self):
         page = load_page("ja/index.html")
         html = page_html("ja/index.html")
         h1s = [item for item in page.headings if item["tag"] == "h1"]
-        self.assertEqual(["音から考え、作品へ進む。"], [item["text"] for item in h1s])
+        self.assertEqual(["AtelierCompositionSon"], [item["text"] for item in h1s])
         for text in (
+            "オンライン作曲・ソルフェージュ・DTM・電子音楽レッスン",
+            "Atelier Composition Son",
             "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。",
             "制作について相談する",
             "進め方と料金を見る",
-            "作曲家Sachie Kobayashiが音響機材を前に制作について説明する様子",
+            "講師の電子音響制作、舞台制作、弦楽器とデジタル制作環境のコラージュ",
         ):
             self.assertIn(text, html)
-        self.assertIn("<picture", html)
-        self.assertIn("hero-atelier-performance-mobile.avif", html)
-        self.assertIn("hero-atelier-performance.webp", html)
+        self.assertIn("hero-collage2.png", html)
         self.assertIn('fetchpriority="high"', html)
         self.assertNotIn("ja-kinetic-hero", html)
 
@@ -122,19 +115,12 @@ class JapaneseFinalTests(unittest.TestCase):
 class FrenchFinalTests(unittest.TestCase):
     def test_french_home_uses_performance_hero_photo(self):
         html = page_html("fr/index.html")
-        for asset in (
-            "hero-atelier-performance-mobile.avif",
-            "hero-atelier-performance-mobile.webp",
-            "hero-atelier-performance.avif",
-            "hero-atelier-performance.webp",
-            "hero-atelier-performance.png",
-        ):
-            self.assertIn(asset, html)
+        self.assertIn("hero-atelier-performance-supplied.png", html)
         self.assertIn(
             "Sachie Kobayashi présentant un travail sonore devant du matériel audio",
             html,
         )
-        self.assertNotIn("hero-atelier-documentary", html)
+        self.assertNotIn("hero-atelier-performance-retouched", html)
 
     def test_french_home_uses_approved_documentary_split_hero(self):
         page = load_page("fr/index.html")
@@ -151,7 +137,7 @@ class FrenchFinalTests(unittest.TestCase):
             "Sachie Kobayashi présentant un travail sonore devant du matériel audio",
         ):
             self.assertIn(text, html)
-        self.assertIn("<picture", html)
+        self.assertIn('src="../images/hero-atelier-performance-supplied.png"', html)
         self.assertNotIn('class="hero-kinetic"', html)
 
     def test_french_home_consolidates_artist_introduction(self):

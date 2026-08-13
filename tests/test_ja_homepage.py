@@ -11,7 +11,7 @@ class JapaneseHomepageTests(unittest.TestCase):
     def test_has_one_h1(self):
         h1s = [heading for heading in self.page.headings if heading["tag"] == "h1"]
         self.assertEqual(1, len(h1s))
-        self.assertEqual("音から考え、作品へ進む。", h1s[0]["text"])
+        self.assertEqual("AtelierCompositionSon", h1s[0]["text"])
 
     def test_primary_sections_are_present_once_and_ordered(self):
         expected = [
@@ -56,9 +56,10 @@ class JapaneseHomepageTests(unittest.TestCase):
         self.assertEqual("eager", hero_image.get("loading"))
         self.assertEqual("high", hero_image.get("fetchpriority"))
         self.assertEqual("async", hero_image.get("decoding"))
-        self.assertEqual(("1200", "1200"), (hero_image.get("width"), hero_image.get("height")))
+        self.assertEqual(("1200", "1600"), (hero_image.get("width"), hero_image.get("height")))
         for text in (
-            "音から考え、作品へ進む。",
+            "オンライン作曲・ソルフェージュ・DTM・電子音楽レッスン",
+            "Atelier Composition Son",
             "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。",
             "制作について相談する",
             "進め方と料金を見る",
@@ -67,7 +68,8 @@ class JapaneseHomepageTests(unittest.TestCase):
 
     def test_homepage_copy_is_natural_and_specific(self):
         for text in (
-            "音から考え、作品へ進む。",
+            "オンライン作曲・ソルフェージュ・DTM・電子音楽レッスン",
+            "Atelier Composition Son",
             "制作の段階に応じて。",
             "無料相談からレッスンまで",
             "学びたいこと、作りたい音に合わせて",
@@ -98,7 +100,7 @@ class JapaneseHomepageTests(unittest.TestCase):
     def test_trust_and_audience_are_concise(self):
         for text in (
             "ジュネーブ高等音楽院", "IRCAM作曲研究課程",
-            "スイスの音楽院での", "指導経験", "日本・スイス・フランスでの", "制作実践",
+            "スイスの音楽院での指導経験", "世界各国での作品発表経験",
             "制作を始める", "基礎と制作環境を整える", "作品・提出物を深める",
         ):
             self.assertIn(text, self.html)
@@ -110,8 +112,8 @@ class JapaneseHomepageTests(unittest.TestCase):
         for text in (
             "ジュネーブ高等音楽院", "音楽教育修士",
             "IRCAM作曲研究課程", "2021-2022",
-            "スイスの音楽院での", "指導経験",
-            "日本・スイス・フランスでの", "制作実践",
+            "スイスの音楽院での指導経験",
+            "世界各国での作品発表経験",
         ):
             self.assertIn(text, self.html)
         self.assertNotIn("BACKGROUND / PRACTICE", self.html)

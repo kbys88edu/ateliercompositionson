@@ -11,7 +11,7 @@ class DesignSystemTests(unittest.TestCase):
         css = repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")
         h1_rule = re.search(r"\.atelier-split-hero h1\s*\{([^}]*)\}", css)
         self.assertIsNotNone(h1_rule)
-        self.assertIn("font-size: clamp(2.5rem, 5vw, 5.8rem)", h1_rule.group(1))
+        self.assertIn("font-size: clamp(3rem, 5.6vw, 6.5rem)", h1_rule.group(1))
 
     def test_profile_portrait_uses_intrinsic_ratio_without_fixed_height(self):
         profile = load_page("ja/profile.html")
@@ -60,6 +60,33 @@ class DesignSystemTests(unittest.TestCase):
 
         menu_toggle = re.search(r"\.acs-menu-toggle\s*\{([^}]*)\}", core_css)
         self.assertIn("white-space: nowrap", menu_toggle.group(1))
+
+    def test_all_content_pages_use_the_shared_responsive_header(self):
+        pages = (
+            "ja/booking.html",
+            "ja/composition-lesson.html",
+            "ja/dtm-lesson.html",
+            "ja/electroacoustic-lesson.html",
+            "ja/mail-correction.html",
+            "ja/music-theory-lesson_with_pdf-link.html",
+            "ja/solfege.html",
+            "ja/sound-technology-ai-lesson.html",
+            "ja/simple-synth.html",
+            "ja/terms.html",
+            "fr/booking.html",
+            "fr/composition-lesson.html",
+            "fr/electroacoustic-lesson.html",
+            "fr/harmony-analysis-lesson.html",
+            "fr/index.html",
+            "fr/mao-lesson.html",
+        )
+        for page_path in pages:
+            html = repo_path(page_path).read_text(encoding="utf-8-sig")
+            self.assertIn('class="acs-site-header" data-menu', html, page_path)
+            self.assertIn("data-menu-toggle", html, page_path)
+            self.assertIn("data-menu-panel", html, page_path)
+            self.assertIn("assets/css/acs-core.css", html, page_path)
+            self.assertIn("assets/js/acs-ui.js", html, page_path)
 
     def test_japanese_header_uses_accessible_compact_brand_below_360px(self):
         for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
@@ -113,12 +140,12 @@ class DesignSystemTests(unittest.TestCase):
         css = repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")
         hero = re.search(r"\.atelier-split-hero\s*\{([^}]*)\}", css)
         self.assertIsNotNone(hero)
-        self.assertIn("grid-template-columns: minmax(0, 54fr) minmax(0, 46fr)", hero.group(1))
+        self.assertIn("grid-template-columns: minmax(0, 64fr) minmax(0, 36fr)", hero.group(1))
 
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
         mobile_hero = re.search(r"\.atelier-split-hero\s*\{([^}]*)\}", mobile_css)
         mobile_button = re.search(r"\.atelier-split-hero__actions a\s*\{([^}]*)\}", mobile_css)
-        self.assertIn("grid-template-columns: 1fr", mobile_hero.group(1))
+        self.assertIn("grid-template-columns: minmax(0, 60fr) minmax(0, 40fr)", mobile_hero.group(1))
         self.assertIn("min-height: 44px", mobile_button.group(1))
         self.assertIn("font-size: 16px", mobile_css)
 
@@ -134,6 +161,11 @@ class DesignSystemTests(unittest.TestCase):
         self.assertIsNotNone(item)
         self.assertIn("border: var(--acs-rule)", item.group(1))
         self.assertNotIn("border-right", item.group(1))
+
+        trust_copy = re.search(r"\.ja-trust__copy\s*\{([^}]*)\}", css)
+        self.assertIsNotNone(trust_copy)
+        self.assertIn("color: var(--acs-ink)", trust_copy.group(1))
+        self.assertNotIn(".ja-trust__copy span", css)
         self.assertIsNotNone(index)
         self.assertIn("color: var(--acs-muted)", index.group(1))
 
