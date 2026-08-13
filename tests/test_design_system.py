@@ -32,7 +32,7 @@ class DesignSystemTests(unittest.TestCase):
             html = repo_path(page_path).read_text(encoding="utf-8")
             self.assertEqual(
                 1,
-                html.count('<a class="acs-mobile-consultation" href="booking.html">無料相談</a>'),
+                html.count('class="acs-site-header" data-shared-header'),
                 page_path,
             )
 
@@ -62,50 +62,34 @@ class DesignSystemTests(unittest.TestCase):
         self.assertIn("white-space: nowrap", menu_toggle.group(1))
 
     def test_all_content_pages_use_the_shared_responsive_header(self):
-        pages = (
-            "ja/booking.html",
-            "ja/composition-lesson.html",
-            "ja/dtm-lesson.html",
-            "ja/electroacoustic-lesson.html",
-            "ja/mail-correction.html",
-            "ja/music-theory-lesson_with_pdf-link.html",
-            "ja/solfege.html",
-            "ja/sound-technology-ai-lesson.html",
-            "ja/simple-synth.html",
-            "ja/terms.html",
-            "fr/booking.html",
-            "fr/composition-lesson.html",
-            "fr/electroacoustic-lesson.html",
-            "fr/harmony-analysis-lesson.html",
-            "fr/index.html",
-            "fr/mao-lesson.html",
+        pages = sorted(
+            path.relative_to(repo_path(".")).as_posix()
+            for language in ("ja", "fr")
+            for path in repo_path(language).glob("*.html")
         )
+        self.assertEqual(19, len(pages))
         for page_path in pages:
             html = repo_path(page_path).read_text(encoding="utf-8-sig")
-            self.assertIn('class="acs-site-header" data-menu', html, page_path)
-            self.assertIn("data-menu-toggle", html, page_path)
-            self.assertIn("data-menu-panel", html, page_path)
+            self.assertEqual(1, html.count('class="acs-site-header" data-shared-header'), page_path)
+            self.assertNotRegex(
+                html,
+                r'class="acs-site-header" data-shared-header></header>\s*<header',
+                page_path,
+            )
+            self.assertEqual(1, html.count("../assets/js/acs-header.js"), page_path)
             self.assertIn("assets/css/acs-core.css", html, page_path)
             self.assertIn("assets/js/acs-ui.js", html, page_path)
+            self.assertLess(
+                html.index("../assets/js/acs-header.js"),
+                html.index("../assets/js/acs-ui.js"),
+                page_path,
+            )
 
     def test_japanese_header_uses_accessible_compact_brand_below_360px(self):
-        for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
-            html = repo_path(page_path).read_text(encoding="utf-8")
-            self.assertIn(
-                'class="acs-site-header__brand" aria-label="Atelier Composition Son"',
-                html,
-                page_path,
-            )
-            self.assertIn(
-                '<span class="acs-site-header__brand-full" aria-hidden="true">Atelier Composition Son</span>',
-                html,
-                page_path,
-            )
-            self.assertIn(
-                '<span class="acs-site-header__brand-short" aria-hidden="true">ACS</span>',
-                html,
-                page_path,
-            )
+        header_script = repo_path("assets/js/acs-header.js").read_text(encoding="utf-8")
+        self.assertIn('class="acs-site-header__brand" aria-label="Atelier Composition Son"', header_script)
+        self.assertIn('<span class="acs-site-header__brand-full" aria-hidden="true">Atelier Composition Son</span>', header_script)
+        self.assertIn('<span class="acs-site-header__brand-short" aria-hidden="true">ACS</span>', header_script)
 
         core_css = repo_path("assets/css/acs-core.css").read_text(encoding="utf-8")
         compact_query = "@media (max-width: 359px)"
@@ -121,6 +105,64 @@ class DesignSystemTests(unittest.TestCase):
         self.assertIsNotNone(compact_short)
         self.assertIn("display: none", compact_full.group(1))
         self.assertIn("display: inline", compact_short.group(1))
+
+    def test_shared_header_renderer_uses_language_specific_navigation(self):
+        node = shutil.which("node")
+        self.assertIsNotNone(node, "Node.js is required for the header renderer contract")
+        script_path = repo_path("assets/js/acs-header.js")
+        harness = r'''
+const fs = require("fs");
+const vm = require("vm");
+const language = process.argv[2];
+const mount = {
+  innerHTML: "", dataset: {}, attributes: {},
+  setAttribute(name, value) { this.attributes[name] = String(value); },
+};
+const document = {
+  documentElement: { lang: language },
+  querySelectorAll(selector) {
+    return selector === "[data-shared-header]" ? [mount] : [];
+  },
+};
+vm.runInNewContext(fs.readFileSync(process.argv[1], "utf8"), { document });
+console.log(JSON.stringify({ attributes: mount.attributes, html: mount.innerHTML }));
+'''
+        rendered = {}
+        for language in ("ja", "fr"):
+            result = subprocess.run(
+                [node, "-e", harness, str(script_path), language],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            rendered[language] = json.loads(result.stdout)
+
+        for hook in ("data-menu", "data-menu-toggle", "data-menu-panel", "data-menu-close"):
+            japanese_output = json.dumps(rendered["ja"], ensure_ascii=False)
+            french_output = json.dumps(rendered["fr"], ensure_ascii=False)
+            self.assertIn(hook, japanese_output)
+            self.assertIn(hook, french_output)
+        for label, href in (
+            ("レッスン", "index.html#study"),
+            ("講師", "index.html#instructor"),
+            ("料金", "index.html#price"),
+            ("受講者の声", "index.html#voices"),
+            ("無料相談", "booking.html"),
+        ):
+            self.assertIn(label, rendered["ja"]["html"])
+            self.assertIn('href="{}"'.format(href), rendered["ja"]["html"])
+        for label, href in (
+            ("Cours", "index.html#entrypoints"),
+            ("À propos", "index.html#instructor"),
+            ("Tarifs", "index.html#format"),
+            ("Œuvres", "index.html#works"),
+            ("FAQ", "index.html#questions"),
+            ("Rendez-vous", "booking.html"),
+        ):
+            self.assertIn(label, rendered["fr"]["html"])
+            self.assertIn('href="{}"'.format(href), rendered["fr"]["html"])
+        self.assertIn('data-track="click_free_consultation"', rendered["ja"]["html"])
+        self.assertIn('data-track="click_free_consultation_fr"', rendered["fr"]["html"])
 
     def test_task_3_opening_markup_uses_composed_styles(self):
         css = repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")
@@ -139,8 +181,21 @@ class DesignSystemTests(unittest.TestCase):
     def test_split_hero_respects_desktop_and_mobile_contract(self):
         css = repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")
         hero = re.search(r"\.atelier-split-hero\s*\{([^}]*)\}", css)
+        media = re.search(r"\.atelier-split-hero__media\s*\{([^}]*)\}", css)
+        image = re.search(r"\.atelier-split-hero__image\s*\{([^}]*)\}", css)
         self.assertIsNotNone(hero)
+        self.assertIsNotNone(media)
+        self.assertIsNotNone(image)
         self.assertIn("grid-template-columns: minmax(0, 64fr) minmax(0, 36fr)", hero.group(1))
+        for declaration in (
+            "height: 100%",
+            "min-height: 0",
+            "align-self: stretch",
+            "overflow: hidden",
+        ):
+            self.assertIn(declaration, media.group(1))
+        self.assertIn("height: 100%", image.group(1))
+        self.assertIn("object-fit: cover", image.group(1))
 
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
         mobile_hero = re.search(r"\.atelier-split-hero\s*\{([^}]*)\}", mobile_css)
@@ -392,15 +447,13 @@ console.log(JSON.stringify({ initial, closedEscapeDoesNotFocus, bothOpen, closeK
             self.assertIn(declaration, reduced_motion)
 
     def test_japanese_menu_and_faq_use_native_keyboard_controls(self):
+        header_script = repo_path("assets/js/acs-header.js").read_text(encoding="utf-8")
+        self.assertEqual(1, header_script.count('class="acs-menu-toggle"'))
+        self.assertIn('type="button"', header_script)
+        self.assertIn('aria-expanded="false"', header_script)
         for page_path in ("ja/index.html", "ja/profile.html", "ja/faq.html"):
-            page = load_page(page_path)
-            menu_toggles = [
-                element["attrs"]
-                for element in page.elements
-                if element["tag"] == "button" and "data-menu-toggle" in element["attrs"]
-            ]
-            self.assertEqual(1, len(menu_toggles), page_path)
-            self.assertEqual("button", menu_toggles[0].get("type"))
+            html = repo_path(page_path).read_text(encoding="utf-8")
+            self.assertEqual(1, html.count('class="acs-site-header" data-shared-header'), page_path)
 
         for page_path in ("ja/index.html", "ja/faq.html"):
             html = repo_path(page_path).read_text(encoding="utf-8")

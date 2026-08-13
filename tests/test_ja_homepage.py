@@ -88,14 +88,16 @@ class JapaneseHomepageTests(unittest.TestCase):
             self.assertNotIn(text, self.html)
 
     def test_header_has_restrained_navigation(self):
+        header_script = repo_path("assets/js/acs-header.js").read_text(encoding="utf-8")
         for label in ("レッスン", "講師", "料金", "受講者の声", "無料相談"):
-            self.assertIn(label, self.html)
+            self.assertIn(label, header_script)
         for old_primary_label in ("AI添削", "学習ツール", "規約", "お問い合わせ"):
-            self.assertNotIn(f">{old_primary_label}</a>", self.html)
+            self.assertNotIn(f">{old_primary_label}</a>", header_script)
 
     def test_mobile_menu_uses_stable_accessible_label(self):
-        self.assertIn('aria-label="メニュー"', self.html)
-        self.assertNotIn('aria-label="メニューを開く"', self.html)
+        header_script = repo_path("assets/js/acs-header.js").read_text(encoding="utf-8")
+        self.assertIn('menuLabel: "メニュー"', header_script)
+        self.assertNotIn('menuLabel: "メニューを開く"', header_script)
 
     def test_trust_and_audience_are_concise(self):
         for text in (

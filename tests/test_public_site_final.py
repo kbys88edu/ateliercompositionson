@@ -214,10 +214,12 @@ class LessonDetailFinalTests(unittest.TestCase):
             self.assertRegex(html, r'href="(?:/ja/)?booking\.html"')
 
     def test_french_lesson_navigation_uses_current_sections(self):
+        header_script = page_html("assets/js/acs-header.js")
+        self.assertIn('index.html#entrypoints', header_script)
+        self.assertIn('index.html#format', header_script)
         for page_path in (*FR_DETAILS, "fr/booking.html"):
             html = page_html(page_path)
-            self.assertIn('index.html#entrypoints', html, page_path)
-            self.assertIn('index.html#format', html, page_path)
+            self.assertIn('../assets/js/acs-header.js', html, page_path)
 
     def test_generated_collages_are_not_primary_french_detail_media(self):
         for page_path in FR_DETAILS:
