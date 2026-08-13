@@ -11,7 +11,7 @@ class JapaneseHomepageTests(unittest.TestCase):
     def test_has_one_h1(self):
         h1s = [heading for heading in self.page.headings if heading["tag"] == "h1"]
         self.assertEqual(1, len(h1s))
-        self.assertEqual("作曲・DTM・音楽理論を、自分の作品につなげる。", h1s[0]["text"])
+        self.assertEqual("作曲・DTM・音楽理論の、基礎から実践まで", h1s[0]["text"])
 
     def test_primary_sections_are_present_once_and_ordered(self):
         expected = [
@@ -74,9 +74,29 @@ class JapaneseHomepageTests(unittest.TestCase):
         for text in (
             "作曲 / DTM / 音楽理論 / 電子音響",
             "オンライン個人レッスン · 60分 · 4800円から",
-            "無料相談では、現在の課題、最初に取り組む内容、無理のない学習ペースを一緒に整理します。",
+            "無料相談では、学びたいことや現在のお悩みを伺い、レッスン内容をご提案します。",
         ):
             self.assertIn(text, self.html)
+
+    def test_homepage_copy_is_natural_and_specific(self):
+        for text in (
+            "作曲を始めたい方から、作品を制作している方まで。",
+            "初めて学ぶ方から、専門的に取り組む方まで",
+            "無料相談からレッスンまで",
+            "学びたいこと、作りたい音に合わせて",
+            "講師の作品",
+            "まずは30分、無料でご相談ください",
+        ):
+            self.assertIn(text, self.html)
+
+        for text in (
+            "自分の作品につなげる",
+            "相談から、次の制作へ。",
+            "レッスンを、創作の場として。",
+            "制作実践から。",
+            "音楽以前の感覚を作品へ接続します",
+        ):
+            self.assertNotIn(text, self.html)
 
     def test_header_has_restrained_navigation(self):
         for label in ("レッスン", "講師", "料金", "受講者の声", "無料相談"):
@@ -92,7 +112,7 @@ class JapaneseHomepageTests(unittest.TestCase):
         for text in (
             "ジュネーブ高等音楽院", "IRCAM作曲研究課程",
             "スイスの音楽院での", "指導経験", "日本・スイス・フランスでの", "制作実践",
-            "これから始める / 基礎から", "独学・制作中", "専門・受験・ポートフォリオ",
+            "初めて学ぶ方", "独学・制作中", "受験・ポートフォリオ",
         ):
             self.assertIn(text, self.html)
 
@@ -129,7 +149,7 @@ class JapaneseHomepageTests(unittest.TestCase):
             if "ja-process__step" in element["attrs"].get("class", "").split()
         ]
         self.assertEqual(3, len(steps))
-        for label in ("相談", "個別レッスン", "次の制作・学習へ"):
+        for label in ("無料相談", "個別レッスン", "次の課題"):
             self.assertIn(label, self.html)
 
     def test_teacher_summary_links_to_full_profile(self):
@@ -176,10 +196,9 @@ class JapaneseHomepageTests(unittest.TestCase):
         self.assertIn("concept", self.page.ids)
         self.assertIn("tools", self.page.ids)
         for text in (
-            "レッスンを、創作の場として。",
-            "受講者自身の感覚・関心・音の記憶から出発します。",
-            "そのすべてを、作品をつくるための手段として扱います。",
-            "一般的な作曲・DTMレッスンよりも、個人の創作プロセスに深く関わります。",
+            "学びたいこと、作りたい音に合わせて",
+            "レッスン内容は、受講者の作品や興味、学びたいことに合わせて決めます。",
+            "楽譜やDAWの操作だけでなく、実際に音を聴きながら、作品に必要な知識と技術を学びます。",
             "SATB 4声体のMusicXMLファイルを使って、連続5度・連続8度などを確認する学習補助ツールです。",
             "2声対位法の基礎的な進行、音程、禁則を確認するための学習補助ツールです。",
             "波形、フィルター、エンベロープ、LFOなどをブラウザ上で試しながら、音の合成について学べる学習用シンセサイザーです。",
