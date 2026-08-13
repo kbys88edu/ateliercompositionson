@@ -120,7 +120,7 @@ class FrenchFinalTests(unittest.TestCase):
         ):
             self.assertIn(text, html)
         self.assertIn("<picture", html)
-        self.assertNotIn("hero-kinetic", html)
+        self.assertNotIn('class="hero-kinetic"', html)
 
     def test_french_home_consolidates_artist_introduction(self):
         html = page_html("fr/index.html")

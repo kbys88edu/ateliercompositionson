@@ -151,6 +151,41 @@
   font-weight: 600;
 }
 
+/* French landing page: keep the editorial rhythm varied after the three entry points. */
+.page .process-list {
+  display: block;
+  border-top: 1px solid #111;
+}
+
+.page .process-item {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 24px;
+  padding: 18px 0;
+  border-top: 0;
+  border-bottom: 1px solid #c9c9c9;
+}
+
+.page .process-number {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+
+.page .works-media-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.page .works-media-grid > :first-child {
+  grid-column: 1 / -1;
+}
+
+.page .works-media-grid > :first-child .work-media-frame {
+  aspect-ratio: 2 / 1;
+}
+
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible,
@@ -247,6 +282,23 @@ textarea:focus-visible {
 
   .atelier-proof-strip > :nth-child(odd) {
     border-left: 0;
+  }
+
+  .page .process-item {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .page .works-media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page .works-media-grid > :first-child {
+    grid-column: auto;
+  }
+
+  .page .works-media-grid > :first-child .work-media-frame {
+    aspect-ratio: 16 / 9;
   }
 }
 
