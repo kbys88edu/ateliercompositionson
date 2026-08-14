@@ -33,9 +33,10 @@ class JapaneseHomepageTests(unittest.TestCase):
         self.assertEqual("#price", tracked["hero_format_price"])
 
     def test_current_prices_are_present_without_commas(self):
-        for text in ("4800円", "7500円", "28000円", "1800円〜"):
+        for text in ("4800円", "7500円", "料金応相談", "1800円〜"):
             self.assertIn(text, self.html)
-        for old_text in ("4,800円", "7,500円", "28,000円", "1,800円"):
+        self.assertIn("月2回から、ご希望に合わせて", self.html)
+        for old_text in ("4,800円", "7,500円", "28,000円", "28000円", "1,800円", "月4回プラン"):
             self.assertNotIn(old_text, self.html)
 
     def test_viewport_allows_zoom(self):
