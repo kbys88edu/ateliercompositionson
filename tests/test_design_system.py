@@ -54,12 +54,17 @@ class DesignSystemTests(unittest.TestCase):
         mobile_css = core_css.split("@media (max-width: 767px)", 1)[1]
         mobile_cta = re.search(r"\.acs-mobile-consultation\s*\{([^}]*)\}", mobile_css)
         self.assertIsNotNone(mobile_cta)
-        self.assertIn("display: inline-flex", mobile_cta.group(1))
+        self.assertIn("display: none", mobile_cta.group(1))
         mobile_header = re.search(r"\.acs-site-header__inner\s*\{([^}]*)\}", mobile_css)
         self.assertIn("gap: var(--acs-space-1)", mobile_header.group(1))
 
         menu_toggle = re.search(r"\.acs-menu-toggle\s*\{([^}]*)\}", core_css)
         self.assertIn("white-space: nowrap", menu_toggle.group(1))
+        self.assertIn("width: auto", menu_toggle.group(1))
+        self.assertIn("letter-spacing: 0", menu_toggle.group(1))
+        menu_arrow = re.search(r"\.acs-menu-toggle::after\s*\{([^}]*)\}", core_css)
+        self.assertIsNotNone(menu_arrow)
+        self.assertIn("content: none", menu_arrow.group(1))
 
     def test_all_content_pages_use_the_shared_responsive_header(self):
         pages = sorted(
