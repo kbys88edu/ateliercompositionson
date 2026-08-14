@@ -66,6 +66,16 @@ class DesignSystemTests(unittest.TestCase):
         self.assertIsNotNone(menu_arrow)
         self.assertIn("content: none", menu_arrow.group(1))
 
+        desktop_links = re.search(r"\.acs-site-nav > a:not\(\.acs-btn\)\s*\{([^}]*)\}", core_css)
+        self.assertIsNotNone(desktop_links)
+        self.assertIn("text-decoration: underline", desktop_links.group(1))
+        self.assertIn("text-underline-offset: 5px", desktop_links.group(1))
+
+        mobile_links = re.search(r"\.acs-menu-panel nav > a:not\(\.acs-btn\)\s*\{([^}]*)\}", core_css)
+        self.assertIsNotNone(mobile_links)
+        self.assertIn("text-decoration: underline", mobile_links.group(1))
+        self.assertIn("text-underline-offset: 5px", mobile_links.group(1))
+
     def test_all_content_pages_use_the_shared_responsive_header(self):
         pages = sorted(
             path.relative_to(repo_path(".")).as_posix()
