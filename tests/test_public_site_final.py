@@ -82,7 +82,7 @@ class JapaneseFinalTests(unittest.TestCase):
         for text in (
             "制作の段階に応じて。",
             "制作を始める",
-            "基礎と制作環境を整える",
+            "制作環境を整えながら、応用へ",
             "作品・提出物を深める",
         ):
             self.assertIn(text, html)

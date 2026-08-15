@@ -108,7 +108,7 @@ class JapaneseHomepageTests(unittest.TestCase):
         for text in (
             "ジュネーブ高等音楽院", "IRCAM作曲研究課程",
             "スイスの音楽院での指導経験", "世界各国での作品発表経験",
-            "制作を始める", "基礎と制作環境を整える", "作品・提出物を深める",
+            "制作を始める", "制作環境を整えながら、応用へ", "作品・提出物を深める",
         ):
             self.assertIn(text, self.html)
 
