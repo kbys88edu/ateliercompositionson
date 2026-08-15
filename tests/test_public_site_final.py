@@ -113,14 +113,15 @@ class JapaneseFinalTests(unittest.TestCase):
 
 
 class FrenchFinalTests(unittest.TestCase):
-    def test_french_home_uses_performance_hero_photo(self):
+    def test_french_home_uses_supplied_collage_hero(self):
         html = page_html("fr/index.html")
-        self.assertIn("hero-atelier-performance-supplied.png", html)
+        self.assertIn("hero-collage2.png", html)
+        self.assertNotIn('class="top-nav"', html)
         self.assertIn(
-            "Sachie Kobayashi présentant un travail sonore devant du matériel audio",
+            "Collage de pratiques de composition, de création scénique, d’instruments à cordes et de production électronique",
             html,
         )
-        self.assertNotIn("hero-atelier-performance-retouched", html)
+        self.assertNotIn("hero-atelier-performance-supplied.png", html)
 
     def test_french_home_uses_approved_documentary_split_hero(self):
         page = load_page("fr/index.html")
@@ -134,10 +135,12 @@ class FrenchFinalTests(unittest.TestCase):
             "Atelier individuel de composition, MAO et pratiques sonores, à partir de vos partitions, maquettes, sessions DAW ou questions précises.",
             "Parler d’un projet",
             "Voir le format et le tarif",
-            "Sachie Kobayashi présentant un travail sonore devant du matériel audio",
+            "Collage de pratiques de composition, de création scénique, d’instruments à cordes et de production électronique",
         ):
             self.assertIn(text, html)
-        self.assertIn('src="../images/hero-atelier-performance-supplied.png"', html)
+        self.assertIn('class="atelier-split-hero__image atelier-split-hero__image--collage"', html)
+        self.assertIn('src="../images/hero-collage2.png"', html)
+        self.assertIn('width="1114" height="1594"', html)
         self.assertNotIn('class="hero-kinetic"', html)
 
     def test_french_home_consolidates_artist_introduction(self):

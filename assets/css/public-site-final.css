@@ -11,7 +11,7 @@
 }
 
 .page .atelier-split-hero {
-  margin-top: 66px;
+  margin-top: 0;
 }
 
 .atelier-split-hero__copy {
@@ -239,7 +239,8 @@ textarea:focus-visible {
     border-bottom: 1px solid #111;
   }
 
-  .atelier-split-hero--ja {
+  .atelier-split-hero--ja,
+  .atelier-split-hero--fr {
     height: auto;
     min-height: 0;
     grid-template-columns: 1fr;

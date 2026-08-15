@@ -216,7 +216,7 @@ console.log(JSON.stringify({ attributes: mount.attributes, html: mount.innerHTML
         self.assertIn("object-fit: contain", collage.group(1))
 
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
-        mobile_hero = re.search(r"\.atelier-split-hero--ja\s*\{([^}]*)\}", mobile_css)
+        mobile_hero = re.search(r"\.atelier-split-hero--ja,\s*\.atelier-split-hero--fr\s*\{([^}]*)\}", mobile_css)
         mobile_collage_media = re.search(r"\.atelier-split-hero__media:has\(\.atelier-split-hero__image--collage\)\s*\{([^}]*)\}", mobile_css)
         mobile_button = re.search(r"\.atelier-split-hero__actions a\s*\{([^}]*)\}", mobile_css)
         self.assertIn("grid-template-columns: 1fr", mobile_hero.group(1))
