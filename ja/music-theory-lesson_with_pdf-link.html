@@ -735,22 +735,18 @@
     box-shadow: none !important;
   }
 </style>
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css" />
-  <link rel="stylesheet" href="../assets/css/acs-core.css" />
+  <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
 </head>
 
-<body>
+<body class="lesson-detail-page">
   <header class="acs-site-header" data-shared-header></header>
 
   <main>
-    <figure class="lesson-header-image" aria-label="Music theory online private lessons">
-      <img src="../images/home-3.jpg" width="1903" height="1403" alt="楽譜とPro Toolsセッションを開いた制作机" loading="lazy" decoding="async">
-    </figure>
-
-    <section class="hero">
-      <div>
+    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
+      <div class="lesson-detail-hero__copy">
         <div class="eyebrow">Online Music Theory Lesson</div>
-        <h1>理論を、音として理解する。</h1>
+        <h1 id="lesson-title">理論を、音として理解する。</h1>
         <p class="lead">
           楽典、コード、和声、対位法、ソルフェージュ、楽曲分析。
           知識として覚えるだけでなく、作曲・演奏・DTM・作品制作に使える音楽理論として学びます。
@@ -766,7 +762,11 @@
         </div>
       </div>
 
-      <aside class="hero-card" aria-label="Lesson summary">
+      <figure class="lesson-detail-hero__media lesson-detail-hero__media--theory" aria-label="Music theory online private lessons">
+        <img src="../images/home-3.jpg" width="1903" height="1403" alt="楽譜とPro Toolsセッションを開いた制作机" loading="lazy" decoding="async">
+      </figure>
+
+      <aside class="lesson-detail-hero__summary" aria-label="Lesson summary">
         <h2>このレッスンで扱うこと</h2>
         <ul>
           <li>音程、調性、コード、スケールの基礎</li>

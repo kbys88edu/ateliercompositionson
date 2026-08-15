@@ -660,23 +660,19 @@
     box-shadow: none !important;
   }
 </style>
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css" />
-  <link rel="stylesheet" href="../assets/css/acs-core.css" />
+  <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
 </head>
 
-<body>
+<body class="lesson-detail-page">
   <header class="acs-site-header" data-shared-header></header>
 
   <main>
-    <figure class="lesson-header-image" aria-label="DTM online private lessons">
-      <img src="../images/ja-dtm-header.png" alt="DTM / sound design / mixing / creative production">
-    </figure>
-
-    <section class="hero">
-      <div>
+    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
+      <div class="lesson-detail-hero__copy">
         <div class="eyebrow">Online DTM / Sound Production Lesson</div>
 
-        <h1>
+        <h1 id="lesson-title">
           DTMを、操作ではなく<br>
           音の設計として学ぶ。
         </h1>
@@ -694,7 +690,11 @@
         </div>
       </div>
 
-      <aside class="hero-panel">
+      <figure class="lesson-detail-hero__media lesson-detail-hero__media--dtm" aria-label="DTM online private lessons">
+        <img src="../images/ja-dtm-header.png" alt="DTM / sound design / mixing / creative production">
+      </figure>
+
+      <aside class="lesson-detail-hero__summary">
         <h2>扱う内容</h2>
         <ul>
           <li>DAWの基本操作と制作ワークフロー</li>

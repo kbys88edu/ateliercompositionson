@@ -296,22 +296,18 @@
     box-shadow: none !important;
   }
 </style>
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css" />
-  <link rel="stylesheet" href="../assets/css/acs-core.css" />
+  <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
 </head>
 
-<body>
+<body class="lesson-detail-page">
   <header class="acs-site-header" data-shared-header></header>
 
   <main>
-    <figure class="lesson-header-image">
-      <img src="../images/module5-vr-performance-documentation.jpeg" width="2048" height="1536" alt="VR、音響、映像、演奏を組み合わせた作品の会場記録" loading="lazy" decoding="async">
-    </figure>
-
-    <section class="hero">
-      <div>
+    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
+      <div class="lesson-detail-hero__copy">
         <div class="eyebrow">Module 05 / Sound Technology &amp; AI</div>
-        <h1>技術を、作品のための道具にする。</h1>
+        <h1 id="lesson-title">技術を、作品のための道具にする。</h1>
         <p class="lead muted">
           音楽プログラミング、Python、DAW拡張、センサー、生成システム、Suno、ChatGPT、Codex、LLM、Deep Learning、映像との連携を、
           単なる操作方法ではなく、作品制作やサウンドデザインのための手段として扱います。
@@ -322,7 +318,11 @@
         </div>
       </div>
 
-      <aside class="hero-panel">
+      <figure class="lesson-detail-hero__media lesson-detail-hero__media--technology">
+        <img src="../images/module5-vr-performance-documentation.jpeg" width="2048" height="1536" alt="VR、音響、映像、演奏を組み合わせた作品の会場記録" loading="lazy" decoding="async">
+      </figure>
+
+      <aside class="lesson-detail-hero__summary">
         <h2>扱うこと</h2>
         <ul class="list">
           <li>音楽プログラミング、Python、DAW拡張の基本設計</li>

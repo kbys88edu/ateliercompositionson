@@ -269,8 +269,6 @@ blockquote{
     box-shadow: none !important;
   }
 </style>
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css" />
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
@@ -280,19 +278,16 @@ blockquote{
     gtag("config", "G-Y1792EBWTT");
   </script>
   <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
 </head>
-<body>
+<body class="lesson-detail-page">
   <header class="acs-site-header" data-shared-header></header>
 
   <main>
-    <figure class="lesson-header-image" aria-label="Solfège and music theory online private lessons">
-      <img src="../images/home-3.jpg" width="1903" height="1403" alt="読譜と聴音に用いる楽譜を置いた制作机" loading="lazy" decoding="async">
-    </figure>
-
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
+    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
+      <div class="lesson-detail-hero__copy">
         <p class="kicker">Online Solfège & Music Theory Lesson</p>
-        <h1 id="hero-title">音を、聴いて、<br>読み、書き、理解する。</h1>
+        <h1 id="lesson-title">音を、聴いて、<br>読み、書き、理解する。</h1>
         <p class="lead">
           楽譜を読む、音程を聴き取る、リズムを感じる、メロディを歌う。
           ソルフェージュは、音楽を感覚だけで終わらせず、耳・目・身体・理論をつなげるための基礎訓練です。
@@ -303,12 +298,16 @@ blockquote{
         </div>
       </div>
 
-      <div class="hero-meta" aria-hidden="true">
+      <figure class="lesson-detail-hero__media lesson-detail-hero__media--solfege" aria-label="Solfège and music theory online private lessons">
+        <img src="../images/home-3.jpg" width="1903" height="1403" alt="読譜と聴音に用いる楽譜を置いた制作机" loading="lazy" decoding="async">
+      </figure>
+
+      <aside class="lesson-detail-hero__summary" aria-hidden="true">
         <span>listen</span>
         <span>read</span>
         <span>sing</span>
         <span>write</span>
-      </div>
+      </aside>
     </section>
 
     <section class="intro-band">

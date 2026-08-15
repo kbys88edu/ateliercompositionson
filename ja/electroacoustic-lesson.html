@@ -233,22 +233,18 @@
     box-shadow: none !important;
   }
 </style>
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css" />
-  <link rel="stylesheet" href="../assets/css/acs-core.css" />
+  <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
 </head>
 
-<body>
+<body class="lesson-detail-page">
   <header class="acs-site-header" data-shared-header></header>
 
   <main>
-    <figure class="lesson-header-image">
-      <img src="../images/max-screen.png" width="1488" height="1090" alt="身体動作の入力と音響合成を接続したMax/MSPパッチ" loading="lazy" decoding="async">
-    </figure>
-
-    <section class="hero">
-      <div>
+    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
+      <div class="lesson-detail-hero__copy">
         <div class="eyebrow">Module 04 / Electroacoustic</div>
-        <h1>音を素材として、作品をつくる。</h1>
+        <h1 id="lesson-title">音を素材として、作品をつくる。</h1>
         <p class="lead muted">
           録音素材、声、環境音、シンセサイザー、ノイズ、空間、編集、加工を使いながら、
           電子音響作品やサウンドアートのための聴き方と構成を学びます。
@@ -260,7 +256,11 @@
         </div>
       </div>
 
-      <aside class="hero-panel">
+      <figure class="lesson-detail-hero__media lesson-detail-hero__media--electroacoustic">
+        <img src="../images/max-screen.png" width="1488" height="1090" alt="身体動作の入力と音響合成を接続したMax/MSPパッチ" loading="lazy" decoding="async">
+      </figure>
+
+      <aside class="lesson-detail-hero__summary">
         <h2>扱うこと</h2>
         <ul class="list">
           <li>録音素材、声、環境音の扱い</li>
