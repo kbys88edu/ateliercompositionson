@@ -221,6 +221,26 @@ class LessonDetailFinalTests(unittest.TestCase):
         ):
             self.assertIn(rule, css)
 
+    def test_shared_lesson_css_resets_legacy_page_conflicts(self):
+        css = page_html("assets/css/lesson-detail-final.css")
+        for rule in (
+            ".lesson-detail-page :is(.band, .dark, .cta, .price-card.emphasis) {",
+            ".lesson-detail-page :is(.band, .dark, .cta, .price-card.emphasis) :is(p, li, .muted, .section-kicker) {",
+            "align-self: start;",
+            "height: clamp(520px, 50vw, 680px);",
+            ".lesson-detail-page :is(.hero-actions, .button-row) {",
+            "width: auto;",
+            "border: 0;",
+            ".lesson-detail-page .lesson-detail-hero__media--composition img {",
+            ".lesson-detail-page .lesson-detail-hero__media--dtm img {",
+            ".lesson-detail-page .lesson-detail-hero__media--theory img {",
+            ".lesson-detail-page .lesson-detail-hero__media--solfege img {",
+            ".lesson-detail-page .lesson-detail-hero__media--electroacoustic img {",
+            ".lesson-detail-page .lesson-detail-hero__media--technology img {",
+            "display: grid;\n    width: 100%;\n    grid-template-columns: 1fr;",
+        ):
+            self.assertIn(rule, css)
+
     def test_all_lesson_details_load_shared_refinement_css_and_have_one_h1(self):
         for page_path in (*JA_DETAILS, *FR_DETAILS):
             page = load_page(page_path)
