@@ -1,80 +1,87 @@
-.lesson-detail-page {
-  background: var(--acs-surface);
-  color: var(--acs-ink);
+:root {
+  --detail-ink: #111;
+  --detail-muted: #5f5f5f;
+  --detail-fine: #d4d4d4;
+  --detail-paper: #fff;
 }
 
-.lesson-detail-page .site-header {
+body {
+  background: var(--detail-paper);
+  color: var(--detail-ink);
+}
+
+.site-header {
   min-height: 66px;
   padding-top: 13px;
   padding-bottom: 13px;
-  border-color: var(--acs-line);
+  border-color: var(--detail-ink);
 }
 
-.lesson-detail-page .brand {
+.brand {
   font-weight: 600;
 }
 
-.lesson-detail-page .hero {
+.hero {
   width: min(100%, 1480px);
   margin-inline: auto;
   align-items: center;
-  border-bottom: var(--acs-rule);
+  border-bottom: 1px solid var(--detail-ink);
 }
 
-.lesson-detail-page .hero > * {
+.hero > * {
   min-width: 0;
 }
 
-.lesson-detail-page .hero h1,
-.lesson-detail-page .hero-copy h1,
-.lesson-detail-page h1,
-.lesson-detail-page h2,
-.lesson-detail-page h3 {
+.hero h1,
+.hero-copy h1,
+h1,
+h2,
+h3 {
   letter-spacing: 0;
 }
 
-.lesson-detail-page .lead {
+.lead {
   max-width: 42rem;
 }
 
-.lesson-detail-page .hero-panel,
-.lesson-detail-page .hero-card,
-.lesson-detail-page .card,
-.lesson-detail-page .price-card,
-.lesson-detail-page .sample-card,
-.lesson-detail-page .wide-card,
-.lesson-detail-page .video-card,
-.lesson-detail-page .soundcloud-card {
+.hero-panel,
+.hero-card,
+.card,
+.price-card,
+.sample-card,
+.wide-card,
+.video-card,
+.soundcloud-card {
   border-radius: 0;
   box-shadow: none;
 }
 
-.lesson-detail-page .btn,
-.lesson-detail-page .button,
-.lesson-detail-page .nav-cta {
+.btn,
+.button,
+.nav-cta {
   min-height: 44px;
   border-radius: 0;
 }
 
-.lesson-detail-page .btn:focus-visible,
-.lesson-detail-page .button:focus-visible,
-.lesson-detail-page .nav a:focus-visible,
-.lesson-detail-page .brand:focus-visible,
-.lesson-detail-page a:focus-visible,
-.lesson-detail-page button:focus-visible,
-.lesson-detail-page summary:focus-visible {
+.btn:focus-visible,
+.button:focus-visible,
+.nav a:focus-visible,
+.brand:focus-visible,
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
   outline: 2px solid #1769ff;
   outline-offset: 3px;
 }
 
-.lesson-detail-page .lesson-image {
+.lesson-image {
   width: min(100%, 1480px);
   margin-inline: auto;
   overflow: hidden;
-  border-bottom: var(--acs-rule);
+  border-bottom: 1px solid var(--detail-ink);
 }
 
-.lesson-detail-page .lesson-image img {
+.lesson-image img {
   width: 100%;
   height: auto;
   max-height: 620px;
@@ -82,28 +89,28 @@
   object-position: center;
 }
 
-.lesson-detail-page main > section:not(.lesson-detail-hero) {
-  border-bottom-color: var(--acs-line-soft);
+main > section:not(.hero) {
+  border-bottom-color: var(--detail-fine);
 }
 
-.lesson-detail-page .video-wrap,
-.lesson-detail-page .audio-wrap {
+.video-wrap,
+.audio-wrap {
   overflow: hidden;
 }
 
 @media (max-width: 900px) {
-  .lesson-detail-page {
+  body {
     min-width: 0;
     overflow-x: hidden;
     font-size: 16px;
   }
 
-  .lesson-detail-page .site-header {
+  .site-header {
     min-height: 64px;
     padding-inline: 6vw;
   }
 
-  .lesson-detail-page .site-header .nav {
+  .site-header .nav {
     display: flex;
     width: 100%;
     flex-direction: row;
@@ -113,11 +120,11 @@
     padding: 0;
   }
 
-  .lesson-detail-page .site-header .nav > a:not(.nav-cta) {
+  .site-header .nav > a:not(.nav-cta) {
     display: none;
   }
 
-  .lesson-detail-page .site-header .nav > a.brand {
+  .site-header .nav > a.brand {
     display: inline-flex;
     margin-right: auto;
     font-size: 11px;
@@ -125,7 +132,7 @@
     white-space: nowrap;
   }
 
-  .lesson-detail-page .site-header > a.brand {
+  .site-header > a.brand {
     display: inline-flex;
     margin-right: auto;
     font-size: 11px;
@@ -133,93 +140,93 @@
     white-space: nowrap;
   }
 
-  .lesson-detail-page .site-header > a.brand + .nav {
+  .site-header > a.brand + .nav {
     width: auto;
     flex: 0 0 auto;
   }
 
-  .lesson-detail-page .site-header .nav-links {
+  .site-header .nav-links {
     display: flex;
     margin-left: auto;
   }
 
-  .lesson-detail-page .site-header .nav-links > a:not(.nav-cta) {
+  .site-header .nav-links > a:not(.nav-cta) {
     display: none;
   }
 
-  .lesson-detail-page .site-header .nav .nav-cta {
+  .site-header .nav .nav-cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
 
-  .lesson-detail-page .hero {
+  .hero {
     padding: 52px 6vw 48px;
     gap: 32px;
   }
 
-  .lesson-detail-page .hero h1,
-  .lesson-detail-page .hero-copy h1,
-  .lesson-detail-page h1 {
+  .hero h1,
+  .hero-copy h1,
+  h1 {
     font-size: clamp(2.35rem, 11vw, 4rem);
     line-height: 1.08;
     overflow-wrap: break-word;
   }
 
-  .lesson-detail-page h2 {
+  h2 {
     font-size: clamp(1.85rem, 8vw, 3rem);
     line-height: 1.16;
   }
 
-  .lesson-detail-page .lead,
-  .lesson-detail-page p,
-  .lesson-detail-page li {
+  .lead,
+  p,
+  li {
     font-size: max(1rem, 16px);
   }
 
-  .lesson-detail-page main > section:not(.lesson-detail-hero),
-  .lesson-detail-page .band-inner {
+  main > section:not(.hero),
+  .band-inner {
     padding-left: 6vw;
     padding-right: 6vw;
   }
 
-  .lesson-detail-page .hero-panel,
-  .lesson-detail-page .hero-card,
-  .lesson-detail-page .card,
-  .lesson-detail-page .price-card,
-  .lesson-detail-page .sample-card,
-  .lesson-detail-page .wide-card,
-  .lesson-detail-page .video-card,
-  .lesson-detail-page .soundcloud-card {
+  .hero-panel,
+  .hero-card,
+  .card,
+  .price-card,
+  .sample-card,
+  .wide-card,
+  .video-card,
+  .soundcloud-card {
     min-width: 0;
     padding: 22px;
   }
 
-  .lesson-detail-page .button-row,
-  .lesson-detail-page .hero-actions {
+  .button-row,
+  .hero-actions {
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  .lesson-detail-page .btn,
-  .lesson-detail-page .button {
+  .btn,
+  .button {
     width: 100%;
     min-height: 46px;
   }
 
-  .lesson-detail-page .lesson-image {
+  .lesson-image {
     aspect-ratio: 16 / 10;
   }
 
-  .lesson-detail-page .lesson-image img {
+  .lesson-image img {
     height: 100%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lesson-detail-page *,
-  .lesson-detail-page *::before,
-  .lesson-detail-page *::after {
+  *,
+  *::before,
+  *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

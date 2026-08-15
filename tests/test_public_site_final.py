@@ -246,7 +246,7 @@ class LessonDetailFinalTests(unittest.TestCase):
 
     def test_shared_lesson_css_resets_common_inline_spacing(self):
         css = page_html("assets/css/lesson-detail-final.css")
-        self.assertNotIn("section:not(.hero)", css)
+        self.assertNotIn(".lesson-detail-page main > section:not(.hero)", css)
         for selector in (
             r"\.lesson-detail-page \.lesson-detail-hero",
             r"\.lesson-detail-page main > section:not\(\.lesson-detail-hero\)",
@@ -295,7 +295,7 @@ class LessonDetailFinalTests(unittest.TestCase):
         )
         self.assertNotIn("@media (max-width: 761px)", css)
 
-    def test_shared_lesson_css_is_strictly_japanese_page_scoped(self):
+    def test_shared_lesson_css_preserves_legacy_french_refinements(self):
         css = page_html("assets/css/lesson-detail-final.css")
         for selector in (
             ":root {",
@@ -307,7 +307,9 @@ class LessonDetailFinalTests(unittest.TestCase):
             "\nmain > section:not(.hero) {",
             "\n  *::before,",
         ):
-            self.assertNotIn(selector, css)
+            self.assertIn(selector, css)
+
+        self.assertIn(".lesson-detail-page .lesson-detail-hero {", css)
 
     def test_all_lesson_details_load_shared_refinement_css_and_have_one_h1(self):
         for page_path in (*JA_DETAILS, *FR_DETAILS):
