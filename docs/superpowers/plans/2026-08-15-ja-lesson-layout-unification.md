@@ -36,12 +36,18 @@ Add these methods to `LessonDetailFinalTests`:
 ```python
 def test_japanese_lessons_share_homepage_aligned_layout_hooks(self):
     for page_path in JA_DETAILS:
+        page = load_page(page_path)
         html = page_html(page_path)
         self.assertIn('class="lesson-detail-page"', html, page_path)
         self.assertIn('class="lesson-detail-hero"', html, page_path)
         self.assertIn('class="lesson-detail-hero__copy"', html, page_path)
         self.assertIn('class="lesson-detail-hero__media', html, page_path)
         self.assertIn('class="lesson-detail-hero__summary', html, page_path)
+        self.assertLess(
+            page.stylesheets.index("../assets/css/acs-core.css"),
+            page.stylesheets.index("../assets/css/lesson-detail-final.css"),
+            page_path,
+        )
 
 def test_shared_lesson_css_uses_compact_split_hero(self):
     css = page_html("assets/css/lesson-detail-final.css")
@@ -98,6 +104,13 @@ Change each body opening tag to:
 
 ```html
 <body class="lesson-detail-page">
+```
+
+Also place the shared stylesheets in this order on every target page so the detail layer is authoritative:
+
+```html
+<link rel="stylesheet" href="../assets/css/acs-core.css">
+<link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
 ```
 
 - [ ] **Step 2: Place the existing image inside the shared hero**
