@@ -42,6 +42,10 @@ class JapaneseHomepageTests(unittest.TestCase):
     def test_viewport_allows_zoom(self):
         self.assertNotIn("user-scalable=no", self.html)
 
+    def test_hero_collage_uses_supplied_intrinsic_dimensions(self):
+        hero = next(image for image in self.page.images if "atelier-split-hero__image--collage" in image.get("class", ""))
+        self.assertEqual(("1114", "1594"), (hero.get("width"), hero.get("height")))
+
     def test_old_duplicate_hero_variants_are_absent(self):
         for class_name in (
             "hero-kinetic", "ja-hero-copy", "ja-hero-kinetic",
@@ -57,7 +61,7 @@ class JapaneseHomepageTests(unittest.TestCase):
         self.assertEqual("eager", hero_image.get("loading"))
         self.assertEqual("high", hero_image.get("fetchpriority"))
         self.assertEqual("async", hero_image.get("decoding"))
-        self.assertEqual(("1200", "1600"), (hero_image.get("width"), hero_image.get("height")))
+        self.assertEqual(("1114", "1594"), (hero_image.get("width"), hero_image.get("height")))
         for text in (
             "オンライン作曲・ソルフェージュ・DTM・電子音楽レッスン",
             "Atelier Composition Son",

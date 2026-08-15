@@ -198,9 +198,11 @@ console.log(JSON.stringify({ attributes: mount.attributes, html: mount.innerHTML
         hero = re.search(r"\.atelier-split-hero\s*\{([^}]*)\}", css)
         media = re.search(r"\.atelier-split-hero__media\s*\{([^}]*)\}", css)
         image = re.search(r"\.atelier-split-hero__image\s*\{([^}]*)\}", css)
+        collage = re.search(r"\.atelier-split-hero__image--collage\s*\{([^}]*)\}", css)
         self.assertIsNotNone(hero)
         self.assertIsNotNone(media)
         self.assertIsNotNone(image)
+        self.assertIsNotNone(collage)
         self.assertIn("grid-template-columns: minmax(0, 64fr) minmax(0, 36fr)", hero.group(1))
         for declaration in (
             "height: 100%",
@@ -211,11 +213,15 @@ console.log(JSON.stringify({ attributes: mount.attributes, html: mount.innerHTML
             self.assertIn(declaration, media.group(1))
         self.assertIn("height: 100%", image.group(1))
         self.assertIn("object-fit: cover", image.group(1))
+        self.assertIn("object-fit: contain", collage.group(1))
 
         mobile_css = css.split("@media (max-width: 767px)", 1)[1]
-        mobile_hero = re.search(r"\.atelier-split-hero\s*\{([^}]*)\}", mobile_css)
+        mobile_hero = re.search(r"\.atelier-split-hero--ja\s*\{([^}]*)\}", mobile_css)
+        mobile_collage_media = re.search(r"\.atelier-split-hero__media:has\(\.atelier-split-hero__image--collage\)\s*\{([^}]*)\}", mobile_css)
         mobile_button = re.search(r"\.atelier-split-hero__actions a\s*\{([^}]*)\}", mobile_css)
-        self.assertIn("grid-template-columns: minmax(0, 60fr) minmax(0, 40fr)", mobile_hero.group(1))
+        self.assertIn("grid-template-columns: 1fr", mobile_hero.group(1))
+        self.assertIsNotNone(mobile_collage_media)
+        self.assertIn("aspect-ratio: 1114 / 1594", mobile_collage_media.group(1))
         self.assertIn("min-height: 44px", mobile_button.group(1))
         self.assertIn("font-size: 16px", mobile_css)
 
