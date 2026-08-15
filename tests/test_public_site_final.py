@@ -192,6 +192,35 @@ class FrenchFinalTests(unittest.TestCase):
 
 
 class LessonDetailFinalTests(unittest.TestCase):
+    def test_japanese_lessons_share_homepage_aligned_layout_hooks(self):
+        for page_path in JA_DETAILS:
+            page = load_page(page_path)
+            html = page_html(page_path)
+            self.assertIn('class="lesson-detail-page"', html, page_path)
+            self.assertIn('class="lesson-detail-hero"', html, page_path)
+            self.assertIn('class="lesson-detail-hero__copy"', html, page_path)
+            self.assertIn('class="lesson-detail-hero__media', html, page_path)
+            self.assertIn('class="lesson-detail-hero__summary', html, page_path)
+            self.assertLess(
+                page.stylesheets.index("../assets/css/acs-core.css"),
+                page.stylesheets.index("../assets/css/lesson-detail-final.css"),
+                page_path,
+            )
+
+    def test_shared_lesson_css_uses_compact_split_hero(self):
+        css = page_html("assets/css/lesson-detail-final.css")
+        for rule in (
+            ".lesson-detail-hero {",
+            "grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);",
+            ".lesson-detail-hero__media img {",
+            "object-fit: cover;",
+            ".lesson-detail-hero h1 {",
+            "font-size: clamp(3rem, 5vw, 4rem);",
+            "@media (max-width: 760px)",
+            "grid-template-columns: 1fr;",
+        ):
+            self.assertIn(rule, css)
+
     def test_all_lesson_details_load_shared_refinement_css_and_have_one_h1(self):
         for page_path in (*JA_DETAILS, *FR_DETAILS):
             page = load_page(page_path)
