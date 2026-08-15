@@ -222,6 +222,17 @@ class JapaneseHomepageTests(unittest.TestCase):
         ):
             self.assertIn(text, profile_body)
 
+    def test_instructor_summary_describes_education_and_practice(self):
+        self.assertIn(
+            "東京芸術大学作曲科卒業後、スイス・フランスで学び、パリを中心に活動した経験のある作曲家・アーティストです。"
+            "クラシック音楽の基礎から、現代音楽、電子音響、サウンドデザイン、Max/MSP、AIを用いた制作まで、"
+            "一人ひとりの関心や作品に合わせて指導します。",
+            self.html,
+        )
+
+    def test_first_audience_path_welcomes_beginners_through_professionals(self):
+        self.assertIn("<h3>制作を始める初心者から、プロまで</h3>", self.html)
+
     def test_tools_are_compact_resources_before_the_final_consultation(self):
         positions = {section_id: self.page.ids.index(section_id) for section_id in (
             "works", "voices", "price", "faq", "contact", "tools",
