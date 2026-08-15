@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -242,6 +243,71 @@ class LessonDetailFinalTests(unittest.TestCase):
             "display: grid;\n    width: 100%;\n    grid-template-columns: 1fr;",
         ):
             self.assertIn(rule, css)
+
+    def test_shared_lesson_css_resets_common_inline_spacing(self):
+        css = page_html("assets/css/lesson-detail-final.css")
+        self.assertNotIn("section:not(.hero)", css)
+        for selector in (
+            r"\.lesson-detail-page \.lesson-detail-hero",
+            r"\.lesson-detail-page main > section:not\(\.lesson-detail-hero\)",
+            r"\.lesson-detail-page main > section\.dark",
+        ):
+            self.assertRegex(
+                css,
+                rf"(?s){selector}\s*\{{[^}}]*padding-inline:\s*0;",
+            )
+
+    def test_shared_lesson_css_defines_section_and_card_typography(self):
+        css = page_html("assets/css/lesson-detail-final.css")
+        for selector, declarations in (
+            (
+                r"\.lesson-detail-page main > section:not\(\.lesson-detail-hero\) h2",
+                ("font-size: var(--acs-h2);", "line-height: 1.2;"),
+            ),
+            (
+                r"\.lesson-detail-page main > section:not\(\.lesson-detail-hero\) h3",
+                ("font-size: var(--acs-h3);", "line-height: 1.35;"),
+            ),
+            (
+                r"\.lesson-detail-page :is\(\.card, \.wide-card, \.sample-card, \.video-card, \.soundcloud-card\) :is\(p, li\)",
+                ("font-size: var(--acs-text-base);", "line-height: 1.8;"),
+            ),
+            (
+                r"\.lesson-detail-page main > section:not\(\.lesson-detail-hero\) li",
+                ("line-height: 1.8;",),
+            ),
+        ):
+            for declaration in declarations:
+                self.assertRegex(
+                    css,
+                    rf"(?s){selector}\s*\{{[^}}]*{re.escape(declaration)}",
+                )
+        self.assertRegex(
+            css,
+            r"(?s)\.lesson-detail-page :is\(\.card, \.price-card, \.sample-card, \.wide-card, \.video-card, \.soundcloud-card\)\s*\{[^}]*padding:\s*var\(--acs-space-5\);",
+        )
+
+    def test_shared_lesson_css_collapses_content_grids_at_760px_only(self):
+        css = page_html("assets/css/lesson-detail-final.css")
+        self.assertRegex(
+            css,
+            r"(?s)@media \(max-width: 760px\).*?\.lesson-detail-page :is\(\.grid-2, \.grid-3, \.cards, \.card-grid, \.step-grid, \.mini-grid, \.video-grid, \.sample-grid, \.price-grid\)\s*\{[^}]*grid-template-columns:\s*1fr;",
+        )
+        self.assertNotIn("@media (max-width: 761px)", css)
+
+    def test_shared_lesson_css_is_strictly_japanese_page_scoped(self):
+        css = page_html("assets/css/lesson-detail-final.css")
+        for selector in (
+            ":root {",
+            "\nbody {",
+            "\n.site-header {",
+            "\n.hero {",
+            "\n.hero > * {",
+            "\n.lesson-image {",
+            "\nmain > section:not(.hero) {",
+            "\n  *::before,",
+        ):
+            self.assertNotIn(selector, css)
 
     def test_all_lesson_details_load_shared_refinement_css_and_have_one_h1(self):
         for page_path in (*JA_DETAILS, *FR_DETAILS):
