@@ -354,6 +354,16 @@ main > section:not(.hero) {
   border-color: var(--acs-line-soft);
 }
 
+.lesson-detail-page .price.recommended .badge {
+  border-color: var(--acs-line);
+}
+
+.lesson-detail-page .price.recommended .button.primary {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
 .lesson-detail-page .lesson-detail-hero__media--composition img { object-position: center; }
 .lesson-detail-page .lesson-detail-hero__media--dtm img { object-position: center; }
 .lesson-detail-page .lesson-detail-hero__media--theory img { object-position: center; }

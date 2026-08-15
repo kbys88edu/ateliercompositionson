@@ -226,6 +226,8 @@ class LessonDetailFinalTests(unittest.TestCase):
         for rule in (
             ".lesson-detail-page :is(.band, .dark, .cta, .price, .price.recommended, .price-card.emphasis) {",
             ".lesson-detail-page :is(.band, .dark, .cta, .price, .price.recommended, .price-card.emphasis) :is(p, li, .muted, .small, .section-kicker) {",
+            ".lesson-detail-page .price.recommended .badge {\n  border-color: var(--acs-line);\n}",
+            ".lesson-detail-page .price.recommended .button.primary {\n  background: #111;\n  color: #fff;\n  border-color: #111;\n}",
             "align-self: start;",
             "height: clamp(520px, 50vw, 680px);",
             ".lesson-detail-page :is(.hero-actions, .button-row) {",
