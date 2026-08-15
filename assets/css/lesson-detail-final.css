@@ -338,13 +338,13 @@ main > section:not(.hero) {
   box-shadow: none;
 }
 
-.lesson-detail-page :is(.band, .dark, .cta, .price-card.emphasis) {
+.lesson-detail-page :is(.band, .dark, .cta, .price, .price.recommended, .price-card.emphasis) {
   background: #fff;
   color: #111;
   border-color: var(--acs-line);
 }
 
-.lesson-detail-page :is(.band, .dark, .cta, .price-card.emphasis) :is(p, li, .muted, .section-kicker) {
+.lesson-detail-page :is(.band, .dark, .cta, .price, .price.recommended, .price-card.emphasis) :is(p, li, .muted, .small, .section-kicker) {
   color: #111;
 }
 

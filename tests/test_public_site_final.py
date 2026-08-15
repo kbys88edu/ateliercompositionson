@@ -224,8 +224,8 @@ class LessonDetailFinalTests(unittest.TestCase):
     def test_shared_lesson_css_resets_legacy_page_conflicts(self):
         css = page_html("assets/css/lesson-detail-final.css")
         for rule in (
-            ".lesson-detail-page :is(.band, .dark, .cta, .price-card.emphasis) {",
-            ".lesson-detail-page :is(.band, .dark, .cta, .price-card.emphasis) :is(p, li, .muted, .section-kicker) {",
+            ".lesson-detail-page :is(.band, .dark, .cta, .price, .price.recommended, .price-card.emphasis) {",
+            ".lesson-detail-page :is(.band, .dark, .cta, .price, .price.recommended, .price-card.emphasis) :is(p, li, .muted, .small, .section-kicker) {",
             "align-self: start;",
             "height: clamp(520px, 50vw, 680px);",
             ".lesson-detail-page :is(.hero-actions, .button-row) {",
