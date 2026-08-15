@@ -66,7 +66,7 @@ class JapaneseHomepageTests(unittest.TestCase):
             "オンライン作曲・ソルフェージュ・DTM・電子音楽レッスン",
             "Atelier Composition Son",
             "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。",
-            "制作について相談する",
+            "30分無料相談",
             "進め方と料金を見る",
         ):
             self.assertIn(text, self.html)
