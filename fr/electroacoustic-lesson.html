@@ -1,173 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cours d’électroacoustique et timbre en ligne | Atelier Composition Son</title>
-  <meta name="description" content="Cours individuel d’électroacoustique en ligne : timbre, texture, montage, transformation sonore, espace, synthèse et composition avec matériaux numériques." />
-  <link rel="canonical" href="https://ateliercompositionson.com/fr/electroacoustic-lesson.html" />
-  <meta property="og:title" content="Cours d’électroacoustique et timbre en ligne | Atelier Composition Son" />
-  <meta property="og:description" content="Explorer le timbre, la texture, le montage, l’espace et la transformation sonore dans un cadre individuel." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://ateliercompositionson.com/fr/electroacoustic-lesson.html" />
-  <meta property="og:site_name" content="Atelier Composition Son" />
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Création électroacoustique et Max/MSP en ligne | Atelier Composition Son</title>
+  <meta name="description" content="Accompagnement individuel en création électroacoustique : timbre, montage, espace, transformation sonore, Max/MSP et technologies musicales.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ateliercompositionson.com/fr/electroacoustic-lesson.html">
+  <link rel="icon" href="../images/fr/acs-logo-header.webp" type="image/webp">
+  <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/electroacoustic-lesson.html">
+  <link rel="alternate" hreflang="ja" href="https://ateliercompositionson.com/ja/electroacoustic-lesson.html">
+  <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/fr/electroacoustic-lesson.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Création électroacoustique et Max/MSP en ligne | Atelier Composition Son">
+  <meta property="og:description" content="Composer avec le timbre, le montage, l’espace et la transformation du son.">
+  <meta property="og:url" content="https://ateliercompositionson.com/fr/electroacoustic-lesson.html">
+  <meta property="og:image" content="https://ateliercompositionson.com/images/max-screen.png">
+  <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/fr-site.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag("js", new Date());
-    gtag("config", "G-Y1792EBWTT");
+    gtag('js', new Date());
+    gtag('config', 'G-Y1792EBWTT');
   </script>
-
-  <style>
-    :root { --bg:#ffffff; --paper:#ffffff; --ink:#111; --muted:#6d6a63; --line:#111; --fine:rgba(17,17,17,.18); }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin:0; background:#fff; color:var(--ink); font-family:"Helvetica Neue", Helvetica, Arial, sans-serif; line-height:1.8; letter-spacing:.015em; -webkit-font-smoothing:antialiased; }
-    a { color:inherit; text-decoration:none; }
-    img { max-width:100%; display:block; border:0; outline:0; box-shadow:none; }
-    .site-header { position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:16px 5vw; border-bottom:1px solid var(--line); background:rgba(255,255,255,.94); backdrop-filter:blur(10px); }
-    .brand { font-size:13px; letter-spacing:.16em; text-transform:uppercase; }
-    .nav { display:flex; align-items:center; gap:18px; color:var(--muted); font-size:13px; }
-    .nav a:hover { color:var(--ink); }
-    .nav-cta { border:1px solid var(--ink); padding:7px 13px; color:var(--ink); }
-    .hero { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr); gap:42px; padding:92px 5vw 72px; align-items:end; }
-    .eyebrow, .section-label { color:var(--muted); font-size:12px; letter-spacing:.18em; text-transform:uppercase; }
-    .eyebrow { margin-bottom:26px; }
-    h1 { margin:0 0 28px; font-size:clamp(42px,7.6vw,112px); line-height:.98; font-weight:500; letter-spacing:-.04em; }
-    h2 { margin:0 0 22px; font-size:clamp(30px,4vw,56px); line-height:1.08; font-weight:400; letter-spacing:-.04em; }
-    h3 { margin:0 0 10px; font-size:22px; line-height:1.35; font-weight:400; }
-    p { margin:0; color:var(--muted); }
-    p + p { margin-top:14px; }
-    .lead { max-width:760px; color:var(--ink); font-size:clamp(17px,2vw,21px); line-height:1.85; }
-    .hero-panel, .card { border:1px solid var(--line); background:var(--paper); padding:30px; }
-    .hero-panel ul, .list { list-style:none; margin:0; padding:0; }
-    .hero-panel li, .list li { border-bottom:1px solid var(--fine); padding:10px 0; color:var(--muted); }
-    .hero-panel li:first-child, .list li:first-child { border-top:1px solid var(--fine); }
-    .button-row { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; min-height:46px; border:1px solid var(--line); padding:12px 18px; font-size:14px; }
-    .btn.primary { background:var(--ink); color:#fff; }
-    .lesson-image { margin:0; }
-    .lesson-image img { width:100%; max-height:520px; object-fit:cover; filter:grayscale(100%); }
-    section { display:grid; grid-template-columns:.34fr 1fr; gap:56px; padding:82px 5vw; }
-    .content { max-width:900px; }
-    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:28px; }
-    .note { margin-top:22px; color:var(--muted); font-size:14px; }
-    footer { display:flex; justify-content:space-between; gap:24px; padding:34px 5vw; color:var(--muted); font-size:13px; }
-    @media (max-width: 820px) { .nav { display:none; } .hero, section, .cards { grid-template-columns:1fr; } .hero { padding-top:64px; } .btn { width:100%; min-height:48px; } footer { flex-direction:column; } }
-  </style>
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css" />
-  <link rel="stylesheet" href="../assets/css/acs-core.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://ateliercompositionson.com/fr/" },
+          { "@type": "ListItem", "position": 2, "name": "Électroacoustique", "item": "https://ateliercompositionson.com/fr/electroacoustic-lesson.html" }
+        ]
+      },
+      {
+        "@type": "Course",
+        "name": "Création électroacoustique et technologies musicales",
+        "description": "Accompagnement de projet autour du timbre, du montage, de l’espace, de Max/MSP et de la transformation sonore.",
+        "url": "https://ateliercompositionson.com/fr/electroacoustic-lesson.html",
+        "provider": { "@type": "Organization", "name": "Atelier Composition Son", "url": "https://ateliercompositionson.com/" },
+        "inLanguage": "fr",
+        "courseMode": "online"
+      }
+    ]
+  }
+  </script>
 </head>
-<body>
-<header class="acs-site-header" data-shared-header></header>
+<body class="fr-site" data-page-type="course">
+  <header class="acs-site-header" data-shared-header></header>
 
   <main>
-    <section class="hero">
-      <div>
-        <div class="eyebrow">électroacoustique et timbre</div>
-        <h1>Cours d’électroacoustique en ligne</h1>
-        <p class="lead">Explorer le son comme matériau : timbre, texture, montage, transformation, espace, synthèse et articulation entre gestes musicaux et outils numériques.</p>
-        <div class="button-row">
-          <a class="btn primary" href="booking.html" data-track="electroacoustic_detail_booking">Réserver un échange gratuit de 30 minutes</a>
-          <a class="btn" href="index.html#entrypoints">Retour aux cours</a>
+    <section class="fr-page-hero" id="top">
+      <div class="fr-shell fr-page-hero__grid">
+        <div class="fr-page-hero__copy">
+          <p class="fr-eyebrow">Électroacoustique · timbre · Max/MSP</p>
+          <h1>Créer avec le son comme matériau</h1>
+          <p>Développer une pièce, une installation ou une performance à partir d’enregistrements, de synthèse, de transformations et de relations entre geste, espace et écoute.</p>
+          <div class="fr-actions">
+            <a class="acs-btn acs-btn--primary" href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="course_hero">Réserver une séance</a>
+            <a class="acs-btn acs-btn--secondary" href="index.html#formats" data-track="click_secondary_cta" data-offer="none" data-cta-position="course_hero">Comparer les formats</a>
+          </div>
         </div>
+        <figure class="fr-page-hero__media">
+          <img src="../images/fr/electroacoustic-hero.webp" alt="Patch Max/MSP reliant captation gestuelle, synthèse et réverbération" width="1200" height="880" loading="eager" decoding="async" fetchpriority="high">
+        </figure>
       </div>
-      <aside class="hero-panel">
-        <h2>Ce cours peut aider à</h2>
-        <ul>
-          <li>développer l’écoute du timbre</li>
-          <li>organiser des matériaux sonores</li>
-          <li>travailler montage et transformation</li>
-          <li>construire une pièce électroacoustique</li>
-        </ul>
-      </aside>
     </section>
 
-    <figure class="lesson-image">
-      <img src="../images/max-screen.png" width="1488" height="1090" alt="Patch Max/MSP reliant captation gestuelle, synthèse et réverbération" loading="lazy" decoding="async">
-    </figure>
-
-    <section>
-      <div class="section-label">pour qui</div>
-      <div class="content">
-        <h2>Pour quels projets ?</h2>
-        <p>Le cours peut accompagner des projets de pièce électroacoustique, musique mixte, installation, musique à l’image, performance ou recherche sonore. Le point de départ peut être un enregistrement, un son synthétique, une session DAW, un patch ou une simple intuition d’écoute.</p>
-        <div class="cards">
-          <article class="card"><h3>Matériaux enregistrés</h3><p>Voix, objets, field recording, sons instrumentaux ou archives personnelles.</p></article>
-          <article class="card"><h3>Synthèse et transformation</h3><p>Comprendre les sons synthétiques, les traitements et les gestes de transformation.</p></article>
-          <article class="card"><h3>Montage et forme</h3><p>Organiser les matières dans le temps, entre contraste, continuité et tension.</p></article>
-          <article class="card"><h3>écoute du timbre</h3><p>Développer une attention au grain, à l’espace, à la densité et au mouvement.</p></article>
+    <section class="fr-section">
+      <div class="fr-shell fr-detail-grid">
+        <div><p class="fr-section-number">01</p><p class="fr-eyebrow">Projets</p></div>
+        <div class="fr-reading">
+          <h2>Écouter avant de choisir un traitement.</h2>
+          <p>Le travail peut accompagner une pièce électroacoustique, une musique mixte, une installation, une musique à l’image, une performance ou une recherche sonore. Le point de départ peut être un enregistrement, un son synthétique, une session DAW, un patch ou une intuition d’écoute.</p>
+          <h3>Matériaux enregistrés</h3>
+          <p>Voix, objets, prises instrumentales, field recording ou archives personnelles.</p>
+          <h3>Synthèse et transformation</h3>
+          <p>Choisir un geste de transformation en fonction des propriétés du matériau, plutôt qu’empiler des effets.</p>
+          <h3>Montage, forme et espace</h3>
+          <p>Organiser les matières dans le temps et penser leur profondeur, leur mouvement et leur mode de diffusion.</p>
         </div>
       </div>
     </section>
 
-    <section>
-      <div class="section-label">travail</div>
-      <div class="content">
-        <h2>Ce que nous pouvons travailler</h2>
-        <div class="cards">
-          <article class="card"><h3>Timbre</h3><p>écouter couleur, attaque, densité, grain, registre et évolution.</p></article>
-          <article class="card"><h3>Texture</h3><p>Composer avec couches, masses, lignes, répétitions et contrastes.</p></article>
-          <article class="card"><h3>Montage</h3><p>Choisir, couper, transformer, organiser et articuler les matériaux.</p></article>
-          <article class="card"><h3>Espace</h3><p>Penser profondeur, placement, mouvement et relation au format de diffusion.</p></article>
+    <section class="fr-section fr-section--paper">
+      <div class="fr-shell fr-detail-grid">
+        <div><p class="fr-section-number">02</p><p class="fr-eyebrow">Méthode</p></div>
+        <div>
+          <h2>Technologie et IA : une chaîne de décisions musicales.</h2>
+          <div class="fr-process" aria-label="Méthode en cinq étapes">
+            <article class="fr-process__step"><h3>Analyse</h3><p>Écouter, décrire et identifier les propriétés du matériau.</p></article>
+            <article class="fr-process__step"><h3>Contraintes</h3><p>Définir une durée, une densité, une tessiture, une règle ou une trajectoire.</p></article>
+            <article class="fr-process__step"><h3>Génération</h3><p>Produire plusieurs variantes avec un algorithme, un système ou un outil d’IA.</p></article>
+            <article class="fr-process__step"><h3>Sélection</h3><p>Comparer les résultats et décider ce qui possède une valeur musicale.</p></article>
+            <article class="fr-process__step"><h3>Réécriture</h3><p>Modifier, recomposer, orchestrer et intégrer le matériau dans une forme.</p></article>
+          </div>
+          <details class="fr-tool-details">
+            <summary>Outils possibles</summary>
+            <p>Max/MSP, enregistrements, DAW, synthèse, capteurs, Python et outils d’IA peuvent être mobilisés selon le projet. Le choix de l’outil vient après l’identification du problème musical.</p>
+          </details>
         </div>
       </div>
     </section>
 
-    <section>
-      <div class="section-label">séance</div>
-      <div class="content">
-        <h2>Exemple de séance</h2>
-        <ul class="list">
-          <li>écoute de vos sons, exports ou esquisses</li>
-          <li>repérage des qualités de timbre, texture, espace et forme</li>
-          <li>propositions de montage, transformation ou développement</li>
-          <li>pistes de travail dans DAW, Max/MSP ou avec fichiers audio</li>
-        </ul>
+    <section class="fr-section">
+      <div class="fr-shell fr-detail-grid">
+        <div><p class="fr-section-number">03</p><p class="fr-eyebrow">Documents</p></div>
+        <div class="fr-reading">
+          <h2>Ce que vous pouvez envoyer.</h2>
+          <ul>
+            <li>fichiers audio ou lien d’écoute ;</li>
+            <li>session DAW, patch Max/MSP ou captures d’écran ;</li>
+            <li>description d’une installation, d’une performance ou d’un dispositif ;</li>
+            <li>question sur le timbre, le montage, la synthèse, l’espace ou le traitement.</li>
+          </ul>
+          <p>Les éléments peuvent être envoyés avant la séance afin de réserver le temps en direct aux décisions et aux essais utiles.</p>
+        </div>
       </div>
     </section>
 
-    <section>
-      <div class="section-label">documents</div>
-      <div class="content">
-        <h2>Ce que vous pouvez envoyer</h2>
-        <ul class="list">
-          <li>fichiers audio ou lien d’écoute</li>
-          <li>session DAW, patch ou captures d’écran</li>
-          <li>description d’une installation, performance ou pièce</li>
-          <li>question sur montage, synthèse, espace ou traitement</li>
-        </ul>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-label">format</div>
-      <div class="content">
-        <h2>Format et tarif</h2>
-        <ul class="list">
-          <li>cours individuel en ligne</li>
-          <li>60 minutes · 70€ / séance</li>
-          <li>travail possible avec DAW, Max/MSP ou fichiers audio</li>
-          <li>premier échange gratuit de 30 minutes</li>
-          <li>suivi régulier proposé en nombre limité</li>
-        </ul>
-        <p class="note">Le tarif correspond à une séance centrée sur votre matériau sonore, avec écoute précise, analyse et pistes concrètes de transformation ou de composition.</p>
-        <div class="button-row">
-          <a class="btn primary" href="booking.html" data-track="electroacoustic_detail_final_booking">Réserver un échange gratuit de 30 minutes</a>
+    <section class="fr-section fr-section--paper">
+      <div class="fr-shell fr-detail-grid">
+        <div><p class="fr-section-number">04</p><p class="fr-eyebrow">Format</p></div>
+        <div class="fr-reading">
+          <h2>Une séance de projet, pas une démonstration de logiciel.</h2>
+          <p>La séance se déroule en ligne, en français, avec vos sons, vos exports ou votre patch. Les outils sont expliqués au moment où ils permettent de résoudre une question de composition.</p>
+          <div class="fr-price-bar">
+            <strong>70€ / 60 min</strong>
+            <a class="acs-btn acs-btn--primary" href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="course_final">Réserver une séance</a>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <span>© Atelier Composition Son</span>
-    <a href="index.html">Retour à la page française</a>
+  <footer class="fr-footer">
+    <div class="fr-shell fr-footer__inner">
+      <div><p class="fr-footer__brand">Atelier Composition Son</p><p class="fr-footer__meta">Électroacoustique et technologies musicales</p></div>
+      <nav class="fr-footer__links" aria-label="Liens de pied de page">
+        <a href="index.html">Accueil</a><a href="index.html#formats">Formats</a><a href="booking.html">Réservation et contact</a><a href="confidentialite/">Confidentialité</a>
+      </nav>
+    </div>
   </footer>
 
-  <script defer src="../assets/js/acs-tracking.js"></script>
+  <script defer src="../assets/js/fr-tracking.js"></script>
   <script defer src="../assets/js/acs-header.js"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
+  <script defer src="../assets/js/acs-ui.js"></script>
+  <script defer src="../assets/js/fr-site.js"></script>
 </body>
 </html>

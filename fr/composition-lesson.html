@@ -1,173 +1,155 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cours de composition musicale en ligne | Atelier Composition Son</title>
-  <meta name="description" content="Cours individuel de composition musicale en ligne : idées, forme, harmonie, développement, notation, portfolio et accompagnement de projet. Premier échange gratuit de 30 minutes." />
-  <link rel="canonical" href="https://ateliercompositionson.com/fr/composition-lesson.html" />
-  <meta property="og:title" content="Cours de composition musicale en ligne | Atelier Composition Son" />
-  <meta property="og:description" content="Accompagnement individuel pour développer vos idées musicales, structurer vos pièces et préciser votre langage sonore." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://ateliercompositionson.com/fr/composition-lesson.html" />
-  <meta property="og:site_name" content="Atelier Composition Son" />
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cours de composition en ligne | Atelier Composition Son</title>
+  <meta name="description" content="Accompagnement individuel en composition : développer un matériau, construire la forme, relire une partition et faire avancer une pièce ou un portfolio.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ateliercompositionson.com/fr/composition-lesson.html">
+  <link rel="icon" href="../images/fr/acs-logo-header.webp" type="image/webp">
+  <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/composition-lesson.html">
+  <link rel="alternate" hreflang="ja" href="https://ateliercompositionson.com/ja/composition-lesson.html">
+  <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/fr/composition-lesson.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Cours de composition en ligne | Atelier Composition Son">
+  <meta property="og:description" content="Travailler directement sur une idée, une partition, une maquette ou une pièce en cours.">
+  <meta property="og:url" content="https://ateliercompositionson.com/fr/composition-lesson.html">
+  <meta property="og:image" content="https://ateliercompositionson.com/images/home.jpg">
+  <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/fr-site.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag("js", new Date());
-    gtag("config", "G-Y1792EBWTT");
+    gtag('js', new Date());
+    gtag('config', 'G-Y1792EBWTT');
   </script>
-
-  <style>
-    :root { --bg:#ffffff; --paper:#ffffff; --ink:#111; --muted:#6d6a63; --line:#111; --fine:rgba(17,17,17,.18); }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin:0; background:#fff; color:var(--ink); font-family:"Helvetica Neue", Helvetica, Arial, sans-serif; line-height:1.8; letter-spacing:.015em; -webkit-font-smoothing:antialiased; }
-    a { color:inherit; text-decoration:none; }
-    img { max-width:100%; display:block; border:0; outline:0; box-shadow:none; }
-    .site-header { position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:16px 5vw; border-bottom:1px solid var(--line); background:rgba(255,255,255,.94); backdrop-filter:blur(10px); }
-    .brand { font-size:13px; letter-spacing:.16em; text-transform:uppercase; }
-    .nav { display:flex; align-items:center; gap:18px; color:var(--muted); font-size:13px; }
-    .nav a:hover { color:var(--ink); }
-    .nav-cta { border:1px solid var(--ink); padding:7px 13px; color:var(--ink); }
-    .hero { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr); gap:42px; padding:92px 5vw 72px; align-items:end; }
-    .eyebrow, .section-label { color:var(--muted); font-size:12px; letter-spacing:.18em; text-transform:uppercase; }
-    .eyebrow { margin-bottom:26px; }
-    h1 { margin:0 0 28px; font-size:clamp(42px,7.6vw,112px); line-height:.98; font-weight:500; letter-spacing:-.04em; }
-    h2 { margin:0 0 22px; font-size:clamp(30px,4vw,56px); line-height:1.08; font-weight:400; letter-spacing:-.04em; }
-    h3 { margin:0 0 10px; font-size:22px; line-height:1.35; font-weight:400; }
-    p { margin:0; color:var(--muted); }
-    p + p { margin-top:14px; }
-    .lead { max-width:760px; color:var(--ink); font-size:clamp(17px,2vw,21px); line-height:1.85; }
-    .hero-panel, .card { border:1px solid var(--line); background:var(--paper); padding:30px; }
-    .hero-panel ul, .list { list-style:none; margin:0; padding:0; }
-    .hero-panel li, .list li { border-bottom:1px solid var(--fine); padding:10px 0; color:var(--muted); }
-    .hero-panel li:first-child, .list li:first-child { border-top:1px solid var(--fine); }
-    .button-row { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; min-height:46px; border:1px solid var(--line); padding:12px 18px; font-size:14px; }
-    .btn.primary { background:var(--ink); color:#fff; }
-    .lesson-image { margin:0; }
-    .lesson-image img { width:100%; max-height:520px; object-fit:cover; filter:grayscale(100%); }
-    section { display:grid; grid-template-columns:.34fr 1fr; gap:56px; padding:82px 5vw; }
-    .content { max-width:900px; }
-    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:28px; }
-    .note { margin-top:22px; color:var(--muted); font-size:14px; }
-    footer { display:flex; justify-content:space-between; gap:24px; padding:34px 5vw; color:var(--muted); font-size:13px; }
-    @media (max-width: 820px) { .nav { display:none; } .hero, section, .cards { grid-template-columns:1fr; } .hero { padding-top:64px; } .btn { width:100%; min-height:48px; } footer { flex-direction:column; } }
-  </style>
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css" />
-  <link rel="stylesheet" href="../assets/css/acs-core.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://ateliercompositionson.com/fr/" },
+          { "@type": "ListItem", "position": 2, "name": "Composition", "item": "https://ateliercompositionson.com/fr/composition-lesson.html" }
+        ]
+      },
+      {
+        "@type": "Course",
+        "name": "Accompagnement individuel en composition",
+        "description": "Développer une idée musicale, construire la forme et faire avancer une pièce à partir de matériaux existants.",
+        "url": "https://ateliercompositionson.com/fr/composition-lesson.html",
+        "provider": { "@type": "Organization", "name": "Atelier Composition Son", "url": "https://ateliercompositionson.com/" },
+        "inLanguage": "fr",
+        "courseMode": "online"
+      }
+    ]
+  }
+  </script>
 </head>
-<body>
-<header class="acs-site-header" data-shared-header></header>
+<body class="fr-site" data-page-type="course">
+  <header class="acs-site-header" data-shared-header></header>
 
   <main>
-    <section class="hero">
-      <div>
-        <div class="eyebrow">Composition musicale</div>
-        <h1>Cours de composition en ligne</h1>
-        <p class="lead">Un accompagnement individuel pour transformer une idée musicale en pièce construite : forme, harmonie, matériau, développement, notation et décision artistique.</p>
-        <div class="button-row">
-          <a class="btn primary" href="booking.html" data-track="composition_detail_booking">Réserver un échange gratuit de 30 minutes</a>
-          <a class="btn" href="index.html#entrypoints">Retour aux cours</a>
+    <section class="fr-page-hero" id="top">
+      <div class="fr-shell fr-page-hero__grid">
+        <div class="fr-page-hero__copy">
+          <p class="fr-eyebrow">Composition · écriture · forme</p>
+          <h1>Accompagnement en composition</h1>
+          <p>Transformer une idée musicale en pièce construite : préciser le matériau, organiser la forme et choisir les gestes d’écriture utiles au projet.</p>
+          <div class="fr-actions">
+            <a class="acs-btn acs-btn--primary" href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="course_hero">Réserver une séance</a>
+            <a class="acs-btn acs-btn--secondary" href="index.html#formats" data-track="click_secondary_cta" data-offer="none" data-cta-position="course_hero">Comparer les formats</a>
+          </div>
         </div>
+        <figure class="fr-page-hero__media">
+          <img src="../images/fr/composition-lesson-hero.webp" alt="Ensemble instrumental en préparation sur une scène de concert" width="1086" height="724" loading="eager" decoding="async" fetchpriority="high">
+        </figure>
       </div>
-      <aside class="hero-panel">
-        <h2>Ce cours peut aider à</h2>
-        <ul>
-          <li>commencer à composer avec un cadre clair</li>
-          <li>développer motifs, textures et matériaux</li>
-          <li>organiser la forme et les contrastes</li>
-          <li>relier écriture, écoute et intention</li>
-        </ul>
-      </aside>
     </section>
 
-    <figure class="lesson-image">
-      <img src="../images/home.jpg" width="1086" height="724" alt="Ensemble instrumental en préparation sur une scène de concert" loading="lazy" decoding="async">
-    </figure>
-
-    <section>
-      <div class="section-label">pour qui</div>
-      <div class="content">
-        <h2>Pour quels projets ?</h2>
-        <p>Le cours peut accompagner une première pièce, une composition en cours, un dossier de portfolio, une musique pour l’image ou une recherche plus expérimentale. Le point de départ peut être très simple : une mélodie, une texture, quelques accords ou une intention encore vague.</p>
-        <div class="cards">
-          <article class="card"><h3>Commencer à composer</h3><p>Installer un cadre de travail clair, avec de petits exercices reliés à vos goûts musicaux.</p></article>
-          <article class="card"><h3>Développer une pièce</h3><p>Identifier le matériau fort, organiser les proportions, les transitions, les contrastes et la continuité.</p></article>
-          <article class="card"><h3>Préparer un dossier</h3><p>Travailler la cohérence d’un portfolio, d’une partition, d’une maquette ou d’une candidature.</p></article>
-          <article class="card"><h3>Clarifier une intention</h3><p>Mettre des mots sur ce que vous cherchez et choisir les gestes musicaux nécessaires.</p></article>
+    <section class="fr-section">
+      <div class="fr-shell fr-detail-grid">
+        <div><p class="fr-section-number">01</p><p class="fr-eyebrow">Projets</p></div>
+        <div class="fr-reading">
+          <h2>Partir de ce que vous avez déjà.</h2>
+          <p>Le travail peut accompagner une première pièce, une composition en cours, un dossier de portfolio, une musique pour l’image ou une recherche expérimentale. Le point de départ peut être une mélodie, une texture, quelques accords, une partition partielle ou une intention encore difficile à formuler.</p>
+          <h3>Développer une pièce</h3>
+          <p>Identifier le matériau qui porte le projet, organiser les proportions, les transitions, les contrastes et la continuité.</p>
+          <h3>Préparer un dossier</h3>
+          <p>Examiner la cohérence d’un portfolio, d’une partition, d’une maquette ou d’une candidature, sans promesse d’admission.</p>
+          <h3>Clarifier une intention</h3>
+          <p>Mettre des mots sur ce que vous cherchez, puis choisir les gestes musicaux nécessaires.</p>
         </div>
       </div>
     </section>
 
-    <section>
-      <div class="section-label">travail</div>
-      <div class="content">
-        <h2>Ce que nous pouvons travailler</h2>
-        <div class="cards">
-          <article class="card"><h3>Idée et matériau</h3><p>Identifier les éléments forts, les possibilités de transformation et les directions musicales possibles.</p></article>
-          <article class="card"><h3>Forme</h3><p>Construire une continuité, organiser les proportions, préparer les transitions et éviter l’accumulation.</p></article>
-          <article class="card"><h3>Harmonie et texture</h3><p>Relier couleurs, accords, timbres, registres et densité sonore.</p></article>
-          <article class="card"><h3>Révision</h3><p>Relire une pièce, repérer les passages fragiles et formuler des pistes concrètes de correction.</p></article>
+    <section class="fr-section fr-section--paper">
+      <div class="fr-shell fr-detail-grid">
+        <div><p class="fr-section-number">02</p><p class="fr-eyebrow">Travail</p></div>
+        <div class="fr-reading">
+          <h2>Les décisions que nous pouvons examiner.</h2>
+          <ul>
+            <li><strong>Idée et matériau :</strong> possibilités de transformation et directions musicales.</li>
+            <li><strong>Forme :</strong> continuité, proportions, transitions, coupe et développement.</li>
+            <li><strong>Harmonie et texture :</strong> couleurs, accords, timbres, registres et densité.</li>
+            <li><strong>Notation et orchestration :</strong> lisibilité, équilibre et réalisation instrumentale.</li>
+            <li><strong>Révision :</strong> passages fragiles et pistes concrètes de réécriture.</li>
+          </ul>
+          <h3>Déroulement possible</h3>
+          <p>Lecture ou écoute du matériau, identification des zones solides et des points de blocage, comparaison de plusieurs solutions, puis formulation d’un plan de travail réalisable.</p>
         </div>
       </div>
     </section>
 
-    <section>
-      <div class="section-label">séance</div>
-      <div class="content">
-        <h2>Exemple de séance</h2>
-        <ul class="list">
-          <li>écoute ou lecture de votre matériau</li>
-          <li>identification des passages forts et des zones fragiles</li>
-          <li>propositions de développement, coupe, variation ou réécriture</li>
-          <li>pistes de travail concrètes pour la séance suivante</li>
-        </ul>
+    <section class="fr-section">
+      <div class="fr-shell fr-detail-grid">
+        <div><p class="fr-section-number">03</p><p class="fr-eyebrow">Documents</p></div>
+        <div class="fr-reading">
+          <h2>Ce que vous pouvez envoyer avant la séance.</h2>
+          <ul>
+            <li>partition, esquisse ou page manuscrite ;</li>
+            <li>fichier audio, MIDI ou maquette DAW ;</li>
+            <li>description d’une commande, d’un projet ou d’un blocage ;</li>
+            <li>portfolio ou dossier de candidature.</li>
+          </ul>
+          <p>Vous n’avez pas besoin de tout envoyer : choisissez les éléments nécessaires à la question que vous souhaitez travailler.</p>
+        </div>
       </div>
     </section>
 
-    <section>
-      <div class="section-label">documents</div>
-      <div class="content">
-        <h2>Ce que vous pouvez envoyer</h2>
-        <ul class="list">
-          <li>partition, esquisse ou page manuscrite</li>
-          <li>fichier audio, MIDI ou maquette DAW</li>
-          <li>description d’une intention, d’une commande ou d’un projet</li>
-          <li>portfolio ou dossier de candidature</li>
-        </ul>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-label">format</div>
-      <div class="content">
-        <h2>Format et tarif</h2>
-        <ul class="list">
-          <li>cours individuel en ligne</li>
-          <li>60 minutes · 70€ / séance</li>
-          <li>premier échange gratuit de 30 minutes</li>
-          <li>rythme ponctuel, mensuel ou régulier</li>
-          <li>suivi régulier proposé en nombre limité</li>
-        </ul>
-        <p class="note">Le tarif correspond à une séance centrée sur votre travail réel, avec écoute, analyse, conseils techniques et pistes de travail concrètes.</p>
-        <div class="button-row">
-          <a class="btn primary" href="booking.html" data-track="composition_detail_final_booking">Réserver un échange gratuit de 30 minutes</a>
+    <section class="fr-section fr-section--paper">
+      <div class="fr-shell fr-detail-grid">
+        <div><p class="fr-section-number">04</p><p class="fr-eyebrow">Format</p></div>
+        <div class="fr-reading">
+          <h2>Une séance centrée sur votre travail réel.</h2>
+          <p>La séance se déroule en ligne et peut combiner lecture, écoute, analyse, partage d’écran et formulation de pistes de travail. Elle est proposée en français.</p>
+          <div class="fr-price-bar">
+            <strong>70€ / 60 min</strong>
+            <a class="acs-btn acs-btn--primary" href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="course_final">Réserver une séance</a>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <span>© Atelier Composition Son</span>
-    <a href="index.html">Retour à la page française</a>
+  <footer class="fr-footer">
+    <div class="fr-shell fr-footer__inner">
+      <div><p class="fr-footer__brand">Atelier Composition Son</p><p class="fr-footer__meta">Accompagnement de projet en ligne</p></div>
+      <nav class="fr-footer__links" aria-label="Liens de pied de page">
+        <a href="index.html">Accueil</a>
+        <a href="index.html#formats">Formats</a>
+        <a href="booking.html">Réservation et contact</a>
+        <a href="confidentialite/">Confidentialité</a>
+      </nav>
+    </div>
   </footer>
 
-  <script defer src="../assets/js/acs-tracking.js"></script>
+  <script defer src="../assets/js/fr-tracking.js"></script>
   <script defer src="../assets/js/acs-header.js"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
+  <script defer src="../assets/js/acs-ui.js"></script>
+  <script defer src="../assets/js/fr-site.js"></script>
 </body>
 </html>

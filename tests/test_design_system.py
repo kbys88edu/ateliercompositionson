@@ -80,9 +80,9 @@ class DesignSystemTests(unittest.TestCase):
         pages = sorted(
             path.relative_to(repo_path(".")).as_posix()
             for language in ("ja", "fr")
-            for path in repo_path(language).glob("*.html")
+            for path in repo_path(language).rglob("*.html")
         )
-        self.assertEqual(19, len(pages))
+        self.assertEqual(20, len(pages))
         for page_path in pages:
             html = repo_path(page_path).read_text(encoding="utf-8-sig")
             self.assertEqual(1, html.count('class="acs-site-header" data-shared-header'), page_path)
@@ -102,7 +102,8 @@ class DesignSystemTests(unittest.TestCase):
 
     def test_japanese_header_uses_accessible_compact_brand_below_360px(self):
         header_script = repo_path("assets/js/acs-header.js").read_text(encoding="utf-8")
-        self.assertIn('class="acs-site-header__brand" aria-label="Atelier Composition Son"', header_script)
+        self.assertIn('brandLabel: "Atelier Composition Son"', header_script)
+        self.assertIn('aria-label="\' + configuration.brandLabel + \'"', header_script)
         self.assertIn('<span class="acs-site-header__brand-full" aria-hidden="true">Atelier Composition Son</span>', header_script)
         self.assertIn('<span class="acs-site-header__brand-short" aria-hidden="true">ACS</span>', header_script)
 
@@ -132,6 +133,7 @@ const language = process.argv[2];
 const mount = {
   innerHTML: "", dataset: {}, attributes: {},
   setAttribute(name, value) { this.attributes[name] = String(value); },
+  getAttribute(name) { return this.attributes[name] || null; },
 };
 const document = {
   documentElement: { lang: language },
@@ -167,17 +169,19 @@ console.log(JSON.stringify({ attributes: mount.attributes, html: mount.innerHTML
             self.assertIn(label, rendered["ja"]["html"])
             self.assertIn('href="{}"'.format(href), rendered["ja"]["html"])
         for label, href in (
-            ("Cours", "index.html#entrypoints"),
-            ("À propos", "index.html#instructor"),
-            ("Tarifs", "index.html#format"),
-            ("Œuvres", "index.html#works"),
-            ("FAQ", "index.html#questions"),
-            ("Rendez-vous", "booking.html"),
+            ("Résultats", "index.html#resultats"),
+            ("Formats", "index.html#formats"),
+            ("Méthode", "index.html#methode"),
+            ("Expérience", "index.html#experience"),
+            ("Contact", "index.html#contact"),
+            ("Faire le point", "booking.html?offer=free-contact#contact-form"),
         ):
             self.assertIn(label, rendered["fr"]["html"])
             self.assertIn('href="{}"'.format(href), rendered["fr"]["html"])
         self.assertIn('data-track="click_free_consultation"', rendered["ja"]["html"])
-        self.assertIn('data-track="click_free_consultation_fr"', rendered["fr"]["html"])
+        self.assertIn('data-track="click_primary_cta"', rendered["fr"]["html"])
+        self.assertNotIn('data-offer="free_contact"', rendered["ja"]["html"])
+        self.assertIn('data-offer="free_contact"', rendered["fr"]["html"])
 
     def test_task_3_opening_markup_uses_composed_styles(self):
         css = repo_path("assets/css/public-site-final.css").read_text(encoding="utf-8")

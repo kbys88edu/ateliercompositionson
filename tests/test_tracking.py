@@ -51,14 +51,14 @@ class TrackingTests(unittest.TestCase):
         tracker_pages = []
         for page_path in sorted(repo_path(".").rglob("*.html")):
             html = page_path.read_text(encoding="utf-8")
-            if "acs-tracking.js" not in html:
+            if "acs-tracking.js" not in html and "fr-tracking.js" not in html:
                 continue
             tracker_pages.append(page_path)
             self.assertIsNone(
                 duplicate_listener.search(html),
                 str(page_path.relative_to(repo_path("."))),
             )
-        self.assertGreaterEqual(len(tracker_pages), 33)
+        self.assertGreaterEqual(len(tracker_pages), 34)
 
     def test_french_pages_emit_explicit_event_once_in_actual_script_order(self):
         node = shutil.which("node")
@@ -88,10 +88,13 @@ const window = {
     set href(value) { currentHref = value; },
     get search() { return new URL(currentHref).search; },
     get origin() { return new URL(currentHref).origin; },
+    assign(value) { currentHref = value; },
   },
   setTimeout() {},
+  addEventListener() {},
 };
 const link = {
+  tagName: "A",
   dataset: { track: attributes["data-track"] },
   textContent: config.linkText,
   getAttribute(name) { return Object.prototype.hasOwnProperty.call(attributes, name) ? attributes[name] : null; },
@@ -99,15 +102,19 @@ const link = {
   hasAttribute(name) { return Object.prototype.hasOwnProperty.call(attributes, name); },
   get href() { return new URL(attributes.href, currentHref).href; },
   addEventListener(type, handler) { (targetHandlers[type] ||= []).push(handler); },
-  closest(selector) { return selector === "a[href]" ? this : null; },
+  closest(selector) {
+    return selector === "a[href]" || selector === "a[data-track]" ? this : null;
+  },
 };
 const document = {
   readyState: "complete",
+  body: { dataset: { pageType: config.pageType || "content" } },
   querySelectorAll(selector) {
     if (selector === "a[href]" || selector === "[data-track]") return [link];
     if (selector === "form") return [];
     return [];
   },
+  querySelector() { return null; },
   addEventListener(type, handler, capture) {
     (documentHandlers[type] ||= []).push({ handler, capture: Boolean(capture) });
   },
@@ -118,7 +125,11 @@ function gtag(kind, name, payload = {}) {
   if (typeof payload.event_callback === "function") payload.event_callback();
 }
 
-const context = { URL, URLSearchParams, document, gtag, sessionStorage, window };
+const context = {
+  URL, URLSearchParams, document, gtag, sessionStorage, window,
+  location: window.location,
+  IntersectionObserver: class { observe() {} unobserve() {} },
+};
 vm.createContext(context);
 config.scripts.forEach((script) => vm.runInContext(script, context));
 const event = {
@@ -143,7 +154,7 @@ console.log(JSON.stringify({ events, explicit: attributes["data-track"] }));
                 )
                 scripts = []
                 for script in parser.scripts:
-                    if script["src"] and script["src"].split("?", 1)[0].endswith("acs-tracking.js"):
+                    if script["src"] and script["src"].split("?", 1)[0].endswith(("acs-tracking.js", "fr-tracking.js")):
                         source_path = page_path.parent.joinpath(script["src"].split("?", 1)[0]).resolve()
                         scripts.append(source_path.read_text(encoding="utf-8"))
                     elif "[data-track]" in script["code"] and "addEventListener" in script["code"]:
@@ -154,6 +165,7 @@ console.log(JSON.stringify({ events, explicit: attributes["data-track"] }));
                         "attributes": link,
                         "linkText": link.get("data-track", ""),
                         "pageUrl": f"https://atelier.example/{page}",
+                        "pageType": "landing" if page == "fr/index.html" else "content",
                         "scripts": scripts,
                     }),
                     capture_output=True,

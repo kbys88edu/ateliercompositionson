@@ -3,2429 +3,409 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cours de composition, harmonie et MAO en ligne | Atelier Composition Son</title>
-  <meta name="description" content="Atelier individuel de composition, MAO et pratiques sonores avec Sachie Kobayashi, à partir de partitions, maquettes, sessions DAW et projets en cours.">
+  <title>Cours de composition en ligne et création sonore | Atelier Composition Son</title>
+  <meta name="description" content="Accompagnement individuel en composition, création sonore, électroacoustique, Max/MSP et MAO créative, à partir de vos partitions, sons et sessions DAW.">
   <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#ffffff">
   <link rel="canonical" href="https://ateliercompositionson.com/fr/">
+  <link rel="icon" href="../images/fr/acs-logo-header.webp" type="image/webp">
   <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/">
   <link rel="alternate" hreflang="ja" href="https://ateliercompositionson.com/ja/">
   <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Atelier Composition Son">
-  <meta property="og:title" content="Cours de composition, harmonie et MAO en ligne | Atelier Composition Son">
-  <meta property="og:description" content="Atelier individuel de composition, MAO et pratiques sonores à partir de partitions, maquettes, sessions DAW et projets en cours.">
+  <meta property="og:title" content="Cours de composition en ligne et création sonore | Atelier Composition Son">
+  <meta property="og:description" content="Un accompagnement individuel à partir de vos partitions, sons, maquettes et sessions DAW.">
   <meta property="og:url" content="https://ateliercompositionson.com/fr/">
-  <meta property="og:image" content="https://ateliercompositionson.com/images/acs-header-fr.png">
+  <meta property="og:image" content="https://ateliercompositionson.com/images/hero-atelier-performance.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="1200">
+  <meta property="og:image:alt" content="Sachie Kobayashi au travail dans un dispositif de création sonore">
   <meta name="twitter:card" content="summary_large_image">
-
-  <style>
-    :root {
-      --bg: #f7f5ef;
-      --text: #111111;
-      --muted: #6d6a63;
-      --line: #d8d3c7;
-      --accent: #111111;
-      --card: #fffdf8;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 15px;
-      line-height: 1.65;
-      font-weight: 400;
-      letter-spacing: 0.015em;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    .page {
-      max-width: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    /* Header navigation */
-
-    .top-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 20;
-      min-height: 66px;
-      padding: 0 5vw;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 28px;
-      background: rgba(247, 245, 239, 0.88);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      min-width: max-content;
-    }
-
-    .brand img {
-      width: 34px;
-      height: 34px;
-      object-fit: contain;
-    }
-
-    .brand span {
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--text);
-    }
-
-    nav {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 22px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1;
-    }
-
-    nav a {
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      text-transform: lowercase;
-      text-decoration: none;
-      transition: color .18s ease, opacity .18s ease;
-      white-space: nowrap;
-    }
-
-    nav a:hover {
-      color: var(--text);
-      opacity: 1;
-    }
-
-    .booking-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      background: var(--accent);
-      color: var(--bg);
-      padding: 10px 16px;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .booking-button:hover {
-      background: transparent;
-      color: var(--accent);
-    }
-
-    .language-link {
-      color: var(--muted);
-    }
-
-    /* Hero */
-
-    .hero {
-      position: relative;
-      display: block;
-      min-height: auto;
-      margin-top: 66px;
-      padding: 0;
-      border-bottom: 1px solid var(--line);
-      background: var(--bg);
-      overflow: visible;
-    }
-
-    .hero::before {
-      content: "";
-      display: block;
-      height: clamp(360px, 42.85vw, 720px);
-      background-image: url('../images/acs-header-fr.png');
-      background-size: cover;
-      background-position: center top;
-      background-repeat: no-repeat;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .identity {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-
-    .logo-image {
-      width: 120px;
-      height: auto;
-      margin: 0 0 22px;
-    }
-
-    .identity h1 {
-      font-size: 14px;
-      line-height: 1.45;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .identity p {
-      max-width: 260px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .hero-copy {
-      position: static;
-      z-index: 2;
-      max-width: none;
-      padding: 28px 5vw 30px;
-      background: var(--bg);
-      border: 0;
-      border-radius: 0;
-    }
-
-    .hero-label {
-      margin-bottom: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .intro-title {
-      max-width: 920px;
-      font-size: clamp(30px, 3.5vw, 54px);
-      line-height: 1.12;
-      font-weight: 400;
-      letter-spacing: -0.035em;
-      margin: 0 0 14px;
-    }
-
-    .hero-copy p {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.75;
-      max-width: 760px;
-    }
-
-    .hero-copy p + p,
-    .hero-copy .desktop-extra {
-      margin-top: 10px;
-    }
-
-    .hero-highlights {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 18px;
-    }
-
-    .hero-highlights span {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 7px 12px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1;
-      letter-spacing: 0.08em;
-      text-transform: lowercase;
-      background: rgba(255, 253, 248, 0.48);
-    }
-
-    .separator {
-      display: none;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .hero-copy .hero-actions {
-      align-items: stretch;
-      gap: 10px;
-    }
-
-    .hero-copy .hero-actions .btn {
-      flex: 1 1 0;
-      width: auto;
-      min-height: 72px;
-      padding: 0 28px;
-      font-family: "Arial Narrow", "Roboto Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-weight: 700;
-      font-size: 20px;
-      justify-content: space-between;
-    }
-
-    .hero-copy .hero-actions .btn::after {
-      content: "→";
-      margin-left: 18px;
-      font-size: 24px;
-      line-height: 1;
-      opacity: 0;
-      transform: translateX(-8px);
-      transition: opacity 180ms ease, transform 180ms ease;
-    }
-
-    .hero-copy .hero-actions .btn:hover,
-    .hero-copy .hero-actions .btn:focus-visible {
-      border-color: #d8793f;
-      background: #d8793f;
-      color: #ffffff;
-      opacity: 1;
-    }
-
-    .hero-copy .hero-actions .btn:hover::after,
-    .hero-copy .hero-actions .btn:focus-visible::after {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--accent);
-      border-radius: 0;
-      min-height: 48px;
-      padding: 0 24px;
-      background: transparent;
-      color: var(--text);
-      font: inherit;
-      font-size: 14px;
-      line-height: 1;
-      letter-spacing: 0.08em;
-      cursor: pointer;
-    }
-
-    .btn.primary {
-      background: var(--accent);
-      color: var(--bg);
-    }
-
-    .btn:hover {
-      opacity: .72;
-    }
-
-    /* Visual sequence */
-
-    .hero-image {
-      padding: 0 5vw 72px;
-      margin: 0;
-      border-bottom: none;
-    }
-
-    .hero-slideshow {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      background: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-    }
-
-    .hero-slideshow img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      filter: grayscale(100%);
-      animation: heroFade 12s infinite;
-    }
-
-    .hero-slideshow img:nth-child(1) { animation-delay: 0s; }
-    .hero-slideshow img:nth-child(2) { animation-delay: 4s; }
-    .hero-slideshow img:nth-child(3) { animation-delay: 8s; }
-
-    @keyframes heroFade {
-      0% { opacity: 0; }
-      8% { opacity: 1; }
-      28% { opacity: 1; }
-      36% { opacity: 0; }
-      100% { opacity: 0; }
-    }
-
-    .hero-image figcaption {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    /* Sections */
-
-    section {
-      display: grid;
-      grid-template-columns: 0.38fr 1fr;
-      gap: 64px;
-      padding: 96px 5vw;
-      border-top: 1px solid var(--line);
-    }
-
-    .section-label {
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .content {
-      max-width: 840px;
-    }
-
-    h2 {
-      margin: 0 0 24px;
-      font-size: clamp(30px, 4vw, 58px);
-      line-height: 1.08;
-      font-weight: 400;
-      letter-spacing: -0.04em;
-    }
-
-    h3 {
-      margin: 0 0 12px;
-      font-size: 22px;
-      line-height: 1.35;
-      font-weight: 400;
-      letter-spacing: -0.03em;
-    }
-
-    .content p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .content p + p {
-      margin-top: 14px;
-    }
-
-    .section-intro {
-      max-width: 720px;
-      margin-bottom: 28px;
-    }
-
-    ul {
-      list-style: none;
-    }
-
-    .list {
-      border-top: 1px solid var(--line);
-      margin-top: 32px;
-    }
-
-    .list li {
-      display: grid;
-      grid-template-columns: 170px 1fr;
-      gap: 28px;
-      border-bottom: 1px solid var(--line);
-      padding: 16px 0;
-    }
-
-    .list li span:first-child {
-      color: var(--text);
-    }
-
-    .list li span:last-child {
-      color: var(--muted);
-    }
-
-    .audience-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-top: 30px;
-    }
-
-    .audience-list li {
-      border: 1px solid var(--line);
-      background: var(--card);
-      border-radius: 24px;
-      padding: 22px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.65;
-    }
-
-    /* Direction */
-
-    .direction-layout {
-      display: grid;
-      grid-template-columns: 1fr minmax(360px, 460px);
-      gap: 48px;
-      align-items: start;
-    }
-
-    .direction-photo {
-      margin: 0;
-    }
-
-    .direction-photo img {
-      width: 100%;
-      height: auto;
-      max-height: 620px;
-      object-fit: cover;
-      object-position: center top;
-      filter: grayscale(100%);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-    }
-
-    .direction-photo figcaption {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    /* Cards / disciplines */
-
-    .disciplines-card {
-      padding-top: 0;
-      margin-top: 0;
-    }
-
-    .disciplines-card h2 {
-      margin-bottom: 18px;
-    }
-
-    .disciplines-note {
-      max-width: 680px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    .disciplines-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-      margin-top: 32px;
-    }
-
-    .discipline-item {
-      border: 1px solid var(--line);
-      background: var(--card);
-      border-radius: 24px;
-      padding: 22px;
-      min-height: 190px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .discipline-item h3 {
-      font-size: 22px;
-      text-transform: none;
-    }
-
-    .discipline-item p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-      margin-bottom: 14px;
-    }
-
-    .discipline-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: auto;
-    }
-
-    .discipline-item a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      margin-top: auto;
-      padding: 10px 14px;
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      background: transparent;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-    }
-
-    .discipline-actions a {
-      margin-top: 0;
-    }
-
-    .discipline-actions a.secondary {
-      background: var(--accent);
-      color: var(--bg);
-    }
-
-    .discipline-item a:hover {
-      opacity: .72;
-    }
-
-    /* Documentation / tools */
-
-    .documentation-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      margin-top: 32px;
-    }
-
-    .documentation-grid figure,
-    .tool-gallery figure {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      overflow: hidden;
-      background: var(--card);
-    }
-
-    .documentation-grid img,
-    .tool-gallery img {
-      width: 100%;
-      object-fit: cover;
-      filter: grayscale(100%);
-    }
-
-    .documentation-grid img {
-      height: 360px;
-    }
-
-    .tool-gallery img {
-      height: 300px;
-    }
-
-    .documentation-grid figcaption,
-    .tool-gallery figcaption {
-      padding: 12px 14px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .tool-gallery {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      margin-top: 32px;
-    }
-
-    .plugin-list {
-      margin-top: 28px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.9;
-      column-count: 2;
-      column-gap: 36px;
-    }
-
-    .plugin-list span {
-      display: block;
-      break-inside: avoid;
-    }
-
-    /* Programme */
-
-    .program {
-      border-top: 1px solid var(--line);
-      margin-top: 32px;
-    }
-
-    .program li {
-      display: grid;
-      grid-template-columns: 54px 1fr;
-      gap: 24px;
-      border-bottom: 1px solid var(--line);
-      padding: 22px 0;
-    }
-
-    .num {
-      color: var(--muted);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .program p {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.75;
-    }
-
-    /* Formats */
-
-    .formats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      border-top: none;
-      padding-top: 0;
-      margin-top: 32px;
-    }
-
-    .formats-focused {
-      grid-template-columns: 1.2fr 1fr;
-    }
-
-    .format {
-      min-height: 360px;
-      border: 1px solid var(--line);
-      background: var(--card);
-      border-radius: 24px;
-      padding: 30px;
-    }
-
-    .format.featured {
-      border-color: var(--accent);
-      background: #fff;
-    }
-
-    .price {
-      margin: 18px 0 18px;
-      font-size: 42px;
-      line-height: 1;
-      letter-spacing: -0.06em;
-    }
-
-    .format-note {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.4;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .format ul {
-      border-top: 1px solid var(--line);
-      margin: 20px 0 18px;
-    }
-
-    .format li {
-      border-bottom: 1px solid var(--line);
-      padding: 8px 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .format-meta {
-      display: grid;
-      gap: 10px;
-      margin: 22px 0 0;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .format-meta strong {
-      color: var(--text);
-      font-weight: 400;
-    }
-
-    .format a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-    }
-
-    .cta-panel {
-      border: 1px solid var(--line);
-      background: var(--card);
-      border-radius: 24px;
-      padding: 30px;
-      margin-top: 34px;
-    }
-
-    .cta-panel p {
-      max-width: 700px;
-    }
-
-    .inline-link {
-      border-bottom: 1px solid currentColor;
-      text-underline-offset: 3px;
-    }
-
-
-
-    /* Ressources */
-
-    #ressources {
-      scroll-margin-top: 100px;
-    }
-
-    .resources-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-top: 32px;
-    }
-
-    .resource-card {
-      display: flex;
-      flex-direction: column;
-      min-height: 420px;
-      border: 1px solid var(--line);
-      background: var(--card);
-      border-radius: 24px;
-      padding: 28px;
-    }
-
-    .resource-card-featured {
-      border-color: var(--accent);
-      background: #ffffff;
-    }
-
-    .resource-label {
-      margin-bottom: 14px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.35;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
-
-    .resource-subtitle {
-      margin-top: -2px;
-      margin-bottom: 14px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .resource-list {
-      margin: 18px 0 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .resource-list li {
-      border-bottom: 1px solid var(--line);
-      padding: 8px 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .resource-card a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      margin-top: auto;
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 12px;
-      line-height: 1.35;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-    }
-
-    .resource-card-featured a {
-      margin-top: 8px;
-      margin-bottom: 18px;
-    }
-
-    .resources-note {
-      margin-top: 28px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    .resources-note a {
-      border-bottom: 1px solid currentColor;
-      text-underline-offset: 3px;
-    }
-
-    /* FAQ / details */
-
-    details {
-      border-bottom: 1px solid var(--line);
-      padding: 22px 0;
-    }
-
-    details:first-child {
-      border-top: 1px solid var(--line);
-    }
-
-    summary {
-      cursor: pointer;
-      list-style: none;
-      color: var(--text);
-      font-size: 18px;
-    }
-
-    summary::-webkit-details-marker {
-      display: none;
-    }
-
-    summary::before {
-      content: '+ ';
-    }
-
-    details[open] summary::before {
-      content: '– ';
-    }
-
-    details p {
-      margin-top: 12px;
-      max-width: 720px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.75;
-    }
-
-    /* Contact */
-
-    .contact-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 22px;
-      margin-top: 32px;
-      border-top: 1px solid var(--line);
-      padding-top: 24px;
-      align-items: start;
-      max-width: 760px;
-    }
-
-    .contact-form {
-      display: grid;
-      gap: 14px;
-    }
-
-    .contact-form label {
-      display: grid;
-      gap: 6px;
-      color: var(--text);
-      font-size: 13px;
-    }
-
-    .contact-form input,
-    .contact-form select,
-    .contact-form textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: var(--card);
-      color: var(--text);
-      font: inherit;
-      font-size: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
-    }
-
-    .contact-form textarea {
-      min-height: 140px;
-      resize: vertical;
-    }
-
-    .contact-form button {
-      width: fit-content;
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      background: var(--accent);
-      color: var(--bg);
-      font: inherit;
-      font-size: 14px;
-      padding: 12px 18px;
-      cursor: pointer;
-    }
-
-    .contact-form button:hover {
-      opacity: .72;
-    }
-
-    .small {
-      margin-top: 16px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .small a {
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 2px;
-    }
-
-    .calendly-inline-widget {
-      min-width: 320px;
-      height: 640px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      overflow: hidden;
-      background: var(--card);
-    }
-
-    /* Footer */
-
-    footer {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr auto;
-      align-items: end;
-      gap: 36px;
-      padding: 56px 5vw;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-logo {
-      width: 58px;
-      height: auto;
-      justify-self: end;
-      opacity: .82;
-      filter: grayscale(100%);
-    }
-
-    /* Responsive */
-
-    @media (max-width: 980px) {
-      .top-nav {
-        position: static;
-        align-items: center;
-        min-height: 72px;
-        padding: 10px 6vw;
-        flex-direction: row;
-        background: var(--bg);
-        backdrop-filter: none;
+  <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/fr-site.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Y1792EBWTT');
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://ateliercompositionson.com/#organization",
+        "name": "Atelier Composition Son",
+        "url": "https://ateliercompositionson.com/",
+        "logo": "https://ateliercompositionson.com/images/acs-logo.png",
+        "email": "info@sachiekobayashi.com"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://ateliercompositionson.com/#sachie-kobayashi",
+        "name": "Sachie Kobayashi",
+        "jobTitle": "Compositrice et artiste sonore",
+        "url": "https://sachiekobayashi.com/",
+        "affiliation": { "@id": "https://ateliercompositionson.com/#organization" }
+      },
+      {
+        "@type": "Service",
+        "@id": "https://ateliercompositionson.com/fr/#service",
+        "name": "Accompagnement individuel en composition et création sonore",
+        "description": "Accompagnement en ligne à partir d’une partition, d’une maquette, d’un enregistrement ou d’une session DAW.",
+        "provider": { "@id": "https://ateliercompositionson.com/#organization" },
+        "areaServed": "Worldwide",
+        "availableLanguage": ["fr", "ja", "en"],
+        "serviceType": [
+          "Cours de composition en ligne",
+          "Création sonore",
+          "Musique électroacoustique",
+          "MAO créative"
+        ]
       }
-
-      nav {
-        display: none;
-      }
-
-      .top-nav::after {
-        display: none;
-      }
-
-      .brand {
-        gap: 14px;
-        letter-spacing: 0.18em;
-        line-height: 1.35;
-      }
-
-      .brand::after {
-        content: "";
-        width: 1px;
-        height: 38px;
-        background: var(--line);
-        order: 1;
-      }
-
-      .brand img {
-        width: 38px;
-        height: 38px;
-        order: 0;
-      }
-
-      .brand span {
-        display: block;
-        max-width: 148px;
-        order: 2;
-        color: var(--text);
-        white-space: normal;
-      }
-
-      .hero {
-        display: block;
-        min-height: auto;
-        margin-top: 0;
-        padding: 0;
-      }
-
-      .hero::before {
-        width: 100%;
-        height: clamp(190px, 52vw, 300px);
-        margin: 0 auto;
-        background-size: cover;
-        background-position: center;
-        border-bottom: 0;
-      }
-
-      .hero-copy {
-        display: block;
-        width: 100%;
-        padding: 28px 6vw 32px;
-        text-align: left;
-      }
-
-      .hero-label,
-      .hero-copy .desktop-extra,
-      .separator {
-        display: none;
-      }
-
-      .intro-title {
-        max-width: none;
-        font-size: clamp(25px, 7vw, 31px);
-        line-height: 1.38;
-        letter-spacing: 0.02em;
-        font-weight: 500;
-        margin-bottom: 16px;
-      }
-
-      .hero-copy p {
-        font-size: 15px;
-        line-height: 1.7;
-        letter-spacing: 0.06em;
-      }
-
-      .hero-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: 20px;
-      }
-
-      .hero-actions .btn {
-        width: 100%;
-        min-height: 44px;
-        justify-content: space-between;
-        padding: 0 12px;
-        font-size: 12px;
-        letter-spacing: 0.04em;
-        line-height: 1.25;
-        text-align: left;
-        white-space: normal;
-      }
-
-      .hero-actions .btn::after {
-        content: "→";
-        margin-left: 8px;
-        font-size: 18px;
-        line-height: 1;
-      }
-
-      section,
-      footer,
-      .direction-layout,
-      .documentation-grid,
-      .tool-gallery {
-        grid-template-columns: 1fr;
-        gap: 34px;
-      }
-
-      .direction-photo img {
-        max-height: none;
-      }
-
-      .formats,
-      .formats-focused,
-      .disciplines-grid,
-      .contact-layout,
-      .audience-list {
-        grid-template-columns: 1fr;
-      }
-
-      .list li,
-      .program li {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .footer-logo {
-        justify-self: start;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .brand span {
-        font-size: 12px;
-        letter-spacing: 0.14em;
-      }
-
-      section {
-        padding: 72px 5vw;
-      }
-
-      .intro-title {
-        font-size: clamp(24px, 6.6vw, 28px);
-      }
-
-      .documentation-grid img,
-      .tool-gallery img {
-        height: 240px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .hero-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-copy .hero-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      .hero-copy .hero-actions .btn {
-        width: 100%;
-        min-height: 72px;
-        padding: 12px 14px;
-        font-size: 16px;
-        line-height: 1.25;
-        text-align: left;
-        letter-spacing: 0.04em;
-      }
-
-      .hero-copy .hero-actions .btn::after {
-        opacity: 1;
-        transform: none;
-      }
-
-      .hero-actions .btn,
-      .booking-button,
-      .format a {
-        width: 100%;
-        min-height: 48px;
-        padding: 12px 14px;
-        line-height: 1.25;
-        text-align: left;
-        white-space: normal;
-      }
-
-      .hero-highlights {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      .resources-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .resource-card {
-        min-height: 0;
-      }
-
-      .audience-list li,
-      .discipline-item,
-      .format,
-      .cta-panel {
-        padding: 20px;
-      }
-
-      .consultation-note {
-        margin-top: 14px;
-        font-size: 12px;
-      }
-
-      #ressources .resource-featured {
-        box-shadow: none;
-      }
-
-      #ressources .resource-featured-copy .btn,
-      .resource-consultation-link {
-        width: 100%;
-      }
-    }
-
-  /* Global white background and frameless images */
-  :root {
-    --bg: #ffffff !important;
-    --paper: #ffffff !important;
-    --card: #ffffff !important;
-    --white: #ffffff !important;
+    ]
   }
-
-  html,
-  body {
-    background: #ffffff !important;
-  }
-
-  figure,
-  img,
-  .lesson-image,
-  .lesson-header-image,
-  .teacher-photo,
-  .inline-work-image,
-  .mobile-studio-image,
-  .hero-image,
-  .image-frame,
-  .visual-card {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-
-  figure img,
-  .lesson-image img,
-  .lesson-header-image img,
-  .teacher-photo img,
-  .inline-work-image img,
-  .hero-image img,
-  .image-frame img,
-  .visual-card img {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-
-  /* French homepage: concise decision-oriented structure */
-  .hero-meta {
-    margin-top: 16px;
-    color: var(--muted);
-    font-size: 13px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  .entry-grid,
-  .practice-grid,
-  .format-summary,
-  .resource-secondary-grid {
-    display: grid;
-    gap: 18px;
-    margin-top: 30px;
-  }
-
-  .entry-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .entry-card {
-    min-height: 250px;
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-    border: 1px solid var(--line);
-    background: var(--card);
-  }
-
-  .entry-card p {
-    font-size: 15px;
-    line-height: 1.7;
-  }
-
-  .entry-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: auto;
-    padding-top: 22px;
-  }
-
-  .text-link {
-    border-bottom: 1px solid currentColor;
-    font-size: 13px;
-    line-height: 1.35;
-    text-underline-offset: 4px;
-  }
-
-  .process-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 26px;
-    margin-top: 30px;
-  }
-
-  .process-item {
-    border-top: 1px solid var(--text);
-    padding-top: 16px;
-  }
-
-  .process-number {
-    display: block;
-    margin-bottom: 16px;
-    font-size: clamp(42px, 5vw, 74px);
-    line-height: .9;
-    letter-spacing: -.06em;
-  }
-
-  .process-item p,
-  .practice-item p {
-    font-size: 15px;
-    line-height: 1.7;
-  }
-
-  #atelier {
-    background: #f4f4f2;
-  }
-
-  .practice-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .practice-item {
-    padding-top: 14px;
-    border-top: 1px solid var(--line);
-  }
-
-  .format-summary {
-    grid-template-columns: minmax(210px, .75fr) 1fr;
-    align-items: stretch;
-  }
-
-  .format-price,
-  .format-details {
-    padding: 28px;
-    border: 1px solid var(--line);
-    background: var(--card);
-  }
-
-  .format-price .price {
-    margin: 10px 0 0;
-    font-size: clamp(48px, 6vw, 74px);
-  }
-
-  .format-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px 28px;
-  }
-
-  .format-details div {
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 10px;
-  }
-
-  .format-details span {
-    display: block;
-    color: var(--muted);
-    font-size: 12px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-  }
-
-  .format-details strong {
-    display: block;
-    margin-top: 4px;
-    font-size: 15px;
-    font-weight: 400;
-  }
-
-  .booking-section {
-    background: var(--text);
-    color: var(--bg);
-    border-top: 0;
-  }
-
-  .booking-section .section-label,
-  .booking-section .content p {
-    color: rgba(255, 255, 255, .7);
-  }
-
-  .booking-section h2 {
-    max-width: 700px;
-  }
-
-  .booking-section .btn.primary {
-    background: var(--bg);
-    border-color: var(--bg);
-    color: var(--text);
-  }
-
-  .booking-section .text-link {
-    color: var(--bg);
-  }
-
-  .resource-featured {
-    display: grid;
-    grid-template-columns: minmax(210px, .72fr) 1.28fr;
-    gap: 28px;
-    margin-top: 30px;
-    padding: 24px;
-    border: 1px solid var(--text);
-    background: #fff;
-  }
-
-  .resource-preview {
-    margin: 0;
-    align-self: stretch;
-  }
-
-  .resource-preview img {
-    width: 100%;
-    height: 100%;
-    min-height: 220px;
-    object-fit: cover;
-    filter: grayscale(100%);
-  }
-
-  .resource-featured-copy {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .resource-featured-copy .btn {
-    align-self: flex-start;
-    margin-top: 20px;
-  }
-
-  .consultation-note {
-    max-width: 620px;
-    margin-top: 16px;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  #ressources .resource-featured {
-    border-width: 1.5px;
-    box-shadow: 0 0 0 5px rgba(17, 17, 17, .035);
-  }
-
-  #ressources .resource-featured-copy .btn {
-    min-height: 48px;
-    padding: 12px 18px;
-    font-size: 13px;
-  }
-
-  .resource-consultation-link {
-    width: fit-content;
-    margin-top: 14px;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.5;
-    border-bottom: 1px solid currentColor;
-    text-underline-offset: 4px;
-  }
-
-  /* Instructor */
-  .instructor-layout {
-    display: grid;
-    grid-template-columns: minmax(220px, .72fr) minmax(0, 1.28fr);
-    gap: 44px;
-    align-items: start;
-  }
-
-  .instructor-photo {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    filter: grayscale(100%);
-  }
-
-  .instructor-copy h2 {
-    margin-bottom: 8px;
-  }
-
-  .instructor-role {
-    margin-bottom: 22px;
-    color: var(--muted);
-    font-size: 13px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-  }
-
-  .instructor-qualification,
-  .instructor-copy p {
-    max-width: 700px;
-    color: var(--muted);
-  }
-
-  .instructor-qualification {
-    margin-bottom: 20px;
-    font-size: 14px;
-    line-height: 1.7;
-  }
-
-  .instructor-copy p {
-    margin-top: 14px;
-    font-size: 15px;
-    line-height: 1.8;
-  }
-
-  .instructor-link {
-    display: inline-block;
-    margin-top: 22px;
-    border-bottom: 1px solid currentColor;
-    color: var(--text) !important;
-    font-size: 13px !important;
-    text-underline-offset: 4px;
-  }
-
-  .resource-secondary-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .resource-compact {
-    display: flex;
-    flex-direction: column;
-    padding: 22px;
-    border-top: 1px solid var(--line);
-  }
-
-  .resource-compact .text-link {
-    width: fit-content;
-    margin-top: auto;
-    padding-top: 18px;
-  }
-
-  .compact-details summary {
-    font-size: 16px;
-  }
-
-  .compact-details p {
-    max-width: 680px;
-  }
-
-  .footer-terms {
-    border-bottom: 1px solid currentColor;
-    text-underline-offset: 4px;
-  }
-
-  @media (max-width: 980px) {
-    .entry-grid,
-    .process-list,
-    .practice-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .entry-card {
-      min-height: 0;
-    }
-
-    .format-summary,
-    .resource-featured,
-    .resource-secondary-grid,
-    .instructor-layout {
-      grid-template-columns: 1fr;
-    }
-
-    .resource-preview img {
-      height: 230px;
-      min-height: 0;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .hero::before {
-      height: 160px;
-    }
-
-    .hero-copy {
-      padding: 24px 5vw 28px;
-    }
-
-    .hero-meta {
-      font-size: 11px;
-    }
-
-    .entry-card,
-    .format-price,
-    .format-details,
-    .resource-featured,
-    .resource-compact {
-      padding: 20px;
-    }
-
-    .process-list {
-      gap: 22px;
-    }
-
-    .process-item {
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      gap: 14px;
-      align-items: start;
-    }
-
-    .process-number {
-      margin: 2px 0 0;
-      font-size: 48px;
-    }
-
-    .format-details {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .booking-section .hero-actions {
-      gap: 14px;
-    }
-
-    .resource-featured-copy .btn {
-      width: 100%;
-      justify-content: center;
-    }
-  }
-
-  /* Kinetic typography hero */
-  .hero::before {
-    display: none;
-  }
-
-  .hero-kinetic {
-    position: relative;
-    height: clamp(390px, 42.85vw, 720px);
-    overflow: hidden;
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    isolation: isolate;
-  }
-
-  .hero-kinetic-video {
-    position: absolute;
-    z-index: 0;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    opacity: .42;
-    mix-blend-mode: multiply;
-    pointer-events: none;
-  }
-
-  .hero-kinetic::before,
-  .hero-kinetic::after {
-    position: absolute;
-    content: "";
-    background: var(--text);
-  }
-
-  .hero-kinetic::before {
-    top: 10%;
-    bottom: 0;
-    left: 7%;
-    width: 1px;
-    transform-origin: top;
-    animation: kineticLine 900ms cubic-bezier(.16, 1, .3, 1) 120ms both;
-  }
-
-  .hero-kinetic::after {
-    top: 15%;
-    right: 5vw;
-    width: clamp(100px, 15vw, 230px);
-    height: 1px;
-    transform-origin: right;
-    animation: kineticRule 900ms cubic-bezier(.16, 1, .3, 1) 900ms both;
-  }
-
-  .kinetic-word {
-    position: absolute;
-    z-index: 1;
-    color: var(--text);
-    font-size: clamp(76px, 15.6vw, 252px);
-    font-weight: 600;
-    line-height: .78;
-    letter-spacing: -.075em;
-    white-space: nowrap;
-    transform: translate3d(0, 0, 0);
-    will-change: transform, opacity;
-    animation: kineticWord 1050ms cubic-bezier(.16, 1, .3, 1) both;
-  }
-
-  .kinetic-word-atelier {
-    top: 8%;
-    left: -1.6%;
-    animation-delay: 80ms;
-  }
-
-  .kinetic-word-composition {
-    top: 37%;
-    left: 14%;
-    animation-delay: 260ms;
-  }
-
-  .kinetic-word-son {
-    right: 12%;
-    bottom: 9%;
-    animation-delay: 440ms;
-  }
-
-  .kinetic-note {
-    position: absolute;
-    z-index: 2;
-    color: var(--text);
-    font-size: clamp(11px, 1.1vw, 16px);
-    font-weight: 500;
-    line-height: 1.15;
-    letter-spacing: .02em;
-    text-transform: uppercase;
-    opacity: 0;
-    animation: kineticNote 600ms ease-out 1080ms both;
-  }
-
-  .kinetic-note-top {
-    top: 11%;
-    right: 25%;
-    font-weight: 700;
-  }
-
-  .kinetic-word-motion {
-    display: inline-block;
-  }
-
-  .kinetic-letter {
-    display: inline-block;
-    will-change: transform;
-    animation: kineticLetterFloat var(--float-duration, 7s) ease-in-out var(--float-delay, 1.3s) infinite alternate;
-  }
-
-  @keyframes kineticWord {
-    from { opacity: 0; transform: translate3d(0, 34px, 0); }
-    to { opacity: 1; transform: translate3d(0, 0, 0); }
-  }
-
-  @keyframes kineticLine {
-    from { transform: scaleY(0); }
-    to { transform: scaleY(1); }
-  }
-
-  @keyframes kineticRule {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
-  }
-
-  @keyframes kineticNote {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes kineticLetterFloat {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    26% { transform: translate3d(calc(var(--drift-x, 2px) * .75), calc(var(--rise-y, 7px) * -.25), 0); }
-    54% { transform: translate3d(calc(var(--drop-x, 2px) * -1.5), calc(var(--drop-y, 15px) * .2), 0); }
-    78% { transform: translate3d(calc(var(--drift-x, 2px) * 1.4), calc(var(--rise-y, 7px) * .35), 0); }
-  }
-
-  @media (max-width: 768px) {
-    .hero-kinetic {
-      height: 230px;
-    }
-
-    .hero-kinetic-video {
-      opacity: .36;
-    }
-
-    .hero-kinetic::before {
-      left: 5vw;
-    }
-
-    .hero-kinetic::after {
-      top: 13%;
-      right: 5vw;
-      width: 74px;
-    }
-
-    .kinetic-word {
-      font-size: clamp(60px, 18vw, 88px);
-    }
-
-    .kinetic-word-atelier {
-      top: 10%;
-      left: -2%;
-    }
-
-    .kinetic-word-composition {
-      top: 39%;
-      left: 4%;
-    }
-
-    .kinetic-word-son {
-      right: 9%;
-      bottom: 10%;
-    }
-
-    .kinetic-note {
-      font-size: 9px;
-    }
-
-    .kinetic-note-top {
-      top: 13%;
-      right: 23%;
-    }
-
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-kinetic::before,
-    .hero-kinetic::after,
-    .hero-kinetic-video,
-    .kinetic-word,
-    .kinetic-word-motion,
-    .kinetic-letter,
-    .kinetic-note {
-      animation: none;
-    }
-
-    .hero-kinetic-video {
-      display: none;
-    }
-
-    .kinetic-word,
-    .kinetic-note {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  /* Selected works */
-  .top-works .content {
-    max-width: 1000px;
-  }
-
-  .works-media-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    margin-top: 30px;
-  }
-
-  .work-media-item {
-    min-width: 0;
-    padding-top: 14px;
-    border-top: 1px solid var(--line);
-  }
-
-  .work-media-frame {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background: var(--text);
-  }
-
-  .work-media-frame iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-
-  .work-media-item h3 {
-    margin: 12px 0 0;
-    font-size: 15px;
-    line-height: 1.5;
-    font-weight: 400;
-    letter-spacing: 0;
-  }
-
-  @media (max-width: 980px) {
-    .works-media-grid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-  }
-</style>
-<link rel="stylesheet" href="../assets/css/acs-core.css">
-<link rel="preload" as="image" href="../images/hero-collage2.png" type="image/png">
-<link rel="stylesheet" href="../assets/css/public-site-final.css">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-Y1792EBWTT');
-</script>
-
+  </script>
 </head>
+<body class="fr-site fr-home" data-page-type="landing">
+  <header class="acs-site-header" data-shared-header></header>
 
-<body>
-<header class="acs-site-header" data-shared-header></header>
-  <div class="page">
-    <header id="top" class="atelier-split-hero atelier-split-hero--fr">
-      <div class="atelier-split-hero__copy">
-        <p class="atelier-split-hero__eyebrow">ATELIER COMPOSITION SON / COURS INDIVIDUELS EN LIGNE</p>
-        <h1>Faire évoluer une idée, une esquisse ou une pratique sonore.</h1>
-        <p class="atelier-split-hero__lead">Atelier individuel de composition, MAO et pratiques sonores, à partir de vos partitions, maquettes, sessions DAW ou questions précises.</p>
-        <div class="atelier-split-hero__actions">
-          <a class="btn primary" href="booking.html" data-track="hero_booking_click">Parler d’un projet</a>
-          <a class="btn" href="#format" data-track="hero_format_price">Voir le format et le tarif</a>
-        </div>
-      </div>
-      <figure class="atelier-split-hero__media">
-        <img class="atelier-split-hero__image atelier-split-hero__image--collage" src="../images/hero-collage2.png" width="1114" height="1594" alt="Collage de pratiques de composition, de création scénique, d’instruments à cordes et de production électronique" loading="eager" decoding="async" fetchpriority="high">
-      </figure>
-    </header>
-
-    <div class="atelier-proof-strip" aria-label="Informations principales">
-      <p><strong>Cours individuel</strong>En ligne · 60 minutes</p>
-      <p><strong>À partir du projet</strong>Partition, maquette ou session DAW</p>
-      <p><strong>Pratiques</strong>Composition, MAO, électroacoustique</p>
-      <p><strong>Langue</strong>Français</p>
-    </div>
-
-    <section id="entrypoints">
-      <div class="section-label">pour qui</div>
-      <div class="content">
-        <h2>Est-ce pour vous&nbsp;?</h2>
-        <div class="entry-grid">
-          <article class="entry-card">
-            <h3>Commencer une pratique</h3>
-            <p>Vous souhaitez commencer la composition ou la MAO à partir d&rsquo;un premier projet concret.</p>
-            <div class="entry-links">
-              <a class="text-link" href="composition-lesson.html" data-track="entry_composition_click">Composition</a>
-              <a class="text-link" href="electroacoustic-lesson.html" data-track="course_detail_electroacoustique_fr">Électroacoustique</a>
-            </div>
-          </article>
-          <article class="entry-card">
-            <h3>Organiser l&rsquo;autodidaxie</h3>
-            <p>Vous avez appris seul et souhaitez structurer vos outils, vos questions et votre prochaine étape.</p>
-            <div class="entry-links">
-              <a class="text-link" href="harmony-analysis-lesson.html" data-track="entry_question_click">Harmonie et analyse</a>
-              <a class="text-link" href="mao-lesson.html" data-track="course_detail_mao_fr">MAO</a>
-            </div>
-          </article>
-          <article class="entry-card">
-            <h3>Développer une idée</h3>
-            <p>Vous avez une esquisse, une écoute, une partition ou une idée que vous souhaitez faire évoluer.</p>
-            <div class="entry-links">
-              <a class="text-link" href="#ressources" data-track="entry_resources_click">Ressources en français</a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="process">
-      <div class="section-label">échange gratuit</div>
-      <div class="content">
-        <h2>Ce que nous clarifions en 30 minutes</h2>
-        <div class="process-list">
-          <article class="process-item"><span class="process-number">01</span><p>Votre situation, vos outils et ce que vous souhaitez apprendre.</p></article>
-          <article class="process-item"><span class="process-number">02</span><p>Un premier axe de travail concret pour avancer.</p></article>
-          <article class="process-item"><span class="process-number">03</span><p>Un rythme possible, sans engagement.</p></article>
-        </div>
-        <p class="process-actions"><a class="text-link" href="booking.html" data-track="process_booking_click">Préparer un premier échange</a></p>
-      </div>
-    </section>
-
-    <section id="ressources">
-      <div class="section-label">ressource principale</div>
-      <div class="content">
-        <h2>Commencer à votre rythme</h2>
-        <p class="section-intro">Un kit d&rsquo;atelier en français pour commencer une pièce à partir d&rsquo;un son, sans attendre une séance individuelle.</p>
-
-        <article class="resource-featured">
-          <figure class="resource-preview">
-            <img src="../images/documentation-1.jpg" width="1973" height="1480" alt="Aperçu d’un carnet d’atelier sonore" loading="lazy" decoding="async">
-          </figure>
-          <div class="resource-featured-copy">
-            <div class="resource-label">Kit d&rsquo;atelier &mdash; Prix de lancement : 19&euro;</div>
-            <h3>Commencer une pi&egrave;ce &agrave; partir d&rsquo;un son</h3>
-            <p class="resource-subtitle">Un parcours d&rsquo;&eacute;coute, de composition et de pratiques sonores</p>
-            <p>Choisissez un son, &eacute;coutez-le autrement, transformez-le et composez une courte esquisse de 60 secondes.</p>
-            <a class="btn primary" href="https://sonata14.gumroad.com/l/gvbzop?utm_source=ateliercompositionson&amp;utm_medium=referral&amp;utm_campaign=202607_carnet_launch&amp;utm_content=resources_primary_cta" target="_blank" rel="noopener noreferrer" data-resource-url="GUMROAD_CARNET_URL" data-resource-track="gumroad_product_click">D&eacute;couvrir le kit &agrave; 19&euro;</a>
-            <a class="resource-consultation-link" href="booking.html" data-track="resource_booking_primary_click">Vous pr&eacute;f&eacute;rez en parler&nbsp;? Pr&eacute;parer un premier &eacute;change</a>
+  <main>
+    <section class="fr-hero" id="top" aria-labelledby="hero-title">
+      <div class="fr-hero__inner">
+        <div class="fr-hero__copy">
+          <p class="fr-hero__kicker">Atelier en ligne · composition · création sonore</p>
+          <h1 id="hero-title">Accompagnement individuel en composition et création sonore</h1>
+          <p class="fr-hero__lead">À partir d’une partition, d’une maquette, d’un enregistrement ou d’une session DAW, clarifiez vos choix et faites avancer votre projet.</p>
+          <div class="fr-hero__actions">
+            <a class="acs-btn acs-btn--primary" href="booking.html?offer=free-contact#contact-form" data-track="click_primary_cta" data-offer="free_contact" data-cta-position="hero">Faire le point sur mon projet</a>
+            <a class="acs-btn acs-btn--secondary" href="#formats" data-track="click_secondary_cta" data-offer="none" data-cta-position="hero">Voir les formats d’accompagnement</a>
           </div>
-        </article>
-        <div class="resource-secondary-grid">
-          <article class="resource-compact">
-            <div class="resource-label">Extrait gratuit</div>
-            <h3>5 questions pour commencer une pi&egrave;ce sonore</h3>
-            <p>Un court carnet d&rsquo;&eacute;coute pour ouvrir une premi&egrave;re direction de composition &agrave; partir d&rsquo;un son.</p>
-            <a class="text-link" href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener noreferrer" data-resource-url="FREE_PDF_URL" data-resource-track="resource_free_pdf_click">T&eacute;l&eacute;charger l&rsquo;extrait</a>
-          </article>
-          <article class="resource-compact">
-            <div class="resource-label">Pour aller plus loin &mdash; 29&euro;</div>
-            <h3>Mini retour sur une esquisse sonore</h3>
-            <p>Un retour &eacute;crit concis sur la mati&egrave;re, l&rsquo;&eacute;coute, la forme et les pistes possibles de d&eacute;veloppement.</p>
-            <a class="text-link" href="mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore" data-resource-url="MINI_FEEDBACK_URL" data-resource-track="resource_mini_feedback_click">Demander un mini retour</a>
-          </article>
+          <p class="fr-hero__scope">Composition, électroacoustique, Max/MSP, analyse, écriture et MAO créative.</p>
         </div>
-        <p class="resources-note">Pour un travail accompagn&eacute;, vous pouvez aussi <a href="booking.html" data-resource-url="BOOKING_URL" data-resource-track="resource_booking_click">r&eacute;server un &eacute;change individuel</a>.</p>
-      </div>
-    </section>
-
-    <section id="instructor" aria-labelledby="instructor-title">
-      <div class="section-label">compositrice / atelier</div>
-      <div class="content instructor-layout">
-        <img class="instructor-photo" src="../images/sachie_studio.jpg" width="2080" height="1170" alt="Sachie Kobayashi dans son studio" loading="lazy" decoding="async">
-        <div class="instructor-copy">
-          <h2 id="instructor-title">Sachie Kobayashi</h2>
-          <div class="instructor-role">Compositrice / Artiste sonore</div>
-          <p>Sachie Kobayashi est compositrice et artiste sonore. Formée à la composition, à la théorie musicale et à la pédagogie à la Haute école de musique de Genève, elle a ensuite suivi le Cursus de composition et d&rsquo;informatique musicale de l&rsquo;IRCAM à Paris. Son travail se développe entre composition instrumentale, électroacoustique, technologies créatives, image et espace. Elle accompagne aussi bien une première esquisse qu&rsquo;un projet déjà engagé, en tenant compte des outils, des références et des contraintes propres à chaque personne.</p>
-          <p class="instructor-qualification">Le travail part de partitions, de maquettes, d’enregistrements ou de sessions DAW réellement en cours. Chaque séance se termine par une prochaine étape concrète.</p>
-          <a class="instructor-link" href="https://www.sachiekobayashi.com/" target="_blank" rel="noopener noreferrer" data-track="teacher_profile_fr">Voir le site artistique</a>
+        <div class="fr-hero__media">
+          <picture>
+            <source media="(max-width: 767px)" type="image/avif" srcset="../images/hero-atelier-performance-mobile.avif">
+            <source media="(max-width: 767px)" type="image/webp" srcset="../images/hero-atelier-performance-mobile.webp">
+            <source type="image/avif" srcset="../images/hero-atelier-performance.avif">
+            <img src="../images/hero-atelier-performance.webp" alt="Sachie Kobayashi pendant une création électroacoustique" width="1200" height="1200" loading="eager" decoding="async" fetchpriority="high">
+          </picture>
         </div>
       </div>
     </section>
 
-    <section id="works" class="top-works" aria-labelledby="works-title">
-      <div class="section-label">œuvres</div>
-      <div class="content">
-        <h2 id="works-title">Quelques œuvres</h2>
-        <p class="section-intro">Composition instrumentale, électronique et création audiovisuelle : une sélection du travail de Sachie Kobayashi.</p>
-        <div class="works-media-grid">
-          <article class="work-media-item">
-            <div class="work-media-frame">
-              <iframe
-                title="Émergences Résurgences pour orchestre"
-                loading="lazy"
-                scrolling="no"
-                allow="autoplay"
-                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Femergences-resurgences-pour-orchestre&amp;color=%23111111&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=false">
-              </iframe>
-            </div>
-            <h3>Émergences Résurgences pour orchestre</h3>
-          </article>
-
-          <article class="work-media-item">
-            <div class="work-media-frame">
-              <iframe
-                src="https://www.youtube.com/embed/SgYGcZS1Mp4"
-                title="Digi Ugi"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-              </iframe>
-            </div>
-            <h3>Digi Ugi</h3>
-          </article>
-
-          <article class="work-media-item">
-            <div class="work-media-frame">
-              <iframe
-                src="https://www.youtube.com/embed/XfBIiXmU4Rc"
-                title="i.p.s.e.i.t.y."
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-              </iframe>
-            </div>
-            <h3>i.p.s.e.i.t.y.</h3>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="format">
-      <div class="section-label">cours individuels</div>
-      <div class="content">
-        <h2>Un accompagnement à votre rythme</h2>
-        <p class="section-intro">Après l&rsquo;échange gratuit, les séances individuelles permettent d&rsquo;approfondir votre pratique avec une direction claire.</p>
-        <div class="format-summary">
-          <div class="format-price"><span class="section-label">cours individuel</span><div class="price">70€</div><p>par séance</p></div>
-          <div class="format-details">
-            <div><span>Durée</span><strong>60 minutes</strong></div>
-            <div><span>Langue</span><strong>français</strong></div>
-            <div><span>Rythme</span><strong>Ponctuel, mensuel ou régulier</strong></div>
-            <div><span>Paiement</span><strong>En ligne possible</strong></div>
-          </div>
-        </div>
-        <p><a class="text-link" href="booking.html" data-track="click_free_consultation_fr">Parler du format adapté à votre projet</a></p>
-        <p><a class="text-link" href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener noreferrer" data-track="terms_pdf_click">Voir les conditions</a></p>
-      </div>
-    </section>
-
-    <section id="booking" class="booking-section">
-      <div class="section-label">échange</div>
-      <div class="content">
-        <h2>Parler de votre projet</h2>
-        <p class="section-intro">Un échange de 30 minutes, sans préparation nécessaire.</p>
-        <p>Vous pouvez venir avec une idée, une maquette, une partition, une session DAW ou simplement une question. Cet échange permet de clarifier votre situation et de voir si un accompagnement individuel peut vous convenir. Aucun engagement n’est demandé.</p>
-        <p class="small">Langue : français</p>
-        <div class="hero-actions">
-          <a class="btn primary" href="booking.html" data-track="booking_page_click">Réserver un premier échange</a>
-        </div>
-      </div>
-    </section>
-    <section id="questions">
-      <div class="section-label">questions</div>
-      <div class="content">
-        <h2>FAQ</h2>
-        <details class="compact-details"><summary>Puis-je commencer si je suis débutant&nbsp;?</summary><p>Oui. Le point de départ peut être une écoute, un exercice, une idée ou une première maquette. Le travail s’adapte à votre situation.</p></details>
-        <details class="compact-details"><summary>Puis-je apporter ma propre musique&nbsp;?</summary><p>Oui. Une pièce, une esquisse, une partition ou une session DAW permet souvent de situer plus précisément le travail.</p></details>
-        <details class="compact-details"><summary>Faut-il savoir lire une partition&nbsp;?</summary><p>Non. La lecture peut être travaillée si elle est utile à votre projet, sans être une condition pour commencer.</p></details>
-        <details class="compact-details"><summary>Comment se déroule le premier échange&nbsp;?</summary><p>Il dure 30 minutes. Nous parlons de votre situation, de vos outils et d’une direction possible, sans engagement.</p></details>
-      </div>
-    </section>
-
-    <section id="conditions" hidden>
-      <div class="section-label">conditions</div>
-      <div class="content">
-        <h2>Informations et politique des cours</h2>
-        <ul class="list">
-          <li><span>format</span><span>cours individuels en ligne via Zoom.</span></li>
-          <li><span>tarif</span><span>cours individuel : 70€ / 60 min. Les diagnostics et packs projet sont définis selon le volume et les documents à analyser.</span></li>
-          <li><span>langue</span><span>français.</span></li>
-          <li><span>paiement</span><span>paiement en ligne possible. Les modalités sont précisées avant le cours.</span></li>
-          <li><span>planning</span><span>rythme ponctuel, mensuel ou régulier selon le projet et les disponibilités.</span></li>
-          <li><span>conditions complètes</span><span><a href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener" data-track="terms_pdf_click">Lesson Terms &amp; Policies / Commerce Disclosure</a></span></li>
-          <li><span>contact</span><span>info@sachiekobayashi.com</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="contact" hidden>
-      <div class="section-label">contact</div>
-      <div class="content">
-        <h2>Réserver un échange ou parler d’un projet</h2>
-        <p>
-          Réservez un échange gratuit de 30 minutes pour clarifier votre projet, ou écrivez directement si vous souhaitez demander un diagnostic de morceau.
-        </p>
-
-        <div class="contact-layout">
+    <section class="fr-section" id="resultats" aria-labelledby="resultats-title">
+      <div class="fr-shell">
+        <div class="fr-section__header">
           <div>
-            <p class="small">
-              Cet échange est ouvert aux compositeurs, musiciens, artistes sonores, utilisateurs de MAO et personnes qui souhaitent simplement poser une première question. Aucun engagement n’est demandé.
-            </p>
+            <p class="fr-section-number">01</p>
+            <p class="fr-eyebrow">Trois résultats concrets</p>
+          </div>
+          <div>
+            <h2 id="resultats-title">Faire avancer ce qui existe déjà, même à l’état d’ébauche.</h2>
+            <p class="fr-section__lead">Le point de départ peut être très simple : un son, quelques mesures, une question de forme ou une session qui n’avance plus.</p>
+          </div>
+        </div>
+        <div class="fr-outcomes">
+          <article class="fr-outcome">
+            <span class="fr-outcome__index">01</span>
+            <h3>Développer un matériau en forme</h3>
+            <p>Transformer une idée, un son, un motif ou une esquisse en structure musicale cohérente.</p>
+          </article>
+          <article class="fr-outcome">
+            <span class="fr-outcome__index">02</span>
+            <h3>Résoudre un blocage précis</h3>
+            <p>Identifier ce qui bloque dans la forme, le timbre, l’écriture, l’orchestration ou la session DAW.</p>
+          </article>
+          <article class="fr-outcome">
+            <span class="fr-outcome__index">03</span>
+            <h3>Finaliser un projet</h3>
+            <p>Faire avancer une pièce, un portfolio, une candidature ou un projet électroacoustique jusqu’à une version partageable.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-            <div class="hero-actions">
-              <a class="text-link" href="booking.html" data-track="click_free_consultation_fr">Préparer un premier échange</a>
-              <a class="btn" href="mailto:info@sachiekobayashi.com" data-track="email_contact_click" data-cta-location="fr_hidden_contact">Écrire par e-mail</a>
+    <section class="fr-section fr-section--paper" id="formats" aria-labelledby="formats-title">
+      <div class="fr-shell">
+        <div class="fr-section__header">
+          <div>
+            <p class="fr-section-number">02</p>
+            <p class="fr-eyebrow">Formats d’accompagnement</p>
+          </div>
+          <div>
+            <h2 id="formats-title">Choisir le degré d’accompagnement utile maintenant.</h2>
+            <p class="fr-section__lead">Travail autonome, regard extérieur ciblé ou séance de projet : les trois formats répondent à des besoins distincts.</p>
+          </div>
+        </div>
+
+        <div class="fr-offers">
+          <article class="fr-offer" data-offer-view="kit_19">
+            <header class="fr-offer__meta">
+              <p class="fr-eyebrow">Kit autonome</p>
+              <h3>Commencer une pièce à partir d’un son</h3>
+              <p class="fr-offer__price">19€</p>
+            </header>
+            <div class="fr-offer__body fr-offer__body--media">
+              <div>
+                <p class="fr-offer__summary">Découvrir une méthode de travail autonome à partir d’un son et produire une esquisse sonore de 60 secondes.</p>
+                <ul class="fr-check-list">
+                  <li>Pour compositeurs, musiciens, étudiants et artistes sonores</li>
+                  <li>Guide d’introduction, cahier de travail et annexe d’approfondissement</li>
+                  <li>Vidéo d’introduction et 5 vidéos d’accompagnement, environ 13 minutes au total</li>
+                  <li>5 exemples audio WAV et 3 sons de pratique WAV</li>
+                  <li>Téléchargement en français, à suivre à votre rythme</li>
+                </ul>
+                <div class="fr-actions fr-actions--spaced">
+                  <a class="acs-btn acs-btn--secondary" href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener" data-track="download_sample" data-offer="kit_19" data-cta-position="offers">Voir un extrait gratuit</a>
+                  <a class="acs-btn acs-btn--primary" href="https://sonata14.gumroad.com/l/gvbzop" data-track="click_gumroad" data-offer="kit_19" data-cta-position="offers">Accéder au kit — 19 €</a>
+                </div>
+              </div>
+              <figure class="fr-kit-preview" aria-label="Aperçu réel du kit Commencer une pièce à partir d’un son">
+                <img class="fr-kit-preview__cover" src="../images/fr/kit-son-cover.webp" alt="Couverture du kit Commencer une pièce à partir d’un son" width="1005" height="566" loading="lazy" decoding="async">
+                <img class="fr-kit-preview__page--one" src="../images/fr/kit-son-inside-01.webp" alt="Page intérieure du cahier de travail sonore" width="1005" height="1256" loading="lazy" decoding="async">
+                <img class="fr-kit-preview__page--two" src="../images/fr/kit-son-inside-02.webp" alt="Exercice intérieur du kit de composition sonore" width="1005" height="1256" loading="lazy" decoding="async">
+              </figure>
             </div>
+          </article>
 
-            <p class="small">
-              Pour envoyer une maquette, un MIDI, une partition, un projet Ableton ou une question sur les cours, vous pouvez écrire directement à <a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click" data-cta-location="fr_hidden_contact_copy">info@sachiekobayashi.com</a>.
-            </p>
+          <article class="fr-offer" data-offer-view="mini_feedback_29">
+            <header class="fr-offer__meta">
+              <p class="fr-eyebrow">Mini retour</p>
+              <h3>Un regard extérieur sur un point précis</h3>
+              <p class="fr-offer__price">29€</p>
+            </header>
+            <div class="fr-offer__body">
+              <div>
+                <p class="fr-offer__summary">Recevoir un retour ciblé sur une esquisse, un son ou une question clairement formulée.</p>
+                <ul class="fr-check-list">
+                  <li>Envoi par lien d’écoute ou fichier audio, avec une question courte</li>
+                  <li>Retour sur la forme, le matériau, le timbre ou un choix d’écriture délimité</li>
+                  <li>Une seule réponse écrite</li>
+                  <li>Le délai est confirmé avant le règlement</li>
+                  <li>Pas de séance en direct ni de nouvel envoi inclus</li>
+                </ul>
+              </div>
+              <div class="fr-offer__cta">
+                <p>Ce format convient à une question précise. Pour travailler une pièce en profondeur, choisissez la séance individuelle.</p>
+                <a class="acs-btn acs-btn--primary" href="booking.html?offer=mini-feedback#contact-form" data-track="request_feedback" data-offer="mini_feedback_29" data-cta-position="offers">Demander un mini retour</a>
+              </div>
+            </div>
+          </article>
 
-            <p class="small">
-              Les conditions complètes sont disponibles ici :
-              <a href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener" data-track="terms_pdf_click">Terms &amp; Policies</a>.
-            </p>
+          <article class="fr-offer" data-offer-view="individual_session_70">
+            <header class="fr-offer__meta">
+              <p class="fr-eyebrow">Séance individuelle</p>
+              <h3>Travailler directement sur votre projet</h3>
+              <p class="fr-offer__price">70€ / 60 min</p>
+            </header>
+            <div class="fr-offer__body">
+              <div>
+                <p class="fr-offer__summary">Une heure en ligne consacrée à votre partition, maquette ou session DAW et aux décisions qui permettront de poursuivre.</p>
+                <ul class="fr-check-list">
+                  <li>Les documents peuvent être envoyés avant la séance</li>
+                  <li>Analyse, écriture, orchestration, forme, timbre, montage ou organisation de session</li>
+                  <li>Composition contemporaine, électroacoustique, Max/MSP et MAO créative</li>
+                  <li>En ligne, sur rendez-vous</li>
+                  <li>Langue : français</li>
+                </ul>
+              </div>
+              <div class="fr-offer__cta">
+                <p>Après la réservation, vous recevez les indications nécessaires pour transmettre les éléments utiles.</p>
+                <a class="acs-btn acs-btn--primary" href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="offers">Réserver une séance</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="fr-section" id="methode" aria-labelledby="methode-title">
+      <div class="fr-shell">
+        <div class="fr-section__header">
+          <div>
+            <p class="fr-section-number">03</p>
+            <p class="fr-eyebrow">Méthode de travail</p>
+          </div>
+          <div>
+            <h2 id="methode-title">Partir du matériau, puis rendre les décisions explicites.</h2>
+            <p class="fr-section__lead">La technique est abordée au moment où elle sert une intention musicale : écouter, comparer, choisir, transformer et réécrire.</p>
+          </div>
+        </div>
+
+        <div class="fr-method-grid">
+          <div>
+            <p class="fr-eyebrow">Une séance de projet</p>
+            <p>Nous situons d’abord le projet : ce qui existe, ce qui résiste et ce que vous souhaitez obtenir. Nous travaillons ensuite sur un nombre limité de décisions, puis formulons une suite d’actions réalisables.</p>
+            <p>La partition, le son et la session sont considérés comme des matériaux de pensée, pas comme de simples exercices techniques.</p>
+          </div>
+          <div>
+            <div class="fr-process" aria-label="Méthode en cinq étapes">
+              <article class="fr-process__step">
+                <h3>Analyse</h3>
+                <p>Écouter, décrire et identifier les propriétés du matériau.</p>
+              </article>
+              <article class="fr-process__step">
+                <h3>Contraintes</h3>
+                <p>Définir une durée, une densité, une tessiture, une règle ou une trajectoire.</p>
+              </article>
+              <article class="fr-process__step">
+                <h3>Génération</h3>
+                <p>Produire plusieurs variantes avec un geste, un algorithme, un système ou un outil d’IA.</p>
+              </article>
+              <article class="fr-process__step">
+                <h3>Sélection</h3>
+                <p>Comparer les résultats et décider ce qui possède une valeur musicale.</p>
+              </article>
+              <article class="fr-process__step">
+                <h3>Réécriture</h3>
+                <p>Modifier, recomposer, orchestrer et intégrer le matériau dans une forme.</p>
+              </article>
+            </div>
+            <details class="fr-tool-details">
+              <summary>Outils possibles</summary>
+              <p>Partition, enregistrement, Ableton Live, Logic Pro, Reaper, Pro Tools, Max/MSP, Python et outils d’IA peuvent être mobilisés selon le projet. Il n’est pas nécessaire de posséder les mêmes logiciels que l’atelier.</p>
+            </details>
           </div>
         </div>
       </div>
     </section>
-    <footer>
-      <div>© 2026</div>
-      <div>Composition, harmonie, MAO et pratiques sonores · <a class="footer-terms" href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener noreferrer" data-track="terms_pdf_click">Conditions</a></div>
-      <img class="footer-logo" src="../images/acs-logo.png" width="306" height="509" alt="Logo Atelier Composition Son" loading="lazy" decoding="async">
-    </footer>
-  </div>
 
-<script>
-  const FREE_PDF_URL = "../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf";
-  const GUMROAD_CARNET_URL = "https://sonata14.gumroad.com/l/gvbzop";
-  const MINI_FEEDBACK_URL = "mailto:info@sachiekobayashi.com?subject=Mini%20retour%20%C3%A9crit%20sur%20une%20esquisse%20sonore";
-  const BOOKING_URL = "/fr/booking.html";
-  const ACS_UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
-  const ACS_UTM_STORAGE_KEY = "acs_fr_utm_params";
-  const GUMROAD_DEFAULT_UTM = {
-    utm_source: "ateliercompositionson",
-    utm_medium: "referral",
-    utm_campaign: "202607_carnet_launch",
-    utm_content: "resources_primary_cta"
-  };
+    <section class="fr-section fr-section--paper" id="experience" aria-labelledby="experience-title">
+      <div class="fr-shell">
+        <div class="fr-section__header">
+          <div>
+            <p class="fr-section-number">04</p>
+            <p class="fr-eyebrow">Expérience et domaines de pratique</p>
+          </div>
+          <div>
+            <h2 id="experience-title">Un atelier nourri par la composition, la recherche et la production.</h2>
+            <p class="fr-section__lead">Les séances relient les outils d’écriture aux conditions réelles de fabrication d’une œuvre.</p>
+          </div>
+        </div>
 
-  const ACS_RESOURCE_URLS = {
-    FREE_PDF_URL,
-    GUMROAD_CARNET_URL,
-    MINI_FEEDBACK_URL,
-    BOOKING_URL
-  };
+        <div class="fr-profile">
+          <figure class="fr-profile__image">
+            <img src="../images/hero-atelier-documentary.webp" alt="Sachie Kobayashi dans son espace de travail" width="1600" height="900" loading="lazy" decoding="async">
+          </figure>
+          <div>
+            <p class="fr-eyebrow">Sachie Kobayashi</p>
+            <h3>Compositrice et artiste sonore</h3>
+            <p>Formée à la composition et à la pédagogie musicale à la Haute école de musique de Genève, puis au Cursus de composition et d’informatique musicale de l’IRCAM, Sachie Kobayashi développe des œuvres instrumentales, électroacoustiques, audiovisuelles et installatives.</p>
+            <p>Cette expérience permet d’aborder une même question depuis plusieurs angles : partition, écoute, espace, geste, traitement du son et organisation technique.</p>
+            <div class="fr-credentials">
+              <div class="fr-credential"><span>01</span><strong>Haute école de musique de Genève<br>Composition et pédagogie musicale</strong></div>
+              <div class="fr-credential"><span>02</span><strong>IRCAM<br>Cursus de composition et d’informatique musicale</strong></div>
+              <div class="fr-credential"><span>03</span><strong>Pratique de l’enseignement en conservatoire en Suisse</strong></div>
+              <div class="fr-credential"><span>04</span><strong>Créations et présentations d’œuvres en Europe et au Japon</strong></div>
+            </div>
+          </div>
+        </div>
 
-  function readStoredUtm() {
-    try {
-      return JSON.parse(sessionStorage.getItem(ACS_UTM_STORAGE_KEY) || "{}");
-    } catch (error) {
-      return {};
-    }
-  }
+        <nav class="fr-domain-links" aria-label="Domaines d’accompagnement">
+          <a class="fr-domain-link" href="composition-lesson.html"><span>01</span><strong>Composition, écriture et développement de la forme</strong></a>
+          <a class="fr-domain-link" href="harmony-analysis-lesson.html"><span>02</span><strong>Analyse, harmonie, contrepoint et orchestration</strong></a>
+          <a class="fr-domain-link" href="electroacoustic-lesson.html"><span>03</span><strong>Électroacoustique, Max/MSP et technologies musicales</strong></a>
+          <a class="fr-domain-link" href="mao-lesson.html"><span>04</span><strong>MAO créative au service de la composition</strong></a>
+        </nav>
 
-  function writeStoredUtm(params) {
-    try {
-      sessionStorage.setItem(ACS_UTM_STORAGE_KEY, JSON.stringify(params));
-    } catch (error) {}
-  }
+        <div class="fr-works" aria-label="Sélection d’œuvres">
+          <article class="fr-work">
+            <p class="fr-work__type">Orchestre</p>
+            <h3>Émergences / Résurgences</h3>
+            <p>Ce travail nourrit l’accompagnement autour de la forme, de la densité et de l’orchestration.</p>
+            <div class="fr-work__player" data-embed-src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Femergences-resurgences-pour-orchestre&amp;color=%23111111&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=false" data-embed-title="Émergences / Résurgences sur SoundCloud" data-embed-height="166">
+              <button class="acs-btn acs-btn--secondary" type="button" data-load-embed data-track="play_work" data-offer="none" data-cta-position="works">Écouter l’œuvre</button>
+            </div>
+          </article>
+          <article class="fr-work">
+            <p class="fr-work__type">Image et son</p>
+            <h3>Digi Ugi</h3>
+            <p>Ce projet sert de point de départ pour travailler le montage, la production et la relation entre image et son.</p>
+            <div class="fr-work__player" data-embed-src="https://www.youtube-nocookie.com/embed/SgYGcZS1Mp4?autoplay=1" data-embed-title="Digi Ugi" data-embed-height="220">
+              <button class="acs-btn acs-btn--secondary" type="button" data-load-embed data-track="play_work" data-offer="none" data-cta-position="works">Voir l’œuvre</button>
+            </div>
+          </article>
+          <article class="fr-work">
+            <p class="fr-work__type">Installation</p>
+            <h3>i.p.s.e.i.t.y.</h3>
+            <p>Cette recherche est mobilisée dans les séances consacrées au geste, à l’espace et à l’électroacoustique.</p>
+            <div class="fr-work__player" data-embed-src="https://www.youtube-nocookie.com/embed/XfBIiXmU4Rc?autoplay=1" data-embed-title="i.p.s.e.i.t.y." data-embed-height="220">
+              <button class="acs-btn acs-btn--secondary" type="button" data-load-embed data-track="play_work" data-offer="none" data-cta-position="works">Voir l’œuvre</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-  function collectCurrentUtm() {
-    const currentParams = new URLSearchParams(window.location.search);
-    const collected = {};
+    <section class="fr-section" id="contact" aria-labelledby="contact-title">
+      <div class="fr-shell">
+        <div class="fr-section__header fr-section__header--compact">
+          <div>
+            <p class="fr-section-number">05</p>
+            <p class="fr-eyebrow">Ressources et premier contact</p>
+          </div>
+          <div>
+            <h2 id="contact-title">Commencer par une ressource, une question ou une séance.</h2>
+          </div>
+        </div>
 
-    ACS_UTM_KEYS.forEach(function(key) {
-      if (currentParams.has(key)) collected[key] = currentParams.get(key);
-    });
+        <div class="fr-contact-grid">
+          <article class="fr-resource">
+            <p class="fr-eyebrow">Ressource gratuite · PDF</p>
+            <h3>5 questions pour commencer une pièce sonore</h3>
+            <p>Un support bref pour observer votre matériau avant de choisir une méthode ou un accompagnement.</p>
+            <a class="acs-btn acs-btn--secondary" href="../assets/pdf/gratuit_5-questions-pour-commencer-une-piece-sonore.pdf" target="_blank" rel="noopener" data-track="download_sample" data-offer="kit_19" data-cta-position="resources">Télécharger le PDF</a>
+          </article>
+          <div>
+            <article class="fr-question">
+              <p class="fr-eyebrow">Une question avant de réserver ?</p>
+              <h3>Vous pouvez d’abord présenter brièvement votre projet.</h3>
+              <p>Ce premier échange sert à vérifier le format approprié. Il ne remplace pas une analyse détaillée de l’œuvre ni une séance.</p>
+              <a class="acs-btn acs-btn--primary" href="booking.html?offer=free-contact#contact-form" data-track="click_primary_cta" data-offer="free_contact" data-cta-position="contact">Poser une question</a>
+            </article>
 
-    if (Object.keys(collected).length) writeStoredUtm(collected);
-    return Object.keys(collected).length ? collected : readStoredUtm();
-  }
+            <div class="fr-faq">
+              <details>
+                <summary>Faut-il avoir un projet déjà avancé ?</summary>
+                <p>Non. Une intention, un son ou quelques mesures suffisent, à condition de pouvoir formuler ce que vous souhaitez examiner.</p>
+              </details>
+              <details>
+                <summary>Les séances conviennent-elles aux candidatures et portfolios ?</summary>
+                <p>Oui. Le travail peut porter sur la sélection, la cohérence et la présentation des pièces, sans promesse d’admission.</p>
+              </details>
+              <details>
+                <summary>Dois-je utiliser le même logiciel que l’atelier ?</summary>
+                <p>Non. Les décisions musicales peuvent être discutées à partir d’exports audio, de captures, de partitions ou d’un partage d’écran.</p>
+              </details>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  function appendTrackedUtm(url) {
-    if (!url || url === '#') return url;
-    const target = new URL(url, window.location.href);
-    const utmParams = collectCurrentUtm();
+  <footer class="fr-footer">
+    <div class="fr-shell fr-footer__inner">
+      <div>
+        <p class="fr-footer__brand">Atelier Composition Son</p>
+        <p class="fr-footer__meta">Composition · création sonore · accompagnement de projet</p>
+      </div>
+      <nav class="fr-footer__links" aria-label="Liens de pied de page">
+        <a href="booking.html">Réservation et contact</a>
+        <a href="confidentialite/">Confidentialité</a>
+        <a href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf" target="_blank" rel="noopener">Conditions</a>
+        <a href="https://sachiekobayashi.com/" target="_blank" rel="noopener">Site de l’artiste</a>
+      </nav>
+    </div>
+  </footer>
 
-    if (target.protocol !== 'http:' && target.protocol !== 'https:') return url;
-
-    if (target.hostname === 'sonata14.gumroad.com') {
-      const sourceParams = Object.keys(utmParams).length ? utmParams : GUMROAD_DEFAULT_UTM;
-      ACS_UTM_KEYS.forEach(function(key) {
-        if (!sourceParams[key]) return;
-        const value = key === 'utm_content' && Object.keys(utmParams).length ? sourceParams[key] + "_resources_cta" : sourceParams[key];
-        target.searchParams.set(key, value);
-      });
-      Object.keys(GUMROAD_DEFAULT_UTM).forEach(function(key) {
-        if (!target.searchParams.has(key)) target.searchParams.set(key, GUMROAD_DEFAULT_UTM[key]);
-      });
-      return target.href;
-    }
-
-    ACS_UTM_KEYS.forEach(function(key) {
-      if (utmParams[key] && !target.searchParams.has(key)) target.searchParams.set(key, utmParams[key]);
-    });
-
-    return target.href;
-  }
-
-  document.querySelectorAll('[data-resource-url]').forEach(function(link) {
-    const key = link.getAttribute('data-resource-url');
-    if (ACS_RESOURCE_URLS[key]) link.setAttribute('href', appendTrackedUtm(ACS_RESOURCE_URLS[key]));
-  });
-
-  function buildResourceEventParams(link, eventName) {
-    const params = {
-      page_language: "fr",
-      cta_location: "resources_section",
-      link_url: link.href,
-      link_text: link.textContent.trim(),
-      page_location: window.location.href,
-      transport_type: "beacon"
-    };
-
-    if (eventName === "gumroad_product_click") {
-      params.product_id = "commencer_piece_son";
-      params.product_name = "Commencer une pièce à partir d’un son";
-      params.value = 19;
-      params.currency = "EUR";
-      params.cta_location = "resources_primary_card";
-    }
-
-    return params;
-  }
-
-  document.querySelectorAll('[data-resource-track]').forEach(function(link) {
-    link.addEventListener('click', function(event) {
-      const eventName = link.getAttribute('data-resource-track');
-      const href = link.getAttribute('href') || '#';
-      const shouldDelay = href && href !== '#' && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && !link.getAttribute('target');
-      let completed = false;
-
-      function finish() {
-        if (completed) return;
-        completed = true;
-        if (shouldDelay) window.location.href = href;
-      }
-
-      if (typeof gtag !== 'function') return;
-      if (shouldDelay) event.preventDefault();
-
-      const eventParams = buildResourceEventParams(link, eventName);
-      eventParams.event_callback = finish;
-      eventParams.event_timeout = 800;
-
-      gtag('event', eventName, eventParams);
-
-      if (shouldDelay) window.setTimeout(finish, 240);
-    });
-  });
-
-  (function observeResourcesSection() {
-    const section = document.getElementById('ressources');
-    if (!section || typeof IntersectionObserver === 'undefined') return;
-
-    try {
-      if (sessionStorage.getItem('acs_resource_section_viewed') === '1') return;
-    } catch (error) {}
-
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (!entry.isIntersecting || entry.intersectionRatio < 0.5) return;
-
-        try {
-          sessionStorage.setItem('acs_resource_section_viewed', '1');
-        } catch (error) {}
-
-        if (typeof gtag === 'function') {
-          gtag('event', 'resource_section_view', {
-            page_language: 'fr',
-            section_name: 'resources',
-            featured_product: 'commencer_piece_son',
-            transport_type: 'beacon'
-          });
-        }
-
-        observer.disconnect();
-      });
-    }, { threshold: 0.5 });
-
-    observer.observe(section);
-  })();
-
-  (function observePageSections() {
-    if (typeof IntersectionObserver === 'undefined') return;
-
-    [
-      { id: 'booking', eventName: 'booking_section_view', storageKey: 'acs_booking_section_viewed' },
-      { id: 'format', eventName: 'pricing_section_view', storageKey: 'acs_pricing_section_viewed' }
-    ].forEach(function(item) {
-      const section = document.getElementById(item.id);
-      if (!section) return;
-
-      try {
-        if (sessionStorage.getItem(item.storageKey) === '1') return;
-      } catch (error) {}
-
-      const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (!entry.isIntersecting || entry.intersectionRatio < 0.5) return;
-          try {
-            sessionStorage.setItem(item.storageKey, '1');
-          } catch (error) {}
-          if (typeof gtag === 'function') {
-            gtag('event', item.eventName, {
-              page_language: 'fr',
-              section_name: item.id,
-              transport_type: 'beacon'
-            });
-          }
-          observer.disconnect();
-        });
-      }, { threshold: 0.5 });
-
-      observer.observe(section);
-    });
-  })();
-
-</script>
-
-  <script defer src="../assets/js/acs-tracking.js"></script>
+  <script defer src="../assets/js/fr-tracking.js"></script>
   <script defer src="../assets/js/acs-header.js"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
+  <script defer src="../assets/js/acs-ui.js"></script>
+  <script defer src="../assets/js/fr-site.js"></script>
 </body>
 </html>

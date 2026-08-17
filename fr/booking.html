@@ -1,376 +1,176 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Échange gratuit de 30 minutes｜Atelier Composition Son</title>
-  <meta name="description" content="Réservez un échange gratuit de 30 minutes avec Atelier Composition Son pour clarifier votre projet, vos besoins et les pistes de travail possibles en composition, théorie musicale, MAO, électroacoustique et création avec IA." />
-  <link rel="canonical" href="https://ateliercompositionson.com/fr/booking.html" />
-
-  <style>
-    :root {
-      --bg: #f7f5ef;
-      --text: #111;
-      --muted: #6d6a63;
-      --line: #151515;
-      --fine-line: rgba(17, 17, 17, 0.18);
-      --card: #fffdf8;
-    }
-
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      background:
-        linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
-        var(--bg);
-      color: var(--text);
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      line-height: 1.8;
-      letter-spacing: 0.015em;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 18px 5vw;
-      border-bottom: 1px solid var(--line);
-      background: rgba(247, 245, 239, 0.92);
-      backdrop-filter: blur(10px);
-    }
-
-    .brand {
-      font-size: 14px;
-      line-height: 1.35;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    nav {
-      display: flex;
-      gap: 20px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    main {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 76px 5vw 88px;
-    }
-
-    .kicker {
-      margin-bottom: 18px;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.32em;
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    .rule {
-      width: 56px;
-      height: 2px;
-      margin: 0 auto 30px;
-      background: var(--line);
-    }
-
-    h1 {
-      margin: 0 0 24px;
-      font-size: clamp(36px, 6vw, 64px);
-      line-height: 1.15;
-      font-weight: 400;
-      letter-spacing: 0.08em;
-      text-align: center;
-    }
-
-    .lead {
-      max-width: 660px;
-      margin: 0 auto;
-      color: var(--text);
-      font-size: 18px;
-      line-height: 2;
-      text-align: center;
-    }
-
-    .badges {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      margin: 30px auto 38px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      overflow: hidden;
-      max-width: 680px;
-      background: rgba(255, 253, 248, 0.52);
-    }
-
-    .badges span {
-      flex: 1 1 0;
-      padding: 11px 14px;
-      border-right: 1px solid var(--fine-line);
-      text-align: center;
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    .badges span:last-child {
-      border-right: 0;
-    }
-
-    .booking-panel {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding: 30px 0 34px;
-    }
-
-    .calendly-inline-widget {
-      width: 100%;
-      min-width: 0;
-      height: 720px;
-      border: 1px solid var(--line);
-      background: var(--card);
-    }
-
-    .note {
-      margin: 22px auto 0;
-      max-width: 660px;
-      color: var(--muted);
-      font-size: 14px;
-      text-align: center;
-    }
-
-    .note a {
-      border-bottom: 1px solid var(--fine-line);
-    }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 42px;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 28px 5vw;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 720px) {
-      header {
-        align-items: flex-start;
-        padding: 15px 5vw;
-      }
-
-      .brand {
-        max-width: 220px;
-        font-size: 12px;
-      }
-
-      nav {
-        gap: 13px;
-        font-size: 12px;
-      }
-
-      main {
-        padding: 48px 5vw 66px;
-      }
-
-      .kicker {
-        font-size: 11px;
-        letter-spacing: 0.28em;
-      }
-
-      h1 {
-        font-size: 34px;
-        letter-spacing: 0.04em;
-      }
-
-      .lead {
-        font-size: 15px;
-        line-height: 1.9;
-        text-align: left;
-      }
-
-      .badges {
-        border-radius: 0;
-      }
-
-      .badges span {
-        padding: 10px 8px;
-        font-size: 12px;
-      }
-
-      .booking-panel {
-        padding: 22px 0 28px;
-      }
-
-      .calendly-inline-widget {
-        height: 690px;
-      }
-
-      .note {
-        text-align: left;
-      }
-    }
-
-    @media (max-width: 420px) {
-      header {
-        gap: 14px;
-      }
-
-      nav {
-        flex-wrap: wrap;
-        justify-content: flex-end;
-      }
-
-      h1 {
-        font-size: 30px;
-      }
-
-      .badges {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      .badges span {
-        border-right: 0;
-        border-bottom: 1px solid var(--fine-line);
-      }
-
-      .badges span:last-child {
-        border-bottom: 0;
-      }
-    }
-
-  /* Global white background and frameless images */
-  :root {
-    --bg: #ffffff !important;
-    --paper: #ffffff !important;
-    --card: #ffffff !important;
-    --white: #ffffff !important;
-  }
-
-  html,
-  body {
-    background: #ffffff !important;
-  }
-
-  figure,
-  img,
-  .lesson-image,
-  .lesson-header-image,
-  .teacher-photo,
-  .inline-work-image,
-  .mobile-studio-image,
-  .hero-image,
-  .image-frame,
-  .visual-card {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-
-  figure img,
-  .lesson-image img,
-  .lesson-header-image img,
-  .teacher-photo img,
-  .inline-work-image img,
-  .hero-image img,
-  .image-frame img,
-  .visual-card img {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-</style>
-
-  <!-- Google tag (gtag.js) -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Réserver une séance ou poser une question | Atelier Composition Son</title>
+  <meta name="description" content="Réservez une séance individuelle de composition et création sonore, ou présentez brièvement votre projet avant de choisir un accompagnement.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ateliercompositionson.com/fr/booking.html">
+  <link rel="icon" href="../images/fr/acs-logo-header.webp" type="image/webp">
+  <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/booking.html">
+  <link rel="alternate" hreflang="ja" href="https://ateliercompositionson.com/ja/booking.html">
+  <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/fr/booking.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Réserver une séance ou poser une question | Atelier Composition Son">
+  <meta property="og:description" content="Séance individuelle en ligne ou premier message au sujet de votre projet.">
+  <meta property="og:url" content="https://ateliercompositionson.com/fr/booking.html">
+  <meta property="og:image" content="https://ateliercompositionson.com/images/hero-atelier-documentary.webp">
+  <link rel="stylesheet" href="../assets/css/acs-core.css">
+  <link rel="stylesheet" href="../assets/css/fr-site.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag("js", new Date());
-    gtag("config", "G-Y1792EBWTT");
+    gtag('js', new Date());
+    gtag('config', 'G-Y1792EBWTT');
   </script>
-  <link rel="stylesheet" href="../assets/css/acs-core.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://ateliercompositionson.com/fr/" },
+          { "@type": "ListItem", "position": 2, "name": "Réservation et contact", "item": "https://ateliercompositionson.com/fr/booking.html" }
+        ]
+      },
+      {
+        "@type": "Service",
+        "name": "Séance individuelle de composition et création sonore",
+        "description": "Séance individuelle en ligne de 60 minutes à partir d’une partition, d’une maquette, d’un enregistrement ou d’une session DAW.",
+        "provider": { "@type": "Organization", "name": "Atelier Composition Son" },
+        "offers": { "@type": "Offer", "price": "70", "priceCurrency": "EUR", "availability": "https://schema.org/LimitedAvailability" }
+      }
+    ]
+  }
+  </script>
 </head>
-
-<body>
-<header class="acs-site-header" data-shared-header></header>
+<body class="fr-site" data-page-type="booking">
+  <header class="acs-site-header" data-shared-header></header>
 
   <main>
-    <a class="back-link" href="index.html">← Retour</a>
+    <section class="fr-page-hero" id="top">
+      <div class="fr-shell fr-page-hero__grid">
+        <div class="fr-page-hero__copy">
+          <p class="fr-eyebrow">Réservation et premier contact</p>
+          <h1>Faire le point sur votre projet</h1>
+          <p>Réservez directement une séance de travail, ou envoyez un message court si vous souhaitez d’abord vérifier le format adapté.</p>
+          <a class="acs-btn acs-btn--secondary" href="index.html#formats" data-track="click_secondary_cta" data-offer="none" data-cta-position="booking_hero">Revoir les trois formats</a>
+        </div>
+        <figure class="fr-page-hero__media">
+          <img src="../images/hero-atelier-documentary.webp" alt="Sachie Kobayashi dans son espace de travail sonore" width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
+        </figure>
+      </div>
+    </section>
 
-    <div class="kicker">Premier échange</div>
-    <div class="rule"></div>
+    <section class="fr-section" id="reservation" aria-labelledby="reservation-title">
+      <div class="fr-shell fr-booking-layout">
+        <div>
+          <p class="fr-section-number">01</p>
+          <p class="fr-eyebrow">Séance individuelle</p>
+          <h2 id="reservation-title">Travailler sur une pièce, une partition, une maquette ou une session DAW.</h2>
+          <p>Les éléments utiles peuvent être envoyés avant le rendez-vous. La séance se déroule en ligne, en français, et se concentre sur les décisions qui permettront de poursuivre le projet.</p>
+          <p>Langue : français</p>
+          <div class="fr-price-bar">
+            <strong>70€ / 60 min</strong>
+          </div>
+        </div>
+        <div class="fr-calendly-panel">
+          <h2>Choisir un horaire</h2>
+          <p>Le calendrier Calendly n’est chargé qu’après votre action. Les informations de connexion sont envoyées automatiquement après la réservation.</p>
+          <button class="acs-btn acs-btn--primary" type="button" data-calendly-url="https://calendly.com/acs_trial/trial_acs" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="booking_page">Ouvrir le calendrier</button>
+          <div class="fr-calendly-slot" data-calendly-slot aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
 
-    <h1>Échange gratuit<br>de 30 minutes</h1>
+    <section class="fr-section fr-section--paper" aria-labelledby="contact-form-title">
+      <div class="fr-shell fr-booking-layout">
+        <div>
+          <p class="fr-section-number">02</p>
+          <p class="fr-eyebrow">Premier message</p>
+          <h2 id="contact-form-title">Une question avant de réserver ?</h2>
+          <p>Vous pouvez présenter brièvement votre projet ou demander le mini retour à 29€. Ce message sert à orienter la demande ; il ne comprend pas une analyse détaillée de l’œuvre.</p>
+        </div>
+        <div class="fr-form-panel">
+          <form class="fr-form" id="contact-form" action="https://formspree.io/f/mbdbpqrj" method="post" novalidate>
+            <input type="hidden" name="offer" value="free_contact">
+            <input type="hidden" name="_subject" value="Demande depuis le site français — Atelier Composition Son">
 
-    <p class="lead">
-      Réservez un échange gratuit de 30 minutes pour clarifier votre projet,
-      vos besoins et les pistes de travail possibles.
-      Cet échange est ouvert aux personnes qui commencent à composer, aux autodidactes,
-      aux étudiants, aux artistes et aux personnes qui souhaitent simplement poser une première question.
-      Aucun engagement n’est demandé.
-    </p>
+            <div class="fr-field">
+              <label for="contact-name">Nom *</label>
+              <input id="contact-name" name="name" type="text" autocomplete="name" required>
+            </div>
 
-    <div class="badges" aria-label="Informations principales">
-      <span>30 minutes</span>
-      <span>Sans préparation nécessaire</span>
-      <span>Sans engagement</span>
-    </div>
+            <div class="fr-field">
+              <label for="contact-email">Adresse e-mail *</label>
+              <input id="contact-email" name="email" type="email" autocomplete="email" required>
+            </div>
 
-    <p class="note">Langue : français</p>
+            <div class="fr-field">
+              <label for="contact-language">Langue souhaitée *</label>
+              <select id="contact-language" name="language" required>
+                <option value="">Choisir une langue</option>
+                <option value="francais">Français</option>
+                <option value="anglais">Anglais</option>
+                <option value="japonais">Japonais</option>
+              </select>
+            </div>
 
-    <p class="note">
-      Vous pouvez venir sans partition, sans maquette finalisée et sans préparation particulière.
-      Nous pouvons simplement parler de votre situation, de vos outils, de vos questions et des horaires possibles entre l’Europe et le Japon.
-    </p>
+            <div class="fr-field">
+              <label for="contact-domain">Domaine principal *</label>
+              <select id="contact-domain" name="domain" required>
+                <option value="">Choisir un domaine</option>
+                <option value="composition">Composition et écriture</option>
+                <option value="analyse">Analyse, harmonie ou orchestration</option>
+                <option value="electroacoustique">Électroacoustique ou Max/MSP</option>
+                <option value="mao">MAO créative</option>
+                <option value="mini-feedback">Mini retour — 29€</option>
+                <option value="portfolio">Portfolio ou candidature</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
 
-    <section class="booking-panel" aria-label="Calendrier de réservation">
-      <div
-        class="calendly-inline-widget"
-        data-url="https://calendly.com/acs_trial/trial_acs"
-      ></div>
+            <div class="fr-field">
+              <label for="contact-availability">Fuseau horaire ou disponibilités *</label>
+              <input id="contact-availability" name="availability" type="text" placeholder="Ex. Paris, mardi ou jeudi après 18 h" required>
+            </div>
 
-      <p class="note">
-        Après la réservation, les informations de rendez-vous sont envoyées automatiquement par e-mail.
-        Pour une correction par e-mail ou une autre demande, vous pouvez écrire à
-        <a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click" data-cta-location="fr_booking_note">info@sachiekobayashi.com</a>.
-      </p>
+            <div class="fr-field">
+              <label for="contact-message">Message court *</label>
+              <textarea id="contact-message" name="message" placeholder="Où en est le projet et quelle question souhaitez-vous examiner ?" required></textarea>
+            </div>
+
+            <div class="fr-field">
+              <label for="contact-project">Lien vers une œuvre ou un document <span class="fr-field__hint">(facultatif)</span></label>
+              <input id="contact-project" name="project_url" type="url" inputmode="url" placeholder="https://">
+              <p class="fr-field__hint">Un seul lien suffit pour ce premier message.</p>
+            </div>
+
+            <p class="fr-privacy-note">Les informations transmises sont utilisées uniquement pour répondre à votre demande et organiser, le cas échéant, une séance. <a class="acs-text-link" href="confidentialite/">En savoir plus sur le traitement des données.</a></p>
+            <p class="fr-form-status" data-form-success aria-live="polite"></p>
+            <p class="fr-form-status fr-form-status--error" data-form-error aria-live="assertive"></p>
+            <button class="acs-btn acs-btn--primary" type="submit" data-no-arrow>Envoyer ma demande</button>
+          </form>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer>
-    © Atelier Composition Son
+  <footer class="fr-footer">
+    <div class="fr-shell fr-footer__inner">
+      <div><p class="fr-footer__brand">Atelier Composition Son</p><p class="fr-footer__meta">Réservation et contact</p></div>
+      <nav class="fr-footer__links" aria-label="Liens de pied de page">
+        <a href="index.html">Accueil</a><a href="index.html#formats">Formats</a><a href="confidentialite/">Confidentialité</a>
+      </nav>
+    </div>
   </footer>
 
-  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-  <script defer src="../assets/js/acs-tracking.js"></script>
+  <script defer src="../assets/js/fr-tracking.js"></script>
   <script defer src="../assets/js/acs-header.js"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
+  <script defer src="../assets/js/acs-ui.js"></script>
+  <script defer src="../assets/js/fr-site.js"></script>
 </body>
 </html>

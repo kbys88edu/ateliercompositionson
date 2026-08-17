@@ -13,55 +13,81 @@
       ],
       consultation: "無料相談",
       consultationTrack: "click_free_consultation",
+      logoSrc: "../images/acs-logo.png",
+      logoWidth: "306",
+      logoHeight: "509",
+      brandLabel: "Atelier Composition Son",
     },
     fr: {
       navLabel: "Navigation principale",
       mobileNavLabel: "Menu mobile",
       menuLabel: "Menu",
       links: [
-        ["Cours", "index.html#entrypoints"],
-        ["À propos", "index.html#instructor"],
-        ["Tarifs", "index.html#format"],
-        ["Œuvres", "index.html#works"],
-        ["FAQ", "index.html#questions"],
+        ["Résultats", "index.html#resultats"],
+        ["Formats", "index.html#formats"],
+        ["Méthode", "index.html#methode"],
+        ["Expérience", "index.html#experience"],
+        ["Contact", "index.html#contact"],
         ["FR / JA", "../ja/", "ja"],
       ],
-      consultation: "Rendez-vous",
-      consultationTrack: "click_free_consultation_fr",
+      consultation: "Faire le point",
+      consultationHref: "booking.html?offer=free-contact#contact-form",
+      consultationTrack: "click_primary_cta",
+      logoSrc: "../images/fr/acs-logo-header.webp",
+      logoWidth: "72",
+      logoHeight: "120",
+      brandLabel: "ACS — Atelier Composition Son",
+      trackingOffer: "free_contact",
     },
   };
 
-  function linkMarkup(link, mobile) {
+  function resolveHref(root, href) {
+    if (/^(?:[a-z]+:|#|\/)/i.test(href)) return href;
+    return root + href;
+  }
+
+  function linkMarkup(link, mobile, root) {
     var language = link[2] ? ' lang="' + link[2] + '"' : "";
     var close = mobile ? " data-menu-close" : "";
-    return '<a href="' + link[1] + '"' + language + close + ">" + link[0] + "</a>";
+    return '<a href="' + resolveHref(root, link[1]) + '"' + language + close + ">" + link[0] + "</a>";
   }
 
   function renderHeader(mount, configuration, index) {
     var panelId = "acs-site-menu-" + index;
+    var root = mount.getAttribute("data-header-root") || "";
+    var consultationHref = resolveHref(root, configuration.consultationHref || "booking.html");
+    var logoSrc = resolveHref(root, configuration.logoSrc || "../images/acs-logo.png");
+    var consultationAnalytics = configuration.trackingOffer
+      ? ' data-offer="' + configuration.trackingOffer + '" data-cta-position="header"'
+      : "";
+    var mobileConsultationAnalytics = configuration.trackingOffer
+      ? ' data-offer="' + configuration.trackingOffer + '" data-cta-position="mobile_menu"'
+      : "";
     var desktopLinks = configuration.links.map(function (link) {
-      return linkMarkup(link, false);
+      return linkMarkup(link, false, root);
     }).join("");
     var mobileLinks = configuration.links.map(function (link) {
-      return linkMarkup(link, true);
+      return linkMarkup(link, true, root);
     }).join("");
-    var consultation = '<a class="acs-btn acs-btn--primary" href="booking.html" data-track="' +
-      configuration.consultationTrack + '">' + configuration.consultation + "</a>";
-    var mobileConsultation = '<a class="acs-btn acs-btn--primary" href="booking.html" data-track="' +
-      configuration.consultationTrack + '" data-menu-close>' + configuration.consultation + "</a>";
+    var consultation = '<a class="acs-btn acs-btn--primary" href="' + consultationHref + '" data-track="' +
+      configuration.consultationTrack + '"' + consultationAnalytics + '>' +
+      configuration.consultation + "</a>";
+    var mobileConsultation = '<a class="acs-btn acs-btn--primary" href="' + consultationHref + '" data-track="' +
+      configuration.consultationTrack + '"' + mobileConsultationAnalytics + ' data-menu-close>' +
+      configuration.consultation + "</a>";
 
     mount.setAttribute("data-menu", "");
     mount.innerHTML =
       '<div class="acs-container--wide acs-site-header__inner">' +
-        '<a class="acs-site-header__brand" aria-label="Atelier Composition Son" href="index.html#top">' +
-          '<img class="acs-site-header__logo" src="../images/acs-logo.png" alt="" width="306" height="509">' +
+        '<a class="acs-site-header__brand" aria-label="' + configuration.brandLabel + '" href="' + resolveHref(root, "index.html#top") + '">' +
+          '<img class="acs-site-header__logo" src="' + logoSrc + '" alt="" width="' + configuration.logoWidth + '" height="' + configuration.logoHeight + '">' +
           '<span class="acs-site-header__brand-full" aria-hidden="true">Atelier Composition Son</span>' +
           '<span class="acs-site-header__brand-short" aria-hidden="true">ACS</span>' +
         "</a>" +
         '<nav class="acs-site-nav" aria-label="' + configuration.navLabel + '">' +
           desktopLinks + consultation +
         "</nav>" +
-        '<a class="acs-mobile-consultation" href="booking.html" data-track="' +
+        '<a class="acs-mobile-consultation" href="' + consultationHref + '" data-track="' +
           configuration.consultationTrack + '">' + configuration.consultation + "</a>" +
         '<button class="acs-menu-toggle" type="button" aria-label="' + configuration.menuLabel +
           '" aria-expanded="false" aria-controls="' + panelId + '" data-menu-toggle>' +

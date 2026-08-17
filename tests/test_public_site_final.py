@@ -114,44 +114,46 @@ class JapaneseFinalTests(unittest.TestCase):
 
 
 class FrenchFinalTests(unittest.TestCase):
-    def test_french_home_uses_supplied_collage_hero(self):
+    def test_french_home_uses_real_documentary_hero(self):
         html = page_html("fr/index.html")
-        self.assertIn("hero-collage2.png", html)
+        self.assertIn("hero-atelier-performance", html)
+        self.assertNotIn("hero-collage2.png", html)
         self.assertNotIn('class="top-nav"', html)
         self.assertIn(
-            "Collage de pratiques de composition, de création scénique, d’instruments à cordes et de production électronique",
+            "Sachie Kobayashi pendant une création électroacoustique",
             html,
         )
-        self.assertNotIn("hero-atelier-performance-supplied.png", html)
+        self.assertIn('fetchpriority="high"', html)
 
-    def test_french_home_uses_approved_documentary_split_hero(self):
+    def test_french_home_uses_project_support_split_hero(self):
         page = load_page("fr/index.html")
         html = page_html("fr/index.html")
         h1s = [item for item in page.headings if item["tag"] == "h1"]
         self.assertEqual(
-            ["Faire évoluer une idée, une esquisse ou une pratique sonore."],
+            ["Accompagnement individuel en composition et création sonore"],
             [item["text"] for item in h1s],
         )
         for text in (
-            "Atelier individuel de composition, MAO et pratiques sonores, à partir de vos partitions, maquettes, sessions DAW ou questions précises.",
-            "Parler d’un projet",
-            "Voir le format et le tarif",
-            "Collage de pratiques de composition, de création scénique, d’instruments à cordes et de production électronique",
+            "À partir d’une partition, d’une maquette, d’un enregistrement ou d’une session DAW",
+            "Faire le point sur mon projet",
+            "Voir les formats d’accompagnement",
+            "Composition, électroacoustique, Max/MSP, analyse, écriture et MAO créative.",
         ):
             self.assertIn(text, html)
-        self.assertIn('class="atelier-split-hero__image atelier-split-hero__image--collage"', html)
-        self.assertIn('src="../images/hero-collage2.png"', html)
-        self.assertIn('width="1114" height="1594"', html)
+        self.assertIn('class="fr-hero__media"', html)
+        self.assertIn('src="../images/hero-atelier-performance.webp"', html)
+        self.assertIn('width="1200" height="1200"', html)
         self.assertNotIn('class="hero-kinetic"', html)
 
     def test_french_home_consolidates_artist_introduction(self):
         html = page_html("fr/index.html")
         self.assertNotIn('id="atelier"', html)
-        self.assertEqual(1, html.count('id="instructor"'))
+        self.assertEqual(1, html.count('id="experience"'))
         for text in (
-            "Compositrice / Artiste sonore",
-            "Le travail part de partitions, de maquettes, d’enregistrements ou de sessions DAW réellement en cours. Chaque séance se termine par une prochaine étape concrète.",
-            "Voir le site artistique",
+            "Compositrice et artiste sonore",
+            "Haute école de musique de Genève",
+            "Cursus de composition et d’informatique musicale de l’IRCAM",
+            "Les séances relient les outils d’écriture aux conditions réelles de fabrication d’une œuvre.",
         ):
             self.assertIn(text, html)
         for text in (">Écoute<", ">Clarté<", ">Autonomie<"):
@@ -169,16 +171,18 @@ class FrenchFinalTests(unittest.TestCase):
         self.assertIn("Langue : français", page_html("fr/index.html"))
         self.assertIn("Langue : français", page_html("fr/booking.html"))
 
-    def test_french_home_has_two_strong_consultation_ctas(self):
-        html = page_html("fr/index.html")
-        booking_primary = [
+    def test_french_home_has_two_scoped_first_contact_ctas(self):
+        page = load_page("fr/index.html")
+        first_contact = [
             link for link in load_page("fr/index.html").links
-            if link.get("href") == "booking.html"
-            and "primary" in link.get("class", "").split()
+            if link.get("href") == "booking.html?offer=free-contact#contact-form"
         ]
-        self.assertEqual(2, len(booking_primary))
-        self.assertIn('data-track="hero_booking_click"', html)
-        self.assertIn('data-track="booking_page_click"', html)
+        self.assertEqual(2, len(first_contact))
+        self.assertTrue(all(link.get("data-track") == "click_primary_cta" for link in first_contact))
+        self.assertEqual(
+            1,
+            sum(link.get("data-cta-position") == "hero" for link in first_contact),
+        )
 
     def test_french_works_use_verified_titles(self):
         html = page_html("fr/index.html")
@@ -312,7 +316,7 @@ class LessonDetailFinalTests(unittest.TestCase):
         self.assertIn(".lesson-detail-page .lesson-detail-hero {", css)
 
     def test_all_lesson_details_load_shared_refinement_css_and_have_one_h1(self):
-        for page_path in (*JA_DETAILS, *FR_DETAILS):
+        for page_path in JA_DETAILS:
             page = load_page(page_path)
             self.assertIn("../assets/css/lesson-detail-final.css", page.stylesheets, page_path)
             self.assertEqual(
@@ -320,13 +324,27 @@ class LessonDetailFinalTests(unittest.TestCase):
                 len([item for item in page.headings if item["tag"] == "h1"]),
                 page_path,
             )
+        for page_path in FR_DETAILS:
+            page = load_page(page_path)
+            self.assertIn("../assets/css/fr-site.css", page.stylesheets, page_path)
+            self.assertNotIn("../assets/css/lesson-detail-final.css", page.stylesheets, page_path)
+            self.assertEqual(
+                1,
+                len([item for item in page.headings if item["tag"] == "h1"]),
+                page_path,
+            )
 
     def test_lesson_details_do_not_use_obsolete_home_anchors(self):
-        obsolete = ("#modules", "#lessons", "#travail", "#tarifs", "#formats", "/ja/#contact")
-        for page_path in (*JA_DETAILS, *FR_DETAILS, "fr/booking.html"):
+        japanese_obsolete = ("#modules", "#lessons", "#travail", "#tarifs", "#formats", "/ja/#contact")
+        for page_path in JA_DETAILS:
             html = page_html(page_path)
-            for fragment in obsolete:
+            for fragment in japanese_obsolete:
                 self.assertNotIn(fragment, html, page_path)
+        french_obsolete = ("#entrypoints", "#format", "#works", "#questions", "#instructor")
+        for page_path in (*FR_DETAILS, "fr/booking.html"):
+            html = page_html(page_path)
+            for fragment in french_obsolete:
+                self.assertNotIn(f'index.html{fragment}"', html, page_path)
 
     def test_japanese_lesson_consultation_routes_are_direct(self):
         for page_path in JA_DETAILS:
@@ -337,8 +355,11 @@ class LessonDetailFinalTests(unittest.TestCase):
 
     def test_french_lesson_navigation_uses_current_sections(self):
         header_script = page_html("assets/js/acs-header.js")
-        self.assertIn('index.html#entrypoints', header_script)
-        self.assertIn('index.html#format', header_script)
+        self.assertIn('index.html#resultats', header_script)
+        self.assertIn('index.html#formats', header_script)
+        self.assertIn('index.html#methode', header_script)
+        self.assertIn('index.html#experience', header_script)
+        self.assertIn('index.html#contact', header_script)
         for page_path in (*FR_DETAILS, "fr/booking.html"):
             html = page_html(page_path)
             self.assertIn('../assets/js/acs-header.js', html, page_path)
@@ -359,17 +380,18 @@ class LessonDetailFinalTests(unittest.TestCase):
 class AnalyticsAndRootTests(unittest.TestCase):
     def test_required_analytics_events_are_present(self):
         joined = "\n".join(
-            page_html(path)
-            for path in ("ja/index.html", "fr/index.html", "fr/booking.html")
-        ) + page_html("assets/js/acs-tracking.js")
+            page_html(path) for path in ("fr/index.html", "fr/booking.html")
+        ) + page_html("assets/js/fr-tracking.js")
         for event in (
-            "hero_booking_click",
-            "booking_section_view",
-            "booking_page_click",
-            "pricing_section_view",
-            "gumroad_product_click",
-            "resource_free_pdf_click",
-            "email_contact_click",
+            "click_primary_cta",
+            "click_secondary_cta",
+            "view_offer",
+            "begin_booking",
+            "submit_booking",
+            "request_feedback",
+            "click_gumroad",
+            "download_sample",
+            "play_work",
         ):
             self.assertIn(event, joined)
 
