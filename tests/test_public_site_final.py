@@ -326,7 +326,13 @@ class LessonDetailFinalTests(unittest.TestCase):
             )
         for page_path in FR_DETAILS:
             page = load_page(page_path)
-            self.assertIn("../assets/css/fr-site.css", page.stylesheets, page_path)
+            self.assertTrue(
+                any(
+                    stylesheet.split("?", 1)[0] == "../assets/css/fr-site.css"
+                    for stylesheet in page.stylesheets
+                ),
+                page_path,
+            )
             self.assertNotIn("../assets/css/lesson-detail-final.css", page.stylesheets, page_path)
             self.assertEqual(
                 1,

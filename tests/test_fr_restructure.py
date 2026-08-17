@@ -209,7 +209,11 @@ class FrenchDetailPageContractTests(unittest.TestCase):
                 len([item for item in page.headings if item["tag"] == "h1"]),
                 page_path,
             )
-            self.assertIn(f"{asset_prefix}assets/css/fr-site.css", page.stylesheets, page_path)
+            expected_stylesheet = f"{asset_prefix}assets/css/fr-site.css"
+            self.assertTrue(
+                any(stylesheet.split("?", 1)[0] == expected_stylesheet for stylesheet in page.stylesheets),
+                page_path,
+            )
             self.assertIn(f"{asset_prefix}assets/js/fr-tracking.js", page.scripts, page_path)
             self.assertNotIn(f"{asset_prefix}assets/js/acs-tracking.js", page.scripts, page_path)
 
