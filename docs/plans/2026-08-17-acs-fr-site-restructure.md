@@ -265,10 +265,10 @@ Every requested event contains:
 - `cta_position`
 - `traffic_source`
 
-Use one capture-phase click handler, a per-element click guard, and one
-IntersectionObserver impression per offer. External Gumroad navigation waits for
-the callback or a short timeout. Calendly messages and contact-form success
-events have independent once-only guards.
+Use one delegated click handler and one IntersectionObserver impression per
+offer. External Gumroad navigation waits for the callback or a short timeout.
+Calendly messages and contact-form success events have independent once-only
+guards. Browser tests verify that one interaction sends one event.
 
 ## 8. Test-first Tasks
 
@@ -326,4 +326,3 @@ events have independent once-only guards.
   invented.
 - A live GA4 DebugView session is not available locally. Event dispatch and
   deduplication will be tested through the real JavaScript contract.
-
