@@ -13,7 +13,7 @@
       ],
       consultation: "無料相談",
       consultationTrack: "click_free_consultation",
-      logoSrc: "../images/acs-logo.png",
+      logoSrc: "../images/acs-logo-square.png",
       logoWidth: "1254",
       logoHeight: "1254",
       brandLabel: "Atelier Composition Son",
@@ -33,7 +33,7 @@
       consultation: "Faire le point",
       consultationHref: "booking.html?offer=free-contact#contact-form",
       consultationTrack: "click_primary_cta",
-      logoSrc: "../images/acs-logo.png",
+      logoSrc: "../images/acs-logo-square.png",
       logoWidth: "1254",
       logoHeight: "1254",
       brandLabel: "ACS — Atelier Composition Son",
@@ -56,7 +56,7 @@
     var panelId = "acs-site-menu-" + index;
     var root = mount.getAttribute("data-header-root") || "";
     var consultationHref = resolveHref(root, configuration.consultationHref || "booking.html");
-    var logoSrc = resolveHref(root, configuration.logoSrc || "../images/acs-logo.png");
+    var logoSrc = resolveHref(root, configuration.logoSrc || "../images/acs-logo-square.png");
     var consultationAnalytics = configuration.trackingOffer
       ? ' data-offer="' + configuration.trackingOffer + '" data-cta-position="header"'
       : "";
