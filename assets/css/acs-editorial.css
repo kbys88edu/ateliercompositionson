@@ -62,6 +62,7 @@ body.acs-editorial { background:#fff; color:#1a1a1a; font-family:var(--acs-font-
 .acs-editorial .ja-works__grid { gap:32px; }
 .acs-editorial .video-grid { border:0; padding-top:1px; padding-left:1px; }
 .acs-editorial .video-grid > .video-card { min-width:0; margin-top:-1px; margin-left:-1px; border:1px solid #c9c9c6; }
+.acs-editorial :is(.audio-wrap,.soundcloud-card) { border-color:#c9c9c6; }
 .acs-editorial #works .video-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 .acs-editorial .video-card--audio { grid-column:1/-1; }
 .acs-editorial .ja-home-instructor { row-gap:24px; }
