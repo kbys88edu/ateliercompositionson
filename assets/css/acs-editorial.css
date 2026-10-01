@@ -124,7 +124,8 @@ body.acs-editorial { background:#fff; color:#1a1a1a; font-family:var(--acs-font-
 .acs-editorial .fr-section h2 { line-height:1.4; }
 .acs-editorial .fr-page-hero h1 { font-size:clamp(36px,3.5vw,60px); line-height:1.3; overflow-wrap:anywhere; hyphens:auto; }
 .acs-editorial .fr-page-hero__copy { min-width:0; }
-.acs-editorial .form-hero { width:100%; }
+.acs-editorial .form-hero { width:min(100%,560px); margin:0 auto 32px; transform:none; }
+.acs-editorial .form-hero img { height:auto; object-fit:contain; }
 .acs-editorial .ja-concept__approaches article { grid-template-columns:minmax(180px,.45fr) minmax(0,1fr); }
 @media(max-width:767px) {
  .acs-editorial .ja-concept__approaches article { grid-template-columns:1fr; }
