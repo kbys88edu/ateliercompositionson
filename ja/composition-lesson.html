@@ -707,9 +707,10 @@
 </style>
   <link rel="stylesheet" href="../assets/css/acs-core.css">
   <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
+<link rel="stylesheet" href="../assets/css/acs-editorial.css?v=editorial-20260930">
 </head>
 
-<body class="lesson-detail-page">
+<body class="lesson-detail-page acs-editorial">
   <header class="acs-site-header" data-shared-header></header>
 
   <main>
@@ -757,7 +758,7 @@
 
       <div class="grid-3">
         <div class="card">
-          <div class="number">01</div>
+
           <h3>作曲を始めたい方</h3>
           <p class="muted">
             楽譜や理論に不安があっても、短い旋律やコード進行から始められます。
@@ -766,7 +767,7 @@
         </div>
 
         <div class="card">
-          <div class="number">02</div>
+
           <h3>曲が途中で止まる方</h3>
           <p class="muted">
             8小節、16小節で止まってしまう原因を分析し、
@@ -775,7 +776,7 @@
         </div>
 
         <div class="card">
-          <div class="number">03</div>
+
           <h3>受験・作品提出が必要な方</h3>
           <p class="muted">
             作曲科受験、作品ポートフォリオ、コンクール、公募作品など、
@@ -1097,7 +1098,7 @@
             <p class="amount">7500円</p>
             <p class="small">70分 / オンライン</p>
             <p class="muted">
-              オリジナル教材を使った専門的なレッスンで、受験、ポートフォリオ、作品添削、専門的な作曲技法に対応します。レッスン後7日以内の短い質問1件に、メールで1回お返事します。
+              オリジナル教材を使った専門的なレッスンで、受験、ポートフォリオ、作品添削、専門的な作曲技法に対応します。<strong>+7日以内のメールでの質問に対する簡潔なフィードバック</strong>
             </p>
           </div>
           <a class="button secondary" href="/ja/booking.html">相談する</a>
@@ -1172,20 +1173,14 @@
       </div>
     </section>
 
-    <section id="consultation">
-      <div class="cta">
-        <div>
-          <div class="section-label">Consultation</div>
-          <h2>まずは無料相談から</h2>
-          <p class="muted">
-            どのレベルから始めるべきか、何を準備すればよいか、現在の作品を見ながら相談できます。
-          </p>
-        </div>
-
-        <a class="button primary" href="/ja/booking.html">無料相談を予約する</a>
-      </div>
-    </section>
-  </main>
+    <section class="acs-consultation" id="consultation" aria-labelledby="consultation-title">
+  <div class="acs-consultation__inner"><div class="acs-consultation__row">
+    <p class="acs-consultation__meta">無料相談 · 30分</p>
+    <div class="acs-consultation__copy"><h2 id="consultation-title">あなたの音楽の、次の一歩を。</h2><p>経験や準備は問いません。今の関心から、レッスンの進め方を一緒に考えます。</p></div>
+    <a class="acs-consultation__booking" href="booking.html" data-track="final_consultation">相談を予約する<span aria-hidden="true">↗</span></a>
+  </div><div class="acs-consultation__links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></div></div>
+</section>
+</main>
 
   <footer>
     <div>
@@ -1198,7 +1193,7 @@
     </div>
   </footer>
   <script defer src="../assets/js/acs-tracking.js"></script>
-  <script defer src="../assets/js/acs-header.js?v=square-logo-20260930"></script>
+  <script defer src="../assets/js/acs-header.js?v=editorial-20260930"></script>
 <script defer src="../assets/js/acs-ui.js"></script>
 </body>
 </html>

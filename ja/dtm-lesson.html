@@ -662,9 +662,10 @@
 </style>
   <link rel="stylesheet" href="../assets/css/acs-core.css">
   <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
+<link rel="stylesheet" href="../assets/css/acs-editorial.css?v=editorial-20260930">
 </head>
 
-<body class="lesson-detail-page">
+<body class="lesson-detail-page acs-editorial">
   <header class="acs-site-header" data-shared-header></header>
 
   <main>
@@ -723,19 +724,19 @@
 
           <div class="cards">
             <article class="card">
-              <div class="num">01</div>
+
               <h3>DTMを始めたい方</h3>
               <p>DAWの画面で何から始めればよいか分からない方に、音源、MIDI、録音、編集の基本を整理します。</p>
             </article>
 
             <article class="card">
-              <div class="num">02</div>
+
               <h3>音が細い・平面的に感じる方</h3>
               <p>レイヤー、音域、倍音、空間処理、コンプレッション、EQの使い方を確認し、音の密度を整えます。</p>
             </article>
 
             <article class="card">
-              <div class="num">03</div>
+
               <h3>作品として完成させたい方</h3>
               <p>8小節のループで止まってしまう状態から、展開、構成、クライマックス、終わり方まで設計します。</p>
             </article>
@@ -929,19 +930,19 @@
         <div class="text-block">
           <div class="cards">
             <article class="card">
-              <div class="num">01</div>
+
               <h3>環境と目的を確認</h3>
               <p>使用しているDAW、音源、制作ジャンル、現在困っている点を確認します。</p>
             </article>
 
             <article class="card">
-              <div class="num">02</div>
+
               <h3>制作中のプロジェクトを扱う</h3>
               <p>MIDI、音源、DAWプロジェクト、書き出した音源をもとに、具体的な改善点を見ます。</p>
             </article>
 
             <article class="card">
-              <div class="num">03</div>
+
               <h3>次の制作課題へ接続</h3>
               <p>レッスン後に何を直すか、何を作るか、どの順番で進めるかを明確にします。</p>
             </article>
@@ -1024,7 +1025,7 @@
             <span class="price-unit">/ 70分</span>
           </div>
 
-          <p class="price-description">オリジナル教材を使った専門的なレッスンで、作品講評、ミックス相談、音作り、プラグイン選定、制作方針の確認に対応します。レッスン後7日以内の短い質問1件に、メールで1回お返事します。</p>
+          <p class="price-description">オリジナル教材を使った専門的なレッスンで、作品講評、ミックス相談、音作り、プラグイン選定、制作方針の確認に対応します。<strong>+7日以内のメールでの質問に対する簡潔なフィードバック</strong></p>
 
           <ul class="price-list">
             <li>制作中の曲のレビュー</li>
@@ -1074,18 +1075,14 @@
       </div>
     </section>
 
-    <section id="contact">
-      <div class="contact-box">
-        <div>
-          <div class="section-kicker">Consultation</div>
-          <h2>まずは無料相談から</h2>
-          <p class="muted" style="margin-top: 18px;">使用しているDAW、作りたい音楽、現在困っていることを簡単に書いてご連絡ください。</p>
-        </div>
-
-        <a class="btn primary" href="/ja/booking.html">無料相談を予約する</a>
-      </div>
-    </section>
-  </main>
+    <section class="acs-consultation" id="contact" aria-labelledby="consultation-title">
+  <div class="acs-consultation__inner"><div class="acs-consultation__row">
+    <p class="acs-consultation__meta">無料相談 · 30分</p>
+    <div class="acs-consultation__copy"><h2 id="consultation-title">あなたの音楽の、次の一歩を。</h2><p>経験や準備は問いません。今の関心から、レッスンの進め方を一緒に考えます。</p></div>
+    <a class="acs-consultation__booking" href="booking.html" data-track="final_consultation">相談を予約する<span aria-hidden="true">↗</span></a>
+  </div><div class="acs-consultation__links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></div></div>
+</section>
+</main>
 
   <footer>
     <div>© Sachie Kobayashi / Atelier Composition Son</div>
@@ -1096,7 +1093,7 @@
     </div>
   </footer>
   <script defer src="../assets/js/acs-tracking.js"></script>
-  <script defer src="../assets/js/acs-header.js?v=square-logo-20260930"></script>
+  <script defer src="../assets/js/acs-header.js?v=editorial-20260930"></script>
 <script defer src="../assets/js/acs-ui.js"></script>
 </body>
 </html>
