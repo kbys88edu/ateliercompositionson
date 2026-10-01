@@ -166,6 +166,7 @@
     }
 
     input,
+    select,
     textarea {
       width: 100%;
       border: 1px solid var(--line);
@@ -184,6 +185,7 @@
     }
 
     input:focus,
+    select:focus,
     textarea:focus {
       box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.12);
     }
@@ -446,6 +448,22 @@
       <div class="field">
         <label for="tools">使用DAW・作品URL（任意）</label>
         <input id="tools" name="daw_or_work_url" type="text" placeholder="例）Logic Pro / SoundCloud、YouTube、Google Driveなど">
+      </div>
+
+      <div class="field">
+        <label for="referral-source">このサイトをどこで知りましたか？（任意）</label>
+        <select id="referral-source" name="referral_source">
+          <option value="">選択してください</option>
+          <option value="検索（Googleなど）">検索（Googleなど）</option>
+          <option value="Instagram">Instagram</option>
+          <option value="X（旧Twitter）">X（旧Twitter）</option>
+          <option value="YouTube">YouTube</option>
+          <option value="SoundCloud">SoundCloud</option>
+          <option value="知人の紹介">知人の紹介</option>
+          <option value="演奏会・イベント">演奏会・イベント</option>
+          <option value="スクール・外部レッスン">スクール・外部レッスン</option>
+          <option value="その他">その他</option>
+        </select>
       </div>
 
       <div class="submit-row">

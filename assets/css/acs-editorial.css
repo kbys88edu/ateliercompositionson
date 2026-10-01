@@ -60,6 +60,12 @@ body.acs-editorial { background:#fff; color:#1a1a1a; font-family:var(--acs-font-
 .acs-editorial > footer a { color:inherit; }
 .acs-editorial iframe { max-width:100%; border:0; }
 .acs-editorial .ja-works__grid { gap:32px; }
+.acs-editorial .video-grid { border:0; padding-top:1px; padding-left:1px; }
+.acs-editorial .video-grid > .video-card { min-width:0; margin-top:-1px; margin-left:-1px; border:1px solid #c9c9c6; }
+.acs-editorial #works .video-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.acs-editorial .video-card--audio { grid-column:1/-1; }
+.acs-editorial .ja-home-instructor { row-gap:24px; }
+.acs-editorial .ja-home-instructor__collaborations { grid-column:1/-1; margin:0; font-size:14px; line-height:1.8; color:#66635e; }
 @media(min-width:1024px) {
  body.acs-editorial { padding-left:190px; }
  .acs-editorial > .acs-site-header { position:fixed !important; inset:0 auto 0 0; width:190px; height:100dvh; border-bottom:0; border-right:1px solid #dededb; overflow-y:auto; background:#fff; }
@@ -96,6 +102,7 @@ body.acs-editorial { background:#fff; color:#1a1a1a; font-family:var(--acs-font-
  .acs-editorial .ja-tools__item > :is(h3,p,a) { grid-column:1; }
  .acs-editorial .ja-pricing__list > li { grid-template-columns:1fr; }
  .acs-editorial .ja-works__grid { grid-template-columns:1fr; }
+ .acs-editorial #works .video-grid { grid-template-columns:1fr; }
  .acs-consultation__row { grid-template-columns:1fr; gap:24px; }
  .acs-consultation__links { margin-left:0; }
  .acs-consultation__booking { width:fit-content; min-width:180px; }
