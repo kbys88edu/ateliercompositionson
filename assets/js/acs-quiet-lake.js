@@ -10,10 +10,14 @@
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var gl = cv.getContext("webgl", { antialias: false, alpha: false, powerPreference: "low-power" });
   if (!gl) return;
+  // 光の網目の計算には高精度の浮動小数点が必要。使えない端末（古いAndroidなど）では、
+  // 模様がブロック状に崩れるため、描画せず白地のままにする。
+  var hp = gl.getShaderPrecisionFormat && gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+  if (!hp || hp.precision === 0) return;
 
   var vs = "attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}";
   var fs = [
-    "precision mediump float;",
+    "precision highp float;",
     "uniform vec2 r;uniform float t;",
     "const float TAU=6.28318530718;",
     "float caustic(vec2 uv,float time){",
