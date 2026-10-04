@@ -16,10 +16,10 @@ LIVE = "https://ateliercompositionson.com/"
 
 def read(p): return open(R + p, encoding="utf-8").read()
 
-def build(variant=None):
+def build():
     global src
-    suffix = f"-art-{variant}" if variant else ""
-    label = {"a": "案A「楽譜」", "b": "案B「工房ノート」", "c": "案C「展覧会」"}.get(variant, "")
+    suffix = ""
+    label = ""
     src = read("ja/index.html")
     src = src.replace("<title>", f"<title>[デザインサンプル{label}] ", 1)
     src = re.sub(r'  <link rel="canonical"[^\n]*\n', '  <meta name="robots" content="noindex, nofollow">\n', src, 1)
@@ -27,8 +27,7 @@ def build(variant=None):
     src = re.sub(r'  <script async src="https://www.googletagmanager.com[^\n]*\n  <script>.*?</script>\n', "", src, flags=re.S)
     m = re.search(r'<link rel="stylesheet" href="../assets/css/acs-editorial.css[^"]*">', src)
     assert m, "editorial stylesheet link not found"
-    extra = f'\n<link rel="stylesheet" href="../assets/css/acs-art-{variant}.css">' if variant else ""
-    src = src.replace(m.group(0), m.group(0) + '\n<link rel="stylesheet" href="../assets/css/acs-refine.css">' + extra)
+    src = src.replace(m.group(0), m.group(0) + '\n<link rel="stylesheet" href="../assets/css/acs-refine.css">')
 
     # --- linked version: keep assets relative, point page links back at ja/ ---
     def to_ja(m):
@@ -93,5 +92,3 @@ def build(variant=None):
 
 if __name__ == "__main__":
     build()
-    for v in ("a", "b", "c"):
-        build(v)
