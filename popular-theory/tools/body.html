@@ -1,0 +1,411 @@
+<header class="top">
+<div class="kicker">ポピュラー音楽理論入門（初級）</div>
+<h1>コードとスケールで<br>ポップスを読む</h1>
+<p class="lead">楽譜は読めるけれど、コード進行になると急に分からなくなる——そんな人のためのまとめです。<b>ポップスの理論は「コード＝単語」「コード進行＝文章」と考えると、ぐっと分かりやすくなります。</b>このページでは、譜面の基礎からアドリブ用のスケールまでを10章に分け、譜例と音源つきで順番に説明します。</p>
+</header>
+
+<h2 id="core"><span class="ch">核心</span>3つの役割だけ覚えればいい</h2>
+
+<p>ポップスで使うコードは何十種類もありますが、<b>役割は3つしかありません。</b>まずこれを頭に入れておくと、この先のどの章も「3つの役割のどれか」の話として読めます。</p>
+
+<div class="tw"><table><thead><tr><th>役割</th><th>記号</th><th>イメージ</th><th>C メジャーの代表</th></tr></thead><tbody>
+<tr><td><b>トニック</b></td><td class="sym">T</td><td>家。落ち着く、終われる</td><td class="sym">C</td></tr>
+<tr><td><b>サブドミナント</b></td><td class="sym">SD</td><td>出かける。話が動き出す</td><td class="sym">F</td></tr>
+<tr><td><b>ドミナント</b></td><td class="sym">D</td><td>帰りたい。緊張して、家に戻りたくなる</td><td class="sym">G7</td></tr>
+</tbody></table></div>
+
+<p>野球にたとえると、<b>ホームベースがトニック、1塁・2塁がサブドミナント、3塁がドミナント</b>です。3塁まで来ると「あと少しでホーム」という緊張が生まれ、ホームに戻ると安心する。コード進行はこの一周のくり返しです。</p>
+
+{{fig:cad_sdd}}
+
+<div class="box">
+<h4>このページの考え方</h4>
+<p>理論は「規則」ではなく<b>「よく使われる形に名前をつけたもの」</b>です。名前を知ると、耳で聴いていた響きを言葉で説明でき、自分でも再現できるようになります。譜例はすべて弾いて、聴いて確かめてください。</p>
+</div>
+
+<h2 id="notation"><span class="ch">1</span>譜面の基礎</h2>
+
+<p>ポップスでは、メロディー・コード・歌詞だけを書いた<b>リード譜</b>を読むことがよくあります。まずは五線の読み方と、リズムの書き方の約束を確認しましょう。</p>
+
+<h3 id="n1"><span class="n">1</span>音の高さ——五線と音名</h3>
+{{fig:staff}}
+<p>高い音はト音記号、低い音はヘ音記号の五線に書きます。二つを組み合わせたものが<b>大譜表</b>で、ピアノの楽譜はふつうこれです。真ん中の <span class="lat">C4</span>（中央のド）は、どちらの五線から書いても同じ高さです。</p>
+
+<div class="tw"><table><thead><tr><th>英語</th><th class="sym">C</th><th class="sym">D</th><th class="sym">E</th><th class="sym">F</th><th class="sym">G</th><th class="sym">A</th><th class="sym">B</th></tr></thead><tbody>
+<tr><td>イタリア語</td><td>ド</td><td>レ</td><td>ミ</td><td>ファ</td><td>ソ</td><td>ラ</td><td>シ</td></tr>
+<tr><td>日本語</td><td>ハ</td><td>ニ</td><td>ホ</td><td>ヘ</td><td>ト</td><td>イ</td><td>ロ</td></tr>
+<tr><td>ドイツ語</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>A</td><td><b>H</b></td></tr>
+</tbody></table></div>
+<p>コード・ネームは英語の音名で書くので、<b>英語の音名を最優先で覚えてください。</b>♯（シャープ）は半音上げ、♭（フラット）は半音下げ、♮（ナチュラル）は元に戻す記号です。臨時記号が効くのは<b>その小節の中だけ</b>です。</p>
+
+<h3 id="n2"><span class="n">2</span>拍子と「強い拍」</h3>
+<p>拍子記号の分母は1拍の音符の種類、分子は1小節の拍の数です。<span class="lat">4/4</span> なら「4分音符を1拍として、1小節に4拍」。<span class="lat">6/8</span> のように分子が3の倍数の拍子は、8分音符3つを1まとまりとして数える<b>複合拍子</b>です（<span class="lat">6/8</span> は「3つ×2」の2拍子系）。</p>
+<p>拍には強さの違いがあります。4拍子なら<b>強・弱・中強・弱</b>、3拍子なら強・弱・弱です。楽譜を書くときは、<b>強い拍（1拍目と3拍目）の頭が目で見えるように</b>書くのが約束です。</p>
+
+{{fig:beat_bad}}
+{{fig:beat_good}}
+<p>二つは<b>まったく同じリズム</b>です。右のように、拍をまたぐ音はタイで分けて書くと、どこが3拍目かがすぐ分かります。</p>
+
+<div class="note"><p><b>表拍と裏拍。</b>1拍を半分に分けたとき、前半を表拍、後半を裏拍と呼びます。英語の upbeat / downbeat は本によって指す向きが逆のことがあるので、このページでは「表拍・裏拍」とだけ書きます。</p></div>
+
+<h3 id="n3"><span class="n">3</span>テンポ・強弱・省略記号</h3>
+<div class="tw"><table><thead><tr><th>種類</th><th>よく見る記号</th><th>意味</th></tr></thead><tbody>
+<tr><td>テンポ</td><td class="sym">♩＝100</td><td>4分音符を1分間に100回</td></tr>
+<tr><td>テンポ（ポップス）</td><td>Fast / Medium / Slow / Ballad / Rubato</td><td>速く／中くらい／遅く／バラードで／テンポを揺らして</td></tr>
+<tr><td>強弱</td><td class="sym">pp p mp mf f ff</td><td>弱い順に。「m」は「やや」</td></tr>
+<tr><td>繰り返し</td><td class="sym">𝄆 𝄇</td><td>挟まれた部分をもう一度</td></tr>
+<tr><td>戻る</td><td class="sym">D.C. / D.S.</td><td>曲の頭へ／𝄋 の位置へ戻る</td></tr>
+<tr><td>飛ぶ</td><td class="sym">to 𝄌 → 𝄌 Coda</td><td>戻ったあと、to 𝄌 から Coda へ飛ぶ</td></tr>
+</tbody></table></div>
+
+<details class="sol"><summary>練習：進む順番を答える</summary><div class="solbody">
+<p>𝄆 A｜B 𝄇（×3）→ 𝄋 C｜D｜to 𝄌 E｜F（D.S.）｜𝄌 Coda G｜H</p>
+<p><b>答え：</b>A–B–A–B–A–B–C–D–E–F–C–D–G–H。<span class="lat">×3</span> は「3回弾く」、D.S. で 𝄋 の C に戻り、2回目は to 𝄌 の手前（D）から Coda へ飛びます。</p>
+</div></details>
+
+<h2 id="chords"><span class="ch">2</span>音程とコード</h2>
+
+<h3 id="c1"><span class="n">1</span>音程は「何度」で数える</h3>
+<p>2つの音の距離を<b>音程</b>といい、同じ音を「1度」として数えます。<span class="lat">C</span> から <span class="lat">E</span> なら C・D・E で3度です。ただし同じ「3度」でも半音の数が違うものがあるので、<b>長・短・完全・増・減</b>をつけて区別します。</p>
+{{fig:intervals}}
+<div class="tw"><table><thead><tr><th>グループ</th><th>度数</th><th>呼び方</th></tr></thead><tbody>
+<tr><td><b>完全グループ</b></td><td class="sym">1・4・5・8</td><td>基本は「完全」。半音広いと「増」、狭いと「減」</td></tr>
+<tr><td><b>長短グループ</b></td><td class="sym">2・3・6・7</td><td>基本は「長」。半音狭いと「短」</td></tr>
+</tbody></table></div>
+<p>響きの性格も覚えておくと、アレンジで役に立ちます。<b>3度と6度</b>はよく溶け合うのでハモリの基本。<b>完全5度</b>は広がりのある響き。<b>増4度（トライトーン）</b>は不安定で、次の音へ進みたがる——これが後でドミナントの正体になります。<b>長7度</b>はとがった響きですが、コードの中に入るとおしゃれな色になります。</p>
+
+<h3 id="c2"><span class="n">2</span>3和音——4種類</h3>
+<p><b>コード</b>は、音を1つおき（3度ずつ）に重ねたものです。一番下の音を<b>ルート</b>（根音）と呼び、上へ 3rd・5th・7th と数えます。3つ重ねたものが3和音です。</p>
+{{fig:triads}}
+<p>一番大事なのは <b>3rd</b> です。長3度ならメジャー（明るい）、短3度ならマイナー（暗い）。コード・ネームの「m」はこの 3rd が短3度だという印です。</p>
+
+<h3 id="c3"><span class="n">3</span>4和音——よく使う10種</h3>
+{{fig:sevenths}}
+<p>覚え方のコツは、ルートから何度かを数えるのではなく、<b>3和音に1音足す</b>と考えることです。</p>
+<div class="tw"><table><thead><tr><th>名前</th><th>作り方</th><th>C での例</th></tr></thead><tbody>
+<tr><td><b>6</b></td><td>5th の全音上を足す</td><td class="sym">C6 ＝ C E G A</td></tr>
+<tr><td><b>7</b></td><td>ルートの全音下を足す</td><td class="sym">C7 ＝ C E G B♭</td></tr>
+<tr><td><b>△7</b>（メジャー・セブン）</td><td>ルートの半音下を足す</td><td class="sym">C△7 ＝ C E G B</td></tr>
+<tr><td><b>m7(♭5)</b></td><td>dim の3和音に短7度</td><td class="sym">Cm7(♭5) ＝ C E♭ G♭ B♭</td></tr>
+<tr><td><b>dim7</b></td><td>短3度だけで4つ積む</td><td class="sym">Cdim7 ＝ C E♭ G♭ A</td></tr>
+<tr><td><b>7sus4</b></td><td>7 の 3rd を 4th に替える</td><td class="sym">C7sus4 ＝ C F G B♭</td></tr>
+</tbody></table></div>
+<div class="warn"><p><b>「7」と「△7」を混同しない。</b>C7（B♭）は緊張して次へ進みたがる<b>ドミナント</b>の響き、C△7（B）は落ち着いた<b>トニック</b>の響き。1音違うだけで役割がまったく変わります。表記は C△7 = Cmaj7 = CM7 と何通りもあります。</p></div>
+
+<h3 id="c4"><span class="n">4</span>転回形とオン・コード</h3>
+{{fig:inversions}}
+<p>ルート以外の音が一番下に来た形を<b>転回形</b>といいます。コード・ネームでは <span class="lat">C/E</span>（C on E）のように、<b>スラッシュの右に一番下の音</b>を書きます。弾くときは、基本形の一番下の音を1オクターヴ上へ移すと第1転回形、一番上の音を1オクターヴ下へ移すと第2転回形です。</p>
+
+<details class="sol"><summary>練習：コード・ネームを答える</summary><div class="solbody">
+<p>① <span class="lat">D F♯ A</span>　② <span class="lat">G B♭ D</span>　③ <span class="lat">E♭ G B♭ D♭</span>　④ <span class="lat">B D F♯ A</span>　⑤ <span class="lat">F♯ A C♯</span>（下から）</p>
+<p><b>答え：</b>① D　② Gm　③ E♭7　④ Bm7　⑤ F♯m。<b>一番下の音が転回形かもしれない</b>ときは、音を並べ替えて3度ずつになる形を探し、その一番下をルートにします。</p>
+</div></details>
+
+<h2 id="scales"><span class="ch">3</span>調とスケール</h2>
+
+<h3 id="s1"><span class="n">1</span>メジャー・スケール</h3>
+<p><b>スケール</b>は、曲で使う音を1オクターヴに並べたものです。鍵盤の隣どうしが<b>半音</b>、半音2つ分が<b>全音</b>。白鍵どうしは全音ですが、<span class="lat">E–F</span> と <span class="lat">B–C</span> の間だけは黒鍵がないので半音です。</p>
+{{fig:major_scale}}
+<p>メジャー・スケールは<b>「全・全・半・全・全・全・半」</b>の並びです。どの音から始めても、この並びさえ守ればメジャー・スケールになります。<span class="lat">G</span> から始めると <span class="lat">F</span> を <span class="lat">F♯</span> にしないと並びが崩れるので、G メジャーには ♯ が1つ付きます。これが<b>調号</b>です。</p>
+
+<h3 id="s2"><span class="n">2</span>マイナー・スケールは3種類</h3>
+{{fig:minor_scales}}
+<div class="tw"><table><thead><tr><th>種類</th><th>作り方</th><th>ひとこと</th></tr></thead><tbody>
+<tr><td><b>ナチュラル</b></td><td>メジャー・スケールの6番目の音から並べる</td><td>基本形。C メジャーの A から</td></tr>
+<tr><td><b>ハーモニック</b></td><td>ナチュラルの7番目を半音上げる</td><td>主音に向かう力（導音）ができる</td></tr>
+<tr><td><b>メロディック</b></td><td>ハーモニックの6番目も半音上げる</td><td>メロディーを歌いやすく。下りはナチュラルに戻す</td></tr>
+</tbody></table></div>
+
+<h3 id="s3"><span class="n">3</span>調号の表</h3>
+<p>同じ調号には、メジャーとマイナーの2つのキーがあります（<b>平行調</b>）。♯は5度上がるごとに、♭は4度上がるごとに1つずつ増えます。</p>
+<div class="tw"><table><thead><tr><th>調号</th><th>メジャー</th><th>マイナー</th><th>調号</th><th>メジャー</th><th>マイナー</th></tr></thead><tbody>
+<tr><td>なし</td><td class="sym">C</td><td class="sym">Am</td><td></td><td></td><td></td></tr>
+<tr><td>♯1</td><td class="sym">G</td><td class="sym">Em</td><td>♭1</td><td class="sym">F</td><td class="sym">Dm</td></tr>
+<tr><td>♯2</td><td class="sym">D</td><td class="sym">Bm</td><td>♭2</td><td class="sym">B♭</td><td class="sym">Gm</td></tr>
+<tr><td>♯3</td><td class="sym">A</td><td class="sym">F♯m</td><td>♭3</td><td class="sym">E♭</td><td class="sym">Cm</td></tr>
+<tr><td>♯4</td><td class="sym">E</td><td class="sym">C♯m</td><td>♭4</td><td class="sym">A♭</td><td class="sym">Fm</td></tr>
+<tr><td>♯5</td><td class="sym">B</td><td class="sym">G♯m</td><td>♭5</td><td class="sym">D♭</td><td class="sym">B♭m</td></tr>
+<tr><td>♯6</td><td class="sym">F♯</td><td class="sym">D♯m</td><td>♭6</td><td class="sym">G♭</td><td class="sym">E♭m</td></tr>
+</tbody></table></div>
+<div class="box">
+<h4>曲のキーを見分けるコツ</h4>
+<ol class="steps">
+<li><b>最後の音を見る。</b>曲はたいてい主音で終わるので、最後の音がキーの候補になります。</li>
+<li><b>明るいか暗いかで決める。</b>最後の音が F で暗い響きなら F マイナー（♭4つ）、明るければ F メジャー（♭1つ）。</li>
+</ol>
+</div>
+
+<h3 id="s4"><span class="n">4</span>移調——「何番目の音か」で考える</h3>
+<p>曲を別のキーに移すことを<b>移調</b>といいます。いちばん確実なのは、<b>メロディーの各音が「スケールの何番目か」を数えて、新しいキーの同じ番号の音に置き換える</b>方法です。C メジャーで「3・5・1」（E G C）なら、E♭ メジャーでは G B♭ E♭ になります。</p>
+<div class="note"><p><b>移調楽器。</b>サックスやトランペットは、楽譜の音と実際に鳴る音がずれる楽器です。たとえば B♭ のトランペットやテナー・サックスは、<b>書いた音より全音（テナーはさらに1オクターヴ）低く</b>鳴ります。一緒に演奏するときは、相手用に移調した楽譜を渡します。</p></div>
+
+<details class="sol"><summary>練習：調号からキーを答える</summary><div class="solbody">
+<p>① ♭2つ　② ♯4つ　③ ♭3つ</p>
+<p><b>答え：</b>① B♭ メジャー / G マイナー　② E メジャー / C♯ マイナー　③ E♭ メジャー / C マイナー。マイナーは<b>メジャーの主音から短3度下</b>です。</p>
+</div></details>
+
+<h2 id="major"><span class="ch">4</span>長調のコード進行</h2>
+
+<h3 id="m1"><span class="n">1</span>ダイアトニック・コード——キーの「単語帳」</h3>
+{{fig:diatonic}}
+<p>スケールの音だけを使って、各音の上に3度ずつ積んだ7つのコードを<b>ダイアトニック・コード</b>といいます。ポップスの曲のコードは、大部分がこの7つでできています。</p>
+<p>どのキーでも、コードの種類の並びは同じ（△7・m7・m7・△7・7・m7・m7(♭5)）です。そこで<b>ローマ数字</b>で「スケールの何番目のコードか」を表します。<span class="lat">IIm7</span> なら「2番目の音の上の m7」。こう書いておけば、キーが変わっても同じ説明が使えます。</p>
+
+<h3 id="m2"><span class="n">2</span>機能と代理コード</h3>
+<p>核心で紹介した3つの役割に、7つのコードを振り分けます。主役の3つ（I・IV・V）と構成音が似ているコードは、同じ役割の<b>代理コード</b>として使えます。</p>
+<div class="tw"><table><thead><tr><th></th><th>トニック（T）</th><th>サブドミナント（SD）</th><th>ドミナント（D）</th></tr></thead><tbody>
+<tr><td><b>主役</b></td><td class="sym">I（I6, I△7）</td><td class="sym">IV（IV6, IV△7）</td><td class="sym">V7</td></tr>
+<tr><td><b>代理</b></td><td class="sym">IIIm7, VIm7</td><td class="sym">IIm7</td><td class="sym">VIIm7(♭5)</td></tr>
+</tbody></table></div>
+<p>たとえば <span class="lat">Am7</span>（A C E G）は <span class="lat">C△7</span>（C E G B）と3つの音が共通なので、トニックの代わりになります。<b>この表は、この先ずっと使う一番大事な表です。</b></p>
+
+<h3 id="m3"><span class="n">3</span>4つの基本ケーデンス</h3>
+<p>役割の並べ方の基本形を<b>ケーデンス</b>（終止形）といいます。文章でいえば、一番短い文です。</p>
+{{fig:cad_d}}
+<p>ドミナントの G7 には、<b>B（ドへ半音で上がりたい）と F（ミへ半音で下がりたい）</b>という不安定な2音が入っています。この2音の間が増4度＝トライトーンです。これが C に落ち着くので、最も強い解決感が生まれます。</p>
+{{fig:cad_sd}}
+{{fig:cad_dsd}}
+<p>③（SD → D → T）は核心で聴いた形です。④は V から IV へ戻る形で、古典的な和声では避けられてきましたが、ロックやポップスではとてもよく使われます。</p>
+
+<h3 id="m4"><span class="n">4</span>なめらかなルートの動き</h3>
+<p>いいコード進行は、<b>ベース（ルート）の動き方</b>に共通点があります。よく使われる順に3つ。</p>
+<ol class="steps">
+<li><b>4度上がる（＝5度下がる）。</b>最も強い進行で<b>強進行</b>と呼びます。<span class="lat">Dm7 → G7</span>（II → V）や <span class="lat">G7 → C</span>（V → I）。</li>
+<li><b>2度上下する。</b>ダイアトニック・コードを順に並べる形。<span class="lat">F → Em7 → Dm7 → C</span> など。</li>
+<li><b>3度下がる。</b><span class="lat">C → Am7</span> のように、共通音が2つあるのでなめらかにつながる。</li>
+</ol>
+{{fig:circle}}
+<p><b>I–VI–II–V</b> は「循環コード」と呼ばれ、何度くり返しても自然に一周するので、数えきれないほどのヒット曲に使われています。<span class="lat">IIm7 → V7</span> の組み合わせは特に<b>ツー・ファイブ</b>と呼び、この先何度も出てきます。</p>
+<div class="note"><p><b>偽終止。</b>V7 のあと I に行くと見せかけて、代理コードの VIm7 へ進むことがあります。「まだ終わらない」という気持ちを作れるので、曲の途中でよく使われます。</p></div>
+
+<details class="sol"><summary>練習：F メジャーのダイアトニック・コードを4和音で書く</summary><div class="solbody">
+<p><b>答え：</b><span class="lat">F△7 – Gm7 – Am7 – B♭△7 – C7 – Dm7 – Em7(♭5)</span>。ローマ数字は C メジャーのときとまったく同じ（I△7 – IIm7 – IIIm7 – IV△7 – V7 – VIm7 – VIIm7(♭5)）です。</p>
+</div></details>
+
+<h2 id="minor"><span class="ch">5</span>短調のコード進行</h2>
+
+<h3 id="mi1"><span class="n">1</span>短調のダイアトニック・コード</h3>
+{{fig:minor_dia}}
+<p>A マイナーの音は C メジャーと同じなので、コードも同じ7つです。違うのは<b>出発点</b>。A から数えるので、ローマ数字は <span class="lat">Im7 – IIm7(♭5) – ♭III△7 – IVm7 – Vm7 – ♭VI△7 – ♭VII7</span> になります。</p>
+<p>「♭III」などの ♭ は、<b>メジャー・スケールを基準にして</b>、それより半音低いという意味です。どんなキーでも同じ物差しで比べられるようにするための書き方です。</p>
+
+<h3 id="mi2"><span class="n">2</span>V7 だけはハーモニック・マイナーから借りる</h3>
+{{fig:minor_v}}
+<p>ナチュラル・マイナーの V は <span class="lat">Em7</span> で、主音 A へ半音で上がる音（導音）がありません。そこで7番目の音を半音上げた<b>ハーモニック・マイナー</b>から <span class="lat">E7</span> を借ります。<b>短調でも、ドミナントはほとんどの場合 V7</b> です。</p>
+{{fig:minor_cad}}
+
+<div class="tw"><table><thead><tr><th></th><th>トニック（T）</th><th>サブドミナント（SD）</th><th>ドミナント（D）</th></tr></thead><tbody>
+<tr><td><b>主役</b></td><td class="sym">Im（Im6, Im△7）</td><td class="sym">IVm（IVm6, IVm7）</td><td class="sym">V7（Vm7）</td></tr>
+<tr><td><b>代理</b></td><td class="sym">♭III△7, VIm7(♭5)</td><td class="sym">♭VI△7, ♭VII7, IIm7(♭5)</td><td class="sym">VIIdim7</td></tr>
+</tbody></table></div>
+<p>短調では <b>♭VI と ♭VII</b> がよく活躍します。<span class="lat">Am → F → G → Am</span>（Im → ♭VI → ♭VII → Im）は、ロックやアニメ・ソングでおなじみの響きです。短調のツー・ファイブは <span class="lat">Bm7(♭5) → E7</span>（IIm7(♭5) → V7）の形になります。</p>
+<div class="note"><p><b>現代のマイナー曲。</b>短調の曲でも、サビで平行調（A マイナーなら C メジャー）へ移って明るく終わるものがたくさんあります。短調と長調は同じ7音を共有しているので、行き来がとても簡単なのです。</p></div>
+
+<details class="sol"><summary>練習：C マイナー（ナチュラル）のダイアトニック・コード</summary><div class="solbody">
+<p><b>答え：</b><span class="lat">Cm7 – Dm7(♭5) – E♭△7 – Fm7 – Gm7 – A♭△7 – B♭7</span>。V は実際にはハーモニック・マイナーから借りた <span class="lat">G7</span> を使うことが多い、という点までセットで覚えましょう。</p>
+</div></details>
+
+<h2 id="tension"><span class="ch">6</span>テンションとヴォイシング</h2>
+
+<h3 id="t1"><span class="n">1</span>テンションは「3度ずつ、さらに上」</h3>
+{{fig:tension_stack}}
+<p>7th のさらに上へ3度ずつ積むと、<b>9th・11th・13th</b> が出てきます。これが<b>テンション</b>です。コードに程よい緊張感と色を足す音で、ジャズやおしゃれなポップスの響きのもとになっています。</p>
+{{fig:tension_swap}}
+<p>ピアノで密集して弾くときは、テンションを足すのではなく<b>構成音と入れ替え</b>ます。ルートはベース（左手）が弾いているので、右手からは省いても大丈夫です。</p>
+<div class="tw"><table><thead><tr><th>テンション</th><th>見つけ方</th><th>何と入れ替えるか</th><th>使えるコード</th></tr></thead><tbody>
+<tr><td class="sym">9</td><td>ルートの全音上</td><td>ルート</td><td>dim と m7(♭5) 以外ほぼすべて</td></tr>
+<tr><td class="sym">♭9・♯9</td><td>9 を半音下げる／上げる</td><td>ルート</td><td>7（ドミナント）だけ</td></tr>
+<tr><td class="sym">11</td><td>5th の全音下</td><td>5th</td><td>マイナー・コード</td></tr>
+<tr><td class="sym">♯11</td><td>11 を半音上げる</td><td>5th</td><td>メジャー・コード、7</td></tr>
+<tr><td class="sym">13・♭13</td><td>5th の全音上／半音上</td><td>5th</td><td>主に 7</td></tr>
+</tbody></table></div>
+<div class="warn"><p><b>メジャー・コードに11th は使わない。</b>11th（C△7 なら F）は 3rd の E と半音でぶつかり、コードの性格を壊します。メジャー・コードで11系を使うなら ♯11（F♯）です。</p></div>
+<p>♭9・♯9・♭13 は暗くて強い緊張、9・13 は明るい緊張です。いくつか組み合わせるときは、<b>同じスケールに入っている、相性のよいものどうし</b>をまとめます（例：<span class="lat">G7(13/9)</span>、<span class="lat">G7(♭13/♭9)</span>）。</p>
+
+<h3 id="t2"><span class="n">2</span>ヴォイシング——音の並べ方</h3>
+<p>同じコードでも、音をどう並べるか（<b>ヴォイシング</b>）で聴こえ方が変わります。1オクターヴ以内に詰めるのが<b>クローズ</b>、それより広げるのが<b>オープン</b>です。初心者がまず身につけたいのは、コードとコードを<b>なめらかにつなぐ</b>ことです。</p>
+{{fig:voicing_bad}}
+{{fig:voicing_good}}
+<div class="box">
+<h4>なめらかにつなぐ2つのルール</h4>
+<ol class="steps">
+<li><b>共通音は動かさない。</b>C（C E G）と Am（A C E）なら C と E が共通。そのまま残す。</li>
+<li><b>ほかの音は一番近いところへ。</b>G を A へ、というように2度以内で動かす。</li>
+</ol>
+</div>
+<p>メロディー（一番上の音）とベースは、<b>反対方向に動く（反行）か、どちらかが止まっている（斜行）</b>と、響きがすっきりします。両方が同じ方向に動く（平行）のは、特別な効果を狙うときだけにします。</p>
+
+<h3 id="t3"><span class="n">3</span>すぐ使える II–V–I</h3>
+{{fig:iiv_voicing}}
+<p>ジャズ・ピアノで最もよく使う形です。<span class="lat">Dm7(9)</span> を「C E F A」と弾き、一番下の C を <b>B に半音下げるだけ</b>で <span class="lat">G7(13/9)</span> になります。そこから上の3音をそれぞれ隣の音へ下ろすと <span class="lat">C△7(9)</span>（B D E G）。指はほとんど動かないのに、テンションの効いた響きが続きます。</p>
+
+<h2 id="nondia"><span class="ch">7</span>キーの外から借りるコード</h2>
+
+<p>ダイアトニック・コードだけでは物足りないとき、ほかのキーから一時的にコードを借りると景色が大きく変わります。ここでは基本の3つを扱います。</p>
+
+<h3 id="nd1"><span class="n">1</span>セカンダリー・ドミナント</h3>
+{{fig:secdom}}
+<p>V7 → I の「帰りたい → 帰った」という力を、<b>I 以外のコードに向けて使う</b>方法です。<span class="lat">Dm7</span> を仮に「家」とみなし、その5度上の7th コード <span class="lat">A7</span> を前に置きます。一瞬だけ D マイナーのキーにいるような感じがして、進行に推進力が生まれます。</p>
+<div class="tw"><table><thead><tr><th>行き先</th><th class="sym">Dm7</th><th class="sym">Em7</th><th class="sym">F△7</th><th class="sym">G7</th><th class="sym">Am7</th></tr></thead><tbody>
+<tr><td><b>前に置く 7th</b></td><td class="sym">A7（VI7）</td><td class="sym">B7（VII7）</td><td class="sym">C7（I7）</td><td class="sym">D7（II7）</td><td class="sym">E7（III7）</td></tr>
+</tbody></table></div>
+<p>II7（<span class="lat">D7</span>）は「ドミナントのドミナント」なので、特に<b>ダブル・ドミナント</b>と呼ばれます。また、借りてきた V7 の前にさらに IIm7 を置いて、<b>ツー・ファイブの形</b>にすることもよくあります（<span class="lat">Em7 – A7 → Dm7</span>）。</p>
+
+<h3 id="nd2"><span class="n">2</span>裏コード（サブ・ファイブ）</h3>
+{{fig:subv}}
+<p><span class="lat">G7</span> と <span class="lat">D♭7</span> は、ルートが増4度も離れているのに、<b>不安定な2音（F と B）が同じ</b>です。だから <span class="lat">D♭7</span> も <span class="lat">G7</span> と同じように C へ解決できます。ルートが半音で下りるので、よりなめらかで都会的な響きになります。V7 の代わりに置く、半音上から入る7th コードを<b>裏コード</b>（Sub V7、♭II7）と呼びます。</p>
+
+<h3 id="nd3"><span class="n">3</span>サブドミナント・マイナー</h3>
+{{fig:sdm}}
+<p>長調の曲で、<b>同じ主音の短調（C マイナー）から IVm を借りる</b>方法です。<span class="lat">F → Fm → C</span> の、胸がきゅっとする響き。<span class="lat">A♭△7</span>（♭VI）や <span class="lat">B♭7</span>（♭VII）も同じ仲間で、<span class="lat">A♭ → B♭ → C</span> のように組み合わせて使うことがよくあります。</p>
+<div class="note"><p><b>ほかにもある「借りもの」。</b>I7（ブルージーなトニック）、IV7（ブルージーなサブドミナント）、VIIdim7（V7(♭9) と同じ音）などもキーの外のコードです。どれも<b>3つの役割のどれかの代わり</b>として働いている、と見ると整理できます。</p></div>
+
+<details class="sol"><summary>練習：セカンダリー・ドミナントを入れる</summary><div class="solbody">
+<p>F メジャーの進行 <span class="lat">F△7 | Am7 ( ) | Gm7 | C7</span> の（ ）に、Gm7 へ向かうコードを入れてください。</p>
+<p><b>答え：</b><span class="lat">D7</span>。Gm7 の5度上の7th コードです（F メジャーの VI7）。</p>
+</div></details>
+
+<h2 id="standard"><span class="ch">8</span>定番のコード進行</h2>
+
+<h3 id="st1"><span class="n">1</span>クリシェ——1本の線を動かす</h3>
+<p>同じコードが長く続くとき、<b>構成音の1つだけを半音ずつ動かして</b>変化をつける技法を<b>クリシェ</b>といいます。形は2つだけです。</p>
+{{fig:cliche_up}}
+{{fig:cliche_bass}}
+<p>動く線がベースに来るものを<b>ベース・クリシェ</b>と呼びます。コード・ネームは「C → Caug → C6 → C7」のように次々と変わりますが、<b>やっていることは1本の線を動かしているだけ</b>です。</p>
+
+<h3 id="st2"><span class="n">2</span>ペダル・ポイント</h3>
+{{fig:pedal}}
+<p>ベースの1音を伸ばし続けたまま、上のコードを変えていく技法です。名前はオルガンの足鍵盤（ペダル）から。主音を伸ばす<b>トニック・ペダル</b>と、5番目の音を伸ばす<b>ドミナント・ペダル</b>があり、ドミナント・ペダルは「早く解決したい」という緊張を長く保つのでイントロによく使われます。</p>
+
+<h3 id="st3"><span class="n">3</span>ディミニッシュの3つの使い方</h3>
+{{fig:passing_dim}}
+<ol class="steps">
+<li><b>パッシング（経過）。</b>全音離れた2つのコードの間に dim7 をはさみ、ベースを半音でつなぐ。上の譜例がこれです。</li>
+<li><b>V7(♭9) の代わり。</b><span class="lat">C♯dim7</span>（C♯ E G B♭）は <span class="lat">A7(♭9)</span> からルートを抜いた形と同じ。だから Dm7 へのセカンダリー・ドミナントとして働きます。</li>
+<li><b>トニックの飾り。</b><span class="lat">Cdim7 → C</span> のように、トニックの直前に同じルートの dim7 を置く。</li>
+</ol>
+<div class="note"><p><b>dim7 は4つで1つ。</b>dim7 は短3度だけでできているので、<span class="lat">Cdim7 = E♭dim7 = G♭dim7 = Adim7</span> はすべて同じ4音です。覚えるのは実質3種類（C・C♯・D）だけ。</p></div>
+
+<h3 id="st4"><span class="n">4</span>循環コードのバリエーション</h3>
+<div class="tw"><table><thead><tr><th>型</th><th>ローマ数字</th><th>C での例</th></tr></thead><tbody>
+<tr><td>基本</td><td class="sym">I – VIm7 – IIm7 – V7</td><td class="sym">C – Am7 – Dm7 – G7</td></tr>
+<tr><td>セカンダリー・ドミナント</td><td class="sym">I – VI7 – IIm7 – V7</td><td class="sym">C – A7 – Dm7 – G7</td></tr>
+<tr><td>パッシング・ディミニッシュ</td><td class="sym">I – ♯Idim7 – IIm7 – V7</td><td class="sym">C – C♯dim7 – Dm7 – G7</td></tr>
+<tr><td>IIIm7 から始める</td><td class="sym">IIIm7 – VI7 – IIm7 – V7</td><td class="sym">Em7 – A7 – Dm7 – G7</td></tr>
+<tr><td>短調（A マイナー）</td><td class="sym">Im – ♭VI – IIm7(♭5) – V7</td><td class="sym">Am – F – Bm7(♭5) – E7</td></tr>
+</tbody></table></div>
+<p>基本形の2つ目を VI7 にしたり、dim7 にしたりするだけで、同じ循環でも色が変わります。<b>どれも「Dm7 へ向かう力を強くする」工夫</b>です。</p>
+
+<h2 id="modulation"><span class="ch">9</span>転調</h2>
+
+<p>曲の途中でキーを変えることを<b>転調</b>といいます。コードを一時的に借りるのが「旅行」なら、転調は「引っ越し」です。</p>
+
+<h3 id="mo1"><span class="n">1</span>近いキーへ——ピヴォット・コード</h3>
+{{fig:pivot}}
+<p>調号が1つしか違わないキー（<b>近親調</b>）へは、<b>両方のキーに属するコード</b>を橋にして移ります。この橋を<b>ピヴォット・コード</b>といいます。上の例の <span class="lat">Am7</span> は、C では VIm7、G では IIm7。聴き手には気づかれないほどなめらかに転調できます。</p>
+<div class="tw"><table><thead><tr><th>C メジャーの近親調</th><th>理由</th></tr></thead><tbody>
+<tr><td class="sym">Am</td><td>平行調（調号が同じ）</td></tr>
+<tr><td class="sym">G・Em</td><td>5度上のキーとその平行調（♯1つ）</td></tr>
+<tr><td class="sym">F・Dm</td><td>4度上のキーとその平行調（♭1つ）</td></tr>
+</tbody></table></div>
+
+<h3 id="mo2"><span class="n">2</span>遠いキーへ——V7 や II–V をつける</h3>
+{{fig:direct}}
+<p>一度トニックでしっかり区切れば、どんなキーへも移れます。これが一番よく使われる転調です。<b>新しいキーの V7（または II–V）を前に置く</b>と、いきなり感がやわらぎます。歌もので最後のサビを半音・全音上げるのもこの仲間です。</p>
+<div class="note"><p><b>同主調への転調。</b>C メジャーと C マイナーのように<b>主音が同じ</b>キーどうしは、明暗がはっきり入れ替わります。同じメロディーを長調→短調で繰り返すと、劇的な効果が出ます。</p></div>
+
+<h3 id="mo3"><span class="n">3</span>dim7 を橋にする</h3>
+{{fig:connect_dim}}
+<p>dim7 は4つの読み方ができるので、<b>「前のキーでの意味」と「新しいキーでの意味」を同時に持たせやすい</b>コードです。C のパッシング・ディミニッシュとして弾いた <span class="lat">C♯dim7</span> は、<span class="lat">Edim7</span> と同じ音です。これを新しいキー D♭ の側から見ると、IIm7（<span class="lat">E♭m7</span>）の直前に置いたディミニッシュになるので、そのまま D♭ の II–V へ入れます。メドレーのつなぎにも便利です。</p>
+
+<details class="sol"><summary>練習：ピヴォット・コードを探す</summary><div class="solbody">
+<p><span class="lat">Am | Am△7 | Am7 | D7 | Dm7 | G7 | C</span> はどこで転調しているでしょう。</p>
+<p><b>答え：</b>A マイナーから平行調の C メジャーへ。<span class="lat">Am7</span> と <span class="lat">D7</span> が橋です。A マイナーでは Im7 – IV7、C メジャーでは VIm7 – II7（→ IIm7 – V7 – I）と読めます。</p>
+</div></details>
+
+<h2 id="avail"><span class="ch">10</span>アドリブのためのスケール</h2>
+
+<p>コードが鳴っているとき、メロディーやアドリブに使える音の並びを<b>アベイラブル・ノート・スケール</b>といいます。基本はとても単純で、<b>コードの構成音のすき間を、キーの音で埋めればいい</b>のです。</p>
+
+<h3 id="a1"><span class="n">1</span>7つの旋法（モード）</h3>
+{{fig:modes}}
+<p>C メジャー・スケールを D から弾けばドリア、E からならフリジア……と、出発点を変えるだけで7つの<b>旋法</b>ができます。上の譜例は、比べやすいように全部を C から並べ直し、明るい順に並べたものです。<b>隣どうしは1音しか違わず</b>、左から順に1音ずつ暗くなっていきます。</p>
+<div class="tw"><table><thead><tr><th>ダイアトニック・コード（C）</th><th>スケール</th><th>避ける音（アヴォイド）</th></tr></thead><tbody>
+<tr><td class="sym">C△7（I）</td><td>イオニア</td><td class="sym">F</td></tr>
+<tr><td class="sym">Dm7（IIm7）</td><td>ドリア</td><td class="sym">B</td></tr>
+<tr><td class="sym">Em7（IIIm7）</td><td>フリジア</td><td class="sym">F</td></tr>
+<tr><td class="sym">F△7（IV）</td><td>リディア</td><td>なし</td></tr>
+<tr><td class="sym">G7（V7）</td><td>ミクソリディア</td><td class="sym">C</td></tr>
+<tr><td class="sym">Am7（VIm7）</td><td>エオリア</td><td class="sym">F</td></tr>
+<tr><td class="sym">Bm7(♭5)（VIIm7(♭5)）</td><td>ロクリア</td><td class="sym">C</td></tr>
+</tbody></table></div>
+<p><b>アヴォイド・ノート</b>は、コードの構成音の半音上にあってぶつかる音など、長く伸ばすとコードの響きを壊す音です。<b>通り過ぎるだけなら問題ありません。</b>強拍で長く伸ばさない、とだけ覚えておけば十分です。</p>
+
+<h3 id="a2"><span class="n">2</span>実際によく使う3つのスケール</h3>
+{{fig:penta_blues}}
+<p>「コードごとに1つのスケール」と考えると、頭が追いつきません。実際には、<b>キー全体を1つのスケールでとらえる</b>ほうが弾きやすく、次の3つが主役です。</p>
+<div class="tw"><table><thead><tr><th>スケール</th><th>C での音</th><th>響き</th></tr></thead><tbody>
+<tr><td><b>メジャー／ナチュラル・マイナー</b></td><td class="sym">C D E F G A B</td><td>きれいでクラシカル。速いパッセージ向き</td></tr>
+<tr><td><b>ペンタトニック</b></td><td class="sym">C D E G A</td><td>4番目と7番目を抜いた5音。ぶつかる音がなく、歌心がある</td></tr>
+<tr><td><b>ブルー・ノート</b></td><td class="sym">C E♭ F G♭ G B♭ B</td><td>♭3・♭5・♭7 のブルー・ノートが入った、哀愁と色気のある音</td></tr>
+</tbody></table></div>
+
+<h3 id="a3"><span class="n">3</span>ブルースで弾いてみる</h3>
+{{fig:blues}}
+<p>ブルースは <b>I7・IV7・V7 の3つだけでできた12小節の形式</b>です。コードが変わっても、アドリブは<b>ずっと同じ C ブルー・ノート・スケール</b>で弾けます。長調の 3rd（E）と短調の ♭3（E♭）がぶつかり合う、あのブルージーな響きがここから生まれます。</p>
+
+<h3 id="a4"><span class="n">4</span>ドミナント7th で選べるスケール</h3>
+<p>V7 は緊張を作るコードなので、使うスケールで緊張の色を選べます。</p>
+<div class="tw"><table><thead><tr><th>スケール</th><th>G7 での音</th><th>色</th></tr></thead><tbody>
+<tr><td><b>ミクソリディア</b></td><td class="sym">G A B C D E F</td><td>そのまま。明るい（9・13）</td></tr>
+<tr><td><b>リディアン♭7</b></td><td class="sym">G A B C♯ D E F</td><td>浮遊感（♯11）。裏コードで定番</td></tr>
+<tr><td><b>ハーモニック・マイナー P5↓</b></td><td class="sym">G A♭ B C D E♭ F</td><td>短調へ解決するときの哀しい色（♭9・♭13）</td></tr>
+<tr><td><b>オルタード</b></td><td class="sym">G A♭ A♯ B C♯ E♭ F</td><td>いちばん暗く、強い緊張</td></tr>
+</tbody></table></div>
+<div class="note"><p><b>時代ごとのアドリブ。</b>ブルース（19世紀〜）はブルー・ノートとペンタトニック、スウィング（1930年代〜）はメロディーを少し崩す「フェイク」、ビバップ（1940年代〜）はコード・トーン＋テンション＋半音の経過音、モード・ジャズ（1950年代末〜）は旋法そのものを軸にしたアドリブ。上の3つのスケールから始めて、少しずつ広げていけば大丈夫です。</p></div>
+
+<details class="sol"><summary>練習：スケールを答える</summary><div class="solbody">
+<p>① G メジャーの <span class="lat">Am7</span>（IIm7）　② F メジャーの <span class="lat">B♭△7</span>（IV△7）　③ C メジャーの <span class="lat">G7</span>（V7）</p>
+<p><b>答え：</b>① A ドリア（A B C D E F♯ G）　② B♭ リディア（B♭ C D E F G A）　③ G ミクソリディア（G A B C D E F）。<b>ローマ数字が同じなら、どのキーでも同じ旋法</b>になります。</p>
+</div></details>
+
+<h2 id="practice"><span class="ch">11</span>練習メニュー</h2>
+<p>上から順に、1日1つずつで構いません。すべて<b>弾いて、声に出してコード・ネームを言う</b>のがコツです。</p>
+<div class="tw"><table><thead><tr><th></th><th>やること</th><th>ねらい</th></tr></thead><tbody>
+<tr><td class="deg">1</td><td>12のキーでメジャー3和音・マイナー3和音を弾く（C → F → B♭ → … と4度ずつ）</td><td>3rd の上げ下げを指で覚える</td></tr>
+<tr><td class="deg">2</td><td>好きなキーのダイアトニック・コード7つを弾き、ローマ数字で言う</td><td>キーが変わっても並びは同じ、を体感する</td></tr>
+<tr><td class="deg">3</td><td>好きな曲のコード譜に T・SD・D を書き込む</td><td>3つの役割で曲を読む</td></tr>
+<tr><td class="deg">4</td><td>I–VI–II–V を<b>共通音を残して</b>弾く（譜例のヴォイシング）</td><td>なめらかなヴォイシングの基本</td></tr>
+<tr><td class="deg">5</td><td>II–V–I の定番ヴォイシングを C・F・B♭ で弾く</td><td>テンション入りの響きに慣れる</td></tr>
+<tr><td class="deg">6</td><td>循環コードの2つ目を VI7 → ♯Idim7 に替えて弾き比べる</td><td>借りてきたコードの色の違いを聴く</td></tr>
+<tr><td class="deg">7</td><td>12小節ブルースの伴奏を流し、ペンタトニックだけでメロディーを作る</td><td>「1つのスケールでアドリブ」の第一歩</td></tr>
+</tbody></table></div>
+
+<h2 id="gloss"><span class="ch">用語集</span>このページに出てきた言葉</h2>
+<div class="tw"><table class="gloss"><tbody>
+<tr><td>ダイアトニック</td><td>キーのスケールの音だけでできていること</td></tr>
+<tr><td>ローマ数字表記</td><td>スケールの何番目の音をルートにしたコードかを示す書き方（IIm7 など）</td></tr>
+<tr><td>ケーデンス</td><td>T・SD・D を並べた、コード進行の最小単位（終止形）</td></tr>
+<tr><td>代理コード</td><td>構成音が似ていて、同じ役割を果たせるコード</td></tr>
+<tr><td>強進行</td><td>ルートが4度上（5度下）へ動く進行。最も自然に聴こえる</td></tr>
+<tr><td>ツー・ファイブ</td><td>IIm7 → V7 の組み合わせ。V7 への準備として置く</td></tr>
+<tr><td>トライトーン</td><td>全音3つ分の音程（増4度・減5度）。ドミナントの緊張のもと</td></tr>
+<tr><td>テンション</td><td>9th・11th・13th。コードに色と緊張を足す音</td></tr>
+<tr><td>ヴォイシング</td><td>コードの音の並べ方</td></tr>
+<tr><td>セカンダリー・ドミナント</td><td>I 以外のコードに向かう V7</td></tr>
+<tr><td>裏コード</td><td>V7 と同じトライトーンを持つ、半音上から解決する7th コード</td></tr>
+<tr><td>サブドミナント・マイナー</td><td>長調の中で、同じ主音の短調から借りた IVm とその仲間</td></tr>
+<tr><td>クリシェ</td><td>同じコードの中で1音だけを半音ずつ動かす技法</td></tr>
+<tr><td>ピヴォット・コード</td><td>転調の前後どちらのキーにも属する、橋渡しのコード</td></tr>
+<tr><td>アヴォイド・ノート</td><td>そのコードの上で長く伸ばすと響きを壊す音</td></tr>
+</tbody></table></div>
+
+<h2 id="check"><span class="ch">付録</span>検算について</h2>
+<p>譜例はすべてプログラムで組み立て、機械で次の点を確かめました。</p>
+<ul>
+<li>コード・ネームのついた箇所では、鳴っている音がすべてそのコードの構成音か、表記したテンション・ベース音であること（ブルースの譜例ではメロディーを除く伴奏部分）</li>
+<li>各小節の拍数が拍子記号と合っていること</li>
+</ul>
+<p>結果、{{checked}}個の譜例で違反は<b>0か所</b>でした。</p>
+
+<p class="src">このページは、秋谷えりこ『ポピュラーピアノのための音楽理論全書』第1〜10章の講義資料を、初心者向けに要点を選んで書き直したものです。説明の文章・譜例・音源はすべてこのページのために新しく作りました（元資料の曲例やメロディーは使っていません）。<br>第8章のクリシェ（5th が上がる型）の4つ目のコードは、資料では C(♯5) と表記されていますが、音は C E B♭ なので C7 として扱いました。<br>音はソフト音源（GM のピアノ）で鳴らしたもので、録音ではありません。</p>
