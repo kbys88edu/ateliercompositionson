@@ -1126,7 +1126,7 @@ body.acs-editorial .ja-trust__item {
   border-left: 1px solid var(--r-line);
 }
 body.acs-editorial .ja-trust__item:first-child { border-left: 0; padding-left: 0; }
-body.acs-editorial .ja-trust__copy { font-size: clamp(0.875rem, 1.05vw, 0.9375rem); line-height: 1.8; letter-spacing: 0.06em; }
+body.acs-editorial .ja-trust__copy { font-size: clamp(0.875rem, 1.05vw, 0.9375rem); line-height: 1.8; letter-spacing: 0.06em; word-break: normal; overflow-wrap: anywhere; }
 
 /* ---------- who / study: softer boxes, more air ---------- */
 body.acs-editorial .ja-who__paths { gap: clamp(20px, 2.4vw, 32px); margin-top: clamp(48px, 6vw, 88px); }
@@ -1220,10 +1220,10 @@ body.acs-editorial > footer {
 @media (max-width: 767px) {
   :root { --r-section: 80px; --r-gap: 36px; }
   body.acs-editorial .acs-section { border-top-color: transparent; }
-  body.acs-editorial .ja-trust__item { gap: 20px; padding: 28px 16px; border-left: 0; border-top: 1px solid var(--r-line); }
-  body.acs-editorial .ja-trust__item:nth-child(-n+2) { border-top: 0; }
-  body.acs-editorial .ja-trust__item:nth-child(even) { border-left: 1px solid var(--r-line); }
-  body.acs-editorial .ja-trust__item:nth-child(odd) { padding-left: 0; }
+  body.acs-editorial .ja-trust__grid { grid-template-columns: minmax(0, 1fr); }
+  body.acs-editorial .ja-trust__item { gap: 10px; padding: 22px 0; border-left: 0; border-top: 1px solid var(--r-line); }
+  body.acs-editorial .ja-trust__item:first-child { border-top: 0; }
+  body.acs-editorial .ja-trust__copy { font-size: 0.9375rem; }
   body.acs-editorial :is(.ja-who__paths article, .ja-study-family) { padding: 28px 24px; }
   body.acs-editorial :is(.ja-concept__grid, .ja-pricing__grid, .ja-faq__grid, .ja-final-cta__grid) { grid-template-columns: minmax(0, 1fr); }
   body.acs-editorial .ja-home-instructor { grid-template-columns: minmax(0, 1fr); align-items: start; }
@@ -1266,7 +1266,7 @@ body.acs-editorial > footer {
       </div>
       <div class="ja-trust__item">
 
-        <p class="ja-trust__copy">IRCAM作曲研究課程<br>2021-2022</p>
+        <p class="ja-trust__copy">IRCAM作曲研究課程修了、<br>VR、インスタレーション</p>
       </div>
       <div class="ja-trust__item">
 
