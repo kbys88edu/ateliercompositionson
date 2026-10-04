@@ -1094,7 +1094,14 @@ body.acs-editorial .atelier-split-hero__lead {
   font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
   line-height: 2.1;
 }
-body.acs-editorial .atelier-split-hero__actions { margin-top: clamp(40px, 5vw, 64px); }
+body.acs-editorial .atelier-split-hero__actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 15.5rem));   /* equal width; wraps to a stack when narrow */
+  justify-content: start;
+  gap: 12px;
+  margin-top: clamp(40px, 5vw, 64px);
+}
+body.acs-editorial .atelier-split-hero__actions a { width: 100%; min-height: 56px; justify-content: space-between; }
 
 /* ---------- buttons & links ---------- */
 body.acs-editorial :is(.acs-btn, .atelier-split-hero__actions a) {
