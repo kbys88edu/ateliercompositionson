@@ -1,0 +1,158 @@
+/* ==========================================================================
+   トップ以外の日本語ページを、トップと同じ「左に小さな見出し・右に本文」の組みに揃える
+   対象：レッスン詳細5ページ / 講師 / FAQ / 規約。トップ(body.qh)には適用しない。
+   ========================================================================== */
+html[lang="ja"] body.acs-editorial:not(.qh) {
+  --qp-pad: clamp(20px, 3.2vw, 44px);
+  --qp-lab: 200px;
+  --qp-rule: #ddd;
+  --qp-ink: #111;
+  --qp-mut: #777;
+}
+
+/* 英字の見出し・ラベルは出さない */
+html[lang="ja"] body.acs-editorial:not(.qh) :is(.kicker, .eyebrow, .section-label, .section-kicker, .acs-kicker) { display: none; }
+html[lang="ja"] body.lesson-detail-page .lesson-detail-hero__summary[aria-hidden="true"] { display: none; }
+html[lang="ja"] body.acs-editorial:not(.qh) .mark { display: none; }
+
+/* ---------------------------------------------------------------- レッスン詳細 */
+body.lesson-detail-page.acs-editorial main { max-width: 1320px; margin-inline: auto; padding: 0; }
+body.lesson-detail-page.acs-editorial { background: #fff; color: var(--qp-ink); }
+
+/* ヒーロー：文字を左、画像を右。トップと同じ比率 */
+body.lesson-detail-page .lesson-detail-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 34%, 440px);
+  grid-template-areas: "copy media" "summary summary";
+  column-gap: clamp(32px, 5vw, 88px);
+  align-items: start;
+  width: auto; min-height: 0; height: auto;
+  padding: clamp(40px, 5vw, 72px) var(--qp-pad) 0;
+  border: 0;
+}
+body.lesson-detail-page .lesson-detail-hero__copy { grid-area: copy; padding: 0; align-self: start; }
+body.lesson-detail-page .lesson-detail-hero__copy > * { max-width: none; margin-inline: 0; }
+body.lesson-detail-page .lesson-detail-hero h1 {
+  font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500;
+  font-size: clamp(26px, 3vw, 40px); line-height: 1.5; letter-spacing: .02em; margin: 0 0 clamp(20px, 2.4vw, 32px);
+}
+body.lesson-detail-page .lesson-detail-hero :is(.lead, .muted) { max-width: 34em; font-size: 15px; line-height: 2; color: var(--qp-ink); }
+body.lesson-detail-page .lesson-detail-hero .muted { color: var(--qp-mut); margin-top: 1em; }
+body.lesson-detail-page .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+body.lesson-detail-page .hero-actions .button {
+  box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+  width: 210px; height: 52px; min-height: 0; padding: 0 16px; margin: 0; white-space: nowrap;
+  border: 1px solid var(--qp-ink); border-radius: 0; box-shadow: none;
+  font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; font-size: 14px; letter-spacing: .06em;
+}
+body.lesson-detail-page .hero-actions .button.primary { background: var(--qp-ink); color: #fff; }
+body.lesson-detail-page .hero-actions .button.secondary { background: transparent; color: var(--qp-ink); }
+body.lesson-detail-page .lesson-detail-hero__media { grid-area: media; width: 100%; height: auto; min-height: 0; max-height: none; align-self: start; margin: 0; overflow: visible; background: none; }
+body.lesson-detail-page .lesson-detail-hero__media img { display: block; width: 100%; height: auto; max-height: none; min-height: 0; object-fit: contain; }
+body.lesson-detail-page .lesson-detail-hero__summary {
+  grid-area: summary; margin-top: clamp(48px, 6vw, 88px); padding: clamp(32px, 4vw, 56px) 0 clamp(40px, 5vw, 72px);
+  border-top: 1px solid var(--qp-rule); background: none;
+  display: grid; grid-template-columns: var(--qp-lab) minmax(0, 1fr); column-gap: var(--qp-pad);
+}
+body.lesson-detail-page .lesson-detail-hero__summary h2 { grid-column: 1; margin: 0; font-size: 14.5px; line-height: 1.7; font-weight: 500; font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; }
+body.lesson-detail-page .lesson-detail-hero__summary ul { grid-column: 2; margin: 0; padding: 0; list-style: none; max-width: 46em; }
+body.lesson-detail-page .lesson-detail-hero__summary li { padding: 8px 0; border-bottom: 1px solid var(--qp-rule); }
+body.lesson-detail-page .lesson-detail-hero__summary li:first-child { border-top: 1px solid var(--qp-rule); }
+
+/* 各セクション：左に小さな見出し、右に本文 */
+body.lesson-detail-page main > section:not(.lesson-detail-hero):not(.acs-consultation) {
+  display: grid; grid-template-columns: var(--qp-lab) minmax(0, 1fr); column-gap: var(--qp-pad); align-items: start;
+  width: auto; max-width: none; margin: 0;
+  padding: clamp(40px, 5.5vw, 80px) var(--qp-pad);
+  border: 0; border-top: 1px solid var(--qp-rule);
+  background: none; color: var(--qp-ink);
+}
+body.lesson-detail-page main > section:not(.lesson-detail-hero):not(.acs-consultation) > * { grid-column: 2; min-width: 0; }
+body.lesson-detail-page main > section:not(.lesson-detail-hero):not(.acs-consultation) > :is(.section-title, h2) { grid-column: 1; grid-row: 1; margin: 0; padding: 0; }
+body.lesson-detail-page main > section:not(.lesson-detail-hero):not(.acs-consultation) h2 {
+  font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500;
+  font-size: 14.5px; line-height: 1.7; letter-spacing: .03em; margin: 0; color: var(--qp-ink);
+}
+/* 左右2段（帯）セクションは、中の2つの塊をそのまま列に置く */
+body.lesson-detail-page section .band-inner { display: contents; }
+body.lesson-detail-page section .band-inner > :first-child { grid-column: 1; grid-row: 1; }
+body.lesson-detail-page section .band-inner > :last-child { grid-column: 2; grid-row: 1; }
+body.lesson-detail-page :is(.band, .dark, .cta, .intro-band) { background: none; color: var(--qp-ink); }
+body.lesson-detail-page :is(.band, .dark) :is(.muted, p, li, h3) { color: inherit; }
+body.lesson-detail-page :is(.band, .dark) .muted { color: var(--qp-mut); }
+
+/* カード：枠を外し、上罫線だけ */
+body.lesson-detail-page :is(.card, .price-card, .wide-card, .sample-card, .price, .flow-item) {
+  border: 0; border-top: 1px solid var(--qp-ink); border-radius: 0; box-shadow: none;
+  background: none; color: inherit; padding: 22px 0 0;
+}
+body.lesson-detail-page :is(.band, .dark) :is(.card, .price-card, .wide-card) { background: none; border-color: var(--qp-ink); }
+body.lesson-detail-page :is(.grid-2, .grid-3, .cards, .price-grid, .video-grid, .sample-grid, .scope-list) { gap: 32px; border: 0; padding: 0; margin: 0; }
+body.lesson-detail-page :is(.grid-2, .grid-3, .cards, .price-grid, .sample-grid, .scope-list) > * { margin: 0; }
+body.lesson-detail-page :is(.card, .price-card, .wide-card, .price) h3 { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; font-size: 15.5px; line-height: 1.7; margin: 0 0 8px; }
+body.lesson-detail-page :is(.card, .price-card, .wide-card, .price) .muted { color: var(--qp-mut); }
+body.lesson-detail-page .list li { padding: 6px 0; }
+body.lesson-detail-page .price.recommended, body.lesson-detail-page .price-card.emphasis { background: none; color: inherit; }
+body.lesson-detail-page .price.recommended .small, body.lesson-detail-page .price.recommended .badge { color: var(--qp-mut); background: none; }
+body.lesson-detail-page .amount { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; }
+/* 本文中のボタンは細い枠のボタンに統一 */
+body.lesson-detail-page main > section:not(.lesson-detail-hero) :is(.button, .btn) { border-radius: 0; box-shadow: none; }
+
+/* ---------------------------------------------------------------- 講師 / FAQ / 規約 */
+html[lang="ja"] body.acs-editorial:not(.qh):not(.lesson-detail-page) main { max-width: 1320px; margin-inline: auto; padding-inline: 0; }
+html[lang="ja"] body.acs-editorial:not(.qh):not(.lesson-detail-page) main > section { border-top: 1px solid var(--qp-rule); padding-block: clamp(40px, 5.5vw, 80px); }
+html[lang="ja"] body.acs-editorial:not(.qh):not(.lesson-detail-page) main > section:first-child { border-top: 0; padding-top: clamp(40px, 5vw, 72px); }
+
+/* 左の見出し列を空けて、本文を右列に */
+.acs-editorial :is(.teacher-inner, .ja-faq-page > .acs-container) {
+  width: auto; max-width: none; margin: 0;
+  padding-inline: var(--qp-pad);
+  display: grid; grid-template-columns: var(--qp-lab, 200px) minmax(0, 1fr); column-gap: var(--qp-pad, 32px);
+}
+.acs-editorial :is(.teacher-inner, .ja-faq-page > .acs-container) > * { grid-column: 2; min-width: 0; max-width: 46em; }
+.acs-editorial :is(.teacher-inner, .ja-faq-page > .acs-container) > :is(.teacher-photo, figure) { max-width: 720px; }
+.acs-editorial .teacher-inner > h1, .acs-editorial .ja-faq-page h1, .acs-editorial main > h1 {
+  font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500;
+  font-size: clamp(26px, 3vw, 40px); line-height: 1.5; letter-spacing: .02em; margin: 0 0 12px;
+}
+.acs-editorial .teacher-inner > h1 { font-family: Optima, "Optima nova", Candara, "Marcellus", serif; letter-spacing: -.02em; }
+.acs-editorial .teacher-role { color: var(--qp-mut, #777); margin: 0 0 28px; }
+.acs-editorial .teacher-photo { display: block; width: 100%; height: auto; margin-bottom: 32px; }
+.acs-editorial .teacher-text, .acs-editorial .text-block p { margin: 0 0 1.2em; }
+.acs-editorial .teacher-qualification { color: var(--qp-mut, #777); }
+
+.acs-editorial .section-grid {
+  width: auto; max-width: none; margin: 0; padding-inline: var(--qp-pad);
+  display: grid; grid-template-columns: var(--qp-lab, 200px) minmax(0, 1fr); column-gap: var(--qp-pad, 32px); align-items: start;
+}
+.acs-editorial .section-grid h2 { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; font-size: 14.5px; line-height: 1.7; margin: 0; }
+.acs-editorial .section-grid .text-block { max-width: 46em; }
+.acs-editorial main > section > .acs-container:not(.teacher-inner):not(.section-grid) { padding-inline: var(--qp-pad); width: auto; margin: 0; }
+.acs-editorial main > section[aria-label="無料相談"] > .acs-container { padding-left: calc(var(--qp-lab, 200px) + var(--qp-pad) * 2); }
+
+.acs-editorial .ja-faq-page__intro { color: var(--qp-mut, #777); margin: 0 0 32px; }
+.acs-editorial .ja-faq-page__cta { margin-top: 40px; }
+
+/* 規約：見出し・リード・ボタンを右列から始め、各節は「左に小見出し・右に内容」 */
+.acs-editorial main > :is(h1, .lead, .actions) { margin-left: calc(var(--qp-lab, 200px) + var(--qp-pad, 32px) * 2); margin-right: var(--qp-pad, 32px); max-width: 46em; }
+.acs-editorial main > h1 { margin-top: clamp(40px, 5vw, 72px); }
+.acs-editorial main > .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; margin-bottom: clamp(40px, 5vw, 72px); }
+.acs-editorial main > section > .grid {
+  display: grid; grid-template-columns: var(--qp-lab, 200px) minmax(0, 1fr); column-gap: var(--qp-pad, 32px);
+  padding-inline: var(--qp-pad); max-width: none; width: auto; margin: 0;
+}
+.acs-editorial main > section > .grid h2 { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; font-size: 14.5px; line-height: 1.7; margin: 0; }
+.acs-editorial main > section > .grid dl, .acs-editorial main > section > .grid .list { max-width: 46em; }
+
+@media (max-width: 900px) {
+  body.lesson-detail-page .lesson-detail-hero { grid-template-columns: 1fr; grid-template-areas: "copy" "media" "summary"; row-gap: 32px; }
+  body.lesson-detail-page .lesson-detail-hero__summary,
+  body.lesson-detail-page main > section:not(.lesson-detail-hero):not(.acs-consultation),
+  .acs-editorial :is(.teacher-inner, .ja-faq-page > .acs-container, .section-grid, main > section > .grid) { grid-template-columns: 1fr; row-gap: 14px; }
+  body.lesson-detail-page main > section:not(.lesson-detail-hero):not(.acs-consultation) > *,
+  body.lesson-detail-page .lesson-detail-hero__summary > *,
+  body.lesson-detail-page section .band-inner > *,
+  .acs-editorial :is(.teacher-inner, .ja-faq-page > .acs-container) > * { grid-column: 1 !important; grid-row: auto !important; }
+  .acs-editorial main > :is(h1, .lead, .actions) { margin-left: var(--qp-pad, 20px); }
+  .acs-editorial main > section[aria-label="無料相談"] > .acs-container { padding-left: var(--qp-pad); }
+}

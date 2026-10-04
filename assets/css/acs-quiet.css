@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&display=swap');
+
+/* ==========================================================================
+   Quiet typography layer
+   acs-editorial.css の後に読み込み、全ページ共通で次を整える:
+   ブランド名の書体(Optima系) / 本文の組み / 下線リンクの枠 / ボタンのサイズ /
+   カード枠の撤去 / トップのヒーロー構成
+   ========================================================================== */
+
+:root {
+  --q-brand: Optima, "Optima nova", Candara, "Marcellus", "Hiragino Mincho ProN", serif;
+  --q-heading: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif;
+  --q-ink: #111;
+  --q-muted: #777;
+  --q-rule: #dcdcd8;
+  --acs-text-base: 15px;
+}
+
+body.acs-editorial {
+  font-size: 15px;
+  line-height: 1.95;
+  letter-spacing: .03em;
+  font-feature-settings: "palt";
+  -webkit-font-smoothing: antialiased;
+}
+.acs-editorial :is(h1, h2, h3) { text-wrap: balance; font-feature-settings: "palt"; }
+.acs-editorial p { text-wrap: pretty; }
+
+/* ---- ブランド名 ------------------------------------------------------- */
+.acs-editorial .acs-site-header__brand-full,
+.acs-editorial #home-title {
+  font-family: var(--q-brand);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: -.045em;
+  font-feature-settings: normal;
+}
+.acs-editorial .acs-site-header__brand-full { font-size: 18px; line-height: 1.3; }
+.acs-editorial #home-title { font-size: clamp(40px, 5.6vw, 92px); line-height: .98; margin: 0; }
+
+/* ---- ボタン：同じ大きさ ------------------------------------------------- */
+.acs-editorial .acs-btn {
+  font-family: var(--q-heading);
+  font-weight: 500;
+  letter-spacing: .06em;
+}
+.acs-editorial :is(.atelier-split-hero__actions, .hero-actions, .button-row) .acs-btn {
+  box-sizing: border-box;
+  width: 210px;
+  height: 52px;
+  min-height: 0;
+  padding: 0 16px;
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .acs-editorial :is(.atelier-split-hero__actions, .hero-actions, .button-row) .acs-btn { width: 100%; }
+}
+
+/* ---- 下線リンクは四角で囲む ------------------------------------------- */
+.acs-editorial :is(.acs-text-link, .ja-study-family a, .ja-faq__more, .acs-consultation__links a, .acs-consultation__booking) {
+  display: inline-block;
+  padding: 5px 12px;
+  margin-block: 2px;
+  border: 1px solid var(--q-ink);
+  color: var(--q-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  line-height: 1.6;
+  min-height: 0;
+}
+.acs-editorial :is(.acs-text-link, .ja-study-family a, .ja-faq__more, .acs-consultation__links a, .acs-consultation__booking):hover {
+  background: var(--q-ink);
+  color: #fff;
+}
+.acs-editorial .acs-consultation__links a { color: var(--q-muted); border-color: var(--q-muted); font-size: 12px; }
+.acs-editorial .acs-consultation__links { gap: 8px; }
+.acs-editorial .acs-consultation__booking { width: auto; padding: 14px 24px; }
+
+/* ---- 見出し・ラベル：小さく、静かに ------------------------------------ */
+.acs-editorial .acs-kicker { display: none; }
+.acs-editorial :is(#who, #works, #study, #process, #voices, #price, #faq, #concept, #instructor) :is(h2) {
+  font-family: var(--q-heading);
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: .03em;
+  margin: 0;
+}
+.acs-editorial :is(h3) { font-family: var(--q-heading); }
+
+/* 短い見出しのセクションは、左に小さな見出し・右に本文 */
+.acs-editorial :is(#who, #works, #study, #process, #voices) > :is(.acs-container, .acs-container--wide) {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  column-gap: 48px;
+  align-items: start;
+}
+.acs-editorial :is(#who, #works, #study, #process, #voices) > :is(.acs-container, .acs-container--wide) > h2 { grid-column: 1; }
+.acs-editorial :is(#who, #works, #study, #process, #voices) > :is(.acs-container, .acs-container--wide) > :not(h2) { grid-column: 2; }
+.acs-editorial :is(#who, #works, #study, #process, #voices) { padding-block: clamp(56px, 7vw, 104px); }
+
+/* ---- カード枠を外し、上罫線だけの組みに --------------------------------- */
+.acs-editorial :is(.ja-who__paths article, .ja-study-family, .ja-trust__item, .ja-voice, .ja-concept__approaches article) {
+  border: 0;
+  border-top: 1px solid var(--q-ink);
+  padding: 22px 0 0;
+  background: none;
+}
+.acs-editorial .ja-trust__item { border-top: 0; padding: 0; }
+.acs-editorial .ja-trust__grid { padding-block: 32px; gap: 24px; border-top: 1px solid var(--q-rule); }
+.acs-editorial .ja-who__paths { gap: 32px; }
+.acs-editorial .ja-who__paths article p,
+.acs-editorial .ja-voice p:not(.ja-voice__profile) { color: var(--q-muted); }
+.acs-editorial .ja-study-family h3 { font-size: 13px; color: var(--q-muted); font-weight: 400; }
+.acs-editorial .ja-study-family a { display: inline-block; margin: 4px 6px 4px 0; }
+.acs-editorial :is(.card, .price, .price-card, .sample-card, .scope-item, .fr-resource, .fr-outcome) { border-color: var(--q-rule); }
+
+/* ---- 料金 ------------------------------------------------------------ */
+.acs-editorial .ja-pricing__amount { font-family: var(--q-heading); font-weight: 500; font-size: 17px; }
+.acs-editorial .ja-pricing__list h3 { font-size: 15px; }
+
+/* ---- 相談ブロックとフッター ------------------------------------------- */
+.acs-editorial .acs-consultation { padding-inline: clamp(20px, 4vw, 64px); }
+.acs-editorial .acs-consultation__inner { border-block: 1px solid var(--q-rule); }
+.acs-editorial .acs-consultation h2 { font-family: var(--q-heading); font-weight: 500; font-size: clamp(22px, 2.4vw, 32px); }
+.acs-editorial > footer { background: #fff; color: var(--q-muted); border-top: 1px solid var(--q-rule); font-size: 12.5px; }
+.acs-editorial > footer a { color: inherit; }
+
+/* ==========================================================================
+   トップ(ja/index.html)のヒーロー：文字を左、写真を右(トリミングなし)
+   ========================================================================== */
+.acs-editorial .atelier-split-hero {
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 34%, 440px);
+  column-gap: clamp(32px, 5vw, 88px);
+  align-items: stretch;
+  padding: clamp(40px, 5vw, 72px) clamp(24px, 4vw, 64px) clamp(56px, 7vw, 104px);
+  border-bottom: 0;
+  max-width: 1320px;
+  margin-inline: auto;
+}
+.acs-editorial .atelier-split-hero__copy {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.acs-editorial .atelier-split-hero__copy > * { max-width: none; width: auto; }
+.acs-editorial .atelier-split-hero__eyebrow {
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: .03em;
+  color: var(--q-muted);
+  margin: 0 0 clamp(16px, 2vw, 28px);
+}
+.acs-editorial .atelier-split-hero__lead {
+  max-width: 31em;
+  margin: auto 0 0;
+  padding-top: clamp(40px, 6vw, 80px);
+  font-size: 15.5px;
+  line-height: 2.05;
+}
+.acs-editorial .atelier-split-hero__actions { margin-top: 32px; }
+.acs-editorial .atelier-split-hero__media { height: auto; max-height: none; align-self: start; }
+.acs-editorial .atelier-split-hero__media img { height: auto; max-height: none; object-fit: contain; }
+
+@media (max-width: 1023px) {
+  .acs-editorial .atelier-split-hero { grid-template-columns: 1fr; row-gap: 36px; }
+  .acs-editorial .atelier-split-hero__lead { margin-top: 24px; padding-top: 0; }
+  .acs-editorial .atelier-split-hero__media { max-height: none; }
+  .acs-editorial .atelier-split-hero__media img { max-height: none; }
+}
+@media (max-width: 767px) {
+  .acs-editorial :is(#who, #works, #study, #process, #voices) > :is(.acs-container, .acs-container--wide) { grid-template-columns: 1fr; row-gap: 20px; }
+  .acs-editorial :is(#who, #works, #study, #process, #voices) > :is(.acs-container, .acs-container--wide) > :is(h2, :not(h2)) { grid-column: 1; }
+}
+
+/* 矢印アイコンは付けない */
+.acs-editorial .acs-btn::after,
+.acs-editorial .acs-btn::before { content: none !important; }
+
+/* 本文中の下線リンク(段落・リスト内)も枠で囲む。折り返しても枠が切れないようにする */
+.acs-editorial main :is(p, li) > a:not(.acs-btn):not(.acs-text-link):not([class*="__booking"]),
+.acs-editorial main :is(p, li) > a[href^="http"]:not(.acs-btn) {
+  display: inline;
+  padding: 2px 8px;
+  border: 1px solid var(--q-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.acs-editorial main :is(p, li) > a:not(.acs-btn):hover { background: var(--q-ink); color: #fff; }
+
+/* ==========================================================================
+   ヘッダー：左レールをやめ、上部に「名前＋目次」だけを置く（デスクトップ）
+   ========================================================================== */
+@media (min-width: 1024px) {
+  body.acs-editorial { padding-left: 0; }
+  .acs-editorial > .acs-site-header {
+    position: static !important; inset: auto !important; width: auto !important; height: auto !important;
+    border: 0 !important; overflow: visible !important; background: #fff;
+  }
+  .acs-editorial .acs-site-header__inner {
+    width: 100%; max-width: 1320px; margin-inline: auto; min-height: 0; height: auto;
+    padding: clamp(20px, 3.2vw, 44px) clamp(20px, 3.2vw, 44px) 0;
+    display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: clamp(20px, 3.2vw, 44px);
+    align-items: start; flex-direction: row;
+  }
+  .acs-editorial .acs-site-header__brand { display: flex; flex-direction: row; align-items: center; gap: 0; min-height: 0; }
+  .acs-editorial .acs-site-header__logo { display: none; }
+  .acs-editorial .acs-site-header__brand-full { font-size: 15px; line-height: 1.6; }
+  .acs-editorial .acs-site-nav { flex-direction: row; align-items: center; gap: 28px; font-size: 14.5px; flex-wrap: wrap; width: 100%; }
+  .acs-editorial .acs-site-nav > a { min-height: 0; line-height: 1.6; }
+  .acs-editorial .acs-site-nav > a[lang] { margin-left: auto; }
+  .acs-editorial .acs-site-nav > a:not(.acs-btn):hover { color: var(--q-muted); }
+  .acs-editorial .acs-site-nav > .acs-btn {
+    width: auto; height: auto; min-height: 0; margin: 0; padding: 4px 12px;
+    background: none; color: var(--q-ink); border: 1px solid var(--q-ink);
+    font-family: inherit; font-weight: 400; letter-spacing: .03em; font-size: 13.5px;
+    text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+  }
+  .acs-editorial .acs-site-nav > .acs-btn:hover { background: var(--q-ink); color: #fff; }
+}
+
+/* ==========================================================================
+   全ページ共通：固定の水面の光（acs-quiet-lake.js が canvas.qlake を挿入）
+   ========================================================================== */
+html:has(canvas.qlake) { background: #fff; }
+body.acs-editorial { background: transparent !important; }
+canvas.qlake { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; display: block; background: #fff; }
+.acs-editorial :is(main, main > section, main > section > div, .acs-consultation, .acs-consultation__inner) { background-color: transparent !important; }
+.acs-editorial > footer { background: transparent !important; }
+.acs-editorial > .acs-site-header, .acs-editorial .acs-menu-panel { background: transparent; }
+/* 背景の光の筋と重なっても読めるよう、文字に白い縁取り */
+.acs-editorial main :is(p, h1, h2, h3, h4, li, summary, dt, dd, legend, label, small, figcaption) { text-shadow: 0 0 6px #fff, 0 0 3px #fff; }
+.acs-editorial :is(.acs-btn, .button, .btn, .qbtn, button, input, select, textarea) { text-shadow: none; }
+@media (max-width: 767px) { .acs-editorial .acs-menu-panel:not([hidden]) { background: #fff; } }

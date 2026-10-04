@@ -1,0 +1,149 @@
+/* ==========================================================================
+   ja/index.html（トップ）専用：承認済みサンプルの組みをそのまま再現
+   body.qh でスコープ。他のページには影響しない。
+   ========================================================================== */
+.qh { --ink: #111; --mut: #777; --rule: #ddd; --pad: clamp(20px, 3.2vw, 44px); --lab: 200px;
+  font-size: 14.5px; line-height: 1.95; letter-spacing: .03em; }
+.qh main :where(h1, h2, h3, p, figure, section, div, details, summary, ul) { margin: 0; padding: 0; }
+.qh main { max-width: none; }
+.qh .mut { color: var(--mut); }
+.qh main a { text-decoration: none; }
+
+/* ---- 冒頭 ---- */
+.qh .qtop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 34%, 440px);
+  column-gap: clamp(32px, 5vw, 88px);
+  align-items: stretch;
+  max-width: 1320px; margin-inline: auto;
+  padding: clamp(40px, 5vw, 72px) var(--pad) clamp(72px, 9vw, 128px);
+}
+.qh .qtxt { display: flex; flex-direction: column; justify-content: space-between; }
+.qh .qside { display: block; color: var(--mut); font-size: 13px; line-height: 1.8; margin-bottom: clamp(16px, 2vw, 28px); }
+.qh .qtop h1 {
+  font-family: Optima, "Optima nova", Candara, "Marcellus", "Hiragino Mincho ProN", serif;
+  font-weight: 500; font-size: clamp(40px, 5.6vw, 92px); line-height: .98; letter-spacing: -.045em;
+  text-transform: none; font-feature-settings: normal;
+}
+.qh .qlead { max-width: 31em; font-size: 15.5px; line-height: 2.05; margin-top: clamp(40px, 6vw, 80px); }
+.qh .qacts { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
+.qh .qbtn {
+  box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+  width: 210px; height: 52px; padding: 0 16px; white-space: nowrap; text-align: center;
+  background: var(--ink); color: #fff; border: 1px solid var(--ink);
+  font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; font-size: 14px; letter-spacing: .06em; line-height: 1.4;
+}
+.qh .qbtn.o { background: transparent; color: var(--ink); }
+.qh .qbtn:hover { opacity: .75; }
+.qh .qimg img { display: block; width: 100%; height: auto; }
+
+/* ---- 行：左に小さな見出し、右に本文 ---- */
+.qh .qrow {
+  display: grid; grid-template-columns: var(--lab) minmax(0, 1fr); gap: var(--pad);
+  max-width: 1320px; margin-inline: auto;
+  padding: clamp(40px, 5.5vw, 80px) var(--pad);
+  border-top: 1px solid var(--rule);
+}
+.qh .qrow > h2 { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; font-size: 14.5px; line-height: 1.7; letter-spacing: .03em; }
+.qh .qbody { max-width: 46em; }
+.qh .qbody p + p { margin-top: 1.2em; }
+.qh .qbody h3 { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; font-size: 14.5px; line-height: 1.7; letter-spacing: .03em; }
+.qh .qit + .qit { margin-top: 1.8em; }
+.qh .qit p { color: var(--mut); }
+.qh .qlinks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+/* 下線リンクは四角で囲む */
+.qh .qbody a:not(.qbtn), .qh .qfoot a, .qh .qmore a {
+  display: inline-block; padding: 5px 12px; margin: 2px 0;
+  border: 1px solid var(--ink); color: var(--ink);
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; line-height: 1.6;
+}
+.qh .qbody a:not(.qbtn):hover, .qh .qfoot a:hover, .qh .qmore a:hover { background: var(--ink); color: #fff; }
+
+/* 講師 */
+.qh .qbody.qprof { max-width: none; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: start; }
+.qh .qprof figure img { display: block; width: 100%; height: auto; }
+
+/* 作品（埋め込み） */
+.qh .qbody.qworks { max-width: none; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 3.4vw, 48px) var(--pad); }
+.qh .qworks .qwide, .qh .qworks .qmore { grid-column: 1 / -1; }
+.qh .qworks iframe { display: block; width: 100%; border: 0; max-width: 100%; }
+.qh .qworks .qwide iframe { height: 166px; }
+.qh .qworks .qv { aspect-ratio: 16 / 9; background: #f2f2f0; }
+.qh .qworks .qv iframe { height: 100%; }
+.qh .qworks h3 { margin-top: 10px; font-size: 14.5px; font-weight: 500; line-height: 1.7; }
+
+/* 考え方 */
+.qh .qq { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-size: clamp(18px, 1.9vw, 24px); line-height: 1.9; letter-spacing: .04em; max-width: 22em; }
+.qh .qq + p { margin-top: 14px; color: var(--mut); font-size: 12.5px; }
+.qh .qtwo { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--pad); margin-top: 48px; }
+
+/* 受講者の声 */
+.qh .qvoice + .qvoice { margin-top: 2.4em; }
+.qh .qvoice .qwho { font-size: 12.5px; color: var(--mut); }
+.qh .qvoice h3 { margin: 4px 0 6px; }
+.qh .qvoice p { color: var(--mut); }
+
+/* 料金 */
+.qh .qlist > div { display: grid; grid-template-columns: 1fr auto; gap: 24px; padding: 11px 0; border-bottom: 1px solid var(--rule); }
+.qh .qlist > div:first-of-type { border-top: 1px solid var(--rule); }
+.qh .qlist .qnm { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; }
+.qh .qlist .qsub { display: block; color: var(--mut); font-size: 13px; line-height: 1.8; max-width: 34em; }
+
+/* FAQ */
+.qh details { border-bottom: 1px solid var(--rule); }
+.qh details:first-of-type { border-top: 1px solid var(--rule); }
+.qh summary { cursor: pointer; padding: 13px 0; list-style: none; display: flex; justify-content: space-between; gap: 20px; font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; }
+.qh summary::-webkit-details-marker { display: none; }
+.qh summary::after { content: '+'; color: var(--mut); font-weight: 400; }
+.qh details[open] summary::after { content: '−'; }
+.qh details p { padding: 0 0 16px; color: var(--mut); max-width: 38em; }
+
+/* 相談 */
+.qh .qfoot { display: grid; grid-template-columns: var(--lab) minmax(0, 1fr); gap: var(--pad); max-width: 1320px; margin-inline: auto; padding: clamp(40px, 5vw, 72px) var(--pad) clamp(40px, 5vw, 72px); border-top: 1px solid var(--rule); }
+.qh .qfoot .qbig { font-family: 'IBM Plex Sans JP', 'Noto Sans JP', sans-serif; font-weight: 500; font-size: clamp(20px, 2.4vw, 32px); line-height: 1.7; letter-spacing: .02em; }
+.qh .qfoot p + p { margin-top: 18px; }
+.qh .qfoot .qsmall { margin-top: 60px; display: flex; flex-wrap: wrap; gap: 8px 12px; color: var(--mut); font-size: 12.5px; align-items: center; }
+.qh .qfoot .qsmall a { color: var(--mut); border-color: var(--mut); }
+.qh > footer { background: #fff; color: var(--mut); border-top: 1px solid var(--rule); padding: 20px var(--pad); font-size: 12.5px; max-width: 1320px; margin-inline: auto; }
+
+@media (max-width: 1023px) {
+  .qh .qtop { grid-template-columns: 1fr; row-gap: 36px; }
+  .qh .qtxt { display: block; }
+  .qh .qlead { margin-top: 28px; }
+}
+@media (max-width: 820px) {
+  .qh { --lab: 0px; }
+  .qh .qrow, .qh .qfoot { grid-template-columns: 1fr; gap: 18px; }
+  .qh .qbody.qworks, .qh .qbody.qprof, .qh .qtwo { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) { .qh .qbtn { width: 100%; } }
+
+.qh .qhero { position: relative; }
+.qh .qhero .qtop { position: relative; }
+
+/* ==========================================================================
+   固定背景：白地に、水面の光の網目を黒い筋で描く（acs-quiet-lake.js）
+   ページを動かしても動かない。文字は黒、写真は白黒、コントラストは最大。
+   ========================================================================== */
+html:has(body.qh) { background: #fff; }
+body.qh.acs-editorial { background: transparent; color: #000; }
+.qh { --ink: #000; --mut: #333; --rule: rgba(0, 0, 0, .45); }
+.qh .qlake { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; display: block; background: #fff; }
+.qh > footer, .qh .acs-site-header, .qh > .acs-site-header { background: transparent !important; color: #000; }
+.qh .acs-site-header a, .qh > footer a { color: #000; }
+.qh .qrow, .qh .qfoot { border-top-color: rgba(0, 0, 0, .35); }
+.qh details, .qh .qlist > div { border-color: rgba(0, 0, 0, .35); }
+.qh .qlist > div:first-of-type, .qh details:first-of-type { border-top-color: rgba(0, 0, 0, .35); }
+.qh main :is(p, h1, h2, h3, summary, span, a) { text-shadow: 0 0 6px #fff, 0 0 3px #fff; }
+/* リンクは黒い枠、ボタンは黒地に白文字と白地に黒文字 */
+.qh .qbody a:not(.qbtn), .qh .qfoot a, .qh .qmore a { background: #fff; border-color: #000; color: #000; text-shadow: none; }
+.qh .qbody a:not(.qbtn):hover, .qh .qfoot a:hover, .qh .qmore a:hover { background: #000; color: #fff; }
+.qh .qfoot .qsmall a { color: #333; border-color: #333; }
+.qh .qbtn { background: #000; color: #fff; border-color: #000; text-shadow: none; }
+.qh .qbtn.o { background: #fff; color: #000; border-color: #000; }
+.qh .acs-site-nav > .acs-btn { color: #000; border-color: #000; background: #fff; text-shadow: none; }
+.qh .acs-site-nav > .acs-btn:hover { background: #000; color: #fff; }
+.qh .acs-site-nav > a:not(.acs-btn):hover { color: #555; }
+.qh .qimg img, .qh .qprof img { filter: none; }
+.qh .qv { background: #f2f2f0; }

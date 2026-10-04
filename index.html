@@ -15,6 +15,7 @@
   <link rel="alternate" hreflang="fr" href="https://ateliercompositionson.com/fr/" />
   <link rel="alternate" hreflang="x-default" href="https://ateliercompositionson.com/" />
 
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #f7f5ef;
@@ -101,11 +102,11 @@
     }
 
     .brand-name {
-      font-family: "Times New Roman", serif;
-      font-style: italic;
+      font-family: Optima, "Optima nova", Candara, "Marcellus", serif;
+      font-style: normal;
       font-size: 22px;
       line-height: 1.05;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.045em;
     }
 
     .meta {
@@ -134,12 +135,12 @@
     h1 {
       margin: 0;
       max-width: 980px;
-      font-family: "Times New Roman", serif;
-      font-style: italic;
+      font-family: Optima, "Optima nova", Candara, "Marcellus", serif;
+      font-style: normal;
       font-size: clamp(58px, 10vw, 148px);
       line-height: .88;
       font-weight: 400;
-      letter-spacing: -.075em;
+      letter-spacing: -.05em;
     }
 
     .subtitle {
@@ -301,8 +302,13 @@
 
   html,
   body {
-    background: #ffffff !important;
+    background: transparent !important;
   }
+
+  html { background: #fff !important; }
+  canvas.qlake { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; display: block; background: #fff; }
+  .page { position: relative; }
+  .meta, .subtitle p, .language { text-shadow: 0 0 6px #fff, 0 0 3px #fff; }
 
   figure,
   img,
@@ -425,5 +431,6 @@
     });
   </script>
   <script defer src="./assets/js/acs-tracking.js"></script>
+  <script defer src="./assets/js/acs-quiet-lake.js?v=quiet-20261004"></script>
 </body>
 </html>
