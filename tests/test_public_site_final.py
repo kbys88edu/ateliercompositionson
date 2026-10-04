@@ -68,7 +68,7 @@ class JapaneseFinalTests(unittest.TestCase):
         for text in (
             "オンライン作曲・ソルフェージュ・DTM・電子音楽レッスン",
             "Atelier Composition Son",
-            "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。",
+            "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから扱います。一人の作曲家が行う小さな個人レッスンだからこそ、ひとりひとりの制作に丁寧に向き合えます。",
             "30分無料相談",
             "進め方と料金を見る",
             "講師の電子音響制作、舞台制作、弦楽器とデジタル制作環境のコラージュ",
@@ -81,7 +81,7 @@ class JapaneseFinalTests(unittest.TestCase):
     def test_japanese_home_uses_production_stage_labels(self):
         html = page_html("ja/index.html")
         for text in (
-            "制作の段階に応じて。",
+            "どなたの制作にも",
             "制作を始める",
             "制作環境を整えながら、応用へ",
             "作品・提出物を深める",

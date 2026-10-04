@@ -65,7 +65,7 @@ class JapaneseHomepageTests(unittest.TestCase):
         for text in (
             "オンライン作曲・ソルフェージュ・DTM・電子音楽レッスン",
             "Atelier Composition Son",
-            "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから個別に扱います。",
+            "作曲・音楽理論・DTM・電子音響を、制作中の楽譜、音源、DAWセッション、まだ形になっていない問いから扱います。一人の作曲家が行う小さな個人レッスンだからこそ、ひとりひとりの制作に丁寧に向き合えます。",
             "30分無料相談",
             "進め方と料金を見る",
         ):
@@ -231,7 +231,8 @@ class JapaneseHomepageTests(unittest.TestCase):
         )
 
     def test_first_audience_path_welcomes_beginners_through_professionals(self):
-        self.assertIn("<h3>制作を始める初心者から、プロまで</h3>", self.html)
+        self.assertIn('<h2 id="who-title">制作を始める初心者から、プロの方まで</h2>', self.html)
+        self.assertIn("<h3>どなたの制作にも</h3>", self.html)
 
     def test_tools_are_compact_resources_before_the_final_consultation(self):
         positions = {section_id: self.page.ids.index(section_id) for section_id in (
