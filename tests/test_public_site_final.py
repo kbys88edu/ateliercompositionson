@@ -81,7 +81,7 @@ class JapaneseFinalTests(unittest.TestCase):
     def test_japanese_home_uses_production_stage_labels(self):
         html = page_html("ja/index.html")
         for text in (
-            "制作の段階に応じて。",
+            "どなたの制作にも",
             "制作を始める",
             "制作環境を整えながら、応用へ",
             "作品・提出物を深める",
