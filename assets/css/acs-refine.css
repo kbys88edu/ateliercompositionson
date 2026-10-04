@@ -235,7 +235,7 @@ body.acs-editorial .acs-consultation__booking { letter-spacing: 0.1em; transitio
 body.acs-editorial .acs-consultation__booking:hover { padding-right: 8px; }
 body.acs-editorial > footer {
   align-items: center;
-  padding: clamp(48px, 6vw, 80px) var(--r-gutter);
+  padding: clamp(48px, 6vw, 80px) max(var(--r-gutter), calc((100% - var(--r-col)) / 2));
   font-size: 12px;
   letter-spacing: 0.08em;
 }
