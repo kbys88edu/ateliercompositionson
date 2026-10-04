@@ -59,7 +59,7 @@
 .ja-trust__index { color: var(--acs-muted); font-size: var(--acs-text-xs); font-variant-numeric: tabular-nums; }
 .ja-trust__copy { margin: 0; color: var(--acs-ink); font-size: clamp(17px, 1.25vw, 20px); font-weight: 500; line-height: 1.45; }
 
-.ja-who > .acs-container > h2 { max-width: 12em; margin: 0; font-size: var(--acs-h2); font-weight: 500; line-height: 1.2; }
+.ja-who > .acs-container > h2 { max-width: 24em; margin: 0; font-size: var(--acs-h2); font-weight: 500; line-height: 1.2; }
 .ja-who__paths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--acs-space-5); margin-top: var(--acs-space-7); }
 .ja-who__paths article { min-width: 0; padding-top: var(--acs-space-4); border-top: var(--acs-rule); }
 .ja-who__paths h3 { margin: var(--acs-space-6) 0 0; font-size: var(--acs-h3); font-weight: 500; line-height: 1.35; }

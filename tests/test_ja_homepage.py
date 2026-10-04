@@ -231,7 +231,8 @@ class JapaneseHomepageTests(unittest.TestCase):
         )
 
     def test_first_audience_path_welcomes_beginners_through_professionals(self):
-        self.assertIn("<h3>制作を始める初心者から、プロまで</h3>", self.html)
+        self.assertIn('<h2 id="who-title">制作を始める初心者から、プロの方まで</h2>', self.html)
+        self.assertIn("<h3>どなたの制作にも</h3>", self.html)
 
     def test_tools_are_compact_resources_before_the_final_consultation(self):
         positions = {section_id: self.page.ids.index(section_id) for section_id in (
