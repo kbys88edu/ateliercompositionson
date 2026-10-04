@@ -1,0 +1,80 @@
+/* Direction A — 楽譜 / Score
+   Mincho headings, five-line staff as the only divider, one vermilion accent. */
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&display=swap');
+
+:root {
+  --a-paper: #f6f4ee; --a-ink: #14120e; --a-mute: #6c675d; --a-red: #a8321e;
+  --a-line: rgba(20, 18, 14, 0.18);
+  --r-line: var(--a-line); --r-box: var(--a-line); --r-muted: var(--a-mute);
+  --acs-font-sans: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+}
+body.acs-editorial { background: var(--a-paper); color: var(--a-ink); font-family: var(--acs-font-sans); }
+body.acs-editorial :is(h1, h2, h3, .acs-consultation h2) { font-family: 'Shippori Mincho', 'Noto Serif JP', serif; font-weight: 400; }
+body.acs-editorial :is(.acs-section, .ja-trust, .acs-consultation, main) { background: transparent; }
+body.acs-editorial .ja-pricing { background: #efece3; }
+
+/* the staff: five hairlines mark each new movement */
+body.acs-editorial .acs-section { position: relative; border-top: 0 !important; }
+body.acs-editorial .acs-section::before {
+  content: ""; position: absolute; top: 0;
+  left: max(var(--r-gutter), calc((100% - var(--r-col)) / 2));
+  width: min(100% - 2 * var(--r-gutter), var(--r-col));
+  height: 29px;
+  background: repeating-linear-gradient(to bottom, var(--a-line) 0 1px, transparent 1px 7px);
+  transform: translateY(-50%);
+}
+body.acs-editorial main { counter-reset: mov; }
+body.acs-editorial .acs-section h2:not(#instructor-title)::before {
+  counter-increment: mov; content: counter(mov, upper-roman) ".";
+  display: block; margin-bottom: 20px;
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400;
+  font-size: 1.125rem; letter-spacing: 0.1em; color: var(--a-red);
+}
+
+/* hero */
+body.acs-editorial .atelier-split-hero { background: transparent; border-bottom: 0; }
+body.acs-editorial .atelier-split-hero h1 {
+  font-family: 'Cormorant Garamond', serif; font-weight: 300; text-transform: uppercase;
+  font-size: clamp(2.5rem, 4.8vw, 5rem); letter-spacing: 0.06em; line-height: 1.08; overflow-wrap: normal; word-break: normal;
+}
+body.acs-editorial .atelier-split-hero__eyebrow { font-family: 'Shippori Mincho', serif; letter-spacing: 0.3em; color: var(--a-mute); }
+body.acs-editorial .atelier-split-hero__lead { font-family: 'Shippori Mincho', serif; font-size: 1rem; line-height: 2.2; color: #3b372f; }
+body.acs-editorial .atelier-split-hero__media { background: transparent; border-left: 1px solid var(--a-line); }
+body.acs-editorial :is(.acs-btn, .atelier-split-hero__actions a) { border-color: var(--a-ink); font-family: 'Shippori Mincho', serif; letter-spacing: 0.16em; }
+body.acs-editorial .atelier-split-hero__actions .acs-btn--primary:hover, body.acs-editorial .acs-btn--primary:hover { background: var(--a-red); border-color: var(--a-red); }
+
+/* trust: movement numbers in italic */
+body.acs-editorial .ja-trust { border-bottom: 1px solid var(--a-line); }
+body.acs-editorial .ja-trust__index { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; letter-spacing: 0.1em; color: var(--a-red); }
+body.acs-editorial .ja-trust__copy { font-family: 'Shippori Mincho', serif; font-size: 0.9375rem; }
+
+/* cards lose their boxes; an ink line and a number are enough */
+body.acs-editorial :is(.ja-who__paths article, .ja-study-family) { border: 0; border-top: 1px solid var(--a-ink); background: transparent; padding-inline: 0; }
+body.acs-editorial .ja-study-family::before { opacity: 0.16; }
+body.acs-editorial .ja-study-family { padding-inline: 24px; }
+body.acs-editorial :is(.ja-index) { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; letter-spacing: 0.1em; color: var(--a-red); }
+body.acs-editorial :is(.ja-who__paths h3, .ja-voice h3, .ja-process__step h3, .ja-concept__approaches h3, .ja-pricing__list h3) { font-family: 'Shippori Mincho', serif; }
+body.acs-editorial .ja-study-family h3 { font-family: 'Cormorant Garamond', serif; font-size: 0.9375rem; letter-spacing: 0.2em; font-weight: 400; }
+
+body.acs-editorial :is(.ja-process__list, .ja-concept__approaches, .ja-voices__grid, .ja-pricing__list, .acs-faq, .faq) { border-top-color: var(--a-ink); }
+body.acs-editorial :is(.acs-text-link, .acs-consultation__links a, .acs-consultation__booking):hover { color: var(--a-red); text-decoration-color: var(--a-red); border-color: var(--a-red); }
+body.acs-editorial .ja-home-instructor__media img { filter: contrast(1.02); }
+body.acs-editorial .ja-pricing__list .ja-pricing__amount { font-family: 'Shippori Mincho', serif; }
+body.acs-editorial .acs-consultation { background: transparent; }
+body.acs-editorial .acs-consultation__booking { border-bottom-color: var(--a-ink); }
+
+/* fixes */
+body.acs-editorial .ja-trust__item { background: transparent; }
+body.acs-editorial .ja-who::before { display: none; }
+body.acs-editorial .acs-site-header__logo { mix-blend-mode: multiply; }
+
+/* sidebar & footer */
+body.acs-editorial .acs-site-header { background: var(--a-paper); border-color: var(--a-line); backdrop-filter: none; }
+body.acs-editorial .acs-site-nav a { font-family: 'Shippori Mincho', serif; letter-spacing: 0.1em; }
+body.acs-editorial > footer { background: var(--a-ink); color: var(--a-paper); position: relative; }
+body.acs-editorial > footer::before {
+  content: ""; position: absolute; top: 24px; left: max(var(--r-gutter), calc((100% - var(--r-col)) / 2));
+  width: min(100% - 2 * var(--r-gutter), var(--r-col)); height: 29px;
+  background: repeating-linear-gradient(to bottom, rgba(246,244,238,.28) 0 1px, transparent 1px 7px);
+}
+@media (max-width: 1023px) { body.acs-editorial .acs-site-header { background: var(--a-paper); } }
