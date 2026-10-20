@@ -56,7 +56,7 @@
 .qh .qbody a:not(.qbtn), .qh .qfoot a, .qh .qmore a {
   display: inline-block; padding: 5px 12px; margin: 2px 0;
   border: 1px solid var(--ink); color: var(--ink);
-  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; line-height: 1.6;
+  text-decoration: none; line-height: 1.6;
 }
 .qh .qbody a:not(.qbtn):hover, .qh .qfoot a:hover, .qh .qmore a:hover { background: var(--ink); color: #fff; }
 

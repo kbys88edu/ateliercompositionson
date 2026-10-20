@@ -63,9 +63,7 @@ body.acs-editorial {
   margin-block: 2px;
   border: 1px solid var(--q-ink);
   color: var(--q-ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  text-decoration: none;
   line-height: 1.6;
   min-height: 0;
 }
@@ -186,9 +184,7 @@ body.acs-editorial {
   display: inline;
   padding: 2px 8px;
   border: 1px solid var(--q-ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  text-decoration: none;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -220,7 +216,7 @@ body.acs-editorial {
     width: auto; height: auto; min-height: 0; margin: 0; padding: 4px 12px;
     background: none; color: var(--q-ink); border: 1px solid var(--q-ink);
     font-family: inherit; font-weight: 400; letter-spacing: .03em; font-size: 13.5px;
-    text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+    text-decoration: none;
   }
   .acs-editorial .acs-site-nav > .acs-btn:hover { background: var(--q-ink); color: #fff; }
 }
