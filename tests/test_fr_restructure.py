@@ -191,12 +191,13 @@ class FrenchHomepageContractTests(unittest.TestCase):
         ):
             self.assertIn(text, source)
 
-    def test_work_embeds_are_click_to_load(self):
+    def test_work_embeds_show_lazy_players_with_thumbnails(self):
         page = load_page("fr/index.html")
-        source = html("fr/index.html")
-        self.assertEqual([], page.iframes)
-        self.assertGreaterEqual(source.count("data-embed-src="), 3)
-        self.assertGreaterEqual(source.count('data-track="play_work"'), 3)
+        sources = [frame["src"] for frame in page.iframes]
+        self.assertEqual(3, len([src for src in sources if src.startswith("https://www.youtube-nocookie.com/embed/")]))
+        for frame in page.iframes:
+            self.assertEqual("lazy", frame.get("loading"))
+            self.assertNotIn("autoplay=1", frame["src"])
 
 
 class FrenchDetailPageContractTests(unittest.TestCase):

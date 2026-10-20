@@ -552,9 +552,15 @@
 }
 
 .fr-work__player iframe {
+  display: block;
   width: 100%;
   border: 0;
   background: #111;
+}
+
+.fr-work__player--video iframe {
+  height: auto;
+  aspect-ratio: 16 / 9;
 }
 
 .fr-contact-grid {
