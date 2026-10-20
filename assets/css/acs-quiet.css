@@ -63,9 +63,7 @@ body.acs-editorial {
   margin-block: 2px;
   border: 1px solid var(--q-ink);
   color: var(--q-ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  text-decoration: none;
   line-height: 1.6;
   min-height: 0;
 }
@@ -186,9 +184,7 @@ body.acs-editorial {
   display: inline;
   padding: 2px 8px;
   border: 1px solid var(--q-ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  text-decoration: none;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -206,7 +202,7 @@ body.acs-editorial {
   .acs-editorial .acs-site-header__inner {
     width: 100%; max-width: 1320px; margin-inline: auto; min-height: 0; height: auto;
     padding: clamp(20px, 3.2vw, 44px) clamp(20px, 3.2vw, 44px) 0;
-    display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: clamp(20px, 3.2vw, 44px);
+    display: grid; grid-template-columns: 200px minmax(0, 1fr) auto; column-gap: clamp(20px, 3.2vw, 44px);
     align-items: start; flex-direction: row;
   }
   .acs-editorial .acs-site-header__brand { display: flex; flex-direction: row; align-items: center; gap: 0; min-height: 0; }
@@ -214,13 +210,13 @@ body.acs-editorial {
   .acs-editorial .acs-site-header__brand-full { font-size: 15px; line-height: 1.6; }
   .acs-editorial .acs-site-nav { flex-direction: row; align-items: center; gap: 28px; font-size: 14.5px; flex-wrap: wrap; width: 100%; }
   .acs-editorial .acs-site-nav > a { min-height: 0; line-height: 1.6; }
-  .acs-editorial .acs-site-nav > a[lang] { margin-left: auto; }
+  .acs-editorial .acs-lang-switch a { min-height: 0; line-height: 1.6; }
   .acs-editorial .acs-site-nav > a:not(.acs-btn):hover { color: var(--q-muted); }
   .acs-editorial .acs-site-nav > .acs-btn {
     width: auto; height: auto; min-height: 0; margin: 0; padding: 4px 12px;
     background: none; color: var(--q-ink); border: 1px solid var(--q-ink);
     font-family: inherit; font-weight: 400; letter-spacing: .03em; font-size: 13.5px;
-    text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+    text-decoration: none;
   }
   .acs-editorial .acs-site-nav > .acs-btn:hover { background: var(--q-ink); color: #fff; }
 }
@@ -238,3 +234,9 @@ canvas.qlake { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 
 .acs-editorial main :is(p, h1, h2, h3, h4, li, summary, dt, dd, legend, label, small, figcaption) { text-shadow: 0 0 6px #fff, 0 0 3px #fff; }
 .acs-editorial :is(.acs-btn, .button, .btn, .qbtn, button, input, select, textarea) { text-shadow: none; }
 @media (max-width: 767px) { .acs-editorial .acs-menu-panel:not([hidden]) { background: #fff; } }
+
+/* 言語切替を常に表示するため、狭い画面ではロゴ横の名称を「ACS」に短縮 */
+@media (max-width: 559px) {
+  .acs-editorial .acs-site-header__brand-full { display: none; }
+  .acs-editorial .acs-site-header__brand-short { display: inline; }
+}

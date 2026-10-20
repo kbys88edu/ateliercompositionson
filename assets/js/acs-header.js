@@ -9,8 +9,8 @@
         ["講師", "index.html#instructor"],
         ["料金", "index.html#price"],
         ["受講者の声", "index.html#voices"],
-        ["JA / FR", "../fr/", "fr"],
       ],
+      languageLabel: "言語",
       consultation: "無料相談",
       consultationTrack: "click_free_consultation",
       logoSrc: "../images/acs-logo-square.png",
@@ -28,8 +28,8 @@
         ["Méthode", "index.html#methode"],
         ["Expérience", "index.html#experience"],
         ["Contact", "index.html#contact"],
-        ["FR / JA", "../ja/", "ja"],
       ],
+      languageLabel: "Langue",
       consultation: "Faire le point",
       consultationHref: "booking.html?offer=free-contact#contact-form",
       consultationTrack: "click_primary_cta",
@@ -40,6 +40,11 @@
       trackingOffer: "free_contact",
     },
   };
+
+  var languages = [
+    ["ja", "日本語", "../ja/"],
+    ["fr", "Français", "../fr/"],
+  ];
 
   function resolveHref(root, href) {
     if (/^(?:[a-z]+:|#|\/)/i.test(href)) return href;
@@ -52,7 +57,17 @@
     return '<a href="' + resolveHref(root, link[1]) + '"' + language + close + ">" + link[0] + "</a>";
   }
 
-  function renderHeader(mount, configuration, index) {
+  function languageMarkup(current, label, root) {
+    return '<div class="acs-lang-switch" role="group" aria-label="' + label + '">' +
+      languages.map(function (item) {
+        var active = item[0] === current ? ' aria-current="true"' : "";
+        return '<a href="' + resolveHref(root, item[2]) + '" lang="' + item[0] + '" hreflang="' + item[0] + '"' +
+          active + ">" + item[1] + "</a>";
+      }).join('<span aria-hidden="true">/</span>') +
+    "</div>";
+  }
+
+  function renderHeader(mount, configuration, index, current) {
     var panelId = "acs-site-menu-" + index;
     var root = mount.getAttribute("data-header-root") || "";
     var consultationHref = resolveHref(root, configuration.consultationHref || "booking.html");
@@ -87,6 +102,7 @@
         '<nav class="acs-site-nav" aria-label="' + configuration.navLabel + '">' +
           desktopLinks + consultation +
         "</nav>" +
+        languageMarkup(current, configuration.languageLabel, root) +
         '<a class="acs-mobile-consultation" href="' + consultationHref + '" data-track="' +
           configuration.consultationTrack + '">' + configuration.consultation + "</a>" +
         '<button class="acs-menu-toggle" type="button" aria-label="' + configuration.menuLabel +
@@ -102,8 +118,9 @@
   }
 
   var language = (document.documentElement.lang || "ja").toLowerCase().slice(0, 2);
-  var configuration = configurations[language] || configurations.ja;
+  if (!configurations[language]) language = "ja";
+  var configuration = configurations[language];
   document.querySelectorAll("[data-shared-header]").forEach(function (mount, index) {
-    renderHeader(mount, configuration, index);
+    renderHeader(mount, configuration, index, language);
   });
 })();
