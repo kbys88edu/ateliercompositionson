@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Atelier Composition Son — Instagram reel (grid)</title>
+<meta name="viewport" content="width=1080">
+<style>
+@font-face { font-family:'ACS Gothic'; font-weight:400; src:url('fonts/plex-sans-jp-400-subset.woff2') format('woff2'); }
+@font-face { font-family:'ACS Gothic'; font-weight:500; src:url('fonts/plex-sans-jp-500-subset.woff2') format('woff2'); }
+:root { --paper:#f7f7f4; --ink:#111; }
+html, body { margin:0; background:#000; }
+#stage { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--paper); color:var(--ink); font-family:'ACS Gothic','IPAGothic',sans-serif; }
+canvas { position:absolute; left:0; top:0; width:1080px; height:1920px; }
+.x { position:absolute; display:none; white-space:nowrap; }
+.rule { height:2px; background:var(--ink); left:96px; width:888px; }
+#main  { left:96px; top:846px; font-size:104px; font-weight:500; letter-spacing:.02em; line-height:130px; }
+#brand { left:96px; top:1040px; font-size:36px; font-weight:500; letter-spacing:.04em; }
+#sub   { left:96px; top:1100px; font-size:28px; font-weight:400; letter-spacing:.1em; }
+#url   { left:96px; top:1196px; font-size:26px; font-weight:400; letter-spacing:.08em; }
+#r1 { top:812px; } #r2 { top:1010px; } #r3 { top:1170px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c" width="1080" height="1920"></canvas>
+  <div class="x rule" id="r1"></div>
+  <div class="x" id="main">30分無料相談</div>
+  <div class="x rule" id="r2"></div>
+  <div class="x" id="brand">Atelier Composition Son</div>
+  <div class="x" id="sub">作曲・音楽理論・DTM・電子音響</div>
+  <div class="x rule" id="r3"></div>
+  <div class="x" id="url">ateliercompositionson.com</div>
+</div>
+<script src="features.js"></script>
+<script>
+'use strict';
+const W = 1080, H = 1920, CELL = 4, NX = W / CELL + 1, NY = H / CELL + 1;
+const TL = window.TL, FEAT = window.FEAT, FPS = TL.fps;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const sstep = (a, b, x) => { const u = clamp((x - a) / (b - a)); return u * u * (3 - 2 * u); };
+const INK = '#111', PAPER = '#f7f7f4';
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+
+/* Chladni field F = sum w (cos n pi x cos m pi y + cos m pi x cos n pi y), sampled on a grid; contours by marching squares */
+const MAXN = 16, CX = [], CY = [];
+for (let n = 0; n < MAXN; n++) {
+  const a = new Float32Array(NX), b = new Float32Array(NY);
+  for (let i = 0; i < NX; i++) a[i] = Math.cos(n * Math.PI * i / (NX - 1));
+  for (let j = 0; j < NY; j++) b[j] = Math.cos(n * Math.PI * j / (NY - 1));
+  CX.push(a); CY.push(b);
+}
+const F = new Float32Array(NX * NY);
+function field(modes) {
+  F.fill(0);
+  for (const [n, m, w] of modes) {
+    const cxn = CX[n], cxm = CX[m], cyn = CY[n], cym = CY[m];
+    for (let j = 0; j < NY; j++) {
+      const a = cym[j] * w, b = cyn[j] * w, row = j * NX;
+      for (let i = 0; i < NX; i++) F[row + i] += cxn[i] * a + cxm[i] * b;
+    }
+  }
+}
+function contour(L, x0, y0, x1, y1) {                       // adds the iso-line F = L to the current path (only inside the box)
+  const i0 = Math.max(0, Math.floor(x0 / CELL)), i1 = Math.min(NX - 2, Math.ceil(x1 / CELL));
+  const j0 = Math.max(0, Math.floor(y0 / CELL)), j1 = Math.min(NY - 2, Math.ceil(y1 / CELL));
+  for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+    const k = j * NX + i, a = F[k] - L, b = F[k + 1] - L, c = F[k + NX + 1] - L, d = F[k + NX] - L;
+    const idx = (a > 0 ? 1 : 0) | (b > 0 ? 2 : 0) | (c > 0 ? 4 : 0) | (d > 0 ? 8 : 0);
+    if (idx === 0 || idx === 15) continue;
+    const px = i * CELL, py = j * CELL;
+    const T = () => [px + CELL * a / (a - b), py], R = () => [px + CELL, py + CELL * b / (b - c)];
+    const B = () => [px + CELL * d / (d - c), py + CELL], Lf = () => [px, py + CELL * a / (a - d)];
+    const seg = (p, q) => { ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); };
+    switch (idx) {
+      case 1: case 14: seg(Lf(), T()); break;
+      case 2: case 13: seg(T(), R()); break;
+      case 3: case 12: seg(Lf(), R()); break;
+      case 4: case 11: seg(R(), B()); break;
+      case 5: seg(Lf(), T()); seg(R(), B()); break;
+      case 6: case 9: seg(T(), B()); break;
+      case 7: case 8: seg(Lf(), B()); break;
+      case 10: seg(T(), R()); seg(Lf(), B()); break;
+    }
+  }
+}
+function drawFigure(modes, levels, color, width, box = [0, 0, W, H]) {
+  field(modes); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineCap = 'round'; ctx.beginPath();
+  for (const L of levels) contour(L, box[0], box[1], box[2], box[3]);
+  ctx.stroke();
+}
+function levelsFor(r) {                                       // dissonance = a bundle of parallel iso-lines; consonance = one line
+  if (r < 0.04) return [0];
+  const d = 0.05 + 0.5 * r; return [-2 * d, -d, 0, d, 2 * d];
+}
+function figure(f) {
+  const pk = f.pk, modes = [[0, 1, 1 - pk[1]]];
+  for (let k = 2; k <= 6; k++) modes.push([k - 1, k, pk[k - 1] * (k < 6 ? 1 - pk[k] : 1 - f.b)]);
+  if (f.b > 0) { modes.push([2, 3, f.b * Math.cos(f.ph)]); modes.push([3, 4, f.b * Math.sin(f.ph)]); }
+  return modes.filter(q => q[2] > 0.002);
+}
+const STORM_FIG = [[2, 5], [3, 6], [2, 7], [4, 7], [3, 8], [5, 8], [4, 9], [2, 9], [5, 6], [3, 7], [4, 5]];
+const evFrames = TL.events.map(e => Math.round(e * FPS));
+
+/* fixed marks: a ruler along the left and top edges (a drawing sheet) */
+function ruler(color) {
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineCap = 'butt'; ctx.beginPath();
+  for (let k = 0; k * 40 <= H; k++) { const y = k * 40, len = k % 5 === 0 ? 40 : 18; ctx.moveTo(0, y + 1); ctx.lineTo(len, y + 1); }
+  for (let k = 0; k * 40 <= W; k++) { const x = k * 40, len = k % 5 === 0 ? 40 : 18; ctx.moveTo(x + 1, 0); ctx.lineTo(x + 1, len); }
+  ctx.stroke();
+}
+
+const $ = id => document.getElementById(id);
+const els = ['r1', 'main', 'r2', 'brand', 'sub', 'r3', 'url'].map($);
+function showCTA(t) {
+  const h1 = TL.ctaHits[0], h2 = h1 + 0.3;                    // the message lands on the downbeat; the rest follows one beat later; no easing
+  els[0].style.display = els[1].style.display = t >= h1 ? 'block' : 'none';
+  for (let i = 2; i < els.length; i++) els[i].style.display = t >= h2 ? 'block' : 'none';
+}
+
+window.renderFrame = function (i) {
+  const f = FEAT[i], t = f.t;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const inStorm = t >= TL.strike - 0.001 && t < TL.darkOut0;
+  const flash = t >= TL.strike - 0.001 && t < TL.strike + 0.07;
+  const bg = inStorm && !flash ? INK : PAPER, fg = inStorm && !flash ? PAPER : INK;
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  if (!inStorm) {
+    if (t >= TL.darkOut0) {
+      const cta = t >= TL.ctaHits[0];
+      drawFigure([[2, 3, 1]], [0], INK, 3, cta ? [0, 0, W, 760] : [0, 0, W, H]);
+      if (cta) { ctx.fillStyle = PAPER; ctx.fillRect(0, 764, W, H - 764); }
+    } else if (t < 1.15) {                                    // opening: a staff, then a scan line draws the first figure above it
+      const wipe = H * sstep(0.3, 1.1, t);
+      drawFigure(figure(f), [0], INK, 3, [0, 0, W, wipe]);
+      ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath();
+      for (let k = -2; k <= 2; k++) { const y = 960 + k * 44; if (y > wipe) { ctx.moveTo(0, y); ctx.lineTo(W, y); } }
+      ctx.stroke();
+      if (wipe > 2 && wipe < H - 2) { ctx.fillStyle = INK; ctx.fillRect(0, wipe - 1, W, 3); }
+    } else {
+      drawFigure(figure(f), levelsFor(f.b > 0 ? f.R : 0), INK, 3);
+    }
+    ruler(INK);
+  } else if (!flash) {
+    let k = -1; for (let j = 0; j < evFrames.length; j++) if (i >= evFrames[j]) k = j;
+    k = Math.max(0, k);
+    for (let back = 2; back >= 0; back--) {                   // multiple exposure: the last three stops
+      const q = STORM_FIG[(k - back + STORM_FIG.length * 4) % STORM_FIG.length];
+      if (k - back < 0 && back > 0) continue;
+      ctx.globalAlpha = back === 0 ? 1 : back === 1 ? 0.4 : 0.18;
+      drawFigure([[q[0], q[1], 1]], [-0.6, -0.3, 0, 0.3, 0.6], PAPER, 3);
+    }
+    ctx.globalAlpha = 1; ruler(PAPER);
+  }
+  showCTA(t);
+  return t;
+};
+window.TOTAL = FEAT.length;
+document.fonts.ready.then(() => { window.READY = true; });
+</script>
+</body>
+</html>
