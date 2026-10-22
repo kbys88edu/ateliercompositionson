@@ -217,7 +217,7 @@ function setFieldUniforms(p, modes) {
 }
 
 /* ------------------------------------------------------------------ the picture, as a function of the score */
-const STORM_FIG = [[3, 7], [5, 8], [2, 9], [6, 11], [4, 9], [7, 12], [5, 13], [8, 11], [3, 10], [9, 14], [6, 13]];
+const STORM_FIG = [[2, 5], [3, 6], [2, 7], [4, 7], [3, 8], [5, 8], [4, 9], [2, 9], [5, 6], [3, 7], [4, 5]];
 const evFrames = TL.events.map(e => Math.round(e * FPS));
 
 function figure(f, t) {
@@ -244,8 +244,8 @@ function frameState(i) {
   // plate geometry
   const sizeP = 840, sizeCTA = 520;
   let size = sizeP, cy = 830;
-  if (t >= TL.strike) { const u = clamp((t - TL.strike) / 1.35); size = lerp(sizeP, 1900, 1 - (1 - u) * (1 - u) * (1 - u)); }
-  if (t >= TL.darkOut0) { const u = easeIO(clamp((t - TL.darkOut0) / (TL.cta - TL.darkOut0 + 0.2))); size = lerp(1900, sizeCTA, u); cy = lerp(830, 560, u); }
+  if (t >= TL.strike) { const u = clamp((t - TL.strike) / 1.35); size = lerp(sizeP, 1500, 1 - (1 - u) * (1 - u) * (1 - u)); }
+  if (t >= TL.darkOut0) { const u = easeIO(clamp((t - TL.darkOut0) / (TL.cta - TL.darkOut0 + 0.2))); size = lerp(1500, sizeCTA, u); cy = lerp(830, 560, u); }
   size *= 1 + 0.004 * f.lv;
   return { f, t, storm, dark, flash, riser, size, cy };
 }
@@ -255,7 +255,7 @@ function modesFor(S, i) {
   if (t >= TL.strike - 0.001 && t < TL.darkOut0) {                      // stop-motion figures, changing at each fire
     let k = -1; for (let j = 0; j < evFrames.length; j++) if (i >= evFrames[j]) k = j;
     const q = STORM_FIG[Math.max(0, k) % STORM_FIG.length], q2 = STORM_FIG[(Math.max(0, k) + 4) % STORM_FIG.length];
-    return [[q[0], q[1], 1], [q2[0], q2[1], 0.45]];
+    return [[q[0], q[1], 1], [q2[0], q2[1], 0.3]];
   }
   if (t >= TL.darkOut0) return [[2, 3, 1]];                              // the fifth: Chladni (2,3), where the piece comes to rest
   return figure(f, t);
@@ -270,7 +270,7 @@ function stepSim(S, i) {
   let burst = 0;
   if (t >= TL.strike - 0.001 && t < TL.darkOut0) {
     const onFire = evFrames.includes(i);
-    A = 0.36; drift = 0.1; burst = (i === evFrames[0]) ? 0.65 : (onFire ? 0.1 : 0.0);
+    A = 0.3; drift = 0.14; burst = (i === evFrames[0]) ? 0.65 : (onFire ? 0.1 : 0.0);
   }
   if (t >= TL.darkOut0) { A = 0.2 + 0.05 * lv; drift = 0.05; }
   gl.useProgram(progUpdate.p);
@@ -295,7 +295,7 @@ function drawScene(S, i) {
   const { f, t } = S;
   gl.bindFramebuffer(gl.FRAMEBUFFER, sceneFbo); gl.viewport(0, 0, W, H); gl.disable(gl.BLEND);
   gl.useProgram(progBg.p);
-  const film = S.dark * (0.35 + 0.65 * S.storm) * 0.9;
+  const film = S.dark * (0.3 + 0.7 * S.storm) * 0.42;
   gl.uniform2f(progBg.u.uRes, W, H); gl.uniform1f(progBg.u.uDark, S.dark); gl.uniform1f(progBg.u.uFilm, film);
   gl.uniform1f(progBg.u.uTime, t); gl.uniform1f(progBg.u.uFlash, S.flash); gl.uniform3f(progBg.u.uPaper, 0.953, 0.945, 0.922);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -303,7 +303,7 @@ function drawScene(S, i) {
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, posTex[cur]); gl.uniform1i(progPts.u.uPos, 0);
   gl.uniform2f(progPts.u.uRes, W, H); gl.uniform2f(progPts.u.uCenter, W / 2, S.cy); gl.uniform1f(progPts.u.uSize, S.size);
   const big = clamp(S.size / 840, 1, 2.2);
-  gl.uniform1f(progPts.u.uPt, lerp(1.7, 2.6, (big - 1) / 1.2));
+  gl.uniform1f(progPts.u.uPt, lerp(1.7, 2.1, (big - 1) / 1.2));
   const ink = lerp(0.07, 0.96, S.dark);
   gl.uniform4f(progPts.u.uColor, ink, ink, ink * 0.985, lerp(0.8, 0.9, S.dark) * (1 - S.flash));
   gl.drawArrays(gl.POINTS, 0, PN * PN); gl.disable(gl.BLEND);
@@ -318,7 +318,7 @@ function post(S, i) {
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, heldTex[hcur]); gl.uniform1i(progHeld.u.uHeld, 0);
   gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, sceneTex); gl.uniform1i(progHeld.u.uScene, 1);
   gl.uniform2f(progHeld.u.uRes, W, H);
-  gl.uniform1f(progHeld.u.uDecay, !inStorm ? 0.0 : (onFire ? 0.6 : 0.985)); gl.uniform1f(progHeld.u.uStamp, (inStorm && onFire) ? 1 : 0);
+  gl.uniform1f(progHeld.u.uDecay, !inStorm ? 0.0 : (onFire ? 0.6 : 0.975)); gl.uniform1f(progHeld.u.uStamp, (inStorm && onFire && S.flash < 0.05) ? 1 : 0);
   gl.drawArrays(gl.TRIANGLES, 0, 3); hcur = 1 - hcur;
   // composite
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, W, H); gl.useProgram(progOut.p);
@@ -327,7 +327,7 @@ function post(S, i) {
   gl.uniform2f(progOut.u.uRes, W, H);
   const live = inStorm ? lerp(0.22, 1, sstep(TL.darkOut0 - 0.1, TL.darkOut0 + 0.3, t)) : 1;
   gl.uniform1f(progOut.u.uLive, live);
-  gl.uniform1f(progOut.u.uCA, 1.5 + 9 * Math.exp(-(t - TL.strike) * 6) * (t >= TL.strike ? 1 : 0) + 2.5 * S.dark);
+  gl.uniform1f(progOut.u.uCA, 1.2 + 6 * Math.exp(-(t - TL.strike) * 7) * (t >= TL.strike ? 1 : 0) + 1.2 * S.dark);
   gl.uniform1f(progOut.u.uGrain, 0.035 + 0.05 * S.dark); gl.uniform1f(progOut.u.uSeed, i * 1.37);
   gl.uniform1f(progOut.u.uFlash, S.flash);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
