@@ -19,7 +19,7 @@ if (!stills.length) {
   ff = spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'image2pipe', '-framerate', '30', '-c:v', 'mjpeg', '-i', '-',
     '-i', path.join(here, 'out', 'audio.wav'),
     '-map', '0:v', '-map', '1:a', '-af', 'loudnorm=I=-14:TP=-1.5:LRA=9,afade=t=out:st=14.55:d=0.45',
-    '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-r', '30', '-g', '30', '-movflags', '+faststart',
+    '-c:v', 'libx264', '-preset', 'slow', '-crf', '19', '-maxrate', '9M', '-bufsize', '18M', '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-r', '30', '-g', '30', '-movflags', '+faststart',
     '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-t', '15', out], { stdio: ['pipe', 'inherit', 'inherit'] });
 }
 const t0 = Date.now();

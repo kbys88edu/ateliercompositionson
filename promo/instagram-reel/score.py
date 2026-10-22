@@ -26,7 +26,7 @@ PARTIAL_T = [0.0, 3.0, 3.9, 4.8, 5.7, 6.4]    # when partial 1..6 of A3 enters
 B_IN, B_GLIDE0, B_GLIDE1 = 7.0, 8.3, 9.6      # 2nd voice: enters 3 Hz sharp, glides up to a pure fifth
 B_START, B_END = 223.0, 330.0                 # Hz  (223 = 3 Hz beating against 220;  330 = 3:2)
 STRIKE, DARK_OUT0, DARK_OUT1 = 10.0, 11.45, 12.2
-CTA_T = 12.4
+CTA_T = 12.2
 EVENTS = [10.0, 10.22, 10.40, 10.52, 10.74, 10.86, 10.98, 11.10, 11.20, 11.30, 11.38]   # stop-motion fires
 RNG = np.random.default_rng(1108)
 
