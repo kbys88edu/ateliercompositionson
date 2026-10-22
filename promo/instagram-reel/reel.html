@@ -15,6 +15,8 @@ canvas { position:absolute; left:0; top:0; width:1080px; height:1920px; }
 .jp { font-family:'ACS Mincho','IPAGothic',serif; font-weight:500; }
 .la { font-family:'ACS Marcellus','Liberation Serif',serif; font-weight:400; }
 /* call to action */
+#wash  { position:absolute; left:0; top:700px; width:1080px; height:560px; opacity:0;
+         background:radial-gradient(ellipse 60% 50% at 50% 50%, var(--paper) 45%, rgba(243,241,235,0) 100%); }
 #main  { top:830px;  font-size:92px; letter-spacing:.12em; padding-left:.12em; box-sizing:border-box; }
 #main .la { font-size:100px; letter-spacing:.02em; }
 #brand { top:1000px; font-size:40px; letter-spacing:.08em; }
@@ -25,6 +27,7 @@ canvas { position:absolute; left:0; top:0; width:1080px; height:1920px; }
 <body>
 <div id="stage">
   <canvas id="gl" width="1080" height="1920"></canvas>
+  <div id="wash"></div>
   <div class="t jp" id="main"><span class="la">30</span>分無料相談</div>
   <div class="t la" id="brand">Atelier Composition Son</div>
   <div class="t jp" id="sub">作曲・音楽理論・DTM・電子音響</div>
@@ -276,7 +279,7 @@ function drawScene(S, i) {
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, posTex[cur]); gl.uniform1i(progPts.u.uPos, 0);
   gl.uniform2f(progPts.u.uRes, W, H); gl.uniform1f(progPts.u.uPt, 1.8);
   const ink = lerp(0.07, 0.96, S.dark);
-  gl.uniform4f(progPts.u.uColor, ink, ink, ink * 0.985, lerp(0.8, 0.9, S.dark) * (1 - S.flash) * (1 - 0.72 * sstep(TL.cta - 0.1, TL.cta + 0.4, t)));   // sand steps back behind the text
+  gl.uniform4f(progPts.u.uColor, ink, ink, ink * 0.985, lerp(0.8, 0.9, S.dark) * (1 - S.flash) * (1 - 0.8 * sstep(TL.cta - 0.1, TL.cta + 0.4, t)));   // sand steps back behind the text
   gl.drawArrays(gl.POINTS, 0, PN * PN); gl.disable(gl.BLEND);
 }
 
@@ -307,7 +310,7 @@ function post(S, i) {
 /* ------------------------------------------------------------------ typography, driven by the same clock */
 const $ = id => document.getElementById(id);
 const el = { 
-  main: $('main'), brand: $('brand'), sub: $('sub'), url: $('url') };
+  wash: $('wash'), main: $('main'), brand: $('brand'), sub: $('sub'), url: $('url') };
 const NAMES = ['', '', 'オクターヴ', '完全5度', '完全4度', '長3度', '短3度'];
 function win(t, a, b, fade = 0.45) { return sstep(a, a + fade, t) * (1 - sstep(b - fade, b, t)); }
 function put(node, o, dy = 0) { node.style.opacity = o.toFixed(3); node.style.transform = `translateY(${((1 - o) * dy).toFixed(1)}px)`; }
@@ -319,7 +322,7 @@ function typeset(S, i) {
   const paper = 1 - S.dark;
   // call to action
   const c0 = TL.cta, fade = (t0) => sstep(t0, t0 + 0.3, t);
-  put(el.main, fade(c0));
+  put(el.wash, fade(c0 - 0.05)); put(el.main, fade(c0));
   for (const n of [el.brand, el.sub, el.url]) put(n, fade(c0 + 0.35));
 }
 
