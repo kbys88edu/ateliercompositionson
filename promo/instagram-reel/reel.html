@@ -16,28 +16,28 @@ canvas { position:absolute; left:0; top:0; width:1080px; height:1920px; }
 .la { font-family:'ACS Marcellus','Liberation Serif',serif; font-weight:400; }
 #frame { position:absolute; left:0; top:0; width:1080px; height:1920px; opacity:0; }
 /* call to action */
-#brand  { top:900px;  font-size:56px; letter-spacing:.1em; }
-#rule   { position:absolute; left:480px; top:985px; width:120px; height:1.5px; background:#111; opacity:0; }
-#sub    { top:1030px; font-size:38px; letter-spacing:.16em; }
-#sub2   { top:1096px; font-size:29px; letter-spacing:.2em; color:var(--mut); }
-#pill   { position:absolute; left:330px; top:1190px; width:420px; height:104px; box-sizing:border-box; border:1.5px solid #111; border-radius:52px; opacity:0; }
-#pillT  { top:1212px; font-size:42px; letter-spacing:.2em; }
-#link   { top:1338px; font-size:28px; letter-spacing:.18em; color:var(--mut); }
-#url    { top:1386px; font-size:26px; letter-spacing:.14em; }
+/* call to action: big type, mask reveals on the downbeat */
+.m { position:absolute; left:0; width:1080px; overflow:hidden; }
+.r { width:1080px; text-align:center; white-space:nowrap; transform:translateY(115%); will-change:transform; }
+#big30 { font-size:300px; line-height:330px; letter-spacing:-.01em; }
+#big30 .jp { font-size:150px; margin-left:12px; }
+#big2  { font-size:132px; line-height:170px; letter-spacing:.14em; padding-left:.14em; box-sizing:border-box; }
+#brand { font-size:46px; line-height:70px; letter-spacing:.08em; }
+#rule  { position:absolute; left:500px; top:1310px; width:80px; height:2px; background:#111; transform:scaleX(0); }
+#sub   { font-size:32px; line-height:56px; letter-spacing:.16em; padding-left:.16em; box-sizing:border-box; }
+#url   { font-size:26px; line-height:48px; letter-spacing:.14em; color:var(--mut); }
 </style>
 </head>
 <body>
 <div id="stage">
   <canvas id="gl" width="1080" height="1920"></canvas>
   <svg id="frame" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
-  <div class="t la" id="brand">Atelier Composition Son</div>
+  <div class="m" style="top:640px;height:330px"><div class="r la" id="big30">30<span class="jp">分</span></div></div>
+  <div class="m" style="top:985px;height:170px"><div class="r jp" id="big2">無料相談</div></div>
+  <div class="m" style="top:1222px;height:70px"><div class="r la" id="brand">Atelier Composition Son</div></div>
   <div id="rule"></div>
-  <div class="t jp" id="sub">作曲・音楽理論・DTM・電子音響</div>
-  <div class="t jp" id="sub2">オンライン個人レッスン</div>
-  <div id="pill"></div>
-  <div class="t jp" id="pillT">30分無料相談</div>
-  <div class="t jp" id="link">プロフィールのリンクから</div>
-  <div class="t la" id="url">ateliercompositionson.com</div>
+  <div class="m" style="top:1330px;height:56px"><div class="r jp" id="sub">作曲・音楽理論・DTM・電子音響</div></div>
+  <div class="m" style="top:1400px;height:48px"><div class="r la" id="url">ateliercompositionson.com</div></div>
 </div>
 <script src="features.js"></script>
 <script>
@@ -225,15 +225,18 @@ function figure(f, t) {
 
 function frameState(i) {
   const f = FEAT[i], t = f.t;
-  const storm = sstep(TL.strike - 0.02, TL.strike + 0.05, t) * (1 - sstep(TL.darkOut0, TL.darkOut0 + 0.5, t));
-  const dark = sstep(TL.strike + 0.05, TL.strike + 0.09, t) * (1 - sstep(TL.darkOut0, TL.darkOut1, t));
+  const storm = t < TL.darkOut0 ? sstep(TL.strike - 0.02, TL.strike + 0.05, t) : 0;
+  const dark = t < TL.darkOut0 ? sstep(TL.strike + 0.05, TL.strike + 0.09, t) : 0;   // hard cut back to paper
   const flash = (t >= TL.strike - 0.001 && t < TL.strike + 0.07) ? 1 - sstep(TL.strike + 0.02, TL.strike + 0.07, t) : 0;
   const riser = sstep(8.7, TL.strike, t);
   // plate geometry
-  const sizeP = 840, sizeCTA = 520;
+  const sizeP = 840, sizeCTA = 300;
   let size = sizeP, cy = 830;
   if (t >= TL.strike) { const u = clamp((t - TL.strike) / 1.35), e = 1 - (1 - u) * (1 - u) * (1 - u); size = lerp(sizeP, 2000, e); cy = lerp(830, 960, e); }
-  if (t >= TL.darkOut0) { const u = easeIO(clamp((t - TL.darkOut0) / (TL.cta - TL.darkOut0 + 0.2))); size = lerp(2000, sizeCTA, u); cy = lerp(960, 560, u); }
+  if (t >= TL.darkOut0) {                                             // the plate pulls back hard to a small mark at the top
+    const e = 1 - Math.pow(2, -10 * clamp((t - TL.darkOut0) / 0.6)); size = lerp(2000, sizeCTA, e); cy = lerp(960, 430, e);
+    if (t >= TL.cta) size *= 1 + 0.07 * Math.exp(-(t - TL.cta) / 0.12);              // and kicks on the downbeat
+  }
   size *= 1 + 0.004 * f.lv;
   return { f, t, storm, dark, flash, riser, size, cy };
 }
@@ -260,7 +263,7 @@ function stepSim(S, i) {
     const onFire = evFrames.includes(i);
     A = 0.3; drift = 0.14; burst = (i === evFrames[0]) ? 0.65 : (onFire ? 0.1 : 0.0);
   }
-  if (t >= TL.darkOut0) { A = 0.2 + 0.05 * lv; drift = 0.05; }
+  if (t >= TL.darkOut0) { A = 0.15 + 0.05 * lv; drift = t < TL.darkOut0 + 0.5 ? 0.14 : 0.06; }
   gl.useProgram(progUpdate.p);
   const modes = modesFor(S, i);
   setFieldUniforms(progUpdate, modes);
@@ -299,7 +302,7 @@ function drawScene(S, i) {
 
 function post(S, i) {
   const { t } = S;
-  const inStorm = t >= TL.strike - 0.001 && t < TL.darkOut0 + 0.35;
+  const inStorm = t >= TL.strike - 0.001 && t < TL.darkOut0;
   const onFire = evFrames.includes(i);
   // held memory
   gl.useProgram(progHeld.p); gl.bindFramebuffer(gl.FRAMEBUFFER, heldFbo[1 - hcur]); gl.viewport(0, 0, W, H);
@@ -313,7 +316,7 @@ function post(S, i) {
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, heldTex[hcur]); gl.uniform1i(progOut.u.uHeld, 0);
   gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, sceneTex); gl.uniform1i(progOut.u.uScene, 1);
   gl.uniform2f(progOut.u.uRes, W, H);
-  const live = inStorm ? Math.max(S.flash, lerp(0.5, 1, sstep(TL.darkOut0 - 0.1, TL.darkOut0 + 0.3, t))) : 1;
+  const live = inStorm ? Math.max(S.flash, 0.5) : 1;
   gl.uniform1f(progOut.u.uLive, live);
   gl.uniform1f(progOut.u.uCA, 0.35 + 6 * Math.exp(-(t - TL.strike) * 7) * (t >= TL.strike ? 1 : 0) + 1.2 * S.dark);
   gl.uniform1f(progOut.u.uGrain, 0.035 + 0.05 * S.dark); gl.uniform1f(progOut.u.uSeed, i * 1.37);
@@ -324,7 +327,7 @@ function post(S, i) {
 /* ------------------------------------------------------------------ typography, driven by the same clock */
 const $ = id => document.getElementById(id);
 const el = { frame: $('frame'),
-  brand: $('brand'), rule: $('rule'), sub: $('sub'), sub2: $('sub2'), pill: $('pill'), pillT: $('pillT'), link: $('link'), url: $('url') };
+  big30: $('big30'), big2: $('big2'), brand: $('brand'), rule: $('rule'), sub: $('sub'), url: $('url') };
 const NAMES = ['', '', 'オクターヴ', '完全5度', '完全4度', '長3度', '短3度'];
 function win(t, a, b, fade = 0.45) { return sstep(a, a + fade, t) * (1 - sstep(b - fade, b, t)); }
 function put(node, o, dy = 0) { node.style.opacity = o.toFixed(3); node.style.transform = `translateY(${((1 - o) * dy).toFixed(1)}px)`; }
@@ -347,17 +350,21 @@ function typeset(S, i) {
   const { f, t } = S;
   const paper = 1 - S.dark;
   drawFrame(S);
-  put(el.frame, paper * (1 - sstep(TL.strike - 0.02, TL.strike, t)) * sstep(0.2, 1.0, t) + sstep(TL.darkOut0, TL.darkOut1, t) * 0.55);
+  put(el.frame, paper * (1 - sstep(TL.strike - 0.02, TL.strike, t)) * sstep(0.2, 1.0, t) + (t >= TL.darkOut0 ? 0.5 * sstep(TL.darkOut0 + 0.2, TL.darkOut0 + 0.5, t) : 0));
   // call to action
-  const c0 = TL.cta, f4 = 0.45;
-  put(el.brand, sstep(c0, c0 + f4, t), 18);
-  el.rule.style.opacity = sstep(c0 + 0.2, c0 + 0.6, t).toFixed(3); el.rule.style.transform = `scaleX(${sstep(c0 + 0.2, c0 + 0.8, t).toFixed(3)})`;
-  put(el.sub, sstep(c0 + 0.3, c0 + 0.3 + f4, t), 14);
-  put(el.sub2, sstep(c0 + 0.5, c0 + 0.5 + f4, t), 12);
-  el.pill.style.opacity = sstep(c0 + 0.7, c0 + 0.7 + f4, t).toFixed(3);
-  put(el.pillT, sstep(c0 + 0.75, c0 + 0.75 + f4, t), 10);
-  put(el.link, sstep(c0 + 0.95, c0 + 0.95 + f4, t) * (1 - sstep(TL.dur - 0.35, TL.dur - 0.05, t)), 8);
-  put(el.url, sstep(c0 + 1.05, c0 + 1.05 + f4, t), 8);
+  const [h1, h2] = TL.ctaHits, h3 = h2 + 0.32;
+  const rev = (node, t0, dur = 0.42, extra = '') => {
+    const u = t < t0 ? 0 : 1 - Math.pow(2, -10 * clamp((t - t0) / dur));           // expo out: fast in, settles
+    node.style.transform = `translateY(${((1 - u) * 115).toFixed(2)}%)${extra}`;
+    return u;
+  };
+  const u30 = t < h1 ? 0 : clamp((t - h1) / 0.5);
+  rev(el.big30, h1, 0.38, ` scale(${(1.1 - 0.1 * (1 - Math.pow(2, -10 * u30))).toFixed(4)})`);
+  rev(el.big2, h2, 0.38);
+  el.rule.style.transform = `scaleX(${(t < h3 ? 0 : 1 - Math.pow(2, -10 * clamp((t - h3) / 0.5))).toFixed(3)})`;
+  rev(el.brand, h3, 0.45);
+  rev(el.sub, h3 + 0.12, 0.45);
+  rev(el.url, h3 + 0.24, 0.45);
 }
 
 /* ------------------------------------------------------------------ one frame */

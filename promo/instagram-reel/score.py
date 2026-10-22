@@ -25,8 +25,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PARTIAL_T = [0.0, 3.0, 3.9, 4.8, 5.7, 6.4]    # when partial 1..6 of A3 enters
 B_IN, B_GLIDE0, B_GLIDE1 = 7.0, 8.3, 9.6      # 2nd voice: enters 3 Hz sharp, glides up to a pure fifth
 B_START, B_END = 223.0, 330.0                 # Hz  (223 = 3 Hz beating against 220;  330 = 3:2)
-STRIKE, DARK_OUT0, DARK_OUT1 = 10.0, 11.45, 12.2
-CTA_T = 12.2
+STRIKE, DARK_OUT0, DARK_OUT1 = 10.0, 11.5, 11.5    # hard cut back to paper
+CTA_T = 11.9                                  # the downbeat: '30分' lands with the chord
+CTA_HITS = [11.9, 12.18]                      # '30分', '無料相談'
 EVENTS = [10.0, 10.22, 10.40, 10.52, 10.74, 10.86, 10.98, 11.10, 11.20, 11.30, 11.38]   # stop-motion fires
 RNG = np.random.default_rng(1108)
 
@@ -37,7 +38,8 @@ def ramp(x, t0, dur):                          # smoothstep 0 -> 1
 
 def duck_env(x):                               # the tonal bed gives way to the strike, comes back after
     d = 1 - 0.9 * ramp(x, STRIKE - 0.02, 0.06)
-    return d + 0.9 * ramp(x, DARK_OUT0, 0.9)
+    d = d * (1 - ramp(x, DARK_OUT0 - 0.03, 0.03))                 # a breath of silence after the cut ...
+    return d + ramp(x, CTA_T - 0.004, 0.008)                      # ... then the full chord on the downbeat
 
 # ---- tonal bed ---------------------------------------------------------------------------
 def fB_of(x):                                  # 2nd voice frequency (log glide after the beating hold)
@@ -62,7 +64,7 @@ def tonal_bed():
     for k in range(4):
         out += stereo(np.sin((k + 1) * phB) * gB / (k + 1) ** 1.1, 0.2)
     # the tonic is settled by a major third (5:2 over A3 = C#5) and a bell on A5 when the call to action opens
-    g3 = ramp(t, CTA_T - 0.1, 1.2)
+    g3 = ramp(t, CTA_T - 0.004, 0.008) * (0.55 + 0.45 * np.exp(-np.maximum(t - CTA_T, 0) / 0.5))
     out += stereo(np.sin(2 * np.pi * 550 * t) * 0.28 * g3, -0.15)
     out += stereo(np.sin(2 * np.pi * 1100 * t) * 0.06 * g3, 0.15)
     return out
@@ -130,10 +132,19 @@ def reverb(x, rt_long=3.0, rt_short=0.9, wet=0.3):
 def build_audio():
     bed = tonal_bed()
     strike = tamtam(STRIKE, 0.32)
-    cta_bell = np.zeros((N, 2)); i0 = int(CTA_T * SR); tt = t[:N - i0]
-    cta_bell[i0:] = stereo(np.sin(2 * np.pi * 880 * tt) * np.exp(-tt / 1.4) * (1 - np.exp(-tt / 0.004)) * 0.22, 0.1)
-    mix = bed * duck_env(t)[:, None] * 0.2 + riser() * 0.22 + strike + frozen_slices(bed * 0.2) * 0.8 + cta_bell
-    mix = reverb(mix)
+    cta = np.zeros((N, 2))
+    for j, th in enumerate(CTA_HITS):                                           # each word lands on a hit
+        i0 = int(th * SR); tt = t[:N - i0]; att = 1 - np.exp(-tt / 0.003)
+        if j == 0:
+            boom = np.sin(2 * np.pi * (48 + 60 * np.exp(-tt / 0.05)) * tt) * np.exp(-tt / 0.45) * 0.9
+            cta[i0:] += stereo(boom * att, 0)
+            cta[i0:] += stereo(np.sin(2 * np.pi * 440 * tt) * np.exp(-tt / 1.6) * att * 0.16, -0.1)
+        else:
+            cta[i0:] += stereo(np.sin(2 * np.pi * 880 * tt) * np.exp(-tt / 1.4) * att * 0.2, 0.15)
+            cta[i0:] += stereo(np.sin(2 * np.pi * 1320 * tt) * np.exp(-tt / 0.9) * att * 0.07, -0.2)
+    gate = (1 - ramp(t, DARK_OUT0 - 0.02, 0.02))[:, None]                        # the concrete material is cut dead with the picture
+    concrete = reverb(riser() * 0.22 + strike + frozen_slices(bed * 0.2) * 0.8) * gate
+    mix = reverb(bed * duck_env(t)[:, None] * 0.2 + cta) + concrete
     mix *= ramp(t, 0, 0.08)[:, None] * (1 - ramp(t, DUR - 0.55, 0.55))[:, None]       # clean in/out (loops quietly)
     mix = np.tanh(mix * 1.1) / np.tanh(1.1)
     mix *= 0.7 / np.abs(mix).max()
@@ -196,7 +207,7 @@ if __name__ == '__main__':
     mix = build_audio(); write_wav(os.path.join(HERE, 'out', 'audio.wav'), mix)
     fr = features(mix)
     tl = {"fps": FPS, "dur": DUR, "f0": F0, "partialT": PARTIAL_T, "bIn": B_IN, "bGlide0": B_GLIDE0, "bGlide1": B_GLIDE1,
-          "strike": STRIKE, "darkOut0": DARK_OUT0, "darkOut1": DARK_OUT1, "cta": CTA_T, "events": EVENTS}
+          "strike": STRIKE, "darkOut0": DARK_OUT0, "darkOut1": DARK_OUT1, "cta": CTA_T, "ctaHits": CTA_HITS, "events": EVENTS}
     with open(os.path.join(HERE, 'features.js'), 'w') as f:
         f.write('window.TL=' + json.dumps(tl) + ';\nwindow.FEAT=' + json.dumps(fr, separators=(',', ':')) + ';\n')
     print('audio + features written;', len(fr), 'frames; peak', float(np.abs(mix).max()))
