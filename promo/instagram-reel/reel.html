@@ -353,8 +353,8 @@ window.renderFrame = function (i) {
   return S.t;
 };
 window.TOTAL = FEAT.length;
-/* optional opening picture, screen-printed behind the sand: ?bg=score | place */
-const BGS = { score: {}, place: {} };                                  // Mozart score / performance venue
+/* optional opening picture, screen-printed behind the sand: ?bg=place */
+const BGS = { place: {} };                                             // performance venue (images/documentation-1.jpg)
 const bgName = new URLSearchParams(location.search).get('bg');
 const BG = BGS[bgName] || null; let bgTex = null;
 function loadBg() {
