@@ -32,6 +32,7 @@ canvas { position:absolute; left:0; top:0; width:1080px; height:1920px; }
   <div class="x" id="url">ateliercompositionson.com</div>
 </div>
 <script src="features.js"></script>
+<script src="bg/objs.js"></script>
 <script>
 'use strict';
 const W = 1080, H = 1920, CELL = 4, NX = W / CELL + 1, NY = H / CELL + 1;
@@ -109,6 +110,50 @@ function ruler(color) {
   ctx.stroke();
 }
 
+/* screentone objects: photographs of music equipment as a 45-degree dot screen (black dots on paper, or white on black) */
+const PLATES = [   // appear on the beat and stay; windows sit on the 96 px margin / 12-column grid
+  { k: 'synth', x: 96,  y: 300, w: 432, h: 432, t: 1.15 },
+  { k: 'mon',   x: 552, y: 300, w: 432, h: 432, t: 3.0 },
+  { k: 'kb',    x: 96,  y: 756, w: 432, h: 432, t: 3.9 },
+  { k: 'piano', x: 552, y: 756, w: 432, h: 432, t: 4.8 },
+];
+const FULL = ['synth', 'mon', 'kb', 'piano'];
+const imgs = {}; let dotsReady = null;
+function halftone(img, w, h, cell, invert) {                // -> {xs, ys, rs}
+  const cv2 = document.createElement('canvas'); cv2.width = w; cv2.height = h; const c2 = cv2.getContext('2d');
+  const s = Math.max(w / img.width, h / img.height), dw = img.width * s, dh = img.height * s;
+  c2.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  const d = c2.getImageData(0, 0, w, h).data, xs = [], ys = [], rs = [], a = Math.PI / 4, ca = Math.cos(a), sa = Math.sin(a);
+  const R = Math.hypot(w, h);
+  for (let u = -R; u <= R; u += cell) for (let v = -R; v <= R; v += cell) {
+    const x = w / 2 + u * ca - v * sa, y = h / 2 + u * sa + v * ca;
+    if (x < 0 || y < 0 || x >= w || y >= h) continue;
+    const l = Math.min(1, d[((y | 0) * w + (x | 0)) * 4] / 255 * (invert ? 1 : 1.25)), tone = invert ? l : Math.pow(1 - l, 1.35);      // ink where it is dark (or, inverted, where it is light)
+    const r = cell * 0.66 * Math.sqrt(Math.max(0, Math.min(1, (tone - 0.04) / 0.92)));
+    if (r > 0.45) { xs.push(x); ys.push(y); rs.push(r); }
+  }
+  return { xs, ys, rs };
+}
+function prepDots() {
+  return Promise.all(Object.entries(window.OBJS).map(([k, src]) => new Promise(res => { const im = new Image(); im.onload = () => { imgs[k] = im; res(); }; im.src = src; }))).then(() => {
+    for (const p of PLATES) p.dots = halftone(imgs[p.k], p.w, p.h, 7, false);
+    for (const k of FULL) imgs[k].full = halftone(imgs[k], W, H, 13, true);
+  });
+}
+function drawDots(dots, ox, oy, color) {
+  ctx.fillStyle = color; ctx.beginPath();
+  for (let i = 0; i < dots.xs.length; i++) { const x = ox + dots.xs[i], y = oy + dots.ys[i]; ctx.moveTo(x + dots.rs[i], y); ctx.arc(x, y, dots.rs[i], 0, 6.2832); }
+  ctx.fill();
+}
+function drawPlates(t) {
+  for (const p of PLATES) {
+    if (t < p.t) continue;
+    ctx.fillStyle = PAPER; ctx.fillRect(p.x, p.y, p.w, p.h);
+    drawDots(p.dots, p.x, p.y, INK);
+    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(p.x + 1, p.y + 1, p.w - 2, p.h - 2);
+  }
+}
+
 const $ = id => document.getElementById(id);
 const els = ['r1', 'main', 'r2', 'brand', 'sub', 'r3', 'url'].map($);
 function showCTA(t) {
@@ -140,9 +185,13 @@ window.renderFrame = function (i) {
       drawFigure(figure(f), levelsFor(f.b > 0 ? f.R : 0), INK, 3);
     }
     ruler(INK);
+    if (t < TL.darkOut0) drawPlates(t);
   } else if (!flash) {
     let k = -1; for (let j = 0; j < evFrames.length; j++) if (i >= evFrames[j]) k = j;
     k = Math.max(0, k);
+    if (k % 2 === 1) {                                        // every other stop is a full-bleed screentone photograph
+      drawDots(imgs[FULL[((k - 1) / 2) % FULL.length]].full, 0, 0, PAPER); ctx.globalAlpha = 1; ruler(PAPER); showCTA(t); return t;
+    }
     for (let back = 2; back >= 0; back--) {                   // multiple exposure: the last three stops
       const q = STORM_FIG[(k - back + STORM_FIG.length * 4) % STORM_FIG.length];
       if (k - back < 0 && back > 0) continue;
@@ -155,7 +204,7 @@ window.renderFrame = function (i) {
   return t;
 };
 window.TOTAL = FEAT.length;
-document.fonts.ready.then(() => { window.READY = true; });
+Promise.all([document.fonts.ready, prepDots()]).then(() => { window.READY = true; });
 </script>
 </body>
 </html>
