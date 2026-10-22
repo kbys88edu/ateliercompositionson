@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Atelier Composition Son — Instagram reel</title>
+<meta name="viewport" content="width=1080">
+<style>
+@font-face { font-family: 'ACS Marcellus'; src: url('fonts/marcellus-subset.woff2') format('woff2'); }
+@font-face { font-family: 'ACS Mincho';    src: url('fonts/shippori-mincho-subset.woff2') format('woff2'); }
+:root { --paper:#f3f1eb; --ink:#111; --mut:#6f6c66; }
+html, body { margin:0; background:#000; }
+#stage { position:relative; width:1080px; height:1920px; overflow:hidden; color:var(--ink); }
+canvas { position:absolute; left:0; top:0; width:1080px; height:1920px; }
+.t { position:absolute; left:0; width:1080px; text-align:center; opacity:0; white-space:nowrap; will-change:opacity,transform; }
+.jp { font-family:'ACS Mincho','IPAGothic',serif; font-weight:500; }
+.la { font-family:'ACS Marcellus','Liberation Serif',serif; font-weight:400; }
+#cap1 { top:1290px; font-size:28px; letter-spacing:.1em; color:var(--mut); }
+#cap2 { top:1338px; font-size:34px; letter-spacing:.08em; }
+#ratios { top:1338px; font-size:40px; letter-spacing:.2em; }
+#ratios span { opacity:.18; transition:none; }
+#gauge { position:absolute; left:340px; top:1402px; width:400px; height:2px; background:rgba(17,17,17,.18); opacity:0; }
+#gauge i { position:absolute; left:0; top:-2px; height:6px; width:0; background:#111; }
+#gaugeL { top:1420px; font-size:20px; letter-spacing:.24em; color:var(--mut); }
+#frame { position:absolute; left:0; top:0; width:1080px; height:1920px; opacity:0; }
+/* call to action */
+#brand  { top:900px;  font-size:56px; letter-spacing:.1em; }
+#rule   { position:absolute; left:480px; top:985px; width:120px; height:1.5px; background:#111; opacity:0; }
+#sub    { top:1030px; font-size:38px; letter-spacing:.16em; }
+#sub2   { top:1096px; font-size:29px; letter-spacing:.2em; color:var(--mut); }
+#pill   { position:absolute; left:330px; top:1190px; width:420px; height:104px; box-sizing:border-box; border:1.5px solid #111; border-radius:52px; opacity:0; }
+#pillT  { top:1212px; font-size:42px; letter-spacing:.2em; }
+#link   { top:1338px; font-size:28px; letter-spacing:.18em; color:var(--mut); }
+#url    { top:1386px; font-size:26px; letter-spacing:.14em; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="gl" width="1080" height="1920"></canvas>
+  <svg id="frame" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+  <div class="t la jp" id="cap1"></div>
+  <div class="t la jp" id="cap2"></div>
+  <div class="t la" id="ratios"><span>1</span> : <span>2</span> : <span>3</span> : <span>4</span> : <span>5</span> : <span>6</span></div>
+  <div id="gauge"><i></i></div>
+  <div class="t la" id="gaugeL">ROUGHNESS</div>
+  <div class="t la" id="brand">Atelier Composition Son</div>
+  <div id="rule"></div>
+  <div class="t jp" id="sub">作曲・音楽理論・DTM・電子音響</div>
+  <div class="t jp" id="sub2">オンライン個人レッスン</div>
+  <div id="pill"></div>
+  <div class="t jp" id="pillT">30分無料相談</div>
+  <div class="t jp" id="link">プロフィールのリンクから</div>
+  <div class="t la" id="url">ateliercompositionson.com</div>
+</div>
+<script src="features.js"></script>
+<script>
+'use strict';
+const W = 1080, H = 1920, PN = 640;                       // canvas, particle texture side (409,600 grains of sand)
+const SUBSTEPS = 6;
+const TL = window.TL, FEAT = window.FEAT, FPS = TL.fps;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const sstep = (a, b, x) => { const u = clamp((x - a) / (b - a)); return u * u * (3 - 2 * u); };
+const lerp = (a, b, u) => a + (b - a) * u;
+const easeIO = u => u * u * (3 - 2 * u);
+
+/* ------------------------------------------------------------------ WebGL */
+const canvas = document.getElementById('gl');
+const gl = canvas.getContext('webgl2', { antialias: false, preserveDrawingBuffer: true, alpha: false });
+gl.getExtension('EXT_color_buffer_float');
+const FS_TRI = `#version 300 es
+void main(){ vec2 p = vec2((gl_VertexID<<1)&2, gl_VertexID&2); gl_Position = vec4(p*2.0-1.0, 0.0, 1.0); }`;
+function prog(vs, fs) {
+  const mk = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o) + '\n' + s); return o; };
+  const p = gl.createProgram(); gl.attachShader(p, mk(gl.VERTEX_SHADER, vs)); gl.attachShader(p, mk(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  const u = {}; const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+  for (let i = 0; i < n; i++) { const a = gl.getActiveUniform(p, i); u[a.name.replace('[0]', '')] = gl.getUniformLocation(p, a.name); }
+  return { p, u };
+}
+function tex(w, h, internal, fmt, type, filter = gl.NEAREST) {
+  const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+  gl.texImage2D(gl.TEXTURE_2D, 0, internal, w, h, 0, fmt, type, null);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  return t;
+}
+function fbo(t) { const f = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, f); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0); return f; }
+const vao = gl.createVertexArray(); gl.bindVertexArray(vao);
+
+/* ---- Chladni field (shared GLSL): F = sum w * (cos(n pi x) cos(m pi y) + cos(m pi x) cos(n pi y)) with its gradient */
+const MAXM = 12;
+const GLSL_FIELD = `
+const float PI = 3.14159265358979;
+uniform int uNM; uniform float uN[${MAXM}]; uniform float uMm[${MAXM}]; uniform float uW[${MAXM}];
+vec3 chladni(vec2 p){                                  // returns (F, dF/dx, dF/dy)
+  vec3 r = vec3(0.0);
+  for (int i = 0; i < ${MAXM}; i++) {
+    if (i >= uNM) break;
+    float n = uN[i] * PI, m = uMm[i] * PI, w = uW[i];
+    float cnx = cos(n*p.x), snx = sin(n*p.x), cmy = cos(m*p.y), smy = sin(m*p.y);
+    float cmx = cos(m*p.x), smx = sin(m*p.x), cny = cos(n*p.y), sny = sin(n*p.y);
+    r.x += w * (cnx*cmy + cmx*cny);
+    r.y += w * (-n*snx*cmy - m*smx*cny);
+    r.z += w * (-m*cnx*smy - n*cmx*sny);
+  }
+  return r;
+}`;
+const GLSL_HASH = `
+uint pcg(uint v){ uint s = v*747796405u + 2891336325u; uint w = ((s >> ((s >> 28u) + 4u)) ^ s) * 277803737u; return (w >> 22u) ^ w; }
+vec3 rnd3(uvec2 id, uint seed){ uint a = pcg(id.x + pcg(id.y + pcg(seed))); uint b = pcg(a + 1234567u); uint c = pcg(b + 7654321u);
+  return vec3(float(a), float(b), float(c)) / 4294967295.0; }`;
+
+/* ---- 1. sand: random walk whose step is proportional to the local vibration |F| (the Chladni algorithm), plus a pull to the nodal lines */
+const progUpdate = prog(FS_TRI, `#version 300 es
+precision highp float; precision highp int;
+uniform sampler2D uPos; uniform float uA, uDrift, uFloor, uBurst; uniform uint uSeed;
+${GLSL_FIELD}${GLSL_HASH}
+out vec4 o;
+void main(){
+  ivec2 ij = ivec2(gl_FragCoord.xy);
+  vec4 s = texelFetch(uPos, ij, 0); vec2 p = s.xy;
+  vec3 r = rnd3(uvec2(ij), uSeed);
+  vec3 f = chladni(p);
+  vec2 g = f.yz;
+  float gm2 = dot(g, g) + 0.3;
+  vec2 toLine = f.x * g / gm2;                         // Newton step: the vector from here to the nearest nodal line
+  float dist = abs(f.x) / sqrt(gm2);                   // distance to the line, so grains spread evenly along it (|F| alone piles them into corners)
+  vec2 step_ = (r.xy - 0.5) * 2.0 * uA * (min(dist, 0.35) + uFloor) - uDrift * toLine;
+  float sl = length(step_); if (sl > 0.06) step_ *= 0.06 / sl;
+  p += step_;
+  p = abs(p); p = 1.0 - abs(1.0 - p);                  // reflect at the plate edge
+  if (r.z < uBurst) p = rnd3(uvec2(ij) + 17u, uSeed + 99u).xy;
+  o = vec4(clamp(p, 0.0, 1.0), 0.0, 1.0);
+}`);
+
+/* ---- 2. scene background: paper <-> black, thin-film iridescence for the dark section */
+const progBg = prog(FS_TRI, `#version 300 es
+precision highp float;
+uniform vec2 uRes; uniform float uDark, uFilm, uTime, uFlash; uniform vec3 uPaper;
+out vec4 o;
+float h21(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
+float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+  return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
+float fbm(vec2 p){ float a = 0.5, s = 0.0; for (int i = 0; i < 5; i++){ s += a*vn(p); p = p*2.03 + 7.1; a *= 0.5; } return s; }
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes; uv.y = 1.0 - uv.y;
+  vec3 col = mix(uPaper, vec3(0.012), uDark);
+  if (uFilm > 0.001) {
+    vec2 q = (uv - 0.5) * vec2(1.6, 2.6);
+    vec2 w = vec2(fbm(q*1.3 + vec2(0.0, uTime*0.35)), fbm(q*1.3 + vec2(5.2, -uTime*0.28)));
+    float th = fbm(q*1.1 + 2.4*(w-0.5) + vec2(0.0, uTime*0.12));          // film thickness, dragged by a swirl
+    th += 0.55 * (uv.y - 0.5);                                              // drains downward
+    vec3 irid = 0.5 + 0.5*cos(6.28318*(th*vec3(1.00, 1.12, 1.27)*1.9 + vec3(0.00, 0.12, 0.30)));
+    float m = smoothstep(0.30, 0.78, fbm(q*0.8 + 3.0*(w-0.5) + 9.0));
+    col += irid * m * uFilm * 0.55 * (0.25 + 0.75*smoothstep(0.2, 0.8, th));
+  }
+  col = mix(col, vec3(1.0), uFlash);
+  o = vec4(col, 1.0);
+}`);
+
+/* ---- 3. grains: points read their position from the sand texture */
+const progPts = prog(`#version 300 es
+precision highp float; precision highp int;
+uniform sampler2D uPos; uniform vec2 uRes, uCenter; uniform float uSize, uPt;
+void main(){
+  ivec2 tc = ivec2(gl_VertexID % ${PN}, gl_VertexID / ${PN});
+  vec2 p = texelFetch(uPos, tc, 0).xy;
+  vec2 px = uCenter + (vec2(p.x, 1.0 - p.y) - 0.5) * uSize;
+  gl_Position = vec4(px.x / uRes.x * 2.0 - 1.0, 1.0 - px.y / uRes.y * 2.0, 0.0, 1.0);
+  gl_PointSize = uPt;
+}`, `#version 300 es
+precision highp float;
+uniform vec4 uColor;
+out vec4 o;
+void main(){ vec2 d = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.18, length(d)); o = vec4(uColor.rgb, uColor.a * a); }`);
+
+/* ---- 4. stop-motion memory: on a fire frame the instant is stamped, the older ones dim (photodynamism-style multiple exposure) */
+const progHeld = prog(FS_TRI, `#version 300 es
+precision highp float;
+uniform sampler2D uHeld, uScene; uniform vec2 uRes; uniform float uDecay, uStamp;
+out vec4 o;
+void main(){ vec2 uv = gl_FragCoord.xy / uRes; vec3 h = texture(uHeld, uv).rgb * uDecay; vec3 s = texture(uScene, uv).rgb;
+  o = vec4(max(h, s * uStamp), 1.0); }`);
+
+/* ---- 5. composite: held frames + live frame, chromatic split on the strike, a little grain */
+const progOut = prog(FS_TRI, `#version 300 es
+precision highp float;
+uniform sampler2D uHeld, uScene; uniform vec2 uRes; uniform float uLive, uCA, uGrain, uSeed, uFlash;
+out vec4 o;
+float h21(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes; vec2 d = vec2(uCA, 0.0) / uRes;
+  vec3 live = vec3(texture(uScene, uv + d).r, texture(uScene, uv).g, texture(uScene, uv - d).b);
+  vec3 held = vec3(texture(uHeld, uv + d).r, texture(uHeld, uv).g, texture(uHeld, uv - d).b);
+  vec3 c = max(live * uLive, held * (1.0 - uFlash));
+  c += (h21(gl_FragCoord.xy + uSeed) - 0.5) * uGrain;
+  o = vec4(c, 1.0);
+}`);
+
+/* ---- GPU resources */
+const posTex = [0, 1].map(() => tex(PN, PN, gl.RGBA32F, gl.RGBA, gl.FLOAT));
+const posFbo = posTex.map(fbo);
+const sceneTex = tex(W, H, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, gl.LINEAR); const sceneFbo = fbo(sceneTex);
+const heldTex = [0, 1].map(() => tex(W, H, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, gl.LINEAR)); const heldFbo = heldTex.map(fbo);
+let cur = 0, hcur = 0, seedCounter = 1;
+(function initSand() {                                  // grains start scattered uniformly (seeded, deterministic)
+  const a = new Float32Array(PN * PN * 4); let s = 1108;
+  const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  for (let i = 0; i < PN * PN; i++) { a[i * 4] = r(); a[i * 4 + 1] = r(); a[i * 4 + 3] = 1; }
+  gl.bindTexture(gl.TEXTURE_2D, posTex[0]); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, PN, PN, gl.RGBA, gl.FLOAT, a);
+  for (const f of heldFbo) { gl.bindFramebuffer(gl.FRAMEBUFFER, f); gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT); }
+})();
+
+function setFieldUniforms(p, modes) {
+  const n = new Float32Array(MAXM), m = new Float32Array(MAXM), w = new Float32Array(MAXM);
+  modes.slice(0, MAXM).forEach((q, i) => { n[i] = q[0]; m[i] = q[1]; w[i] = q[2]; });
+  gl.uniform1i(p.u.uNM, Math.min(modes.length, MAXM)); gl.uniform1fv(p.u.uN, n); gl.uniform1fv(p.u.uMm, m); gl.uniform1fv(p.u.uW, w);
+}
+
+/* ------------------------------------------------------------------ the picture, as a function of the score */
+const STORM_FIG = [[3, 7], [5, 8], [2, 9], [6, 11], [4, 9], [7, 12], [5, 13], [8, 11], [3, 10], [9, 14], [6, 13]];
+const evFrames = TL.events.map(e => Math.round(e * FPS));
+
+function figure(f, t) {
+  // pure tone: one nodal line  ->  partial k arrives: figure (k-1, k)  ->  second voice: (2,3)/(3,4) rotating, locked on (2,3) at 3:2
+  const pk = f.pk; const modes = [];
+  modes.push([0, 1, 1 - pk[1]]);
+  for (let k = 2; k <= 6; k++) {
+    const nextOut = k < 6 ? 1 - pk[k] : 1 - f.b;                         // pk[k] is partial k+1
+    modes.push([k - 1, k, pk[k - 1] * nextOut]);
+  }
+  if (f.b > 0) {
+    modes.push([2, 3, f.b * Math.cos(f.ph)]);
+    modes.push([3, 4, f.b * Math.sin(f.ph)]);
+  }
+  return modes.filter(q => q[2] > 0.002);
+}
+
+function frameState(i) {
+  const f = FEAT[i], t = f.t;
+  const storm = sstep(TL.strike - 0.02, TL.strike + 0.05, t) * (1 - sstep(TL.darkOut0, TL.darkOut0 + 0.5, t));
+  const dark = sstep(TL.strike + 0.05, TL.strike + 0.09, t) * (1 - sstep(TL.darkOut0, TL.darkOut1, t));
+  const flash = (t >= TL.strike - 0.001 && t < TL.strike + 0.07) ? 1 - sstep(TL.strike + 0.02, TL.strike + 0.07, t) : 0;
+  const riser = sstep(8.7, TL.strike, t);
+  // plate geometry
+  const sizeP = 840, sizeCTA = 520;
+  let size = sizeP, cy = 830;
+  if (t >= TL.strike) { const u = clamp((t - TL.strike) / 1.35); size = lerp(sizeP, 1900, 1 - (1 - u) * (1 - u) * (1 - u)); }
+  if (t >= TL.darkOut0) { const u = easeIO(clamp((t - TL.darkOut0) / (TL.cta - TL.darkOut0 + 0.2))); size = lerp(1900, sizeCTA, u); cy = lerp(830, 560, u); }
+  size *= 1 + 0.004 * f.lv;
+  return { f, t, storm, dark, flash, riser, size, cy };
+}
+
+function modesFor(S, i) {
+  const { f, t, storm } = S;
+  if (t >= TL.strike - 0.001 && t < TL.darkOut0) {                      // stop-motion figures, changing at each fire
+    let k = -1; for (let j = 0; j < evFrames.length; j++) if (i >= evFrames[j]) k = j;
+    const q = STORM_FIG[Math.max(0, k) % STORM_FIG.length], q2 = STORM_FIG[(Math.max(0, k) + 4) % STORM_FIG.length];
+    return [[q[0], q[1], 1], [q2[0], q2[1], 0.45]];
+  }
+  if (t >= TL.darkOut0) return [[2, 3, 1]];                              // the fifth: Chladni (2,3), where the piece comes to rest
+  return figure(f, t);
+}
+
+function stepSim(S, i) {
+  const { f, t } = S;
+  const settleIn = 1 - sstep(0.0, 1.8, t);                               // grains fall in from a scatter at the start
+  const rough = f.R, lv = f.lv;
+  let A = 0.2 + 0.2 * rough + 0.06 * lv + 0.2 * S.riser * S.riser + 0.35 * settleIn;
+  let drift = 0.07 - 0.04 * rough + 0.03 * settleIn;
+  let burst = 0;
+  if (t >= TL.strike - 0.001 && t < TL.darkOut0) {
+    const onFire = evFrames.includes(i);
+    A = 0.36; drift = 0.1; burst = (i === evFrames[0]) ? 0.65 : (onFire ? 0.1 : 0.0);
+  }
+  if (t >= TL.darkOut0) { A = 0.2 + 0.05 * lv; drift = 0.05; }
+  gl.useProgram(progUpdate.p);
+  const modes = modesFor(S, i);
+  setFieldUniforms(progUpdate, modes);
+  // the figure changes when a partial (or the second voice) enters: the plate shakes the sand loose, it falls onto the new nodal lines
+  let pulse = 0;
+  for (const te of TL.partialT.slice(1).concat([TL.bIn])) if (t >= te) pulse = Math.max(pulse, Math.exp(-(t - te) / 0.22));
+  A += 0.25 * pulse;
+  gl.uniform1f(progUpdate.u.uA, A); gl.uniform1f(progUpdate.u.uDrift, drift); gl.uniform1f(progUpdate.u.uFloor, 0.006 + 0.04 * pulse);
+  gl.viewport(0, 0, PN, PN);
+  for (let s = 0; s < SUBSTEPS; s++) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, posFbo[1 - cur]);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, posTex[cur]); gl.uniform1i(progUpdate.u.uPos, 0);
+    gl.uniform1ui(progUpdate.u.uSeed, seedCounter++);
+    gl.uniform1f(progUpdate.u.uBurst, s === 0 ? burst : 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3); cur = 1 - cur;
+  }
+}
+
+function drawScene(S, i) {
+  const { f, t } = S;
+  gl.bindFramebuffer(gl.FRAMEBUFFER, sceneFbo); gl.viewport(0, 0, W, H); gl.disable(gl.BLEND);
+  gl.useProgram(progBg.p);
+  const film = S.dark * (0.35 + 0.65 * S.storm) * 0.9;
+  gl.uniform2f(progBg.u.uRes, W, H); gl.uniform1f(progBg.u.uDark, S.dark); gl.uniform1f(progBg.u.uFilm, film);
+  gl.uniform1f(progBg.u.uTime, t); gl.uniform1f(progBg.u.uFlash, S.flash); gl.uniform3f(progBg.u.uPaper, 0.953, 0.945, 0.922);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.useProgram(progPts.p); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, posTex[cur]); gl.uniform1i(progPts.u.uPos, 0);
+  gl.uniform2f(progPts.u.uRes, W, H); gl.uniform2f(progPts.u.uCenter, W / 2, S.cy); gl.uniform1f(progPts.u.uSize, S.size);
+  const big = clamp(S.size / 840, 1, 2.2);
+  gl.uniform1f(progPts.u.uPt, lerp(1.7, 2.6, (big - 1) / 1.2));
+  const ink = lerp(0.07, 0.96, S.dark);
+  gl.uniform4f(progPts.u.uColor, ink, ink, ink * 0.985, lerp(0.8, 0.9, S.dark) * (1 - S.flash));
+  gl.drawArrays(gl.POINTS, 0, PN * PN); gl.disable(gl.BLEND);
+}
+
+function post(S, i) {
+  const { t } = S;
+  const inStorm = t >= TL.strike - 0.001 && t < TL.darkOut0 + 0.35;
+  const onFire = evFrames.includes(i);
+  // held memory
+  gl.useProgram(progHeld.p); gl.bindFramebuffer(gl.FRAMEBUFFER, heldFbo[1 - hcur]); gl.viewport(0, 0, W, H);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, heldTex[hcur]); gl.uniform1i(progHeld.u.uHeld, 0);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, sceneTex); gl.uniform1i(progHeld.u.uScene, 1);
+  gl.uniform2f(progHeld.u.uRes, W, H);
+  gl.uniform1f(progHeld.u.uDecay, !inStorm ? 0.0 : (onFire ? 0.6 : 0.985)); gl.uniform1f(progHeld.u.uStamp, (inStorm && onFire) ? 1 : 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 3); hcur = 1 - hcur;
+  // composite
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, W, H); gl.useProgram(progOut.p);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, heldTex[hcur]); gl.uniform1i(progOut.u.uHeld, 0);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, sceneTex); gl.uniform1i(progOut.u.uScene, 1);
+  gl.uniform2f(progOut.u.uRes, W, H);
+  const live = inStorm ? lerp(0.22, 1, sstep(TL.darkOut0 - 0.1, TL.darkOut0 + 0.3, t)) : 1;
+  gl.uniform1f(progOut.u.uLive, live);
+  gl.uniform1f(progOut.u.uCA, 1.5 + 9 * Math.exp(-(t - TL.strike) * 6) * (t >= TL.strike ? 1 : 0) + 2.5 * S.dark);
+  gl.uniform1f(progOut.u.uGrain, 0.035 + 0.05 * S.dark); gl.uniform1f(progOut.u.uSeed, i * 1.37);
+  gl.uniform1f(progOut.u.uFlash, S.flash);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+
+/* ------------------------------------------------------------------ typography, driven by the same clock */
+const $ = id => document.getElementById(id);
+const el = { cap1: $('cap1'), cap2: $('cap2'), ratios: $('ratios'), gauge: $('gauge'), gaugeL: $('gaugeL'), frame: $('frame'),
+  brand: $('brand'), rule: $('rule'), sub: $('sub'), sub2: $('sub2'), pill: $('pill'), pillT: $('pillT'), link: $('link'), url: $('url') };
+const NAMES = ['', '', 'オクターヴ', '完全5度', '完全4度', '長3度', '短3度'];
+function win(t, a, b, fade = 0.45) { return sstep(a, a + fade, t) * (1 - sstep(b - fade, b, t)); }
+function put(node, o, dy = 0) { node.style.opacity = o.toFixed(3); node.style.transform = `translateY(${((1 - o) * dy).toFixed(1)}px)`; }
+let lastHead = '';
+function setText(node, s) { if (node.dataset.s !== s) { node.textContent = s; node.dataset.s = s; } }
+
+// plate frame: a hairline with scale ticks (a figure plate in a treatise)
+function drawFrame(S) {
+  const half = Math.min(S.size, 1900) / 2, cx = W / 2, cy = S.cy, ticks = 20;
+  let s = `<rect x="${cx - half}" y="${cy - half}" width="${half * 2}" height="${half * 2}" fill="none" stroke="#111" stroke-width="1.2"/>`;
+  for (let k = 1; k < ticks; k++) {
+    const u = k / ticks, len = (k % 5 === 0) ? 14 : 7, x = cx - half + u * half * 2, y = cy - half + u * half * 2;
+    s += `<line x1="${x}" y1="${cy + half}" x2="${x}" y2="${cy + half + len}" stroke="#111" stroke-width="1"/>`;
+    s += `<line x1="${cx - half}" y1="${y}" x2="${cx - half - len}" y2="${y}" stroke="#111" stroke-width="1"/>`;
+  }
+  el.frame.innerHTML = s;
+}
+
+function typeset(S, i) {
+  const { f, t } = S;
+  const paper = 1 - S.dark;
+  drawFrame(S);
+  put(el.frame, paper * (1 - sstep(TL.strike - 0.02, TL.strike, t)) * sstep(0.2, 1.0, t) + sstep(TL.darkOut0, TL.darkOut1, t) * 0.55);
+  // captions (Fig. 1 / 2 / 3)
+  if (t < 3.0) {
+    setText(el.cap1, 'Fig. 1　純音 A3 = 220 Hz　節線は一本'); put(el.cap1, win(t, 1.0, 2.9), 8);
+    put(el.cap2, 0); put(el.ratios, 0);
+  } else if (t < 7.0) {
+    setText(el.cap1, 'Fig. 2　倍音列とクラドニ図形 (n, m) = 比 n : m'); put(el.cap1, win(t, 3.15, 6.9), 8);
+    // which partial is the newest one
+    let k = 1; for (let j = 0; j < 6; j++) if (t >= TL.partialT[j]) k = j + 1;
+    [...el.ratios.children].forEach((sp, j) => { sp.style.opacity = (j < k ? 1 : 0.16).toFixed(2); });
+    put(el.ratios, win(t, 3.15, 6.9) , 6);
+    put(el.cap2, 0);
+  } else if (t < 10.0) {
+    put(el.ratios, 0);
+    setText(el.cap1, 'Fig. 3　二つの音のうなり　Plomp–Levelt の粗さ'); put(el.cap1, win(t, 7.15, 9.9, 0.3), 8);
+    const locked = t >= TL.bGlide1 - 0.05;
+    setText(el.cap2, locked ? '3 : 2　完全5度' : `Δf = ${Math.max(0, f.df).toFixed(1)} Hz`);
+    put(el.cap2, win(t, 7.3, 9.95, 0.3), 6);
+  } else { put(el.cap1, 0); put(el.cap2, 0); put(el.ratios, 0); }
+  const gOn = (t >= 7.3 && t < 9.95) ? win(t, 7.3, 9.95, 0.3) : 0;
+  el.gauge.style.opacity = gOn.toFixed(3); el.gauge.firstElementChild.style.width = (400 * clamp(f.R)).toFixed(1) + 'px';
+  put(el.gaugeL, gOn * 0.9, 0);
+  // call to action
+  const c0 = TL.cta;
+  put(el.brand, sstep(c0, c0 + 0.7, t), 18);
+  el.rule.style.opacity = sstep(c0 + 0.35, c0 + 0.9, t).toFixed(3); el.rule.style.transform = `scaleX(${sstep(c0 + 0.35, c0 + 1.1, t).toFixed(3)})`;
+  put(el.sub, sstep(c0 + 0.5, c0 + 1.2, t), 14);
+  put(el.sub2, sstep(c0 + 0.8, c0 + 1.5, t), 12);
+  el.pill.style.opacity = sstep(c0 + 1.2, c0 + 1.8, t).toFixed(3);
+  put(el.pillT, sstep(c0 + 1.3, c0 + 1.9, t), 10);
+  put(el.link, sstep(c0 + 1.7, c0 + 2.3, t) * (1 - sstep(TL.dur - 0.35, TL.dur - 0.05, t)), 8);
+  put(el.url, sstep(c0 + 1.9, c0 + 2.5, t), 8);
+}
+
+/* ------------------------------------------------------------------ one frame */
+window.renderFrame = function (i) {
+  const S = frameState(i);
+  stepSim(S, i); drawScene(S, i); post(S, i); typeset(S, i);
+  return S.t;
+};
+window.TOTAL = FEAT.length;
+document.fonts.ready.then(() => { window.READY = true; });
+</script>
+</body>
+</html>
