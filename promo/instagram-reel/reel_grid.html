@@ -136,7 +136,7 @@ function halftone(img, w, h, cell, invert) {                // -> {xs, ys, rs}
 }
 function prepDots() {
   return Promise.all(Object.entries(window.OBJS).map(([k, src]) => new Promise(res => { const im = new Image(); im.onload = () => { imgs[k] = im; res(); }; im.src = src; }))).then(() => {
-    for (const p of PLATES) p.dots = halftone(imgs[p.k], p.w, p.h, 7, false);
+    for (const p of PLATES) p.dots = halftone(imgs[p.k], p.w, p.h, p.k === "kb" || p.k === "piano" ? 5 : 7, false);
     for (const k of FULL) imgs[k].full = halftone(imgs[k], W, H, 13, true);
   });
 }
