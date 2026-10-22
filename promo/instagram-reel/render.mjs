@@ -11,7 +11,7 @@ const stills = process.env.STILLS ? process.env.STILLS.split(',').map(Number) : 
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
 page.on('console', m => console.log('[page]', m.text())); page.on('pageerror', e => console.log('[pageerror]', e.message));
-await page.goto('file://' + path.join(here, 'reel.html'));
+await page.goto('file://' + path.join(here, 'reel.html') + (process.env.BG ? '?bg=' + process.env.BG : ''));
 await page.waitForFunction('window.READY === true');
 const total = await page.evaluate('window.TOTAL');
 let ff = null;

@@ -117,15 +117,37 @@ void main(){
 /* ---- 2. scene background: paper <-> black, thin-film iridescence for the dark section */
 const progBg = prog(FS_TRI, `#version 300 es
 precision highp float;
-uniform vec2 uRes; uniform float uDark, uFilm, uTime, uFlash; uniform vec3 uPaper;
+uniform vec2 uRes; uniform float uDark, uFilm, uTime, uFlash, uImgAmt; uniform int uImgMode; uniform vec3 uPaper, uInk2; uniform sampler2D uImg;
 out vec4 o;
 float h21(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
 float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
   return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
 float fbm(vec2 p){ float a = 0.5, s = 0.0; for (int i = 0; i < 5; i++){ s += a*vn(p); p = p*2.03 + 7.1; a *= 0.5; } return s; }
+float halftone(vec2 px, float ang, float cell, float tone){          // one screen of a screen print: dots on a rotated grid
+  float c = cos(ang), s = sin(ang); vec2 q = mat2(c, -s, s, c) * px / cell;
+  float d = length(fract(q) - 0.5), r = sqrt(clamp(tone, 0.0, 1.0)) * 0.72;
+  return smoothstep(r + 0.5 / cell * 2.0, r - 0.5 / cell * 2.0, d);
+}
+vec3 screenprint(vec2 uv, vec2 px, vec3 col){                        // two inks, slightly off register, uneven coverage
+  vec2 off = vec2(5.0, -3.0) / uRes;
+  float L1 = texture(uImg, uv).r, L2 = texture(uImg, uv + off).r;
+  float uneven = 0.78 + 0.22 * fbm(px * 0.035);
+  float k1, k2;
+  if (uImgMode == 0) {                                                // line art (score): solid ink, second colour plate misregistered
+    k1 = smoothstep(0.62, 0.35, L1) * uneven;
+    k2 = smoothstep(0.7, 0.4, L2) * 0.85 * (0.7 + 0.3 * fbm(px * 0.02 + 3.0));
+  } else {                                                            // photograph: halftone black + a flat colour for the midtones
+    k1 = halftone(px, 0.785, 7.0, smoothstep(0.92, 0.08, L1)) * uneven;
+    k2 = smoothstep(0.85, 0.35, L2) * 0.75 * (0.75 + 0.25 * fbm(px * 0.02 + 3.0));
+  }
+  col *= mix(vec3(1.0), uInk2, k2 * uImgAmt);
+  col = mix(col, vec3(0.09, 0.09, 0.1), k1 * 0.92 * uImgAmt);
+  return col;
+}
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes; uv.y = 1.0 - uv.y;
   vec3 col = mix(uPaper, vec3(0.012), uDark);
+  if (uImgAmt > 0.001) col = screenprint(uv, gl_FragCoord.xy, col);
   if (uFilm > 0.001) {
     vec2 q = (uv - 0.5) * vec2(1.6, 2.6);
     vec2 w = vec2(fbm(q*1.3 + vec2(0.0, uTime*0.35)), fbm(q*1.3 + vec2(5.2, -uTime*0.28)));
@@ -273,6 +295,9 @@ function drawScene(S, i) {
   gl.useProgram(progBg.p);
   const film = S.dark * (0.3 + 0.7 * S.storm) * 0.42;
   gl.uniform2f(progBg.u.uRes, W, H); gl.uniform1f(progBg.u.uDark, S.dark); gl.uniform1f(progBg.u.uFilm, film);
+  gl.uniform1f(progBg.u.uImgAmt, bgTex ? 1 - sstep(1.0, 3.0, t) : 0);       // the picture gives way as the sand gathers
+  if (bgTex) { gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, bgTex); gl.uniform1i(progBg.u.uImg, 2);
+    gl.uniform1i(progBg.u.uImgMode, BG.mode); gl.uniform3f(progBg.u.uInk2, ...BG.ink2); }
   gl.uniform1f(progBg.u.uTime, t); gl.uniform1f(progBg.u.uFlash, S.flash); gl.uniform3f(progBg.u.uPaper, 0.953, 0.945, 0.922);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
   gl.useProgram(progPts.p); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -333,7 +358,23 @@ window.renderFrame = function (i) {
   return S.t;
 };
 window.TOTAL = FEAT.length;
-document.fonts.ready.then(() => { window.READY = true; });
+/* optional opening picture, screen-printed behind the sand: ?bg=score | place */
+const BGS = { score: { mode: 0, ink2: [0.86, 0.36, 0.26] },           // Mozart score, vermilion second plate
+              place: { mode: 1, ink2: [0.55, 0.62, 0.78] } };          // performance venue, slate-blue second plate
+const bgName = new URLSearchParams(location.search).get('bg');
+const BG = BGS[bgName] || null; let bgTex = null;
+function loadBg() {
+  return new Promise(res => {
+    if (!BG) return res();
+    const sc = document.createElement('script'); sc.src = `bg/${bgName}.js`;
+    sc.onload = () => { const im = new Image(); im.onload = () => {
+      bgTex = tex(W, H, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, gl.LINEAR);
+      gl.bindTexture(gl.TEXTURE_2D, bgTex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, im); res(); };
+      im.src = window.BG_IMG; };
+    document.head.appendChild(sc);
+  });
+}
+Promise.all([document.fonts.ready, loadBg()]).then(() => { window.READY = true; });
 </script>
 </body>
 </html>
