@@ -327,7 +327,7 @@ function post(S, i) {
   gl.uniform2f(progOut.u.uRes, W, H);
   const live = inStorm ? Math.max(S.flash, lerp(0.5, 1, sstep(TL.darkOut0 - 0.1, TL.darkOut0 + 0.3, t))) : 1;
   gl.uniform1f(progOut.u.uLive, live);
-  gl.uniform1f(progOut.u.uCA, 1.2 + 6 * Math.exp(-(t - TL.strike) * 7) * (t >= TL.strike ? 1 : 0) + 1.2 * S.dark);
+  gl.uniform1f(progOut.u.uCA, 0.35 + 6 * Math.exp(-(t - TL.strike) * 7) * (t >= TL.strike ? 1 : 0) + 1.2 * S.dark);
   gl.uniform1f(progOut.u.uGrain, 0.035 + 0.05 * S.dark); gl.uniform1f(progOut.u.uSeed, i * 1.37);
   gl.uniform1f(progOut.u.uFlash, S.flash);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
