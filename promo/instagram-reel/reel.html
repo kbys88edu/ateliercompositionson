@@ -14,13 +14,6 @@ canvas { position:absolute; left:0; top:0; width:1080px; height:1920px; }
 .t { position:absolute; left:0; width:1080px; text-align:center; opacity:0; white-space:nowrap; will-change:opacity,transform; }
 .jp { font-family:'ACS Mincho','IPAGothic',serif; font-weight:500; }
 .la { font-family:'ACS Marcellus','Liberation Serif',serif; font-weight:400; }
-#cap1 { top:1290px; font-size:28px; letter-spacing:.1em; color:var(--mut); }
-#cap2 { top:1338px; font-size:34px; letter-spacing:.08em; }
-#ratios { top:1338px; font-size:40px; letter-spacing:.2em; }
-#ratios span { opacity:.18; transition:none; }
-#gauge { position:absolute; left:340px; top:1402px; width:400px; height:2px; background:rgba(17,17,17,.18); opacity:0; }
-#gauge i { position:absolute; left:0; top:-2px; height:6px; width:0; background:#111; }
-#gaugeL { top:1420px; font-size:20px; letter-spacing:.24em; color:var(--mut); }
 #frame { position:absolute; left:0; top:0; width:1080px; height:1920px; opacity:0; }
 /* call to action */
 #brand  { top:900px;  font-size:56px; letter-spacing:.1em; }
@@ -37,11 +30,6 @@ canvas { position:absolute; left:0; top:0; width:1080px; height:1920px; }
 <div id="stage">
   <canvas id="gl" width="1080" height="1920"></canvas>
   <svg id="frame" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
-  <div class="t la jp" id="cap1"></div>
-  <div class="t la jp" id="cap2"></div>
-  <div class="t la" id="ratios"><span>1</span> : <span>2</span> : <span>3</span> : <span>4</span> : <span>5</span> : <span>6</span></div>
-  <div id="gauge"><i></i></div>
-  <div class="t la" id="gaugeL">ROUGHNESS</div>
   <div class="t la" id="brand">Atelier Composition Son</div>
   <div id="rule"></div>
   <div class="t jp" id="sub">作曲・音楽理論・DTM・電子音響</div>
@@ -335,7 +323,7 @@ function post(S, i) {
 
 /* ------------------------------------------------------------------ typography, driven by the same clock */
 const $ = id => document.getElementById(id);
-const el = { cap1: $('cap1'), cap2: $('cap2'), ratios: $('ratios'), gauge: $('gauge'), gaugeL: $('gaugeL'), frame: $('frame'),
+const el = { frame: $('frame'),
   brand: $('brand'), rule: $('rule'), sub: $('sub'), sub2: $('sub2'), pill: $('pill'), pillT: $('pillT'), link: $('link'), url: $('url') };
 const NAMES = ['', '', 'オクターヴ', '完全5度', '完全4度', '長3度', '短3度'];
 function win(t, a, b, fade = 0.45) { return sstep(a, a + fade, t) * (1 - sstep(b - fade, b, t)); }
@@ -360,27 +348,6 @@ function typeset(S, i) {
   const paper = 1 - S.dark;
   drawFrame(S);
   put(el.frame, paper * (1 - sstep(TL.strike - 0.02, TL.strike, t)) * sstep(0.2, 1.0, t) + sstep(TL.darkOut0, TL.darkOut1, t) * 0.55);
-  // captions (Fig. 1 / 2 / 3)
-  if (t < 3.0) {
-    setText(el.cap1, 'Fig. 1　純音 A3 = 220 Hz　節線は一本'); put(el.cap1, win(t, 1.0, 2.9), 8);
-    put(el.cap2, 0); put(el.ratios, 0);
-  } else if (t < 7.0) {
-    setText(el.cap1, 'Fig. 2　倍音列とクラドニ図形 (n, m) = 比 n : m'); put(el.cap1, win(t, 3.15, 6.9), 8);
-    // which partial is the newest one
-    let k = 1; for (let j = 0; j < 6; j++) if (t >= TL.partialT[j]) k = j + 1;
-    [...el.ratios.children].forEach((sp, j) => { sp.style.opacity = (j < k ? 1 : 0.16).toFixed(2); });
-    put(el.ratios, win(t, 3.15, 6.9) , 6);
-    put(el.cap2, 0);
-  } else if (t < 10.0) {
-    put(el.ratios, 0);
-    setText(el.cap1, 'Fig. 3　二つの音のうなり　Plomp–Levelt の粗さ'); put(el.cap1, win(t, 7.15, 9.9, 0.3), 8);
-    const locked = t >= TL.bGlide1 - 0.05;
-    setText(el.cap2, locked ? '3 : 2　完全5度' : `Δf = ${Math.max(0, f.df).toFixed(1)} Hz`);
-    put(el.cap2, win(t, 7.3, 9.95, 0.3), 6);
-  } else { put(el.cap1, 0); put(el.cap2, 0); put(el.ratios, 0); }
-  const gOn = (t >= 7.3 && t < 9.95) ? win(t, 7.3, 9.95, 0.3) : 0;
-  el.gauge.style.opacity = gOn.toFixed(3); el.gauge.firstElementChild.style.width = (400 * clamp(f.R)).toFixed(1) + 'px';
-  put(el.gaugeL, gOn * 0.9, 0);
   // call to action
   const c0 = TL.cta, f4 = 0.45;
   put(el.brand, sstep(c0, c0 + f4, t), 18);
