@@ -148,17 +148,17 @@ out float vPic;
 void main(){
   ivec2 tc = ivec2(gl_VertexID % ${PN}, gl_VertexID / ${PN});
   vec4 s = texelFetch(uPos, tc, 0); vec2 p = s.xy;
-  vPic = uPic == 1 ? texture(uImg, vec2(p.x, 1.0 - p.y)).r : 0.0;
+  vPic = uPic == 1 ? texture(uImg, vec2(s.z, 1.0 - s.w)).r : 0.0;
   vec2 px = vec2(p.x, 1.0 - p.y) * uRes;
   gl_Position = vec4(px.x / uRes.x * 2.0 - 1.0, 1.0 - px.y / uRes.y * 2.0, 0.0, 1.0);
   gl_PointSize = uPt;
 }`, `#version 300 es
 precision highp float; precision highp int;
-uniform vec4 uColor; uniform int uPic;
+uniform vec4 uColor; uniform int uPic; uniform float uWhite;
 in float vPic;
 out vec4 o;
 void main(){ vec2 d = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.18, length(d));
-  if (uPic == 1) { float l = min(1.0, (0.04 + 1.5 * pow(vPic, 0.9)) * uColor.a * a); o = vec4(vec3(l) * uColor.rgb, 1.0); }    // screen blend: premultiplied light
+  if (uPic == 1) { float l = min(1.0, mix(0.04 + 1.5 * pow(vPic, 0.9), 1.0, uWhite) * uColor.a * a); o = vec4(vec3(l) * uColor.rgb, 1.0); }    // screen blend: premultiplied light
   else o = vec4(uColor.rgb, uColor.a * a); }`);
 
 /* ---- 4. stop-motion memory: on a fire frame the instant is stamped, the older ones dim (photodynamism-style multiple exposure) */
@@ -266,8 +266,12 @@ function stepSim(S, i) {
   for (const te of TL.partialT.slice(1).concat([TL.bIn])) if (t >= te) pulse = Math.max(pulse, Math.exp(-(t - te) / 0.22));
   A += 0.25 * pulse;
   A *= hold; drift *= hold;
+  if (bgTex) drift *= sstep(0.75, 1.3, t);                                // first the picture crumbles, then the grains find the lines
   gl.uniform1f(progUpdate.u.uAsp, H / W); gl.uniform1f(progUpdate.u.uA, A); gl.uniform1f(progUpdate.u.uDrift, drift); let floor = 0.006 + 0.04 * pulse;
-  if (bgTex && t < OPEN_END) floor += 0.03;                               // wide bands of sand: the photo stays readable inside the lines
+  if (bgTex) {                                                          // the plate starts: the photograph breaks up into loose grains
+    const jolt = t >= 0.4 ? Math.exp(-(t - 0.4) / 0.5) * sstep(0.38, 0.5, t) : 0;
+    A += 0.12 * jolt; floor += 0.012 * jolt;
+  }
   if (bgTex && t >= OPEN_END && t < OPEN_END + 0.35) { drift = 0.22; A = 0.12; }   // after the cut the bands snap tight
   gl.uniform1f(progUpdate.u.uFloor, floor); gl.uniform1f(progUpdate.u.uDrift, drift); gl.uniform1f(progUpdate.u.uA, A);
   gl.viewport(0, 0, PN, PN);
@@ -295,7 +299,7 @@ function drawScene(S, i) {
   gl.uniform2f(progPts.u.uRes, W, H); gl.uniform1f(progPts.u.uPt, 1.8);
   if (bgTex) { gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, bgTex); gl.uniform1i(progPts.u.uImg, 2); }
   if (S.open > 0.001) {                                                     // grains carry the picture, screened onto black
-    gl.uniform1i(progPts.u.uPic, 1); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_COLOR); gl.uniform1f(progPts.u.uPt, lerp(2.8, 1.8, sstep(0.4, 1.4, t)));
+    gl.uniform1i(progPts.u.uPic, 1); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_COLOR); gl.uniform1f(progPts.u.uPt, lerp(2.8, 1.8, sstep(0.4, 1.4, t))); gl.uniform1f(progPts.u.uWhite, sstep(0.9, 1.9, t));
     gl.uniform4f(progPts.u.uColor, 1.0, 0.985, 0.95, lerp(1.0, 0.3, sstep(0.5, 1.6, t)));   // dense and bright while it is still a photograph
     gl.drawArrays(gl.POINTS, 0, PN * PN);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.uniform1f(progPts.u.uPt, 1.8);
