@@ -111,43 +111,22 @@ void main(){
   p += vec2(step_.x, step_.y / uAsp);
   p = abs(p); p = 1.0 - abs(1.0 - p);                  // reflect at the plate edge
   if (r.z < uBurst) p = rnd3(uvec2(ij) + 17u, uSeed + 99u).xy;
-  o = vec4(clamp(p, 0.0, 1.0), 0.0, 1.0);
+  o = vec4(clamp(p, 0.0, 1.0), s.zw);
 }`);
 
 /* ---- 2. scene background: paper <-> black, thin-film iridescence for the dark section */
 const progBg = prog(FS_TRI, `#version 300 es
 precision highp float;
-uniform vec2 uRes; uniform float uDark, uFilm, uTime, uFlash, uImgAmt; uniform int uImgMode; uniform vec3 uPaper, uInk2; uniform sampler2D uImg;
+uniform vec2 uRes; uniform float uDark, uFilm, uTime, uFlash, uImgAmt; uniform vec3 uPaper; uniform sampler2D uImg;
 out vec4 o;
 float h21(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
 float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
   return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
 float fbm(vec2 p){ float a = 0.5, s = 0.0; for (int i = 0; i < 5; i++){ s += a*vn(p); p = p*2.03 + 7.1; a *= 0.5; } return s; }
-float halftone(vec2 px, float ang, float cell, float tone){          // one screen of a screen print: dots on a rotated grid
-  float c = cos(ang), s = sin(ang); vec2 q = mat2(c, -s, s, c) * px / cell;
-  float d = length(fract(q) - 0.5), r = sqrt(clamp(tone, 0.0, 1.0)) * 0.72;
-  return smoothstep(r + 0.5 / cell * 2.0, r - 0.5 / cell * 2.0, d);
-}
-vec3 screenprint(vec2 uv, vec2 px, vec3 col){                        // two inks, slightly off register, uneven coverage
-  vec2 off = vec2(5.0, -3.0) / uRes;
-  float L1 = texture(uImg, uv).r, L2 = texture(uImg, uv + off).r;
-  float uneven = 0.78 + 0.22 * fbm(px * 0.035);
-  float k1, k2;
-  if (uImgMode == 0) {                                                // line art (score): solid ink, second colour plate misregistered
-    k1 = smoothstep(0.62, 0.35, L1) * uneven;
-    k2 = smoothstep(0.7, 0.4, L2) * 0.85 * (0.7 + 0.3 * fbm(px * 0.02 + 3.0));
-  } else {                                                            // photograph: halftone black + a flat colour for the midtones
-    k1 = halftone(px, 0.785, 7.0, smoothstep(0.92, 0.08, L1)) * uneven;
-    k2 = smoothstep(0.85, 0.35, L2) * 0.5 * (0.75 + 0.25 * fbm(px * 0.02 + 3.0));
-  }
-  col *= mix(vec3(1.0), uInk2, k2 * uImgAmt);
-  col = mix(col, vec3(0.09, 0.09, 0.1), k1 * 0.92 * uImgAmt);
-  return col;
-}
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes; uv.y = 1.0 - uv.y;
   vec3 col = mix(uPaper, vec3(0.012), uDark);
-  if (uImgAmt > 0.001) col = screenprint(uv, gl_FragCoord.xy, col);
+  if (uImgAmt > 0.001) col = 1.0 - (1.0 - col) * (1.0 - texture(uImg, uv).rgb * uImgAmt);   // screen
   if (uFilm > 0.001) {
     vec2 q = (uv - 0.5) * vec2(1.6, 2.6);
     vec2 w = vec2(fbm(q*1.3 + vec2(0.0, uTime*0.35)), fbm(q*1.3 + vec2(5.2, -uTime*0.28)));
@@ -164,18 +143,23 @@ void main(){
 /* ---- 3. grains: points read their position from the sand texture */
 const progPts = prog(`#version 300 es
 precision highp float; precision highp int;
-uniform sampler2D uPos; uniform vec2 uRes; uniform float uPt;
+uniform sampler2D uPos, uImg; uniform vec2 uRes; uniform float uPt; uniform int uPic;
+out float vPic;
 void main(){
   ivec2 tc = ivec2(gl_VertexID % ${PN}, gl_VertexID / ${PN});
-  vec2 p = texelFetch(uPos, tc, 0).xy;
+  vec4 s = texelFetch(uPos, tc, 0); vec2 p = s.xy;
+  vPic = uPic == 1 ? texture(uImg, vec2(s.z, 1.0 - s.w)).r : 0.0;
   vec2 px = vec2(p.x, 1.0 - p.y) * uRes;
   gl_Position = vec4(px.x / uRes.x * 2.0 - 1.0, 1.0 - px.y / uRes.y * 2.0, 0.0, 1.0);
   gl_PointSize = uPt;
 }`, `#version 300 es
 precision highp float;
-uniform vec4 uColor;
+uniform vec4 uColor; uniform int uPic;
+in float vPic;
 out vec4 o;
-void main(){ vec2 d = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.18, length(d)); o = vec4(uColor.rgb, uColor.a * a); }`);
+void main(){ vec2 d = gl_PointCoord - 0.5; float a = smoothstep(0.5, 0.18, length(d));
+  if (uPic == 1) { float l = pow(vPic, 1.3) * uColor.a * a; o = vec4(vec3(l) * uColor.rgb, 1.0); }    // screen blend: premultiplied light
+  else o = vec4(uColor.rgb, uColor.a * a); }`);
 
 /* ---- 4. stop-motion memory: on a fire frame the instant is stamped, the older ones dim (photodynamism-style multiple exposure) */
 const progHeld = prog(FS_TRI, `#version 300 es
@@ -209,7 +193,7 @@ let cur = 0, hcur = 0, seedCounter = 1;
 (function initSand() {                                  // grains start scattered uniformly (seeded, deterministic)
   const a = new Float32Array(PN * PN * 4); let s = 1108;
   const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
-  for (let i = 0; i < PN * PN; i++) { a[i * 4] = r(); a[i * 4 + 1] = r(); a[i * 4 + 3] = 1; }
+  for (let i = 0; i < PN * PN; i++) { a[i * 4] = r(); a[i * 4 + 1] = r(); a[i * 4 + 2] = a[i * 4]; a[i * 4 + 3] = a[i * 4 + 1]; }
   gl.bindTexture(gl.TEXTURE_2D, posTex[0]); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, PN, PN, gl.RGBA, gl.FLOAT, a);
   for (const f of heldFbo) { gl.bindFramebuffer(gl.FRAMEBUFFER, f); gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT); }
 })();
@@ -243,9 +227,10 @@ function frameState(i) {
   const f = FEAT[i], t = f.t;
   const storm = t < TL.darkOut0 ? sstep(TL.strike - 0.02, TL.strike + 0.05, t) : 0;
   const dark = t < TL.darkOut0 ? sstep(TL.strike + 0.05, TL.strike + 0.09, t) : 0;   // hard cut back to paper
+  const open = bgTex ? 1 - sstep(2.3, 2.95, t) : 0;                                   // opening on black: the picture, made of sand
   const flash = (t >= TL.strike - 0.001 && t < TL.strike + 0.07) ? 1 - sstep(TL.strike + 0.02, TL.strike + 0.07, t) : 0;
   const riser = sstep(8.7, TL.strike, t);
-  return { f, t, storm, dark, flash, riser };
+  return { f, t, storm, dark, flash, riser, open };
 }
 
 function modesFor(S, i) {
@@ -262,6 +247,7 @@ function modesFor(S, i) {
 function stepSim(S, i) {
   const { f, t } = S;
   const settleIn = 1 - sstep(0.0, 1.8, t);                               // grains fall in from a scatter at the start
+  const hold = bgTex ? sstep(0.35, 0.95, t) : 1;                          // with a picture: it holds a moment before the sand moves
   const rough = f.R, lv = f.lv;
   let A = 0.2 + 0.2 * rough + 0.06 * lv + 0.2 * S.riser * S.riser + 0.35 * settleIn;
   let drift = 0.07 - 0.04 * rough + 0.03 * settleIn;
@@ -278,6 +264,7 @@ function stepSim(S, i) {
   let pulse = 0;
   for (const te of TL.partialT.slice(1).concat([TL.bIn])) if (t >= te) pulse = Math.max(pulse, Math.exp(-(t - te) / 0.22));
   A += 0.25 * pulse;
+  A *= hold; drift *= hold;
   gl.uniform1f(progUpdate.u.uAsp, H / W); gl.uniform1f(progUpdate.u.uA, A); gl.uniform1f(progUpdate.u.uDrift, drift); gl.uniform1f(progUpdate.u.uFloor, 0.006 + 0.04 * pulse);
   gl.viewport(0, 0, PN, PN);
   for (let s = 0; s < SUBSTEPS; s++) {
@@ -294,18 +281,26 @@ function drawScene(S, i) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, sceneFbo); gl.viewport(0, 0, W, H); gl.disable(gl.BLEND);
   gl.useProgram(progBg.p);
   const film = S.dark * (0.3 + 0.7 * S.storm) * 0.42;
-  gl.uniform2f(progBg.u.uRes, W, H); gl.uniform1f(progBg.u.uDark, S.dark); gl.uniform1f(progBg.u.uFilm, film);
-  gl.uniform1f(progBg.u.uImgAmt, bgTex ? 1 - sstep(1.0, 3.0, t) : 0);       // the picture gives way as the sand gathers
-  if (bgTex) { gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, bgTex); gl.uniform1i(progBg.u.uImg, 2);
-    gl.uniform1i(progBg.u.uImgMode, BG.mode); gl.uniform3f(progBg.u.uInk2, ...BG.ink2); }
+  gl.uniform2f(progBg.u.uRes, W, H); gl.uniform1f(progBg.u.uDark, Math.max(S.dark, S.open)); gl.uniform1f(progBg.u.uFilm, film);
+  gl.uniform1f(progBg.u.uImgAmt, bgTex ? 0.35 * (1 - sstep(0.3, 1.3, t)) : 0);   // a faint screened picture under the sand, gone as it moves
+  if (bgTex) { gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, bgTex); gl.uniform1i(progBg.u.uImg, 2); }
   gl.uniform1f(progBg.u.uTime, t); gl.uniform1f(progBg.u.uFlash, S.flash); gl.uniform3f(progBg.u.uPaper, 0.953, 0.945, 0.922);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
   gl.useProgram(progPts.p); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, posTex[cur]); gl.uniform1i(progPts.u.uPos, 0);
   gl.uniform2f(progPts.u.uRes, W, H); gl.uniform1f(progPts.u.uPt, 1.8);
+  if (bgTex) { gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, bgTex); gl.uniform1i(progPts.u.uImg, 2); }
+  if (S.open > 0.001) {                                                     // grains carry the picture, screened onto black
+    gl.uniform1i(progPts.u.uPic, 1); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_COLOR);
+    gl.uniform4f(progPts.u.uColor, 1.0, 0.985, 0.95, 0.95 * S.open);
+    gl.drawArrays(gl.POINTS, 0, PN * PN);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  }
+  gl.uniform1i(progPts.u.uPic, 0);
   const ink = lerp(0.07, 0.96, S.dark);
-  gl.uniform4f(progPts.u.uColor, ink, ink, ink * 0.985, lerp(0.8, 0.9, S.dark) * (1 - S.flash) * (1 - 0.8 * sstep(TL.cta - 0.1, TL.cta + 0.4, t)));   // sand steps back behind the text
-  gl.drawArrays(gl.POINTS, 0, PN * PN); gl.disable(gl.BLEND);
+  gl.uniform4f(progPts.u.uColor, ink, ink, ink * 0.985, lerp(0.8, 0.9, S.dark) * (1 - S.flash) * (1 - S.open) * (1 - 0.8 * sstep(TL.cta - 0.1, TL.cta + 0.4, t)));   // sand steps back behind the text
+  if (S.open < 0.999) gl.drawArrays(gl.POINTS, 0, PN * PN);
+  gl.disable(gl.BLEND);
 }
 
 function post(S, i) {
@@ -359,8 +354,7 @@ window.renderFrame = function (i) {
 };
 window.TOTAL = FEAT.length;
 /* optional opening picture, screen-printed behind the sand: ?bg=score | place */
-const BGS = { score: { mode: 0, ink2: [0.86, 0.36, 0.26] },           // Mozart score, vermilion second plate
-              place: { mode: 1, ink2: [0.55, 0.62, 0.78] } };          // performance venue, slate-blue second plate
+const BGS = { score: {}, place: {} };                                  // Mozart score / performance venue
 const bgName = new URLSearchParams(location.search).get('bg');
 const BG = BGS[bgName] || null; let bgTex = null;
 function loadBg() {
