@@ -396,7 +396,7 @@ function typeset(S, i) {
 /* ------------------------------------------------------------------ one frame */
 window.renderFrame = function (i) {
   const S = frameState(i);
-  stepSim(S, i); drawScene(S, i); post(S, i); typeset(S, i);
+  stepSim(S, i); drawScene(S, i); post(S, i); typeset(S, i); gl.finish();
   return S.t;
 };
 window.TOTAL = FEAT.length;

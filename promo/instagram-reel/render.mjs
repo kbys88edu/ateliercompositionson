@@ -25,9 +25,9 @@ if (!stills.length) {
 const t0 = Date.now();
 for (let i = 0; i < total; i++) {
   await page.evaluate(`window.renderFrame(${i})`);
-  if (stills.includes(i)) { await page.screenshot({ path: path.join(here, 'out', `still_${String(i).padStart(3, '0')}.png`) }); }
+  if (stills.includes(i)) { await page.screenshot({ path: path.join(here, 'out', `still_${String(i).padStart(3, '0')}.png`), timeout: 120000 }); }
   if (ff && i >= first && i <= last) {
-    const buf = await page.screenshot({ type: 'jpeg', quality: 97 });
+    const buf = await page.screenshot({ type: 'jpeg', quality: 97, timeout: 120000 });
     if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
   }
   if (i % 30 === 0) console.log(`frame ${i}/${total}  ${((Date.now() - t0) / 1000).toFixed(0)}s`);
