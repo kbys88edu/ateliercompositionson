@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Atelier Composition Son — Instagram reel (bitmap)</title>
+<meta name="viewport" content="width=1080">
+<style>
+@font-face { font-family:'ACS Gothic'; font-weight:400; src:url('fonts/plex-sans-jp-400-subset.woff2') format('woff2'); }
+@font-face { font-family:'ACS Gothic'; font-weight:500; src:url('fonts/plex-sans-jp-500-subset.woff2') format('woff2'); }
+@font-face { font-family:'ACS Anton'; src:url('fonts/anton-subset.woff2') format('woff2'); }
+@font-face { font-family:'ACS Mono'; font-weight:500; src:url('fonts/plex-mono-500-subset.woff2') format('woff2'); }
+html, body { margin:0; background:#000; }
+canvas { display:block; width:1080px; height:1920px; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script src="features.js"></script>
+<script src="bg/objs.js"></script>
+<script>
+'use strict';
+/* Editorial / glitch version: black on paper. A dot-screened photograph is cut into blocks that slip out of register
+   while the music is dissonant and snap back when it resolves on the fifth; ASCII-art instruments in the strobe section;
+   Chladni iso-lines run underneath as the score's own drawing. */
+const W = 1080, H = 1920, CELL = 4, NX = W / CELL + 1, NY = H / CELL + 1;
+const TL = window.TL, FEAT = window.FEAT, FPS = TL.fps;
+const PAPER = '#ffffff', INK = '#000000';                  // pure black and white
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const sstep = (a, b, x) => { const u = clamp((x - a) / (b - a)); return u * u * (3 - 2 * u); };
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+function rng(seed) { let s = seed | 0; return () => { s = (s + 0x6D2B79F5) | 0; let z = Math.imul(s ^ (s >>> 15), 1 | s); z = (z + Math.imul(z ^ (z >>> 7), 61 | z)) ^ z; return ((z ^ (z >>> 14)) >>> 0) / 4294967296; }; }
+const snap = (v, g = 8) => Math.round(v / g) * g;
+
+/* ---------------------------------------------------------------- Chladni iso-lines (marching squares) */
+const MAXN = 16, CX = [], CY = [];
+for (let n = 0; n < MAXN; n++) {
+  const a = new Float32Array(NX), b = new Float32Array(NY);
+  for (let i = 0; i < NX; i++) a[i] = Math.cos(n * Math.PI * i / (NX - 1));
+  for (let j = 0; j < NY; j++) b[j] = Math.cos(n * Math.PI * j / (NY - 1));
+  CX.push(a); CY.push(b);
+}
+const F = new Float32Array(NX * NY);
+function field(modes) {
+  F.fill(0);
+  for (const [n, m, w] of modes) {
+    const cxn = CX[n], cxm = CX[m], cyn = CY[n], cym = CY[m];
+    for (let j = 0; j < NY; j++) { const a = cym[j] * w, b = cyn[j] * w, row = j * NX; for (let i = 0; i < NX; i++) F[row + i] += cxn[i] * a + cxm[i] * b; }
+  }
+}
+function contour(L) {
+  for (let j = 0; j < NY - 1; j++) for (let i = 0; i < NX - 1; i++) {
+    const k = j * NX + i, a = F[k] - L, b = F[k + 1] - L, c = F[k + NX + 1] - L, d = F[k + NX] - L;
+    const idx = (a > 0 ? 1 : 0) | (b > 0 ? 2 : 0) | (c > 0 ? 4 : 0) | (d > 0 ? 8 : 0);
+    if (idx === 0 || idx === 15) continue;
+    const px = i * CELL, py = j * CELL;
+    const T = () => [px + CELL * a / (a - b), py], R = () => [px + CELL, py + CELL * b / (b - c)];
+    const B = () => [px + CELL * d / (d - c), py + CELL], Lf = () => [px, py + CELL * a / (a - d)];
+    const seg = (p, q) => { ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); };
+    switch (idx) {
+      case 1: case 14: seg(Lf(), T()); break; case 2: case 13: seg(T(), R()); break;
+      case 3: case 12: seg(Lf(), R()); break; case 4: case 11: seg(R(), B()); break;
+      case 5: seg(Lf(), T()); seg(R(), B()); break; case 6: case 9: seg(T(), B()); break;
+      case 7: case 8: seg(Lf(), B()); break; case 10: seg(T(), R()); seg(Lf(), B()); break;
+    }
+  }
+}
+function drawFigure(modes, levels, color, width) {
+  field(modes); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineCap = 'round'; ctx.beginPath();
+  for (const L of levels) contour(L); ctx.stroke();
+}
+function figure(f) {
+  const pk = f.pk, modes = [[0, 1, 1 - pk[1]]];
+  for (let k = 2; k <= 6; k++) modes.push([k - 1, k, pk[k - 1] * (k < 6 ? 1 - pk[k] : 1 - f.b)]);
+  if (f.b > 0) { modes.push([2, 3, f.b * Math.cos(f.ph)]); modes.push([3, 4, f.b * Math.sin(f.ph)]); }
+  return modes.filter(q => q[2] > 0.002);
+}
+const STORM_FIG = [[2, 5], [3, 6], [2, 7], [4, 7], [3, 8], [5, 8], [4, 9], [2, 9], [5, 6], [3, 7], [4, 5]];
+const evFrames = TL.events.map(e => Math.round(e * FPS));
+
+/* ---------------------------------------------------------------- pictures: dot screen, ASCII */
+const imgs = {};
+function loadImgs() {
+  return Promise.all(Object.entries(window.OBJS).map(([k, src]) => new Promise(res => { const im = new Image(); im.onload = () => { imgs[k] = im; res(); }; im.src = src; })));
+}
+function coverData(img, w, h, fx = 0.5, fy = 0.5) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  const s = Math.max(w / img.width, h / img.height), dw = img.width * s, dh = img.height * s;
+  g.drawImage(img, (w - dw) * fx, (h - dh) * fy, dw, dh); return g.getImageData(0, 0, w, h).data;
+}
+function screenCanvas(img, w, h, cell) {                     // a fine 45-degree dot screen, ink on paper (a newspaper photograph)
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  g.fillStyle = PAPER; g.fillRect(0, 0, w, h); g.fillStyle = INK;
+  const d = coverData(img, w, h), a = Math.PI / 4, ca = Math.cos(a), sa = Math.sin(a), R = Math.hypot(w, h);
+  g.beginPath();
+  for (let u = -R; u <= R; u += cell) for (let v = -R; v <= R; v += cell) {
+    const x = w / 2 + u * ca - v * sa, y = h / 2 + u * sa + v * ca;
+    if (x < 0 || y < 0 || x >= w || y >= h) continue;
+    const l = d[((y | 0) * w + (x | 0)) * 4] / 255, tone = Math.pow(clamp((0.92 - l) / 0.8), 1.3);   // steeper curve: clean whites, solid blacks
+    const r = cell * 0.7 * Math.sqrt(tone); if (r > 0.35) { g.moveTo(x + r, y); g.arc(x, y, r, 0, 6.2832); }
+  }
+  g.fill();
+  const id = g.getImageData(0, 0, w, h), p = id.data;                 // 1-bit: every pixel is either ink or paper
+  for (let i = 0; i < p.length; i += 4) { const v = p[i] < 128 ? 0 : 255; p[i] = p[i + 1] = p[i + 2] = v; p[i + 3] = 255; }
+  g.putImageData(id, 0, 0); return c;
+}
+let RAMP = '';
+function buildRamp() {                                        // order the glyphs by how much ink they carry
+  const set = " .'`:-=+*cegarsCDEFGAB#%&@", c = document.createElement('canvas'); c.width = c.height = 48; const g = c.getContext('2d');
+  const ink = [...set].map(ch => { g.clearRect(0, 0, 48, 48); g.font = '500 40px "ACS Mono"'; g.textBaseline = 'top'; g.fillText(ch, 4, 2);
+    const d = g.getImageData(0, 0, 48, 48).data; let s = 0; for (let i = 3; i < d.length; i += 4) s += d[i]; return [ch, s]; });
+  ink.sort((p, q) => p[1] - q[1]); RAMP = ink.map(p => p[0]).join('');
+}
+const AC = 14, AR = 24;                                       // ASCII cell (px)
+function asciiGrid(img, light) {                              // light = glyphs for the bright parts (white text on black)
+  const cols = Math.floor(W / AC), rows = Math.floor(H / AR), d = coverData(img, cols, rows), out = [];
+  for (let j = 0; j < rows; j++) { let s = ''; for (let i = 0; i < cols; i++) {
+    const l = d[(j * cols + i) * 4] / 255, tone = light ? l : 1 - l; s += RAMP[Math.min(RAMP.length - 1, Math.floor(Math.pow(tone, 1.1) * RAMP.length))]; } out.push(s); }
+  return out;
+}
+function drawAscii(grid, color) {
+  ctx.fillStyle = color; ctx.font = '500 21px "ACS Mono"'; ctx.textBaseline = 'top';
+  for (let j = 0; j < grid.length; j++) ctx.fillText(grid[j], 2, j * AR + 1);
+}
+
+/* ---------------------------------------------------------------- the Chladni figure as a dot field
+   dots grow where the plate vibrates and vanish on the nodal lines, which run through the page as white paths */
+const lerp = (a, b, u) => a + (b - a) * u;
+const easeO = u => 1 - Math.pow(1 - clamp(u), 3), easeIO = u => { u = clamp(u); return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; };
+function dotField(modes, color, cell, gain, box = [0, 0, W, H], skip = null, shape = 'o', margin = 0) {
+  let norm = 0; for (const q of modes) norm += Math.abs(q[2]) * 2; norm = Math.max(norm, 1e-6);
+  ctx.fillStyle = color; ctx.beginPath();
+  const [bx, by, bw, bh] = box;
+  for (let y = by + cell / 2; y < by + bh; y += cell) for (let x = bx + cell / 2; x < bx + bw; x += cell) {
+    if (skip && x > skip[0] && x < skip[0] + skip[2] && y > skip[1] && y < skip[1] + skip[3]) continue;
+    const u = x / W, v = y / H; let f = 0;
+    for (const [n, m, w] of modes) f += w * (Math.cos(n * Math.PI * u) * Math.cos(m * Math.PI * v) + Math.cos(m * Math.PI * u) * Math.cos(n * Math.PI * v));
+    const win = margin ? Math.min(1, Math.min(x, W - x, y, H - y) / margin) : 1;      // the field thins out toward the edges of the page
+    const a = Math.min(1, Math.abs(f) / norm * 1.7), r = cell * 0.46 * Math.pow(a, 1.5) * gain * Math.pow(win, 1.5);
+    if (r < 0.6) continue;
+    if (shape === 'o') { ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, 6.2832); } else ctx.rect(x - r, y - r, 2 * r, 2 * r);
+  }
+  ctx.fill();
+}
+
+/* ---------------------------------------------------------------- the photograph as a bitmap (square pixels on an 8 px grid), fraying at its edges */
+const CARD = [96, 392, 600, 696], PX = 8;
+let bitmap = null, asciiFull = [];
+function buildBitmap(img) {
+  const [, , cw, ch] = CARD, cols = cw / PX, rows = ch / PX, d = coverData(img, cols, rows), r = rng(11), out = [];
+  for (let j = -14; j < rows + 14; j++) for (let i = -14; i < cols + 14; i++) {
+    const inside = i >= 0 && j >= 0 && i < cols && j < rows;
+    const edge = Math.min(i, j, cols - 1 - i, rows - 1 - j);              // distance to the card edge, in pixels of the grid
+    let tone;
+    if (inside) { const l = d[(j * cols + i) * 4] / 255; tone = Math.pow(clamp((0.9 - l) / 0.78), 1.2); if (edge < 6) tone *= 0.35 + 0.65 * edge / 6; }
+    else tone = r() < 0.06 * Math.exp(edge / 4) ? 0.3 : 0;                 // a few stray pixels outside, thinning with distance
+    const s = tone > 0.62 ? 8 : tone > 0.34 ? 6 : tone > 0.14 ? 4 : tone > 0.05 && r() < 0.6 ? 2 : 0;
+    if (s) out.push([i * PX + (PX - s) / 2, j * PX + (PX - s) / 2, s, j]);
+  }
+  return out;
+}
+const BANDS = [ { t: 3.9, y0: 22, y1: 26, dx: 6 }, { t: 5.7, y0: 58, y1: 61, dx: -5 }, { t: 7.0, y0: 40, y1: 44, dx: 8 } ];   // in grid rows / px*8
+function drawBitmap(t, f, ox = CARD[0], oy = CARD[1], settled = false) {
+  const lock = TL.bGlide1 - 0.05, back = settled ? 1 : sstep(lock - 0.1, lock + 0.35, t);
+  const sway = (t >= TL.bIn && t < lock) ? 1 + 1.6 * f.R * Math.sin(f.ph) : 1;
+  const shift = j => { for (const b of BANDS) if ((settled || t >= b.t) && j >= b.y0 && j < b.y1) return Math.round(b.dx * (settled ? 1 : easeO((t - b.t) / 0.15)) * sway * (1 - back)) * PX; return 0; };
+  ctx.fillStyle = INK; ctx.beginPath();
+  for (const [x, y, s, j] of bitmap) ctx.rect(ox + x + shift(j), oy + y, s, s);
+  ctx.fill();
+}
+const LABELS = [
+  { t: 3.0, s: '作曲',     x: 384, y: 16,  w: 136, h: 232 },
+  { t: 3.9, s: '音楽理論', x: 24,  y: 96,  w: 232, h: 280 },
+  { t: 4.8, s: 'DTM',      x: 200, y: 464, w: 184, h: 120 },
+  { t: 5.7, s: '電子音響', x: 24,  y: 560, w: 176, h: 112 },
+];
+function drawLabels(t, ox = CARD[0], oy = CARD[1]) {
+  ctx.lineWidth = 2; ctx.font = '500 26px "ACS Gothic"'; ctx.textBaseline = 'middle';
+  for (const L of LABELS) {
+    if (t < L.t) continue;
+    const u = easeO((t - L.t) / 0.2), w = Math.max(2, snap(L.w * u, 2)), h = Math.max(2, snap(L.h * u, 2));
+    ctx.strokeStyle = INK; ctx.strokeRect(ox + L.x + 1, oy + L.y + 1, w - 2, h - 2);
+    const tw = ctx.measureText(L.s).width + 24;
+    ctx.fillStyle = PAPER; ctx.fillRect(ox + L.x, oy + L.y - 38, tw, 38); ctx.strokeRect(ox + L.x + 1, oy + L.y - 37, tw - 2, 38);
+    ctx.fillStyle = INK; ctx.fillText(L.s, ox + L.x + 12, oy + L.y - 18);
+  }
+}
+
+/* ---------------------------------------------------------------- call to action: big type with the dot field running through it */
+let brandSize = 150;
+function drawCTA(t) {
+  const h1 = TL.ctaHits[0], h2 = h1 + 0.3, lh = brandSize * 0.96, top = 330;
+  ctx.fillStyle = INK; ctx.font = `${brandSize}px "ACS Anton"`; ctx.textBaseline = 'alphabetic';
+  const lines = ['ATELIER', 'COMPOSITION', 'SON'];
+  lines.forEach((s, i) => { if (t >= h1 + i * 0.05) ctx.fillText(s, 90, top + lh * (i + 1)); });
+  // the fifth, as a band of the dot field under the name
+  const y0 = top + lh * 3 + 48, y1 = y0 + 240, g = easeO((t - h1) / 0.35);
+  dotField([[2, 3, 1]], INK, 20, 1.15 * g * (0.85 + 0.15 * FEAT[Math.min(FEAT.length - 1, Math.round(t * FPS))].lv), [0, y0, W, y1 - y0]);
+  if (t >= h2) {
+    const yb = y1 + 48;
+    ctx.fillStyle = INK; ctx.fillRect(96, yb, 520, 2);
+    ctx.font = '500 40px "ACS Gothic"'; ctx.textBaseline = 'top'; ctx.fillText('30分無料相談', 96, yb + 28);
+    ctx.font = '400 26px "ACS Gothic"'; ctx.fillText('作曲・音楽理論・DTM・電子音響', 96, yb + 90);
+    ctx.font = '500 22px "ACS Mono"'; ctx.fillText('ateliercompositionson.com', 96, yb + 136);
+  }
+}
+
+/* ---------------------------------------------------------------- one frame */
+window.renderFrame = function (i) {
+  const f = FEAT[i], t = f.t;
+  const inStorm = t >= TL.strike - 0.001 && t < TL.darkOut0, flash = t >= TL.strike - 0.001 && t < TL.strike + 0.07;
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
+  if (flash) { ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H); return t; }
+  if (inStorm) {
+    ctx.fillStyle = INK; ctx.fillRect(0, 0, W, H);
+    let k = -1; for (let j = 0; j < evFrames.length; j++) if (i >= evFrames[j]) k = j; k = Math.max(0, k);
+    if (k % 2 === 1) drawAscii(asciiFull[((k - 1) / 2) % asciiFull.length], PAPER);
+    else { const q = STORM_FIG[k % STORM_FIG.length]; dotField([[q[0], q[1], 1]], PAPER, 18, 1.15, [0, 0, W, H], null, 's'); }
+    return t;
+  }
+  ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
+  if (t >= TL.darkOut0) {
+    if (t < TL.ctaHits[0]) { dotField([[2, 3, 1]], INK, 24, 1, [0, 0, W, H], null, 'o', 260); return t; }   // a beat of silence: the fifth as a field
+    drawCTA(t); return t;
+  }
+  if (t < 1.15) {                                             // a staff; a scan line draws the first nodal line
+    const wipe = H * sstep(0.3, 1.1, t);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, wipe); ctx.clip(); drawFigure(figure(f), [0], INK, 2.5); ctx.restore();
+    ctx.fillStyle = INK; for (let k = -2; k <= 2; k++) { const y = 960 + k * 44; if (y > wipe) ctx.fillRect(0, y - 1, W, 2); }
+    if (wipe > 2 && wipe < H - 2) ctx.fillRect(0, wipe - 2, W, 4);
+    return t;
+  }
+  // the line becomes a field: dots swell on either side of it (and breathe with the sound)
+  const grow = easeO((t - 1.15) / 0.5), card = t >= 3.0;
+  const gain = grow * (0.8 + 0.2 * f.lv) * (card ? 0.82 : 1);
+  if (t < 1.4) { ctx.globalAlpha = 1 - clamp((t - 1.15) / 0.25); drawFigure(figure(f), [0], INK, 2.5); ctx.globalAlpha = 1; }
+  const skip = card ? [CARD[0] - 40, CARD[1] - 80, CARD[2] + 80, CARD[3] + 120] : null;
+  dotField(figure(f), INK, 24, gain, [0, 0, W, H], skip, 'o', 260);
+  if (card) {                                                  // the photograph arrives on the octave, as a bitmap with frayed edges
+    const reveal = easeO((t - 3.0) / 0.35);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, CARD[1] - 140, W, (CARD[3] + 280) * reveal); ctx.clip();
+    drawBitmap(t, f); ctx.restore();
+    drawLabels(t);
+  }
+  return t;
+};
+window.TOTAL = FEAT.length;
+Promise.all([document.fonts.load('150px "ACS Anton"'), document.fonts.load('500 21px "ACS Mono"'), document.fonts.load('500 40px "ACS Gothic"'), document.fonts.load('400 28px "ACS Gothic"'), loadImgs()]).then(() => {
+  buildRamp();
+  bitmap = buildBitmap(imgs.kb);
+  asciiFull = ['synth', 'piano', 'mon', 'kb'].map(k => asciiGrid(imgs[k], true));
+  ctx.font = '150px "ACS Anton"'; const w = ctx.measureText('COMPOSITION').width; brandSize = Math.floor(150 * 892 / w);
+  window.READY = true;
+});
+</script>
+</body>
+</html>
