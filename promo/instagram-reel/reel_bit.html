@@ -234,6 +234,26 @@ function drawLabels(t, f, ox = CARD[0], oy = CARD[1]) {
   ctx.globalAlpha = 1;
 }
 
+/* ---------------------------------------------------------------- the address as a dot-matrix (5 x 7), the same dots as the field */
+const GLYPH = {
+  a: ['.....', '.....', '.###.', '....#', '.####', '#...#', '.####'], c: ['.....', '.....', '.###.', '#....', '#....', '#...#', '.###.'],
+  e: ['.....', '.....', '.###.', '#...#', '#####', '#....', '.###.'], i: ['..#..', '.....', '.##..', '..#..', '..#..', '..#..', '.###.'],
+  l: ['.##..', '..#..', '..#..', '..#..', '..#..', '..#..', '.###.'], m: ['.....', '.....', '##.#.', '#.#.#', '#.#.#', '#.#.#', '#.#.#'],
+  n: ['.....', '.....', '#.##.', '##..#', '#...#', '#...#', '#...#'], o: ['.....', '.....', '.###.', '#...#', '#...#', '#...#', '.###.'],
+  p: ['.....', '.....', '####.', '#...#', '####.', '#....', '#....'], r: ['.....', '.....', '#.##.', '##..#', '#....', '#....', '#....'],
+  s: ['.....', '.....', '.####', '#....', '.###.', '....#', '####.'], t: ['..#..', '..#..', '#####', '..#..', '..#..', '..#.#', '...#.'],
+  '.': ['.....', '.....', '.....', '.....', '.....', '.##..', '.##..'],
+};
+function dotText(str, x, y, width, u = 1) {                    // u: how much of the line has been printed, left to right
+  const cols = str.length * 6 - 1, p = width / cols, r = p * 0.42, shown = Math.ceil(cols * u);
+  ctx.fillStyle = INK; ctx.beginPath();
+  [...str].forEach((ch, k) => { const g = GLYPH[ch]; if (!g) return;
+    for (let j = 0; j < 7; j++) for (let i = 0; i < 5; i++) { if (g[j][i] !== '#' || k * 6 + i >= shown) continue;
+      const cx = x + (k * 6 + i) * p + p / 2, cy = y + j * p + p / 2; ctx.moveTo(cx + r, cy); ctx.arc(cx, cy, r, 0, 6.2832); } });
+  ctx.fill();
+  return 7 * p;
+}
+
 /* ---------------------------------------------------------------- call to action: big type with the dot field running through it */
 let brandSize = 150;
 function drawCTA(t) {
@@ -244,12 +264,12 @@ function drawCTA(t) {
   // the fifth, as a band of the dot field under the name
   const y0 = top + lh * 3 + 48, y1 = y0 + 240, g = easeO((t - h1) / 0.35);
   dotField([[2, 3, 1]], INK, 20, 1.15 * g * (0.85 + 0.15 * FEAT[Math.min(FEAT.length - 1, Math.round(t * FPS))].lv), [0, y0, W, y1 - y0]);
+  const ya = y1 + 36, ah = t >= h2 ? dotText('ateliercompositionson.com', 96, ya, 888, easeO((t - h2) / 0.4)) : 7 * 888 / 149;
   if (t >= h2) {
-    const yb = y1 + 48;
+    const yb = ya + ah + 56;
     ctx.fillStyle = INK; ctx.fillRect(96, yb, 520, 2);
     ctx.font = '500 40px "ACS Gothic"'; ctx.textBaseline = 'top'; ctx.fillText('30分無料相談', 96, yb + 28);
     ctx.font = '400 26px "ACS Gothic"'; ctx.fillText('作曲・音楽理論・DTM・電子音響', 96, yb + 90);
-    ctx.font = '500 22px "ACS Mono"'; ctx.fillText('ateliercompositionson.com', 96, yb + 136);
   }
 }
 
