@@ -24,7 +24,7 @@ canvas { display:block; width:1080px; height:1920px; }
    Chladni iso-lines run underneath as the score's own drawing. */
 const W = 1080, H = 1920, CELL = 4, NX = W / CELL + 1, NY = H / CELL + 1;
 const TL = window.TL, FEAT = window.FEAT, FPS = TL.fps;
-const PAPER = '#f4f4f1', INK = '#0e0e0e';
+const PAPER = '#ffffff', INK = '#000000';                  // pure black and white
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const sstep = (a, b, x) => { const u = clamp((x - a) / (b - a)); return u * u * (3 - 2 * u); };
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
@@ -95,10 +95,13 @@ function screenCanvas(img, w, h, cell) {                     // a fine 45-degree
   for (let u = -R; u <= R; u += cell) for (let v = -R; v <= R; v += cell) {
     const x = w / 2 + u * ca - v * sa, y = h / 2 + u * sa + v * ca;
     if (x < 0 || y < 0 || x >= w || y >= h) continue;
-    const l = d[((y | 0) * w + (x | 0)) * 4] / 255, tone = Math.pow(1 - Math.min(1, l * 1.12), 1.15);
+    const l = d[((y | 0) * w + (x | 0)) * 4] / 255, tone = Math.pow(clamp((0.92 - l) / 0.8), 1.3);   // steeper curve: clean whites, solid blacks
     const r = cell * 0.7 * Math.sqrt(tone); if (r > 0.35) { g.moveTo(x + r, y); g.arc(x, y, r, 0, 6.2832); }
   }
-  g.fill(); return c;
+  g.fill();
+  const id = g.getImageData(0, 0, w, h), p = id.data;                 // 1-bit: every pixel is either ink or paper
+  for (let i = 0; i < p.length; i += 4) { const v = p[i] < 128 ? 0 : 255; p[i] = p[i + 1] = p[i + 2] = v; p[i + 3] = 255; }
+  g.putImageData(id, 0, 0); return c;
 }
 let RAMP = '';
 function buildRamp() {                                        // order the glyphs by how much ink they carry
@@ -170,13 +173,14 @@ function drawHero(t, f, ox = HX, oy = HY, clip = null, glitch = true) {
   ctx.restore();
 }
 function drawLabels(t, ox = HX, oy = HY) {
-  ctx.lineWidth = 2; ctx.font = '500 24px "ACS Gothic"'; ctx.textBaseline = 'middle';
+  ctx.lineWidth = 2; ctx.font = '500 26px "ACS Gothic"'; ctx.textBaseline = 'middle';
   for (const L of LABELS) {
     if (t < L.t) continue;
     ctx.strokeStyle = INK; ctx.strokeRect(ox + L.x + 1, oy + L.y + 1, L.w - 2, L.h - 2);
-    const tw = ctx.measureText(L.s).width + 20;
-    ctx.fillStyle = INK; ctx.fillRect(ox + L.x, oy + L.y - 36, tw, 36);
-    ctx.fillStyle = PAPER; ctx.fillText(L.s, ox + L.x + 10, oy + L.y - 17);
+    const tw = ctx.measureText(L.s).width + 24;
+    ctx.fillStyle = PAPER; ctx.fillRect(ox + L.x, oy + L.y - 38, tw, 38);
+    ctx.strokeRect(ox + L.x + 1, oy + L.y - 37, tw - 2, 38);
+    ctx.fillStyle = INK; ctx.fillText(L.s, ox + L.x + 12, oy + L.y - 18);
   }
 }
 
@@ -221,24 +225,24 @@ window.renderFrame = function (i) {
     let k = -1; for (let j = 0; j < evFrames.length; j++) if (i >= evFrames[j]) k = j; k = Math.max(0, k);
     if (k % 2 === 1) drawAscii(asciiFull[((k - 1) / 2) % asciiFull.length], PAPER);
     else { const q = STORM_FIG[k % STORM_FIG.length]; drawFigure([[q[0], q[1], 1]], [-0.6, -0.3, 0, 0.3, 0.6], PAPER, 2.5); }
-    masthead(PAPER); return t;
+    return t;
   }
   ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
   if (t >= TL.darkOut0) {                                     // after the cut: a beat of silence on the fifth, then the page
-    if (t < TL.ctaHits[0]) { drawFigure([[2, 3, 1]], [0], INK, 2.5); masthead(INK); return t; }
-    drawCTA(t, f); bracket(HX, 150, false, INK); masthead(INK); return t;
+    if (t < TL.ctaHits[0]) { drawFigure([[2, 3, 1]], [0], INK, 2.5); return t; }
+    drawCTA(t, f); bracket(HX, 150, false, INK); return t;
   }
   if (t < 1.15) {                                             // a staff; a scan line draws the first nodal line
     const wipe = H * sstep(0.3, 1.1, t);
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, wipe); ctx.clip(); drawFigure(figure(f), [0], INK, 2.5); ctx.restore();
     ctx.fillStyle = INK; for (let k = -2; k <= 2; k++) { const y = 960 + k * 44; if (y > wipe) ctx.fillRect(0, y - 1, W, 2); }
     if (wipe > 2 && wipe < H - 2) ctx.fillRect(0, wipe - 2, W, 4);
-    bracket(HX, 150, false, INK); masthead(INK); return t;
+    bracket(HX, 150, false, INK); return t;
   }
   const lv = f.b > 0 && f.R > 0.04 ? (() => { const d = 0.05 + 0.5 * f.R; return [-2 * d, -d, 0, d, 2 * d]; })() : [0];
   drawFigure(figure(f), lv, INK, 2.5);
   drawHero(t, f); drawLabels(t);
-  bracket(HX, 150, false, INK); bracket(HX + HW, HY + HH + 120, true, INK); masthead(INK);
+  bracket(HX, 150, false, INK); bracket(HX + HW, HY + HH + 120, true, INK);
   return t;
 };
 window.TOTAL = FEAT.length;
