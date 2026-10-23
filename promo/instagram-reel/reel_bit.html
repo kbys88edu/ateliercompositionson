@@ -135,7 +135,7 @@ function dotField(modes, color, cell, gain, box = [0, 0, W, H], skip = null, sha
     const u = x / W, v = y / H; let f = 0;
     for (const [n, m, w] of modes) f += w * (Math.cos(n * Math.PI * u) * Math.cos(m * Math.PI * v) + Math.cos(m * Math.PI * u) * Math.cos(n * Math.PI * v));
     const win = margin ? Math.min(1, Math.min(x, W - x, y, H - y) / margin) : 1;      // the field thins out toward the edges of the page
-    const a = Math.min(1, Math.abs(f) / norm * 1.7), r = cell * 0.46 * Math.pow(a, 1.5) * gain * Math.pow(win, 1.5);
+    const a = Math.min(1, Math.abs(f) / norm * 1.6), r = cell * 0.42 * Math.pow(a, 1.8) * gain * Math.pow(win, 1.5);
     if (r < 0.6) continue;
     if (shape === 'o') { ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, 6.2832); } else ctx.rect(x - r, y - r, 2 * r, 2 * r);
   }
@@ -143,46 +143,38 @@ function dotField(modes, color, cell, gain, box = [0, 0, W, H], skip = null, sha
 }
 
 /* ---------------------------------------------------------------- the photograph as a bitmap (square pixels on an 8 px grid), fraying at its edges */
-const CARD = [96, 392, 600, 696], PX = 8;
+const CARD = [312, 616, 456, 528], PX = 4;
 let bitmap = null, asciiFull = [];
-function buildBitmap(img) {
-  const [, , cw, ch] = CARD, cols = cw / PX, rows = ch / PX, d = coverData(img, cols, rows), r = rng(11), out = [];
-  for (let j = -14; j < rows + 14; j++) for (let i = -14; i < cols + 14; i++) {
-    const inside = i >= 0 && j >= 0 && i < cols && j < rows;
-    const edge = Math.min(i, j, cols - 1 - i, rows - 1 - j);              // distance to the card edge, in pixels of the grid
-    let tone;
-    if (inside) { const l = d[(j * cols + i) * 4] / 255; tone = Math.pow(clamp((0.9 - l) / 0.78), 1.2); if (edge < 6) tone *= 0.35 + 0.65 * edge / 6; }
-    else tone = r() < 0.06 * Math.exp(edge / 4) ? 0.3 : 0;                 // a few stray pixels outside, thinning with distance
-    const s = tone > 0.62 ? 8 : tone > 0.34 ? 6 : tone > 0.14 ? 4 : tone > 0.05 && r() < 0.6 ? 2 : 0;
-    if (s) out.push([i * PX + (PX - s) / 2, j * PX + (PX - s) / 2, s, j]);
-  }
+const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16);
+function buildBitmap(img) {                                    // 1-bit ordered dither on a 4 px grid: a clean bitmap, hard edges
+  const [, , cw, ch] = CARD, cols = cw / PX, rows = ch / PX, d = coverData(img, cols, rows, 0.62, 0.3), out = [];
+  for (let j = 0; j < rows; j++) { let run = -1;
+    for (let i = 0; i <= cols; i++) {
+      let on = false;
+      if (i < cols) { const l = d[(j * cols + i) * 4] / 255, tone = Math.pow(clamp((0.94 - l) / 0.84), 1.1); on = tone > BAYER[(j % 4) * 4 + (i % 4)]; }
+      if (on && run < 0) run = i;
+      if (!on && run >= 0) { out.push([run * PX, j * PX, (i - run) * PX, PX]); run = -1; }
+    } }
   return out;
 }
-const BANDS = [ { t: 3.9, y0: 22, y1: 26, dx: 6 }, { t: 5.7, y0: 58, y1: 61, dx: -5 }, { t: 7.0, y0: 40, y1: 44, dx: 8 } ];   // in grid rows / px*8
-function drawBitmap(t, f, ox = CARD[0], oy = CARD[1], settled = false) {
-  const lock = TL.bGlide1 - 0.05, back = settled ? 1 : sstep(lock - 0.1, lock + 0.35, t);
-  const sway = (t >= TL.bIn && t < lock) ? 1 + 1.6 * f.R * Math.sin(f.ph) : 1;
-  const shift = j => { for (const b of BANDS) if ((settled || t >= b.t) && j >= b.y0 && j < b.y1) return Math.round(b.dx * (settled ? 1 : easeO((t - b.t) / 0.15)) * sway * (1 - back)) * PX; return 0; };
-  ctx.fillStyle = INK; ctx.beginPath();
-  for (const [x, y, s, j] of bitmap) ctx.rect(ox + x + shift(j), oy + y, s, s);
-  ctx.fill();
-}
+function drawBitmap(ox = CARD[0], oy = CARD[1]) { ctx.fillStyle = INK; ctx.beginPath(); for (const [x, y, w, h] of bitmap) ctx.rect(ox + x, oy + y, w, h); ctx.fill(); }
 const LABELS = [
-  { t: 3.0, s: '作曲',     x: 384, y: 16,  w: 136, h: 232 },
-  { t: 3.9, s: '音楽理論', x: 24,  y: 96,  w: 232, h: 280 },
-  { t: 4.8, s: 'DTM',      x: 200, y: 464, w: 184, h: 120 },
-  { t: 5.7, s: '電子音響', x: 24,  y: 560, w: 176, h: 112 },
+  { t: 3.0, s: '作曲',     x: 292, y: 12,  w: 112, h: 176 },
+  { t: 3.9, s: '音楽理論', x: 16,  y: 72,  w: 184, h: 212 },
+  { t: 4.8, s: 'DTM',      x: 152, y: 352, w: 144, h: 96 },
+  { t: 5.7, s: '電子音響', x: 16,  y: 424, w: 136, h: 88 },
 ];
 function drawLabels(t, ox = CARD[0], oy = CARD[1]) {
-  ctx.lineWidth = 2; ctx.font = '500 26px "ACS Gothic"'; ctx.textBaseline = 'middle';
+  ctx.lineWidth = 2; ctx.font = '500 22px "ACS Gothic"'; ctx.textBaseline = 'middle';
   for (const L of LABELS) {
     if (t < L.t) continue;
-    const u = easeO((t - L.t) / 0.2), w = Math.max(2, snap(L.w * u, 2)), h = Math.max(2, snap(L.h * u, 2));
-    ctx.strokeStyle = INK; ctx.strokeRect(ox + L.x + 1, oy + L.y + 1, w - 2, h - 2);
-    const tw = ctx.measureText(L.s).width + 24;
-    ctx.fillStyle = PAPER; ctx.fillRect(ox + L.x, oy + L.y - 38, tw, 38); ctx.strokeRect(ox + L.x + 1, oy + L.y - 37, tw - 2, 38);
-    ctx.fillStyle = INK; ctx.fillText(L.s, ox + L.x + 12, oy + L.y - 18);
+    ctx.globalAlpha = clamp((t - L.t) / 0.16);                  // a short, quiet fade
+    ctx.strokeStyle = INK; ctx.strokeRect(ox + L.x + 1, oy + L.y + 1, L.w - 2, L.h - 2);
+    const tw = ctx.measureText(L.s).width + 20;
+    ctx.fillStyle = PAPER; ctx.fillRect(ox + L.x, oy + L.y - 32, tw, 32); ctx.strokeRect(ox + L.x + 1, oy + L.y - 31, tw - 2, 32);
+    ctx.fillStyle = INK; ctx.fillText(L.s, ox + L.x + 10, oy + L.y - 15);
   }
+  ctx.globalAlpha = 1;
 }
 
 /* ---------------------------------------------------------------- call to action: big type with the dot field running through it */
@@ -229,16 +221,15 @@ window.renderFrame = function (i) {
     if (wipe > 2 && wipe < H - 2) ctx.fillRect(0, wipe - 2, W, 4);
     return t;
   }
-  // the line becomes a field: dots swell on either side of it (and breathe with the sound)
-  const grow = easeO((t - 1.15) / 0.5), card = t >= 3.0;
-  const gain = grow * (0.8 + 0.2 * f.lv) * (card ? 0.82 : 1);
-  if (t < 1.4) { ctx.globalAlpha = 1 - clamp((t - 1.15) / 0.25); drawFigure(figure(f), [0], INK, 2.5); ctx.globalAlpha = 1; }
-  const skip = card ? [CARD[0] - 40, CARD[1] - 80, CARD[2] + 80, CARD[3] + 120] : null;
-  dotField(figure(f), INK, 24, gain, [0, 0, W, H], skip, 'o', 260);
-  if (card) {                                                  // the photograph arrives on the octave, as a bitmap with frayed edges
-    const reveal = easeO((t - 3.0) / 0.35);
-    ctx.save(); ctx.beginPath(); ctx.rect(0, CARD[1] - 140, W, (CARD[3] + 280) * reveal); ctx.clip();
-    drawBitmap(t, f); ctx.restore();
+  // the line becomes a field: small dots gather on either side of it, breathing a little with the sound
+  const grow = easeIO((t - 1.15) / 0.8), card = t >= 3.0;
+  const gain = grow * (0.92 + 0.08 * f.lv);
+  if (t < 1.5) { ctx.globalAlpha = 1 - clamp((t - 1.15) / 0.35); drawFigure(figure(f), [0], INK, 2); ctx.globalAlpha = 1; }
+  const skip = card ? [CARD[0] - 56, CARD[1] - 88, CARD[2] + 112, CARD[3] + 144] : null;
+  dotField(figure(f), INK, 28, gain, [0, 0, W, H], skip, 'o', 280);
+  if (card) {                                                  // the photograph is drawn down, slowly, on the octave
+    const reveal = easeIO((t - 3.0) / 0.6);
+    ctx.save(); ctx.beginPath(); ctx.rect(CARD[0], CARD[1], CARD[2], CARD[3] * reveal); ctx.clip(); drawBitmap(); ctx.restore();
     drawLabels(t);
   }
   return t;
