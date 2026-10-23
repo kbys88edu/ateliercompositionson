@@ -147,7 +147,7 @@ const CARD = [312, 616, 456, 528], PX = 4;
 let bitmap = null, asciiFull = [];
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16);
 function buildBitmap(img) {                                    // 1-bit ordered dither on a 4 px grid: a clean bitmap, hard edges
-  const [, , cw, ch] = CARD, cols = cw / PX, rows = ch / PX, d = coverData(img, cols, rows, 0.62, 0.3), out = [];
+  const [, , cw, ch] = CARD, cols = cw / PX, rows = ch / PX, d = coverData(img, cols, rows, 0.85, 0.2), out = [];
   for (let j = 0; j < rows; j++) { let run = -1;
     for (let i = 0; i <= cols; i++) {
       let on = false;
