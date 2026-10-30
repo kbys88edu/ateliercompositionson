@@ -1000,7 +1000,29 @@ function renderResults(results) {
   }).join("");
 }
 
+
+function recordStudyLog(errorCount, warnCount, okCount) {
+  if (!window.StudyLog) return;
+  const exercise = typeof getSelectedExercise === "function" ? getSelectedExercise() : null;
+  const title = exercise && exercise.title
+    ? (typeof exercise.title === "string" ? exercise.title : (exercise.title[currentLanguage] || exercise.title.ja || ""))
+    : "";
+  const notes = getNotesFromTextarea("counterpoint").filter(Boolean).join(" ");
+  const isFr = currentLanguage === "fr";
+  window.StudyLog.record({
+    tool: "counterpoint-module4",
+    toolLabel: isFr ? "Contrepoint Module 4" : "対位法 Module 4",
+    kind: "analysis",
+    question: title || (isFr ? "Exercice libre" : "自由課題"),
+    detail: notes,
+    answer: isFr ? `fautes ${errorCount} / avertissements ${warnCount} / OK ${okCount}` : `禁則 ${errorCount} / 注意 ${warnCount} / OK ${okCount}`,
+    status: errorCount ? "error" : warnCount ? "warn" : "ok",
+    counts: { errors: errorCount, warnings: warnCount, ok: okCount }
+  });
+}
+
 function renderSummary(errorCount, warnCount, okCount) {
+  recordStudyLog(errorCount, warnCount, okCount);
   const summary = document.getElementById("summary");
   if (!summary) return;
 

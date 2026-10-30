@@ -357,6 +357,7 @@
     gtag("js", new Date());
     gtag("config", "G-Y1792EBWTT");
   </script>
+  <link rel="stylesheet" href="css/study-log.css?v=20261030" />
 </head>
 
 <body>
@@ -451,6 +452,15 @@
     </section>
 
 
+    <section class="lesson-cta study-log-cta" aria-label="Study log">
+      <p class="eyebrow" data-i18n="logEyebrow">Study log</p>
+      <h2 class="lesson-cta-title" data-i18n="logTitle">学習記録</h2>
+      <p class="lesson-cta-text" data-i18n="logText">各モジュールで「解析する」を押した結果を自動で記録します。その日の記録をPDFに保存したり、先生にメールで共有できます。</p>
+      <div class="lesson-cta-actions">
+        <a class="lesson-button" href="/counterpoint/log.html" data-i18n="logButton">学習記録を開く</a>
+      </div>
+    </section>
+
     <section class="lesson-cta" aria-label="Counterpoint lessons">
       <p class="eyebrow" data-i18n="lessonEyebrow">Lesson</p>
       <h2 class="lesson-cta-title" data-i18n="lessonTitle">対位法を、音として理解する</h2>
@@ -494,7 +504,11 @@
         lessonTitle: "対位法を、音として理解する",
         lessonText: "チェッカーの結果は、学習の入口です。なぜその進行が自然に聞こえるのか、どこで声部が硬くなるのかを、実際に弾いて確認しながら整理します。",
         lessonNote: "対位法は、禁則を避けるだけでなく、旋律の方向、緊張と解決、二つの声部の独立性を耳で理解することが重要です。",
-        consultationButton: "無料相談を予約する"
+        consultationButton: "無料相談を予約する",
+        logEyebrow: "Study log",
+        logTitle: "学習記録",
+        logText: "各モジュールで「解析する」を押した結果を自動で記録します。その日の記録をPDFに保存したり、先生にメールで共有できます。",
+        logButton: "学習記録を開く"
       },
       fr: {
         languageLabel: "Langue",
@@ -519,7 +533,11 @@
         lessonTitle: "Comprendre le contrepoint par l’écoute",
         lessonText: "Le résultat du vérificateur n’est qu’un point de départ. En cours, nous jouons les lignes, écoutons les tensions et clarifions pourquoi certains mouvements fonctionnent musicalement.",
         lessonNote: "Le contrepoint ne consiste pas seulement à éviter des fautes : il faut comprendre la direction mélodique, la tension et la résolution, ainsi que l’indépendance réelle des voix.",
-        consultationButton: "Réserver une consultation gratuite"
+        consultationButton: "Réserver une consultation gratuite",
+        logEyebrow: "Journal d’étude",
+        logTitle: "Journal d’étude",
+        logText: "Chaque analyse lancée dans un module est enregistrée automatiquement. Enregistrez le journal du jour en PDF ou partagez-le avec votre professeur par e-mail.",
+        logButton: "Ouvrir le journal"
       }
     };
 
@@ -547,6 +565,7 @@
 
     window.addEventListener("DOMContentLoaded", () => setLanguage("ja"));
   </script>
+  <script src="js/study-log.js?v=20261030" data-site="counterpoint" data-log-url="log.html"></script>
   <script defer src="../assets/js/acs-tracking.js"></script>
 </body>
 </html>

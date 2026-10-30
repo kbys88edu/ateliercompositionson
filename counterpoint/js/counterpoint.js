@@ -877,44 +877,113 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
   }
 
   function analyzeCounterpoint() {
-    const result = $("analysisInlineResult");
-    const cantus = getNotesFromTextarea("cantus");
+    const inline = $("analysisInlineResult");
+    const list = $("result");
+    const cantus = getNotesFromTextarea("cantus").filter(Boolean);
     const counterpoint = getNotesFromTextarea("counterpoint").filter(Boolean);
+    const NAMES = {"0": "完全1度", "1": "短2度", "2": "長2度", "3": "短3度", "4": "長3度", "5": "完全4度", "6": "増4度/減5度", "7": "完全5度", "8": "短6度", "9": "長6度", "10": "短7度", "11": "長7度", "12": "完全8度"};
+    const results = [];
+    const add = (type, message) => results.push({ type, message });
+    const intervalName = (semitones) => {
+      const abs = Math.abs(semitones);
+      return abs > 12 ? `${NAMES[abs % 12]} (+8)` : NAMES[abs];
+    };
 
-    if (!result) return;
+    if (!inline) return;
+    if (!cantus.length) add("error", "定旋律が読み込まれていません。");
+    else if (!counterpoint.length) add("error", "対旋律が入力されていません。");
 
-    if (!cantus.length) {
-      result.innerHTML = "定旋律が読み込まれていません。";
-      return;
-    }
+    if (cantus.length && counterpoint.length) {
+      if (cantus.length !== counterpoint.length) add("error", `音数が合っていません：定旋律 ${cantus.length} 音に対して対旋律 ${counterpoint.length} 音です。`);
+      else add("ok", `音数：${cantus.length} 音ずつで一致しています。`);
 
-    if (!counterpoint.length) {
-      result.innerHTML = "対旋律がNon saisiです。";
-      return;
-    }
+      const len = Math.min(cantus.length, counterpoint.length);
+      const c = cantus.map(noteToMidi);
+      const p = counterpoint.map(noteToMidi);
+      const PERFECT = [0, 7];
+      const CONSONANT = [0, 3, 4, 7, 8, 9];
+      const sig = (x) => (x > 0 ? 1 : x < 0 ? -1 : 0);
+      let parallelFound = false;
+      let run = 0;
+      let runStart = 0;
 
-    const issues = [];
-    const len = Math.min(cantus.length, counterpoint.length);
+      for (let i = 0; i < len; i += 1) {
+        if (c[i] === null || p[i] === null) { add("error", `${i + 1}音目：音名を読み取れません。`); continue; }
+        const diff = p[i] - c[i];
+        const cls = Math.abs(diff) % 12;
+        const n = intervalName(diff);
 
-    for (let i = 0; i < len; i += 1) {
-      const cMidi = noteToMidi(cantus[i]);
-      const pMidi = noteToMidi(counterpoint[i]);
-      if (cMidi === null || pMidi === null) continue;
+        if (diff < 0) add("warn", `${i + 1}音目：対旋律が定旋律より下にあります（声部交差）。`);
 
-      const interval = Math.abs(pMidi - cMidi) % 12;
-      const allowed = [0, 3, 4, 7, 8, 9].includes(interval);
+        if (!CONSONANT.includes(cls)) add("error", `${i + 1}音目：${n} は不協和音程です。協和音程（1・3・5・6・8度）にしてください。`);
+        else if (i === 0 && !PERFECT.includes(cls)) add("error", `開始音：${n} で始まっています。完全1度・5度・8度で始めてください。`);
+        else if (i === len - 1 && cls !== 0) add(cls === 7 ? "warn" : "error", cls === 7 ? "終止音：完全5度で終わっています。完全1度か8度の方が安定します。" : `終止音：${n} で終わっています。完全1度か8度で終えてください。`);
+        else add("ok", `${i + 1}音目：${n}（協和）`);
 
-      if (!allowed) {
-        issues.push(`${i + 1}音目：不協和音程の可能性`);
+        if (i > 0 && c[i - 1] !== null && p[i - 1] !== null) {
+          const prevCls = Math.abs(p[i - 1] - c[i - 1]) % 12;
+          const cm = sig(c[i] - c[i - 1]);
+          const pm = sig(p[i] - p[i - 1]);
+          const similar = cm !== 0 && cm === pm;
+          const which = cls === 7 ? "5度" : (Math.abs(diff) === 0 ? "1度" : "8度");
+          if (PERFECT.includes(cls) && prevCls === cls && cm !== 0 && pm !== 0 && diff === p[i - 1] - c[i - 1]) {
+            add("error", `${i}音目→${i + 1}音目：連続${which}です（禁則）。`);
+            parallelFound = true;
+          } else if (PERFECT.includes(cls) && similar && prevCls !== cls) {
+            add("warn", `${i}音目→${i + 1}音目：並行進行で${which}に入っています（隠伏${which}）。反行で入ると自然です。`);
+          }
+
+          const leap = p[i] - p[i - 1];
+          const leapAbs = Math.abs(leap);
+          const ln = intervalName(leap);
+          if (leapAbs === 0) add("warn", `${i}音目→${i + 1}音目：同じ音が続いています。`);
+          else if (leapAbs > 12) add("error", `${i}音目→${i + 1}音目：${ln} の跳躍はオクターブを超えています。`);
+          else if ([6, 10, 11].includes(leapAbs)) add("warn", `${i}音目→${i + 1}音目：${ln} の跳躍は歌いにくい音程です。`);
+
+          const thirds = (cls === 3 || cls === 4) && (prevCls === 3 || prevCls === 4);
+          const sixths = (cls === 8 || cls === 9) && (prevCls === 8 || prevCls === 9);
+          if (thirds || sixths) {
+            if (run === 0) runStart = i;
+            run += 1;
+            if (run === 3) {
+              const kind = thirds ? "3" : "6";
+              add("warn", `${runStart}音目から：${kind}度が4回以上続いています。反行や別の音程を混ぜてください。`);
+            }
+          } else {
+            run = 0;
+          }
+        }
       }
+
+      if (!parallelFound && len > 1) add("ok", "連続5度・連続8度はありません。");
     }
 
-    if (!issues.length) {
-      result.innerHTML = "Aucun problème majeur détecté.";
-      return;
+    const errors = results.filter((r) => r.type === "error").length;
+    const warns = results.filter((r) => r.type === "warn").length;
+    const oks = results.filter((r) => r.type === "ok").length;
+    lastIssues = results.filter((r) => r.type !== "ok");
+
+    const summary = errors === 0 && warns === 0 ? `大きな問題は見つかりませんでした。OK項目：${oks}件` : `禁則：${errors}件 / 注意：${warns}件 / OK：${oks}件`;
+    const important = lastIssues.slice(0, 6).map((r) => r.message);
+    inline.innerHTML = summary + (important.length ? "<br>" + important.join("<br>") : "");
+
+    if (list) {
+      list.innerHTML = results.map((r) => `<div class="result-item ${r.type}">${r.message}</div>`).join("");
     }
 
-    result.innerHTML = `${issues.length} 件の指摘があります。<br>${issues.join("<br>")}`;
+    if (window.StudyLog && cantus.length && counterpoint.length) {
+      const exercise = getSelectedExercise();
+      window.StudyLog.record({
+        tool: "counterpoint-module1",
+        toolLabel: "対位法 Module 1",
+        kind: "analysis",
+        question: exercise && exercise.title ? exercise.title : "自由課題",
+        detail: counterpoint.join(" "),
+        answer: `禁則 ${errors} / 注意 ${warns} / OK ${oks}`,
+        status: errors ? "error" : warns ? "warn" : "ok",
+        counts: { errors, warnings: warns, ok: oks }
+      });
+    }
   }
 
   function exportMidi() {
