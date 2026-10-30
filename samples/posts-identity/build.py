@@ -253,12 +253,14 @@ def section_html(sec, lang):
     return f'<section class="block"{idattr}>{label}<div class="body">{body}</div></section>'
 
 
-def hero_html(sec, lang):
+def hero_html(sec, lang, extra=""):
     h1 = sec.find("h1")
     eyebrow = label_text(sec)
     aside = sec.find("aside")
     body = render([c for c in sec.children if c is not aside], lang, {"in_hero": True})
-    out = f'<section class="page-head"><p class="label">{esc(eyebrow)}</p><div><h1>{esc(re.sub(r"\\s+", " ", h1.text()).strip())}</h1>{body}</div></section>'
+    title = re.sub(r"\s+", " ", h1.text()).strip()
+    cls = "page-head with-wave" if extra else "page-head"
+    out = f'<section class="{cls}"><p class="label">{esc(eyebrow)}</p><div><h1>{esc(title)}</h1>{body}</div>{extra}</section>'
     if aside is not None:
         out += section_html(aside, lang)
     return out
@@ -268,7 +270,12 @@ def band(lang):
     return '<div class="field band" id="field"><img class="still" src="../assets/img/ecouter.jpg" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas></div>'
 
 
+WAVE = {"ja": '<figure class="wave"><img src="../assets/img/wave.png" alt="手を振る Sachie Kobayashi"></figure>',
+        "fr": '<figure class="wave"><img src="../assets/img/wave.png" alt="Sachie Kobayashi fait un signe de la main"></figure>'}
+
+
 def port(src_path, lang, out_name):
+    extra = WAVE[lang] if out_name == "booking.html" else ""
     src = open(src_path, encoding="utf-8").read()
     root = parse(src)
     title = (root.find("title").text().strip() if root.find("title") else "Atelier Composition Son")
@@ -279,13 +286,13 @@ def port(src_path, lang, out_name):
         nonlocal loose
         if any(isinstance(x, Node) for x in loose):
             wrapper = Node("section", []); wrapper.children = loose
-            parts.append(hero_html(wrapper, lang) if wrapper.find("h1") else section_html(wrapper, lang))
+            parts.append(hero_html(wrapper, lang, extra) if wrapper.find("h1") else section_html(wrapper, lang))
         loose = []
 
     for c in main.children:
         if isinstance(c, Node) and c.tag in ("section", "article") or (isinstance(c, Node) and c.tag == "div" and c.find("h2")):
             flush()
-            parts.append(hero_html(c, lang) if c.find("h1") else section_html(c, lang))
+            parts.append(hero_html(c, lang, extra) if c.find("h1") else section_html(c, lang))
         else:
             loose.append(c)
     flush()
