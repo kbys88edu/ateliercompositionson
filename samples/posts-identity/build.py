@@ -143,6 +143,7 @@ LINKS_CLASSES = ("hero-actions", "fr-actions", "acs-consultation__links", "actio
 
 
 def fix_url(u, lang):
+    if u and u.endswith("sachie_studio.jpg"): return "../assets/img/teacher.jpg"
     if not u or u.startswith(("#", "http", "mailto:", "tel:", "data:")): return u
     for pfx in ("/images/", "/assets/", "/docs/", "/sounds/", "/pdf/", "/scores/"):
         if u.startswith(pfx): return "../../.." + u
@@ -185,7 +186,7 @@ def render(nodes, lang, ctx):
             out.append(esc(n)); continue
         t = n.tag
         if t in DROP or t == "h1": continue
-        if t == "img" and (ctx.get("in_hero") or "hero" in (n.attrs.get("src") or "")): continue
+        if t == "img" and any(k in (n.attrs.get("src") or "") for k in ("hero", "header")): continue
         if has_cls(n, LABEL_CLASSES): continue          # 見出しの小さな文字は外で使う
         if t in ("figure",) and ("hero" in " ".join(n.cls()) or ctx.get("in_hero")): continue
         if t == "iframe":
@@ -276,7 +277,7 @@ WAVE = {"ja": '<figure class="wave"><img src="../assets/img/wave.png" alt="手�
 
 
 def port(src_path, lang, out_name):
-    extra = WAVE[lang] if out_name == "booking.html" else ""
+    extra = ""
     src = open(src_path, encoding="utf-8").read()
     root = parse(src)
     title = (root.find("title").text().strip() if root.find("title") else "Atelier Composition Son")
