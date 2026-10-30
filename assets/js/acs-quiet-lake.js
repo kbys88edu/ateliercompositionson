@@ -34,7 +34,7 @@
     "  c=clamp(c,0.,1.);",
     "  float band=smoothstep(.02,.10,c)*(1.-smoothstep(.10,.34,c));",   // 光の筋の縁にできる、ごく淡い影
     "  float core=smoothstep(.20,.62,c);",                              // 光の芯（白）
-    "  return mix(.985-.09*band,1.,core);",                             // 地は白に近く、縁だけ淡い灰色、芯は白（ノイズ成分は控えめ）
+    "  return mix(.993-.065*band,1.,core);",                             // 地は白に近く、縁だけ淡い灰色、芯は白（ノイズ成分は控えめ）
     "}",
     "void main(){",
     "  vec2 q=gl_FragCoord.xy/r;",
@@ -52,8 +52,8 @@
     "  vec3 col=vec3(raw.g);",
     "  col=mix(col,col*col*(3.-2.*col),.12);",                 // 全体のコントラストをやや強める（S字カーブ）
     "  col+=chroma*patch*1.0;",                                  // 場所によって虹色を足す
-    "  col*=.95+.05*q.y;",                                     // 上から差す光
-    "  col*=1.-.10*pow(length(q-.5)*1.25,2.);",                // 周辺をわずかに沈める
+    "  col*=.975+.025*q.y;",                                     // 上から差す光
+    "  col*=1.-.06*pow(length(q-.5)*1.25,2.);",                // 周辺をわずかに沈める
     "  gl_FragColor=vec4(clamp(col,0.,1.),1.);",
     "}"
   ].join("\n");
