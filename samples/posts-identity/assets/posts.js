@@ -79,24 +79,26 @@
   var loc = gl.getAttribLocation(pg, "a"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   var U = {}; ["r", "t", "burst", "frame", "px", "veil", "ph", "rect", "uvm", "hasPh"].forEach(function (n) { U[n] = gl.getUniformLocation(pg, n); });
   gl.uniform1f(U.hasPh, 0);
-  // 配色：投稿で使った色。#palette-名前 で切り替え（spectrum / cobalt / mono / ember / prism）
   var PAL = {
-    spectrum: ["ffffff","fae23c","ff8a1c","f02832","fa64d7","2642f5","78d6ec"],   // 白い紙面のスペクトル投稿
-    cobalt:   ["ffffff","dfe6ff","9fb1ff","5c78ff","2642f5","1630c8","0a1450"],   // 黒地にコバルトの光のリール
-    mono:     ["ffffff","e9e9eb","bdbdc2","8a8a90","55555a","2a2a2e","0e0e10"],   // 網点のモノクロ写真
-    ember:    ["ffffff","ffe7c2","ffb46b","ff6a2b","e8342c","8c1d2e","2a0d14"],   // 4:5 フィード広告の赤と橙
-    prism:    ["ffffff","b8f0e6","5fd6c8","2642f5","8e5cff","fa64d7","ffd1f0"]    // 色収差の青・紫・桃
+    spectrum: ["ffffff","fae23c","ff8a1c","f02832","fa64d7","2642f5","78d6ec"],
+    cobalt:   ["ffffff","dfe6ff","9fb1ff","5c78ff","2642f5","1630c8","0a1450"],
+    mono:     ["ffffff","e9e9eb","bdbdc2","8a8a90","55555a","2a2a2e","0e0e10"],
+    ember:    ["ffffff","ffe7c2","ffb46b","ff6a2b","e8342c","8c1d2e","2a0d14"],
+    prism:    ["ffffff","b8f0e6","5fd6c8","2642f5","8e5cff","fa64d7","ffd1f0"]
   };
   var CU = gl.getUniformLocation(pg, "C");
-  function setPal(name) {
-    var a = PAL[name] || PAL.spectrum, f = [];
-    a.forEach(function (h) { for (var i = 0; i < 3; i++) f.push(parseInt(h.substr(i * 2, 2), 16) / 255); });
-    gl.uniform3fv(CU, new Float32Array(f));
-    document.documentElement.setAttribute("data-palette", PAL[name] ? name : "spectrum");
+  // 配色を虹のように順に移り変わらせる（各色 6 秒とどまり、4 秒かけて次の色へ）
+  var ORDER = ["spectrum", "prism", "cobalt", "mono", "ember"], HOLD = 6, FADE = 4;
+  function hexArr(name) { var f = []; PAL[name].forEach(function (h) { for (var i = 0; i < 3; i++) f.push(parseInt(h.substr(i * 2, 2), 16) / 255); }); return f; }
+  var PALF = {}; ORDER.forEach(function (n) { PALF[n] = hexArr(n); });
+  function cyclePal(sec) {
+    if (reduce) { gl.uniform3fv(CU, new Float32Array(PALF.spectrum)); return; }
+    var span = HOLD + FADE, k = Math.floor(sec / span) % ORDER.length, ph = sec % span;
+    var a = PALF[ORDER[k]], b = PALF[ORDER[(k + 1) % ORDER.length]];
+    var x = ph < HOLD ? 0 : (ph - HOLD) / FADE; x = x * x * (3 - 2 * x);
+    var out = new Float32Array(21); for (var i = 0; i < 21; i++) out[i] = a[i] + (b[i] - a[i]) * x;
+    gl.uniform3fv(CU, out);
   }
-  function fromHash() { var m = /palette-(\w+)/.exec(location.hash); setPal(m ? m[1] : (window.ACS_PALETTE || "spectrum")); }
-  fromHash();
-  window.addEventListener("hashchange", function () { fromHash(); draw(performance.now()); });
   gl.uniform1f(U.veil, mast ? 1 : 0);
 
   var PA = 646 / 1434;
@@ -133,7 +135,7 @@
   function burstAt(sec) { return Math.max(0.04 + 0.45 * g(sec % 6, 3.0, 0.22), tap); }
   function draw(ms) {
     var sec = (ms - t0) / 1000;
-    size(); gl.uniform1f(U.t, sec + 4.0); gl.uniform1f(U.burst, burstAt(sec)); gl.uniform1f(U.frame, Math.floor(sec * 30));
+    size(); cyclePal(sec); gl.uniform1f(U.t, sec + 4.0); gl.uniform1f(U.burst, burstAt(sec)); gl.uniform1f(U.frame, Math.floor(sec * 30));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     tap *= 0.9;
   }

@@ -276,3 +276,5 @@ footer.site .small a { margin-right: 14px; }
 html[data-palette="spectrum"] .palettes a[href$="spectrum"], html[data-palette="cobalt"] .palettes a[href$="cobalt"],
 html[data-palette="mono"] .palettes a[href$="mono"], html[data-palette="ember"] .palettes a[href$="ember"],
 html[data-palette="prism"] .palettes a[href$="prism"] { font-weight: 700; text-decoration-thickness: 2px; }
+
+.field.photo-css .photo { z-index: 1; }

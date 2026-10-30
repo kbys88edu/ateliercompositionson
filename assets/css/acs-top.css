@@ -281,3 +281,5 @@ footer.site .fine a { margin-right: 16px; }
 .embed-play { position: absolute; left: 14px; bottom: 12px; background: #fff; color: #0e0e10; font: 500 14px/1 "Inter", sans-serif; padding: 9px 12px 8px; }
 .embed.is-link .embed-play { left: 0; bottom: auto; top: 0; }
 @media (prefers-reduced-motion: reduce) { .embed-facade img { transition: none; } }
+
+.field.photo-css .photo { z-index: 1; }

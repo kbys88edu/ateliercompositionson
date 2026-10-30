@@ -315,7 +315,10 @@ def port_synth():
 
 
 def build_index(lang):
+    import base64
+    PORTRAIT_URI = "data:image/jpeg;base64," + base64.b64encode(open(os.path.join(HERE, "assets", "img", "portrait.jpg"), "rb").read()).decode()
     tpl = open(os.path.join(HERE, "src", f"{lang}-index.html"), encoding="utf-8").read().replace("{{COLS3}}", COLS3[lang])
+    tpl = tpl.replace('id="portrait" src="../assets/img/portrait.jpg"', f'id="portrait" src="{PORTRAIT_URI}"')
     title = "Atelier Composition Son — 作曲・音楽理論・DTM・電子音響のオンラインレッスン" if lang == "ja" else "Atelier Composition Son — Composition et création sonore en ligne"
     open(os.path.join(HERE, lang, "index.html"), "w", encoding="utf-8").write(chrome(lang, title, "index.html", tpl))
 

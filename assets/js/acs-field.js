@@ -26,7 +26,7 @@ function acsField(field) {
 
   var fs = [
     "precision highp float;",
-    "uniform vec2 r;uniform float t;uniform float burst;uniform float frame;uniform float px;uniform float veil;",
+    "uniform vec2 r;uniform float t;uniform float burst;uniform float frame;uniform float px;uniform float veil;uniform vec3 C[7];",
     "uniform sampler2D ph;uniform vec4 rect;uniform vec4 uvm;uniform float hasPh;",
     "const float TAU=6.28318530718;",
     "float caustic(vec2 uv,float time){",
@@ -37,8 +37,7 @@ function acsField(field) {
     "  c/=5.;c=1.17-pow(c,1.4);return clamp(pow(abs(c),8.),0.,1.);}",
     "float h(vec3 q){return fract(sin(dot(q,vec3(12.9898,78.233,37.719)))*43758.5453);}",
     "vec3 pal(float u){u=clamp(u,0.,1.);",
-    "  vec3 c0=vec3(1.,1.,1.),c1=vec3(.98,.886,.235),c2=vec3(1.,.541,.11),c3=vec3(.941,.157,.196),",
-    "       c4=vec3(.98,.392,.843),c5=vec3(.149,.259,.961),c6=vec3(.471,.839,.925);",
+    "  vec3 c0=C[0],c1=C[1],c2=C[2],c3=C[3],c4=C[4],c5=C[5],c6=C[6];",
     "  if(u<.10)return mix(c0,c1,u/.10);if(u<.26)return mix(c1,c2,(u-.10)/.16);if(u<.40)return mix(c2,c3,(u-.26)/.14);",
     "  if(u<.54)return mix(c3,c4,(u-.40)/.14);if(u<.68)return mix(c4,c5,(u-.54)/.14);if(u<.80)return mix(c5,c6,(u-.68)/.12);",
     "  if(u<.92)return mix(c6,c0,(u-.80)/.12);return c0;}",
@@ -79,6 +78,26 @@ function acsField(field) {
   var loc = gl.getAttribLocation(pg, "a"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   var U = {}; ["r", "t", "burst", "frame", "px", "veil", "ph", "rect", "uvm", "hasPh"].forEach(function (n) { U[n] = gl.getUniformLocation(pg, n); });
   gl.uniform1f(U.hasPh, 0);
+  var PAL = {
+    spectrum: ["ffffff","fae23c","ff8a1c","f02832","fa64d7","2642f5","78d6ec"],
+    cobalt:   ["ffffff","dfe6ff","9fb1ff","5c78ff","2642f5","1630c8","0a1450"],
+    mono:     ["ffffff","e9e9eb","bdbdc2","8a8a90","55555a","2a2a2e","0e0e10"],
+    ember:    ["ffffff","ffe7c2","ffb46b","ff6a2b","e8342c","8c1d2e","2a0d14"],
+    prism:    ["ffffff","b8f0e6","5fd6c8","2642f5","8e5cff","fa64d7","ffd1f0"]
+  };
+  var CU = gl.getUniformLocation(pg, "C");
+  // 配色を虹のように順に移り変わらせる（各色 6 秒とどまり、4 秒かけて次の色へ）
+  var ORDER = ["spectrum", "prism", "cobalt", "mono", "ember"], HOLD = 6, FADE = 4;
+  function hexArr(name) { var f = []; PAL[name].forEach(function (h) { for (var i = 0; i < 3; i++) f.push(parseInt(h.substr(i * 2, 2), 16) / 255); }); return f; }
+  var PALF = {}; ORDER.forEach(function (n) { PALF[n] = hexArr(n); });
+  function cyclePal(sec) {
+    if (reduce) { gl.uniform3fv(CU, new Float32Array(PALF.spectrum)); return; }
+    var span = HOLD + FADE, k = Math.floor(sec / span) % ORDER.length, ph = sec % span;
+    var a = PALF[ORDER[k]], b = PALF[ORDER[(k + 1) % ORDER.length]];
+    var x = ph < HOLD ? 0 : (ph - HOLD) / FADE; x = x * x * (3 - 2 * x);
+    var out = new Float32Array(21); for (var i = 0; i < 21; i++) out[i] = a[i] + (b[i] - a[i]) * x;
+    gl.uniform3fv(CU, out);
+  }
   gl.uniform1f(U.veil, mast ? 1 : 0);
 
   var PA = 646 / 1434;
@@ -115,7 +134,7 @@ function acsField(field) {
   function burstAt(sec) { return Math.max(0.04 + 0.45 * g(sec % 6, 3.0, 0.22), tap); }
   function draw(ms) {
     var sec = (ms - t0) / 1000;
-    size(); gl.uniform1f(U.t, sec + 4.0); gl.uniform1f(U.burst, burstAt(sec)); gl.uniform1f(U.frame, Math.floor(sec * 30));
+    size(); cyclePal(sec); gl.uniform1f(U.t, sec + 4.0); gl.uniform1f(U.burst, burstAt(sec)); gl.uniform1f(U.frame, Math.floor(sec * 30));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     tap *= 0.9;
   }
