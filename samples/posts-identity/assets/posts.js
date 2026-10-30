@@ -93,7 +93,8 @@
   var PALF = {}; ORDER.forEach(function (n) { PALF[n] = hexArr(n); });
   function cyclePal(sec) {
     if (reduce) { gl.uniform3fv(CU, new Float32Array(PALF.spectrum)); return; }
-    var span = HOLD + FADE, k = Math.floor(sec / span) % ORDER.length, ph = sec % span;
+    sec = Math.max(0, sec || 0);                       // 開始直後に負になることがある
+    var span = HOLD + FADE, n = ORDER.length, k = ((Math.floor(sec / span) % n) + n) % n, ph = sec % span;
     var a = PALF[ORDER[k]], b = PALF[ORDER[(k + 1) % ORDER.length]];
     var x = ph < HOLD ? 0 : (ph - HOLD) / FADE; x = x * x * (3 - 2 * x);
     var out = new Float32Array(21); for (var i = 0; i < 21; i++) out[i] = a[i] + (b[i] - a[i]) * x;
@@ -134,7 +135,7 @@
   function g(x, c, w) { return Math.exp(-Math.pow((x - c) / w, 2)); }
   function burstAt(sec) { return Math.max(0.04 + 0.45 * g(sec % 6, 3.0, 0.22), tap); }
   function draw(ms) {
-    var sec = (ms - t0) / 1000;
+    var sec = Math.max(0, (ms - t0) / 1000);
     size(); cyclePal(sec); gl.uniform1f(U.t, sec + 4.0); gl.uniform1f(U.burst, burstAt(sec)); gl.uniform1f(U.frame, Math.floor(sec * 30));
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     tap *= 0.9;
