@@ -385,12 +385,12 @@ function midiToFrequency(midi) {
 const SAMPLE_VOICE_SETS = {
   femaleSample: {
     folder: "female",
-    notes: ["G3", "C4", "G4", "C5", "G5"],
+    notes: ["C4", "G4", "C5", "G5"],
     transposeSemitones: 0
   },
   maleSample: {
     folder: "male",
-    notes: ["G2", "C3", "G3", "C4", "G4"],
+    notes: ["C3", "G3", "C4", "G4"],
     transposeSemitones: 0
   }
 };
@@ -398,7 +398,8 @@ const SAMPLE_VOICE_SETS = {
 const sampleVoiceCache = {};
 
 function getSampleVoiceBasePath() {
-  return "audio/voice";
+  // The pages live one folder below counterpoint/audio.
+  return "../audio/voice";
 }
 
 function getNearestSampleNote(targetMidi, sampleNotes, setName = "") {
@@ -899,7 +900,29 @@ function renderResults(results) {
   }
 }
 
+
+function recordStudyLog(errorCount, warnCount, okCount) {
+  if (!window.StudyLog) return;
+  const exercise = typeof getSelectedExercise === "function" ? getSelectedExercise() : null;
+  const title = exercise && exercise.title
+    ? (typeof exercise.title === "string" ? exercise.title : (exercise.title[currentLanguage] || exercise.title.ja || ""))
+    : "";
+  const notes = getNotesFromTextarea("counterpoint").filter(Boolean).join(" ");
+  const isFr = currentLanguage === "fr";
+  window.StudyLog.record({
+    tool: "counterpoint-module2",
+    toolLabel: isFr ? "Contrepoint Module 2" : "対位法 Module 2",
+    kind: "analysis",
+    question: title || (isFr ? "Exercice libre" : "自由課題"),
+    detail: notes,
+    answer: isFr ? `fautes ${errorCount} / avertissements ${warnCount} / OK ${okCount}` : `禁則 ${errorCount} / 注意 ${warnCount} / OK ${okCount}`,
+    status: errorCount ? "error" : warnCount ? "warn" : "ok",
+    counts: { errors: errorCount, warnings: warnCount, ok: okCount }
+  });
+}
+
 function renderSummary(errorCount, warnCount, okCount) {
+  recordStudyLog(errorCount, warnCount, okCount);
   const summary = document.getElementById("analysisInlineResult");
   if (!summary) return;
 
