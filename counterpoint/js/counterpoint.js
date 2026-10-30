@@ -33,14 +33,14 @@
   };
 
   const EXERCISES = [
-    { id: "c-major-arch", title: "C major / アーチ型", desc: "Cから上行し、中央で頂点を作って戻る基本Exerciceです。", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
+    { id: "c-major-arch", title: "C major / アーチ型", desc: "Cから上行し、中央で頂点を作って戻る基本課題です。", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
     { id: "d-minor-step", title: "D minor / 順次進行", desc: "短調の感覚を保ちながら順次進行を練習します。", cantus: ["D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4"] },
-    { id: "g-major-low", title: "G major / 低めの音域", desc: "やや低い音域で、安定した協和音程を作るExerciceです。", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
+    { id: "g-major-low", title: "G major / 低めの音域", desc: "やや低い音域で、安定した協和音程を作る課題です。", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
     { id: "f-major-small-peak", title: "F major / 小さな頂点", desc: "短い上行と下行を含む、まとまりやすい定旋律です。", cantus: ["F3", "G3", "A3", "C4", "B3", "A3", "G3", "F3"] },
-    { id: "a-minor-return", title: "A minor / 回帰", desc: "開始音へ自然に戻ることを意識するExerciceです。", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
+    { id: "a-minor-return", title: "A minor / 回帰", desc: "開始音へ自然に戻ることを意識する課題です。", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
     { id: "c-major-leap", title: "C major / 小さな跳躍", desc: "小さな跳躍を含む定旋律に対して対旋律を作ります。", cantus: ["C4", "E4", "D4", "F4", "G4", "E4", "F4", "D4", "C4"] },
-    { id: "e-minor-middle", title: "E minor / 中音域", desc: "中音域で対旋律の輪郭を整えるExerciceです。", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
-    { id: "g-major-long", title: "G major / 長め", desc: "少し長い定旋律で、quintes parallèles・8度を避ける練習です。", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
+    { id: "e-minor-middle", title: "E minor / 中音域", desc: "中音域で対旋律の輪郭を整える課題です。", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
+    { id: "g-major-long", title: "G major / 長め", desc: "少し長い定旋律で、連続5度・連続8度を避ける練習です。", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
     { id: "f-major-descend", title: "F major / 下降中心", desc: "下降形を中心にした定旋律です。", cantus: ["F4", "E4", "D4", "C4", "B3", "C4", "D4", "C4", "F3"] },
     { id: "c-major-extended", title: "C major / 拡張", desc: "やや長めの総合練習です。", cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "F4", "E4", "D4", "C4"] }
   ];
@@ -92,112 +92,6 @@ function undoLastEdit() {
     cantus: false
   };
 
-  const sampleVoiceCache = {};
-
-  function getSampleVoiceBasePath() {
-    return "audio/voice";
-  }
-
-  function getVoiceSampleCandidates(voiceSet, midi) {
-    const folder = voiceSet === "femaleSample" ? "male" : "female";
-
-    const anchors = [
-      { midi: 55, name: "G3" },
-      { midi: 60, name: "C4" },
-      { midi: 67, name: "G4" },
-      { midi: 72, name: "C5" },
-      { midi: 79, name: "G5" }
-    ];
-
-    let best = anchors[0];
-    anchors.forEach((anchor) => {
-      if (Math.abs(anchor.midi - midi) < Math.abs(best.midi - midi)) {
-        best = anchor;
-      }
-    });
-
-    const base = getSampleVoiceBasePath();
-
-    return [
-      { url: `${base}/${folder}/${best.name}.wav`, rootMidi: best.midi },
-      { url: `${base}/${folder}/${best.name}.mp3`, rootMidi: best.midi },
-      { url: `${base}/${folder}/${best.name}.ogg`, rootMidi: best.midi },
-
-      // alternate naming, if the uploaded files use flat folders
-      { url: `${base}/${folder}_${best.name}.wav`, rootMidi: best.midi },
-      { url: `${base}/${folder}_${best.name}.mp3`, rootMidi: best.midi },
-      { url: `${base}/${folder}_${best.name}.ogg`, rootMidi: best.midi }
-    ];
-  }
-
-  async function loadVoiceSample(candidate) {
-    const ctx = ensureAudioReady();
-    const cacheKey = candidate.url;
-
-    if (sampleVoiceCache[cacheKey]) {
-      return sampleVoiceCache[cacheKey];
-    }
-
-    const response = await fetch(candidate.url, { cache: "force-cache" });
-    if (!response.ok) {
-      throw new Error(`Sample not found: ${candidate.url}`);
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
-
-    sampleVoiceCache[cacheKey] = {
-      buffer: audioBuffer,
-      rootMidi: candidate.rootMidi
-    };
-
-    return sampleVoiceCache[cacheKey];
-  }
-
-  async function playSampleVoiceNote(setName, midi, duration = 0.75, gainScale = 1) {
-  const set = SAMPLE_VOICE_SETS[setName];
-  if (!set) return;
-
-  const nearestNote = getNearestSampleNote(midi, set.notes, setName);
-  const sourceMidi = noteToMidi(nearestNote);
-  if (sourceMidi === null) return;
-
-  const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
-
-  if (!buffer) {
-    playFallbackVoice(midi, duration, gainScale);
-    return;
-  }
-
-  const ctx = getAudioContext();
-  const now = ctx.currentTime;
-
-  const source = ctx.createBufferSource();
-  const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-
-  source.buffer = buffer;
-  source.playbackRate.setValueAtTime(Math.pow(2, (midi - sourceMidi + set.transposeSemitones) / 12), now);
-
-  filter.type = "lowpass";
-  filter.frequency.setValueAtTime(6200, now);
-
-  const attack = 0.016;
-  const release = 0.22;
-  const targetGain = 0.95 * gainScale;
-
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, targetGain), now + attack);
-  gain.gain.setValueAtTime(Math.max(0.0001, targetGain), now + Math.max(attack + 0.02, duration - release));
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + release);
-
-  source.connect(filter);
-  filter.connect(gain);
-  gain.connect(getReverbDestination());
-
-  source.start(now);
-  source.stop(now + duration + release + 0.04);
-}
 
 
 
@@ -381,7 +275,7 @@ function moveNoteChromatic(note, semitone) {
   function updateExerciseDescription() {
     const desc = $("exerciseDescription");
     const exercise = getSelectedExercise();
-    if (desc) desc.textContent = exercise ? exercise.desc : "Exerciceを選択してください。";
+    if (desc) desc.textContent = exercise ? exercise.desc : "課題を選択してください。";
   }
 
   function loadSelectedExercise() {
@@ -983,44 +877,113 @@ function playMidiNote(midi, duration = 0.75, gainScale = 1, voiceSet = "femaleSa
   }
 
   function analyzeCounterpoint() {
-    const result = $("analysisInlineResult");
-    const cantus = getNotesFromTextarea("cantus");
+    const inline = $("analysisInlineResult");
+    const list = $("result");
+    const cantus = getNotesFromTextarea("cantus").filter(Boolean);
     const counterpoint = getNotesFromTextarea("counterpoint").filter(Boolean);
+    const NAMES = {"0": "完全1度", "1": "短2度", "2": "長2度", "3": "短3度", "4": "長3度", "5": "完全4度", "6": "増4度/減5度", "7": "完全5度", "8": "短6度", "9": "長6度", "10": "短7度", "11": "長7度", "12": "完全8度"};
+    const results = [];
+    const add = (type, message) => results.push({ type, message });
+    const intervalName = (semitones) => {
+      const abs = Math.abs(semitones);
+      return abs > 12 ? `${NAMES[abs % 12]} (+8)` : NAMES[abs];
+    };
 
-    if (!result) return;
+    if (!inline) return;
+    if (!cantus.length) add("error", "定旋律が読み込まれていません。");
+    else if (!counterpoint.length) add("error", "対旋律が入力されていません。");
 
-    if (!cantus.length) {
-      result.innerHTML = "定旋律が読み込まれていません。";
-      return;
-    }
+    if (cantus.length && counterpoint.length) {
+      if (cantus.length !== counterpoint.length) add("error", `音数が合っていません：定旋律 ${cantus.length} 音に対して対旋律 ${counterpoint.length} 音です。`);
+      else add("ok", `音数：${cantus.length} 音ずつで一致しています。`);
 
-    if (!counterpoint.length) {
-      result.innerHTML = "対旋律がNon saisiです。";
-      return;
-    }
+      const len = Math.min(cantus.length, counterpoint.length);
+      const c = cantus.map(noteToMidi);
+      const p = counterpoint.map(noteToMidi);
+      const PERFECT = [0, 7];
+      const CONSONANT = [0, 3, 4, 7, 8, 9];
+      const sig = (x) => (x > 0 ? 1 : x < 0 ? -1 : 0);
+      let parallelFound = false;
+      let run = 0;
+      let runStart = 0;
 
-    const issues = [];
-    const len = Math.min(cantus.length, counterpoint.length);
+      for (let i = 0; i < len; i += 1) {
+        if (c[i] === null || p[i] === null) { add("error", `${i + 1}音目：音名を読み取れません。`); continue; }
+        const diff = p[i] - c[i];
+        const cls = Math.abs(diff) % 12;
+        const n = intervalName(diff);
 
-    for (let i = 0; i < len; i += 1) {
-      const cMidi = noteToMidi(cantus[i]);
-      const pMidi = noteToMidi(counterpoint[i]);
-      if (cMidi === null || pMidi === null) continue;
+        if (diff < 0) add("warn", `${i + 1}音目：対旋律が定旋律より下にあります（声部交差）。`);
 
-      const interval = Math.abs(pMidi - cMidi) % 12;
-      const allowed = [0, 3, 4, 7, 8, 9].includes(interval);
+        if (!CONSONANT.includes(cls)) add("error", `${i + 1}音目：${n} は不協和音程です。協和音程（1・3・5・6・8度）にしてください。`);
+        else if (i === 0 && !PERFECT.includes(cls)) add("error", `開始音：${n} で始まっています。完全1度・5度・8度で始めてください。`);
+        else if (i === len - 1 && cls !== 0) add(cls === 7 ? "warn" : "error", cls === 7 ? "終止音：完全5度で終わっています。完全1度か8度の方が安定します。" : `終止音：${n} で終わっています。完全1度か8度で終えてください。`);
+        else add("ok", `${i + 1}音目：${n}（協和）`);
 
-      if (!allowed) {
-        issues.push(`${i + 1}音目：不協和音程の可能性`);
+        if (i > 0 && c[i - 1] !== null && p[i - 1] !== null) {
+          const prevCls = Math.abs(p[i - 1] - c[i - 1]) % 12;
+          const cm = sig(c[i] - c[i - 1]);
+          const pm = sig(p[i] - p[i - 1]);
+          const similar = cm !== 0 && cm === pm;
+          const which = cls === 7 ? "5度" : (Math.abs(diff) === 0 ? "1度" : "8度");
+          if (PERFECT.includes(cls) && prevCls === cls && cm !== 0 && pm !== 0 && diff === p[i - 1] - c[i - 1]) {
+            add("error", `${i}音目→${i + 1}音目：連続${which}です（禁則）。`);
+            parallelFound = true;
+          } else if (PERFECT.includes(cls) && similar && prevCls !== cls) {
+            add("warn", `${i}音目→${i + 1}音目：並行進行で${which}に入っています（隠伏${which}）。反行で入ると自然です。`);
+          }
+
+          const leap = p[i] - p[i - 1];
+          const leapAbs = Math.abs(leap);
+          const ln = intervalName(leap);
+          if (leapAbs === 0) add("warn", `${i}音目→${i + 1}音目：同じ音が続いています。`);
+          else if (leapAbs > 12) add("error", `${i}音目→${i + 1}音目：${ln} の跳躍はオクターブを超えています。`);
+          else if ([6, 10, 11].includes(leapAbs)) add("warn", `${i}音目→${i + 1}音目：${ln} の跳躍は歌いにくい音程です。`);
+
+          const thirds = (cls === 3 || cls === 4) && (prevCls === 3 || prevCls === 4);
+          const sixths = (cls === 8 || cls === 9) && (prevCls === 8 || prevCls === 9);
+          if (thirds || sixths) {
+            if (run === 0) runStart = i;
+            run += 1;
+            if (run === 3) {
+              const kind = thirds ? "3" : "6";
+              add("warn", `${runStart}音目から：${kind}度が4回以上続いています。反行や別の音程を混ぜてください。`);
+            }
+          } else {
+            run = 0;
+          }
+        }
       }
+
+      if (!parallelFound && len > 1) add("ok", "連続5度・連続8度はありません。");
     }
 
-    if (!issues.length) {
-      result.innerHTML = "Aucun problème majeur détecté.";
-      return;
+    const errors = results.filter((r) => r.type === "error").length;
+    const warns = results.filter((r) => r.type === "warn").length;
+    const oks = results.filter((r) => r.type === "ok").length;
+    lastIssues = results.filter((r) => r.type !== "ok");
+
+    const summary = errors === 0 && warns === 0 ? `大きな問題は見つかりませんでした。OK項目：${oks}件` : `禁則：${errors}件 / 注意：${warns}件 / OK：${oks}件`;
+    const important = lastIssues.slice(0, 6).map((r) => r.message);
+    inline.innerHTML = summary + (important.length ? "<br>" + important.join("<br>") : "");
+
+    if (list) {
+      list.innerHTML = results.map((r) => `<div class="result-item ${r.type}">${r.message}</div>`).join("");
     }
 
-    result.innerHTML = `${issues.length} 件の指摘があります。<br>${issues.join("<br>")}`;
+    if (window.StudyLog && cantus.length && counterpoint.length) {
+      const exercise = getSelectedExercise();
+      window.StudyLog.record({
+        tool: "counterpoint-module1",
+        toolLabel: "対位法 Module 1",
+        kind: "analysis",
+        question: exercise && exercise.title ? exercise.title : "自由課題",
+        detail: counterpoint.join(" "),
+        answer: `禁則 ${errors} / 注意 ${warns} / OK ${oks}`,
+        status: errors ? "error" : warns ? "warn" : "ok",
+        counts: { errors, warnings: warns, ok: oks }
+      });
+    }
   }
 
   function exportMidi() {
