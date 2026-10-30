@@ -56,6 +56,7 @@
     "  float lum=dot(col,vec3(.3333));",
     "  vec3 film=pal(.12+.8*fract(lum*1.6+fc.y/r.y*.5+fc.x/r.x*.35+.06*t));",
     "  col=mix(col,film,.2*(.35+.65*lum));",
+    "  col=mix(col,vec3(1.),.32);",   // 全体を少し薄く
     "  vec2 q=vec2(fc.x/r.x,1.-fc.y/r.y);",
     "  col=mix(col,vec3(1.),veil*.62*(1.-smoothstep(.46,.74,q.y)));",
     "  if(hasPh>.5&&q.x>=rect.x&&q.x<=rect.z&&q.y>=rect.y&&q.y<=rect.w){",
