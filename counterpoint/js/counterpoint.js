@@ -33,14 +33,14 @@
   };
 
   const EXERCISES = [
-    { id: "c-major-arch", title: "C major / アーチ型", desc: "Cから上行し、中央で頂点を作って戻る基本Exerciceです。", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
+    { id: "c-major-arch", title: "C major / アーチ型", desc: "Cから上行し、中央で頂点を作って戻る基本課題です。", cantus: ["C4", "D4", "E4", "F4", "G4", "F4", "E4", "D4", "C4"] },
     { id: "d-minor-step", title: "D minor / 順次進行", desc: "短調の感覚を保ちながら順次進行を練習します。", cantus: ["D4", "E4", "F4", "G4", "A4", "G4", "F4", "E4", "D4"] },
-    { id: "g-major-low", title: "G major / 低めの音域", desc: "やや低い音域で、安定した協和音程を作るExerciceです。", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
+    { id: "g-major-low", title: "G major / 低めの音域", desc: "やや低い音域で、安定した協和音程を作る課題です。", cantus: ["G3", "A3", "B3", "C4", "D4", "C4", "B3", "A3", "G3"] },
     { id: "f-major-small-peak", title: "F major / 小さな頂点", desc: "短い上行と下行を含む、まとまりやすい定旋律です。", cantus: ["F3", "G3", "A3", "C4", "B3", "A3", "G3", "F3"] },
-    { id: "a-minor-return", title: "A minor / 回帰", desc: "開始音へ自然に戻ることを意識するExerciceです。", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
+    { id: "a-minor-return", title: "A minor / 回帰", desc: "開始音へ自然に戻ることを意識する課題です。", cantus: ["A3", "B3", "C4", "D4", "E4", "D4", "C4", "B3", "A3"] },
     { id: "c-major-leap", title: "C major / 小さな跳躍", desc: "小さな跳躍を含む定旋律に対して対旋律を作ります。", cantus: ["C4", "E4", "D4", "F4", "G4", "E4", "F4", "D4", "C4"] },
-    { id: "e-minor-middle", title: "E minor / 中音域", desc: "中音域で対旋律の輪郭を整えるExerciceです。", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
-    { id: "g-major-long", title: "G major / 長め", desc: "少し長い定旋律で、quintes parallèles・8度を避ける練習です。", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
+    { id: "e-minor-middle", title: "E minor / 中音域", desc: "中音域で対旋律の輪郭を整える課題です。", cantus: ["E4", "F4", "G4", "A4", "B4", "A4", "G4", "F4", "E4"] },
+    { id: "g-major-long", title: "G major / 長め", desc: "少し長い定旋律で、連続5度・連続8度を避ける練習です。", cantus: ["G3", "A3", "B3", "D4", "C4", "B3", "A3", "C4", "B3", "A3", "G3"] },
     { id: "f-major-descend", title: "F major / 下降中心", desc: "下降形を中心にした定旋律です。", cantus: ["F4", "E4", "D4", "C4", "B3", "C4", "D4", "C4", "F3"] },
     { id: "c-major-extended", title: "C major / 拡張", desc: "やや長めの総合練習です。", cantus: ["C4", "D4", "E4", "G4", "F4", "E4", "D4", "F4", "E4", "D4", "C4"] }
   ];
@@ -92,112 +92,6 @@ function undoLastEdit() {
     cantus: false
   };
 
-  const sampleVoiceCache = {};
-
-  function getSampleVoiceBasePath() {
-    return "audio/voice";
-  }
-
-  function getVoiceSampleCandidates(voiceSet, midi) {
-    const folder = voiceSet === "femaleSample" ? "male" : "female";
-
-    const anchors = [
-      { midi: 55, name: "G3" },
-      { midi: 60, name: "C4" },
-      { midi: 67, name: "G4" },
-      { midi: 72, name: "C5" },
-      { midi: 79, name: "G5" }
-    ];
-
-    let best = anchors[0];
-    anchors.forEach((anchor) => {
-      if (Math.abs(anchor.midi - midi) < Math.abs(best.midi - midi)) {
-        best = anchor;
-      }
-    });
-
-    const base = getSampleVoiceBasePath();
-
-    return [
-      { url: `${base}/${folder}/${best.name}.wav`, rootMidi: best.midi },
-      { url: `${base}/${folder}/${best.name}.mp3`, rootMidi: best.midi },
-      { url: `${base}/${folder}/${best.name}.ogg`, rootMidi: best.midi },
-
-      // alternate naming, if the uploaded files use flat folders
-      { url: `${base}/${folder}_${best.name}.wav`, rootMidi: best.midi },
-      { url: `${base}/${folder}_${best.name}.mp3`, rootMidi: best.midi },
-      { url: `${base}/${folder}_${best.name}.ogg`, rootMidi: best.midi }
-    ];
-  }
-
-  async function loadVoiceSample(candidate) {
-    const ctx = ensureAudioReady();
-    const cacheKey = candidate.url;
-
-    if (sampleVoiceCache[cacheKey]) {
-      return sampleVoiceCache[cacheKey];
-    }
-
-    const response = await fetch(candidate.url, { cache: "force-cache" });
-    if (!response.ok) {
-      throw new Error(`Sample not found: ${candidate.url}`);
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
-
-    sampleVoiceCache[cacheKey] = {
-      buffer: audioBuffer,
-      rootMidi: candidate.rootMidi
-    };
-
-    return sampleVoiceCache[cacheKey];
-  }
-
-  async function playSampleVoiceNote(setName, midi, duration = 0.75, gainScale = 1) {
-  const set = SAMPLE_VOICE_SETS[setName];
-  if (!set) return;
-
-  const nearestNote = getNearestSampleNote(midi, set.notes, setName);
-  const sourceMidi = noteToMidi(nearestNote);
-  if (sourceMidi === null) return;
-
-  const buffer = await loadSampleVoiceBuffer(setName, nearestNote);
-
-  if (!buffer) {
-    playFallbackVoice(midi, duration, gainScale);
-    return;
-  }
-
-  const ctx = getAudioContext();
-  const now = ctx.currentTime;
-
-  const source = ctx.createBufferSource();
-  const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-
-  source.buffer = buffer;
-  source.playbackRate.setValueAtTime(Math.pow(2, (midi - sourceMidi + set.transposeSemitones) / 12), now);
-
-  filter.type = "lowpass";
-  filter.frequency.setValueAtTime(6200, now);
-
-  const attack = 0.016;
-  const release = 0.22;
-  const targetGain = 0.95 * gainScale;
-
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, targetGain), now + attack);
-  gain.gain.setValueAtTime(Math.max(0.0001, targetGain), now + Math.max(attack + 0.02, duration - release));
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + release);
-
-  source.connect(filter);
-  filter.connect(gain);
-  gain.connect(getReverbDestination());
-
-  source.start(now);
-  source.stop(now + duration + release + 0.04);
-}
 
 
 
@@ -381,7 +275,7 @@ function moveNoteChromatic(note, semitone) {
   function updateExerciseDescription() {
     const desc = $("exerciseDescription");
     const exercise = getSelectedExercise();
-    if (desc) desc.textContent = exercise ? exercise.desc : "Exerciceを選択してください。";
+    if (desc) desc.textContent = exercise ? exercise.desc : "課題を選択してください。";
   }
 
   function loadSelectedExercise() {

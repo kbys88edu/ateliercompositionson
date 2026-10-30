@@ -502,8 +502,8 @@ const SAMPLE_VOICE_SETS = {
   maleSample: {
     folder: "male",
     // Required male files:
-    // C2.wav, G2.wav, C3.wav, G3.wav, C4.wav, G4.wav
-    notes: ["C2", "G2", "C3", "G3", "C4", "G4"],
+    // C3.wav, G3.wav, C4.wav, G4.wav
+    notes: ["C3", "G3", "C4", "G4"],
     transposeSemitones: 0
   }
 };
@@ -514,7 +514,7 @@ function getSampleVoiceBasePath() {
   const path = window.location.pathname;
   if (
     path.includes("/module2/") ||
-    path.includes("/module4/") ||
+    path.includes("/module3/") ||
     path.includes("/module4/") ||
     path.includes("/three-voice/")
   ) {
@@ -1894,3 +1894,12 @@ function exportMidi() {
 
 
 window.undoLastEdit = undoLastEdit;
+
+// Open the page in a given language from a link, e.g. module4-quarter-counterpoint.html?lang=fr
+window.addEventListener("DOMContentLoaded", () => {
+  const requested = new URLSearchParams(window.location.search).get("lang");
+  if (!requested || !I18N[requested] || requested === currentLanguage) return;
+  const languageSelect = document.getElementById("languageSelect");
+  if (languageSelect) languageSelect.value = requested;
+  setLanguage(requested);
+});

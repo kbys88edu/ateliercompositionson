@@ -2216,3 +2216,43 @@ body {
 .senzoku-measure-line.final-thick {
   stroke-width: 2.7 !important;
 }
+
+
+/* 2026-10-30 fixes: the score scrolls sideways instead of being clipped on narrow screens,
+   control labels never break mid-word, Japanese headings keep natural tracking. */
+.score-box {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.score-editor,
+#scoreEditor {
+  height: 360px !important;
+}
+
+h1,
+.module1-language-title {
+  letter-spacing: -0.02em;
+}
+
+.language-control > span,
+.exercise-control > span,
+.tempo-control {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 760px) {
+  .exercise-control {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .exercise-control select,
+  #exerciseSelect {
+    min-width: 0 !important;
+    width: 100%;
+    max-width: 100%;
+  }
+}

@@ -385,12 +385,12 @@ function midiToFrequency(midi) {
 const SAMPLE_VOICE_SETS = {
   femaleSample: {
     folder: "female",
-    notes: ["G3", "C4", "G4", "C5", "G5"],
+    notes: ["C4", "G4", "C5", "G5"],
     transposeSemitones: 0
   },
   maleSample: {
     folder: "male",
-    notes: ["G2", "C3", "G3", "C4", "G4"],
+    notes: ["C3", "G3", "C4", "G4"],
     transposeSemitones: 0
   }
 };
@@ -398,7 +398,8 @@ const SAMPLE_VOICE_SETS = {
 const sampleVoiceCache = {};
 
 function getSampleVoiceBasePath() {
-  return "audio/voice";
+  // The pages live one folder below counterpoint/audio.
+  return "../audio/voice";
 }
 
 function getNearestSampleNote(targetMidi, sampleNotes, setName = "") {

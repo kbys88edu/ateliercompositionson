@@ -683,3 +683,36 @@ button[onclick="stopPlayback(true)"] {
     margin-left: 0 !important;
   }
 }
+
+
+/* 2026-10-30 fixes: readable score on phones (scroll sideways instead of shrinking),
+   control labels never break mid-word, Japanese headings keep natural tracking. */
+h1 {
+  letter-spacing: -0.02em;
+}
+
+.language-control > span,
+.exercise-control > span,
+.timbre-control > span,
+.playback-control > span,
+.tempo-control {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 820px) {
+  .score-box {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .score-editor {
+    min-width: 1100px;
+  }
+}
+
+@media (max-width: 520px) {
+  h1 {
+    letter-spacing: -0.02em;
+  }
+}
