@@ -270,3 +270,9 @@ footer.site .small a { margin-right: 14px; }
 .embed-play { position: absolute; left: 14px; bottom: 12px; background: #fff; color: #0e0e10; font: 500 14px/1 "Inter", sans-serif; padding: 9px 12px 8px; }
 .embed.is-link .embed-play { left: 0; bottom: auto; top: 0; }
 @media (prefers-reduced-motion: reduce) { .embed-facade img { transition: none; } }
+
+/* 確認用：冒頭の配色の切り替え */
+.palettes { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 10px 0 0; font: 400 13px/1.6 var(--sans); }
+html[data-palette="spectrum"] .palettes a[href$="spectrum"], html[data-palette="cobalt"] .palettes a[href$="cobalt"],
+html[data-palette="mono"] .palettes a[href$="mono"], html[data-palette="ember"] .palettes a[href$="ember"],
+html[data-palette="prism"] .palettes a[href$="prism"] { font-weight: 700; text-decoration-thickness: 2px; }

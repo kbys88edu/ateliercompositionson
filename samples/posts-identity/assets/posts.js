@@ -27,7 +27,7 @@
 
   var fs = [
     "precision highp float;",
-    "uniform vec2 r;uniform float t;uniform float burst;uniform float frame;uniform float px;uniform float veil;",
+    "uniform vec2 r;uniform float t;uniform float burst;uniform float frame;uniform float px;uniform float veil;uniform vec3 C[7];",
     "uniform sampler2D ph;uniform vec4 rect;uniform vec4 uvm;uniform float hasPh;",
     "const float TAU=6.28318530718;",
     "float caustic(vec2 uv,float time){",
@@ -38,8 +38,7 @@
     "  c/=5.;c=1.17-pow(c,1.4);return clamp(pow(abs(c),8.),0.,1.);}",
     "float h(vec3 q){return fract(sin(dot(q,vec3(12.9898,78.233,37.719)))*43758.5453);}",
     "vec3 pal(float u){u=clamp(u,0.,1.);",
-    "  vec3 c0=vec3(1.,1.,1.),c1=vec3(.98,.886,.235),c2=vec3(1.,.541,.11),c3=vec3(.941,.157,.196),",
-    "       c4=vec3(.98,.392,.843),c5=vec3(.149,.259,.961),c6=vec3(.471,.839,.925);",
+    "  vec3 c0=C[0],c1=C[1],c2=C[2],c3=C[3],c4=C[4],c5=C[5],c6=C[6];",
     "  if(u<.10)return mix(c0,c1,u/.10);if(u<.26)return mix(c1,c2,(u-.10)/.16);if(u<.40)return mix(c2,c3,(u-.26)/.14);",
     "  if(u<.54)return mix(c3,c4,(u-.40)/.14);if(u<.68)return mix(c4,c5,(u-.54)/.14);if(u<.80)return mix(c5,c6,(u-.68)/.12);",
     "  if(u<.92)return mix(c6,c0,(u-.80)/.12);return c0;}",
@@ -79,6 +78,24 @@
   var loc = gl.getAttribLocation(pg, "a"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   var U = {}; ["r", "t", "burst", "frame", "px", "veil", "ph", "rect", "uvm", "hasPh"].forEach(function (n) { U[n] = gl.getUniformLocation(pg, n); });
   gl.uniform1f(U.hasPh, 0);
+  // 配色：投稿で使った色。#palette-名前 で切り替え（spectrum / cobalt / mono / ember / prism）
+  var PAL = {
+    spectrum: ["ffffff","fae23c","ff8a1c","f02832","fa64d7","2642f5","78d6ec"],   // 白い紙面のスペクトル投稿
+    cobalt:   ["ffffff","dfe6ff","9fb1ff","5c78ff","2642f5","1630c8","0a1450"],   // 黒地にコバルトの光のリール
+    mono:     ["ffffff","e9e9eb","bdbdc2","8a8a90","55555a","2a2a2e","0e0e10"],   // 網点のモノクロ写真
+    ember:    ["ffffff","ffe7c2","ffb46b","ff6a2b","e8342c","8c1d2e","2a0d14"],   // 4:5 フィード広告の赤と橙
+    prism:    ["ffffff","b8f0e6","5fd6c8","2642f5","8e5cff","fa64d7","ffd1f0"]    // 色収差の青・紫・桃
+  };
+  var CU = gl.getUniformLocation(pg, "C");
+  function setPal(name) {
+    var a = PAL[name] || PAL.spectrum, f = [];
+    a.forEach(function (h) { for (var i = 0; i < 3; i++) f.push(parseInt(h.substr(i * 2, 2), 16) / 255); });
+    gl.uniform3fv(CU, new Float32Array(f));
+    document.documentElement.setAttribute("data-palette", PAL[name] ? name : "spectrum");
+  }
+  function fromHash() { var m = /palette-(\w+)/.exec(location.hash); setPal(m ? m[1] : (window.ACS_PALETTE || "spectrum")); }
+  fromHash();
+  window.addEventListener("hashchange", function () { fromHash(); draw(performance.now()); });
   gl.uniform1f(U.veil, mast ? 1 : 0);
 
   var PA = 646 / 1434;
