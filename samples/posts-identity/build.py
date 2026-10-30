@@ -9,11 +9,24 @@
 - ja/simple-synth.html : アプリ部分は元のまま、周りだけ新しいスタイルにする
 出力先はこのフォルダ。画像は ../../images、PDF は ../../assets、ページ同士は相対リンク。
 """
-import os, re, html
+import os, re, html, sys
 from html.parser import HTMLParser
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
+SRC_REV = "b306ed5"          # 再設計前の公開ページ（この版から本文を取り出す）
+MODE = "sample"              # "sample" = 見本フォルダへ / "prod" = 公開ページ（ja/, fr/）へ
+
+
+def read_src(relpath):
+    import subprocess
+    return subprocess.run(["git", "-C", ROOT, "show", f"{SRC_REV}:{relpath}"], capture_output=True, check=True).stdout.decode("utf-8")
+
+
+def list_src(lang):
+    import subprocess
+    out = subprocess.run(["git", "-C", ROOT, "ls-tree", "--name-only", f"{SRC_REV}", f"{lang}/"], capture_output=True, check=True).stdout.decode()
+    return [os.path.basename(x) for x in out.split() if x.endswith(".html")]
 
 NAV = {
     "ja": [("index.html", "トップ"), ("composition-lesson.html", "作曲"), ("dtm-lesson.html", "DTM"),
@@ -28,7 +41,7 @@ COLS3 = {
     "fr": '<div class="cols3"><p>Atelier<span>Composition Son</span></p><p>Cours en ligne<span>Composition · MAO</span></p><p>ateliercompositionson<span>.com/fr</span></p></div>',
 }
 SMALL = {
-    "ja": '<span>© Atelier Composition Son</span><span><a href="terms.html">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="../fr/index.html">Français</a></span>',
+    "ja": '<span>© Atelier Composition Son</span><span><a href="terms.html" data-track="click_terms_page">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click">お問い合わせ</a><a href="../fr/index.html">Français</a></span>',
     "fr": '<span>© Atelier Composition Son</span><span><a href="../../../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf">Conditions</a><a href="https://ateliercompositionson.com/fr/confidentialite/">Confidentialité</a><a href="../ja/index.html">日本語</a></span>',
 }
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' \
@@ -143,6 +156,10 @@ LINKS_CLASSES = ("hero-actions", "fr-actions", "acs-consultation__links", "actio
 
 
 def fix_url(u, lang):
+    if MODE == "prod":
+        if u and u.endswith("sachie_studio.jpg"): return "../images/site/teacher.jpg"
+        if u and u.startswith("../assets/img/"): return "../images/site/" + u[len("../assets/img/"):]
+        return u
     if u and u.endswith("sachie_studio.jpg"): return "../assets/img/teacher.jpg"
     if not u or u.startswith(("#", "http", "mailto:", "tel:", "data:")): return u
     for pfx in ("/images/", "/assets/", "/docs/", "/sounds/", "/pdf/", "/scores/"):
@@ -164,10 +181,15 @@ def esc(s):
     return html.escape(s, quote=False)
 
 
+KEEP_CLASSES = {"correction-form", "error"}
+
+
 def attrs_html(n, lang, extra_class=None):
     out = []
+    keep = [c for c in n.cls() if c in KEEP_CLASSES and c != extra_class]
+    if keep: extra_class = " ".join(([extra_class] if extra_class else []) + keep)
     for k, v in n.attrs.items():
-        if k in KEEP_ATTRS:
+        if k in KEEP_ATTRS or k.startswith("data-") or k.startswith("aria-") or k == "hidden":
             if k in ("href", "src"): v = fix_url(v, lang)
             if v is None: out.append(f" {k}")
             else: out.append(f' {k}="{html.escape(v, quote=True)}"')
@@ -215,6 +237,10 @@ def render(nodes, lang, ctx):
         # 入れ物：意味のあるものだけ残し、ほかは中身に置き換える
         if t in ("div", "section", "article", "aside", "main", "span"):
             inner = render(n.children, lang, ctx)
+            if any(k.startswith("data-") or k == "id" for k in n.attrs):     # スクリプトが使う入れ物は残す
+                if has_cls(n, ("field", "submit-row", "form-row")):
+                    out.append(f'<div class="frow"{attrs_html(n, lang)}>{inner}</div>'); continue
+                out.append(f'<{t}{attrs_html(n, lang)}>{inner}</{t}>'); continue
             if not inner.strip(): continue
             if has_cls(n, TAGS_CLASSES):
                 tags = "".join(f'<span class="tag">{esc(re.sub(r"\s+", " ", c.text()).strip())}</span>' for c in n.children if isinstance(c, Node) and c.text().strip())
@@ -269,7 +295,8 @@ def hero_html(sec, lang, extra=""):
 
 def band(lang, extra=""):
     cls = "field band greet" if extra else "field band"
-    return f'<div class="{cls}" id="field"><img class="still" src="../assets/img/ecouter.jpg" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas>{extra}</div>'
+    img = "../images/site/ecouter.jpg" if MODE == "prod" else "../assets/img/ecouter.jpg"
+    return f'<div class="{cls}" id="field"><img class="still" src="{img}" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas>{extra}</div>'
 
 
 WAVE = {"ja": '<figure class="wave"><img src="../assets/img/wave.png" alt="手を振る Sachie Kobayashi"></figure>',
@@ -278,7 +305,7 @@ WAVE = {"ja": '<figure class="wave"><img src="../assets/img/wave.png" alt="手�
 
 def port(src_path, lang, out_name):
     extra = ""
-    src = open(src_path, encoding="utf-8").read()
+    src = read_src(f"{lang}/{out_name}")
     root = parse(src)
     title = (root.find("title").text().strip() if root.find("title") else "Atelier Composition Son")
     main = root.find("main") or root.find("body")
@@ -299,11 +326,14 @@ def port(src_path, lang, out_name):
             loose.append(c)
     flush()
     body = band(lang, extra) + "".join(parts)
-    open(os.path.join(HERE, lang, out_name), "w", encoding="utf-8").write(chrome(lang, title, out_name, body))
+    if MODE == "prod":
+        write_prod(lang, out_name, src, body)
+    else:
+        open(os.path.join(HERE, lang, out_name), "w", encoding="utf-8").write(chrome(lang, title, out_name, body))
 
 
 def port_synth():
-    src = open(os.path.join(ROOT, "ja", "simple-synth.html"), encoding="utf-8").read()
+    src = read_src("ja/simple-synth.html")
     main = re.search(r"<main.*?</main>", src, flags=re.S).group(0)
     main = main.replace("../assets/", "../../../assets/")
     title = re.search(r"<title>(.*?)</title>", src, flags=re.S).group(1).strip()
@@ -345,7 +375,7 @@ def main():
     for lang in ("ja", "fr"):
         os.makedirs(os.path.join(HERE, lang), exist_ok=True)
         build_index(lang)
-        for f in sorted(os.listdir(os.path.join(ROOT, lang))):
+        for f in sorted(list_src(lang)):
             if not f.endswith(".html") or f == "index.html": continue
             if lang == "ja" and f == "simple-synth.html": continue
             port(os.path.join(ROOT, lang, f), lang, f)
@@ -355,5 +385,109 @@ def main():
     print("done")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and not (len(sys.argv) > 1 and sys.argv[1] == "--prod"):
     main()
+
+
+# ───────────────────────── 公開ページへの書き出し ─────────────────────────
+OLD_ASSETS = ("acs-core.css", "ja-home.css", "public-site-final.css", "lesson-detail-final.css", "acs-editorial.css", "acs-quiet",
+              "fr-site.css", "acs-header.js", "acs-ui.js", "acs-quiet-lake.js")
+
+
+def prod_head(src):
+    """元の <head> から、SEO・計測・構造化データは残し、旧スタイルとページ内の <style> は外す。"""
+    head = re.search(r"<head[^>]*>(.*?)</head>", src, flags=re.S | re.I).group(1)
+    head = re.sub(r"<style.*?</style>", "", head, flags=re.S | re.I)
+    head = re.sub(r'<link[^>]*rel="stylesheet"[^>]*>', lambda m: "" if any(a in m.group(0) for a in OLD_ASSETS) else m.group(0), head)
+    head = re.sub(r'<link[^>]*rel="preload"[^>]*>', "", head)
+    head = re.sub(r'<script[^>]*src="[^"]*"[^>]*>\s*</script>', lambda m: "" if any(a in m.group(0) for a in OLD_ASSETS) else m.group(0), head)
+    head = re.sub(r"\n\s*\n+", "\n", head)
+    return head.strip()
+
+
+def prod_scripts(src):
+    """本文末の、ページの機能に必要なスクリプトだけを残す（旧ヘッダー・旧背景は外す）。"""
+    body = re.search(r"<body[^>]*>(.*)</body>", src, flags=re.S | re.I).group(1)
+    keep = []
+    for m in re.finditer(r"<script\b[^>]*>.*?</script>", body, flags=re.S | re.I):
+        tag = m.group(0)
+        if any(a in tag for a in OLD_ASSETS): continue
+        keep.append(tag)
+    return "\n".join(keep)
+
+
+def write_prod(lang, out_name, src, body, scripts=None):
+    head = prod_head(src)
+    pre = "../"
+    nav = "".join(f'<a href="{h}"{" aria-current=\"page\"" if h == out_name else ""}>{t}</a>' for h, t in NAV[lang])
+    lang_sw = ('<span class="lang"><strong>JA</strong> / <a href="../fr/">FR</a></span>' if lang == "ja"
+               else '<span class="lang"><strong>FR</strong> / <a href="../ja/">JA</a></span>')
+    small = SMALL[lang].replace("../fr/index.html", "../fr/").replace("../ja/index.html", "../ja/") \
+        .replace("../../../docs/", "../docs/")
+    scripts = prod_scripts(src) if scripts is None else scripts
+    page = f"""<!DOCTYPE html>
+<html lang="{lang}">
+<head>
+{head}
+{FONTS}
+<link rel="stylesheet" href="{pre}assets/css/acs-posts.css?v=site-20261030">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="./">Atelier Composition Son</a>
+    <nav aria-label="{'メインメニュー' if lang == 'ja' else 'Navigation principale'}">{nav}{lang_sw}</nav>
+  </header>
+<main>
+{body}
+</main>
+  <footer class="site">
+    {COLS3[lang].replace('class="cols3"', 'class="cols3" style="margin-top:0"')}
+    <div class="small">{small}</div>
+  </footer>
+</div>
+{scripts}
+<script src="{pre}assets/js/acs-embeds.js?v=site-20261030"></script>
+<script defer src="{pre}assets/js/acs-field.js?v=site-20261030"></script>
+</body>
+</html>
+"""
+    page = page.replace('href="index.html"', 'href="./"')
+    open(os.path.join(ROOT, lang, out_name), "w", encoding="utf-8").write(page)
+
+
+def prod_main():
+    global MODE
+    MODE = "prod"
+    import shutil
+    os.makedirs(os.path.join(ROOT, "images", "site"), exist_ok=True)
+    for f in os.listdir(os.path.join(HERE, "assets", "img")):
+        shutil.copy(os.path.join(HERE, "assets", "img", f), os.path.join(ROOT, "images", "site", f))
+    shutil.copy(os.path.join(HERE, "assets", "posts.css"), os.path.join(ROOT, "assets", "css", "acs-posts.css"))
+    for lang in ("ja", "fr"):
+        for f in sorted(list_src(lang)):
+            if f == "index.html" or (lang == "ja" and f == "simple-synth.html"): continue
+            port(None, lang, f)
+            print("prod", lang, f)
+    # フランス語トップ：見本の構成を、元の <head> とスクリプトで
+    src = read_src("fr/index.html")
+    tpl = open(os.path.join(HERE, "src", "fr-index.html"), encoding="utf-8").read().replace("{{COLS3}}", COLS3["fr"])
+    tpl = tpl.replace("../assets/img/", "../images/site/").replace("../../../assets/", "../assets/").replace("../../../docs/", "../docs/")
+    write_prod("fr", "index.html", src, tpl)
+    print("prod fr index.html")
+    # 簡易シンセ：アプリはそのまま
+    s = read_src("ja/simple-synth.html")
+    main_html = re.search(r"<main.*?</main>", s, flags=re.S).group(0)
+    body = band("ja") + '<section class="page-head"><p class="label">学習ツール</p><div><h1>簡易シンセサイザー</h1><p>波形、フィルター、エンベロープ、LFO を触りながら、音作りの基本を確かめるための小さなシンセサイザーです。</p></div></section><div class="synth-wrap">' + main_html + "</div>"
+    s2 = s.replace("</head>", "</head>")
+    write_prod("ja", "simple-synth.html", s, body)
+    # simple-synth.css は残す
+    p = os.path.join(ROOT, "ja", "simple-synth.html"); t = open(p, encoding="utf-8").read()
+    if "simple-synth.css" not in t:
+        t = t.replace('<link rel="stylesheet" href="../assets/css/acs-posts.css', '<link rel="stylesheet" href="simple-synth.css?v=1">\n<link rel="stylesheet" href="../assets/css/acs-posts.css')
+        open(p, "w", encoding="utf-8").write(t)
+    print("prod ja simple-synth.html")
+
+
+if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "--prod":
+    prod_main()

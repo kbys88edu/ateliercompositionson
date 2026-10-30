@@ -20,7 +20,7 @@
           
           
           <p>Réservez directement une séance de travail, ou envoyez un message court si vous souhaitez d’abord vérifier le format adapté.</p>
-          <a href="index.html#formats" class="arrow">Revoir les trois formats</a>
+          <a href="index.html#formats" data-track="click_secondary_cta" data-offer="none" data-cta-position="booking_hero" class="arrow">Revoir les trois formats</a>
         
         
       
@@ -39,8 +39,8 @@
         
           <h2>Choisir un horaire</h2>
           <p>Le calendrier Calendly n’est chargé qu’après votre action. Les informations de connexion sont envoyées automatiquement après la réservation.</p>
-          <button type="button">Ouvrir le calendrier</button>
-          
+          <button type="button" data-calendly-url="https://calendly.com/acs_trial/trial_acs" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="booking_page">Ouvrir le calendrier</button>
+          <div data-calendly-slot aria-live="polite"></div>
         
       
     </div></section><section class="block"><p class="label h">Une question avant de réserver ?<small>Premier message</small></p><div class="body">
@@ -107,9 +107,9 @@
             
 
             <p>Les informations transmises sont utilisées uniquement pour répondre à votre demande et organiser, le cas échéant, une séance. <a href="https://ateliercompositionson.com/fr/confidentialite/">En savoir plus sur le traitement des données.</a></p>
-            <p></p>
-            <p></p>
-            <button type="submit">Envoyer ma demande</button>
+            <p data-form-success aria-live="polite"></p>
+            <p data-form-error aria-live="assertive"></p>
+            <button type="submit" data-no-arrow>Envoyer ma demande</button>
           </form>
         
       

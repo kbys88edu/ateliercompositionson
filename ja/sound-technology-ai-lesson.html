@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>サウンドテクノロジー・AI音楽レッスン｜Atelier Composition Son</title>
   <meta name="description" content="サウンドテクノロジーとAI音楽のオンライン個人レッスン。音楽プログラミング、Python、DAW拡張、センサー、生成システム、Suno、ChatGPT、Codex、LLM、Deep Learning、映像との連携を作品制作に接続します。" />
   <link rel="canonical" href="https://ateliercompositionson.com/ja/sound-technology-ai-lesson.html" />
@@ -12,7 +11,6 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ateliercompositionson.com/ja/sound-technology-ai-lesson.html" />
   <meta property="og:site_name" content="Atelier Composition Son" />
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
@@ -21,336 +19,56 @@
     gtag("js", new Date());
     gtag("config", "G-Y1792EBWTT");
   </script>
-
-  <style>
-    :root {
-      --bg: #f8f6f1;
-      --paper: #fffefa;
-      --ink: #101010;
-      --muted: #67625a;
-      --line: #1c1c1c;
-      --max: 1180px;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: linear-gradient(90deg, rgba(16,16,16,0.035) 1px, transparent 1px) 0 0 / 25vw 100%, var(--bg);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", YuGothic, Meiryo, sans-serif;
-      line-height: 1.85;
-      letter-spacing: 0;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
-    p { margin: 0; }
-    p + p { margin-top: 1.1em; }
-    ul { margin: 0; padding-left: 1.2em; }
-    li + li { margin-top: 0.45em; }
-    .muted { color: var(--muted); }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 1px solid var(--line);
-      background: rgba(248, 246, 241, 0.92);
-      backdrop-filter: blur(14px);
-    }
-
-    .nav {
-      padding: 16px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 28px;
-    }
-
-    .brand {
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      font-weight: 650;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .nav-cta { border: 1px solid var(--ink); padding: 7px 13px; color: var(--ink); }
-
-    .lesson-header-image {
-      margin: 0;
-      border-bottom: 1px solid var(--line);
-      background: var(--bg);
-    }
-
-    .lesson-header-image img {
-      width: 100%;
-      max-height: 520px;
-      object-fit: cover;
-      filter: grayscale(100%);
-    }
-
-    .hero {
-      padding: 94px 28px 70px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
-      gap: 36px;
-      align-items: end;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .eyebrow, .section-label {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow { margin-bottom: 28px; }
-
-    h1 {
-      margin: 0 0 30px;
-      font-size: clamp(44px, 8.4vw, 124px);
-      line-height: 0.98;
-      font-weight: 500;
-      letter-spacing: -0.04em;
-    }
-
-    h2 {
-      margin: 0 0 24px;
-      font-size: clamp(30px, 4vw, 58px);
-      line-height: 1.08;
-      font-weight: 400;
-      letter-spacing: -0.04em;
-    }
-
-    h3 { margin: 0 0 12px; font-size: 22px; line-height: 1.35; font-weight: 400; }
-    .lead { max-width: 780px; font-size: clamp(17px, 2vw, 22px); line-height: 1.95; }
-
-    .hero-panel, .card {
-      border: 1px solid var(--line);
-      background: var(--paper);
-      padding: 32px;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 32px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      border: 1px solid var(--line);
-      padding: 13px 20px;
-      font-size: 14px;
-    }
-
-    .btn.primary { background: var(--ink); color: var(--bg); }
-
-    section {
-      padding: 82px 28px;
-      display: grid;
-      grid-template-columns: 0.38fr 1fr;
-      gap: 48px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .content { max-width: var(--max); }
-    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-    .card { border-top: 0; border-left: 0; }
-    .list { color: var(--muted); }
-
-    .scope-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0;
-      margin-top: 32px;
-      border-top: 1px solid var(--line);
-      border-left: 1px solid var(--line);
-    }
-
-    .scope-item {
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      background: var(--paper);
-      padding: 26px;
-    }
-
-    .scope-item small {
-      display: block;
-      margin-bottom: 12px;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .tool-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 28px;
-    }
-
-    .tool-list span {
-      display: inline-flex;
-      border: 1px solid var(--line);
-      background: transparent;
-      padding: 7px 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.2;
-    }
-
-    .inline-work-image {
-      margin: 0;
-      margin-top: 28px;
-      max-width: 360px;
-      border: 1px solid var(--line);
-      background: var(--paper);
-    }
-
-    .inline-work-image img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-
-    .inline-work-image figcaption {
-      padding: 12px 14px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 34px 28px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 900px) {
-      .nav-links { display: none; }
-      .hero, section, .grid-2, .scope-list { grid-template-columns: 1fr; }
-      .inline-work-image { max-width: 340px; }
-      .hero, section { padding-left: 18px; padding-right: 18px; }
-      .btn { width: 100%; min-height: 48px; }
-      footer { flex-direction: column; }
-    }
-
-  /* Global white background and frameless images */
-  :root {
-    --bg: #ffffff !important;
-    --paper: #ffffff !important;
-    --card: #ffffff !important;
-    --white: #ffffff !important;
-  }
-
-  html,
-  body {
-    background: #ffffff !important;
-  }
-
-  figure,
-  img,
-  .lesson-image,
-  .lesson-header-image,
-  .teacher-photo,
-  .inline-work-image,
-  .mobile-studio-image,
-  .hero-image,
-  .image-frame,
-  .visual-card {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-
-  figure img,
-  .lesson-image img,
-  .lesson-header-image img,
-  .teacher-photo img,
-  .inline-work-image img,
-  .hero-image img,
-  .image-frame img,
-  .visual-card img {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-</style>
-  <link rel="stylesheet" href="../assets/css/acs-core.css">
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
-<link rel="stylesheet" href="../assets/css/acs-editorial.css?v=editorial-20260930">
-<link rel="stylesheet" href="../assets/css/acs-quiet.css?v=nounderline-20261020">
-<link rel="stylesheet" href="../assets/css/acs-quiet-pages.css?v=quiet-20261004">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/css/acs-posts.css?v=site-20261030">
 </head>
-
-<body class="lesson-detail-page acs-editorial">
-  <header class="acs-site-header" data-shared-header></header>
-
-  <main>
-    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
-      <div class="lesson-detail-hero__copy">
-        <div class="eyebrow">Module 05 / Sound Technology &amp; AI</div>
-        <h1 id="lesson-title">技術を、作品のための道具にする。</h1>
-        <p class="lead muted">
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="./">Atelier Composition Son</a>
+    <nav aria-label="メインメニュー"><a href="./">トップ</a><a href="composition-lesson.html">作曲</a><a href="dtm-lesson.html">DTM</a><a href="music-theory-lesson_with_pdf-link.html">音楽理論</a><a href="solfege.html">ソルフェージュ</a><a href="electroacoustic-lesson.html">電子音響</a><a href="sound-technology-ai-lesson.html" aria-current="page">AI音楽</a><a href="profile.html">講師</a><a href="faq.html">質問</a><a href="booking.html">無料相談</a><span class="lang"><strong>JA</strong> / <a href="../fr/">FR</a></span></nav>
+  </header>
+<main>
+<div class="field band" id="field"><img class="still" src="../images/site/ecouter.jpg" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas></div><section class="page-head"><p class="label">Module 05 / Sound Technology &amp; AI</p><div><h1>技術を、作品のための道具にする。</h1>
+      
+        
+        
+        <p class="lead">
           音楽プログラミング、Python、DAW拡張、センサー、生成システム、Suno、ChatGPT、Codex、LLM、Deep Learning、映像との連携を、
           単なる操作方法ではなく、作品制作やサウンドデザインのための手段として扱います。
         </p>
-        <div class="button-row">
-          <a class="btn primary" href="/ja/booking.html">無料相談を予約する</a>
-          <a class="btn" href="/ja/#study">レッスン科目へ戻る</a>
-        </div>
-      </div>
+        <p class="links">
+          <a href="/ja/booking.html" class="arrow">無料相談を予約する</a>
+          <a href="/ja/#study">レッスン科目へ戻る</a>
+        </p>
+      
 
-      <figure class="lesson-detail-hero__media lesson-detail-hero__media--technology">
-        <img src="../images/module5-vr-performance-documentation.jpeg" width="2048" height="1536" alt="VR、音響、映像、演奏を組み合わせた作品の会場記録" loading="lazy" decoding="async">
-      </figure>
+      
 
-      <aside class="lesson-detail-hero__summary">
-        <h2>扱うこと</h2>
+      
+    </div></section><section class="block"><p class="label h">扱うこと</p><div class="body">
+        
         <ul class="list">
           <li>音楽プログラミング、Python、DAW拡張の基本設計</li>
           <li>センサー、MIDI、OSC、生成システムの整理</li>
           <li>Suno、ChatGPT、Codex、LLM、Deep Learning、追加学習の考え方</li>
           <li>映像・インタラクションと作品コンセプトの接続</li>
         </ul>
-      </aside>
-    </section>
-
-    <section>
-      <div class="section-label">レッスン内容</div>
-      <div class="content">
-        <h2>Sound Technology と AI を分けずに扱う</h2>
-        <p class="muted">
+      </div></section><section class="block"><p class="label h">Sound Technology と AI を分けずに扱う<small>レッスン内容</small></p><div class="body">
+      
+      
+        
+        <p>
           テクノロジーは、導入するだけでは作品になりません。
           どの道具を選ぶか、どの結果を採用するか、音楽的にどう構成するかを、
           制作プロセスの中で具体的に整理します。
         </p>
-        <p class="muted">
+        <p>
           はじめて触れる段階から、制作の中で自分なりに使い始める段階までを想定しています。
           既存の作品やスケッチがある場合は、それをもとに必要な技術だけを選びます。
         </p>
 
-        <div class="tool-list" aria-label="扱えるツール例">
+        
           <span>OpenMusic</span>
           <span>Max/MSP</span>
           <span>Max for Live</span>
@@ -363,82 +81,78 @@
           <span>Deep Learning</span>
           <span>TouchDesigner</span>
           <span>VRテクノロジー</span>
-        </div>
+        
 
-        <figure class="inline-work-image">
-          <img src="../images/module5-vr-performance-documentation.jpeg" width="2048" height="1536" alt="VR、音響、映像、演奏が関わるSachie Kobayashiの作品記録" loading="lazy" decoding="async">
+        <figure>
+          <img src="../images/module5-vr-performance-documentation.jpeg" alt="VR、音響、映像、演奏が関わるSachie Kobayashiの作品記録" loading="lazy">
           <figcaption>Sachie KobayashiのVR作品</figcaption>
         </figure>
 
-        <div class="grid-2" style="margin-top: 32px;">
-          <article class="card">
+        <div class="grid">
+          <div class="item">
             <h3>制作環境</h3>
-            <p class="muted">普段使っているDAWや音楽制作環境をもとに、音作り、編集、ルーティング、外部ツールとの接続を整理します。</p>
-          </article>
-          <article class="card">
+            <p>普段使っているDAWや音楽制作環境をもとに、音作り、編集、ルーティング、外部ツールとの接続を整理します。</p>
+          </div>
+          <div class="item">
             <h3>音楽プログラミング</h3>
-            <p class="muted">音高、リズム、形式、確率、ルール、反復、変化を使い、PythonやCodexも補助にしながら、作曲のための小さな仕組みを作ります。</p>
-          </article>
-          <article class="card">
+            <p>音高、リズム、形式、確率、ルール、反復、変化を使い、PythonやCodexも補助にしながら、作曲のための小さな仕組みを作ります。</p>
+          </div>
+          <div class="item">
             <h3>AI音源の判断</h3>
-            <p class="muted">生成された音源を聴き、使える部分、避けたい部分、編集すべき点、作品に接続できる可能性を整理します。</p>
-          </article>
-          <article class="card">
+            <p>生成された音源を聴き、使える部分、避けたい部分、編集すべき点、作品に接続できる可能性を整理します。</p>
+          </div>
+          <div class="item">
             <h3>映像・インタラクション</h3>
-            <p class="muted">音と映像、動き、センサー、画面上の反応を結びつけ、作品の構造として使える形にします。</p>
-          </article>
+            <p>音と映像、動き、センサー、画面上の反応を結びつけ、作品の構造として使える形にします。</p>
+          </div>
         </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-label">Scope</div>
-      <div class="content">
-        <h2>扱える範囲</h2>
-        <p class="muted">
+      
+    </div></section><section class="block"><p class="label h">扱える範囲<small>Scope</small></p><div class="body">
+      
+      
+        
+        <p>
           それぞれの技術を深く網羅する講座ではなく、作品制作に必要な範囲を選んで扱います。
           目的がまだ曖昧な場合は、まず小さな試作から始めます。
         </p>
 
-        <div class="scope-list">
-          <article class="scope-item">
+        
+          
 
             <h3>音の仕組みを作る</h3>
-            <p class="muted">パッチ、ルール、確率、反復、変化を使って、音や構造が動く仕組みを作ります。</p>
-          </article>
-          <article class="scope-item">
+            <p>パッチ、ルール、確率、反復、変化を使って、音や構造が動く仕組みを作ります。</p>
+          
+          
 
             <h3>制作環境を広げる</h3>
-            <p class="muted">DAWの中だけで完結しない制作、外部制御、拡張ツール、リアルタイム処理を整理します。</p>
-          </article>
-          <article class="scope-item">
+            <p>DAWの中だけで完結しない制作、外部制御、拡張ツール、リアルタイム処理を整理します。</p>
+          
+          
 
             <h3>AIを素材として扱う</h3>
-            <p class="muted">生成結果をそのまま使うのではなく、選定、編集、再構成、批評を通して作品に接続します。</p>
-          </article>
-          <article class="scope-item">
+            <p>生成結果をそのまま使うのではなく、選定、編集、再構成、批評を通して作品に接続します。</p>
+          
+          
 
             <h3>言葉と音をつなげる</h3>
-            <p class="muted">プロンプト、ChatGPTとの対話、文章生成、データの整理、LLMトレーニングやDeep Learningの考え方を、音楽制作の補助線として扱います。</p>
-          </article>
-          <article class="scope-item">
+            <p>プロンプト、ChatGPTとの対話、文章生成、データの整理、LLMトレーニングやDeep Learningの考え方を、音楽制作の補助線として扱います。</p>
+          
+          
 
             <h3>音と映像を連動させる</h3>
-            <p class="muted">映像生成、画面上の動き、リアルタイム反応を、音楽作品やパフォーマンスに接続します。</p>
-          </article>
-          <article class="scope-item">
+            <p>映像生成、画面上の動き、リアルタイム反応を、音楽作品やパフォーマンスに接続します。</p>
+          
+          
 
             <h3>小さな試作を作る</h3>
-            <p class="muted">大きなシステムを作る前に、短い実験、音のスケッチ、簡単な操作系から始めます。</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-label">Format</div>
-      <div class="content">
-        <h2>レッスン形式</h2>
+            <p>大きなシステムを作る前に、短い実験、音のスケッチ、簡単な操作系から始めます。</p>
+          
+        
+      
+    </div></section><section class="block"><p class="label h">レッスン形式<small>Format</small></p><div class="body">
+      
+      
+        
         <ul class="list">
           <li>オンライン個人レッスン</li>
           <li>60分 / 単発または継続</li>
@@ -448,27 +162,25 @@
           <li>プロンプト、生成結果、対話型AIの使い方、PythonやDeep Learningを含む追加学習の計画相談にも対応</li>
           <li>必要な技術を選び、小さな制作課題として進めます</li>
         </ul>
-        <div class="button-row">
-          <a class="btn primary" href="/ja/booking.html">無料相談を予約する</a>
-        </div>
-      </div>
-    </section>
-  <section class="acs-consultation" id="consultation" aria-labelledby="consultation-title">
-  <div class="acs-consultation__inner"><div class="acs-consultation__row">
-    <p class="acs-consultation__meta">無料相談 · 30分</p>
-    <div class="acs-consultation__copy"><h2 id="consultation-title">レッスンについてのご相談</h2><p>学びたいことや、今困っていることをお聞かせください。<br>相談の際に、レッスンの内容や進め方をご説明します。</p></div>
-    <a class="acs-consultation__booking" href="booking.html" data-track="final_consultation">無料相談を予約する</a>
-  </div><div class="acs-consultation__links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></div></div>
-</section>
+        <p class="links">
+          <a href="/ja/booking.html" class="arrow">無料相談を予約する</a>
+        </p>
+      
+    </div></section><section class="call" id="consultation"><p class="label">無料相談 · 30分</p><div class="body">
+  
+    
+    <h2 id="consultation-title">レッスンについてのご相談</h2><p>学びたいことや、今困っていることをお聞かせください。<br>相談の際に、レッスンの内容や進め方をご説明します。</p>
+    <a href="booking.html" data-track="final_consultation" class="arrow">無料相談を予約する</a>
+  <p class="links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></p>
+</div></section>
 </main>
-
-  <footer>
-    <div>© Atelier Composition Son</div>
-    <a href="/ja/">日本語トップへ戻る</a>
+  <footer class="site">
+    <div class="cols3" style="margin-top:0"><p>Atelier<span>Composition Son</span></p><p>オンラインレッスン<span>作曲・理論・電子音楽</span></p><p>ateliercompositionson<span>.com/ja</span></p></div>
+    <div class="small"><span>© Atelier Composition Son</span><span><a href="terms.html" data-track="click_terms_page">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click">お問い合わせ</a><a href="../fr/">Français</a></span></div>
   </footer>
-  <script defer src="../assets/js/acs-tracking.js"></script>
-  <script defer src="../assets/js/acs-header.js?v=lang-20261020"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
-<script defer src="../assets/js/acs-quiet-lake.js?v=quiet-20261004"></script>
+</div>
+<script defer src="../assets/js/acs-tracking.js"></script>
+<script src="../assets/js/acs-embeds.js?v=site-20261030"></script>
+<script defer src="../assets/js/acs-field.js?v=site-20261030"></script>
 </body>
 </html>

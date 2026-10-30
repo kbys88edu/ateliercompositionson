@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
+<meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Création électroacoustique et Max/MSP en ligne | Atelier Composition Son</title>
   <meta name="description" content="Accompagnement individuel en création électroacoustique : timbre, montage, espace, transformation sonore, Max/MSP et technologies musicales.">
@@ -16,8 +16,6 @@
   <meta property="og:description" content="Composer avec le timbre, le montage, l’espace et la transformation du son.">
   <meta property="og:url" content="https://ateliercompositionson.com/fr/electroacoustic-lesson.html">
   <meta property="og:image" content="https://ateliercompositionson.com/images/max-screen.png">
-  <link rel="stylesheet" href="../assets/css/acs-core.css">
-  <link rel="stylesheet" href="../assets/css/fr-site.css?v=lang-20261020">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -48,35 +46,34 @@
     ]
   }
   </script>
-<link rel="stylesheet" href="../assets/css/acs-editorial.css?v=editorial-20260930">
-<link rel="stylesheet" href="../assets/css/acs-quiet.css?v=nounderline-20261020">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/css/acs-posts.css?v=site-20261030">
 </head>
-<body class="fr-site acs-editorial" data-page-type="course">
-  <header class="acs-site-header" data-shared-header></header>
-
-  <main>
-    <section class="fr-page-hero" id="top">
-      <div class="fr-shell fr-page-hero__grid">
-        <div class="fr-page-hero__copy">
-          <p class="fr-eyebrow">Électroacoustique · timbre · Max/MSP</p>
-          <h1>Créer avec le son comme matériau</h1>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="./">Atelier Composition Son</a>
+    <nav aria-label="Navigation principale"><a href="./">Accueil</a><a href="composition-lesson.html">Composition</a><a href="harmony-analysis-lesson.html">Analyse et écriture</a><a href="electroacoustic-lesson.html" aria-current="page">Électroacoustique</a><a href="mao-lesson.html">MAO</a><a href="booking.html">Réserver</a><span class="lang"><strong>FR</strong> / <a href="../ja/">JA</a></span></nav>
+  </header>
+<main>
+<div class="field band" id="field"><img class="still" src="../images/site/ecouter.jpg" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas></div><section class="page-head"><p class="label">Électroacoustique · timbre · Max/MSP</p><div><h1>Créer avec le son comme matériau</h1>
+      
+        
+          
+          
           <p>Développer une pièce, une installation ou une performance à partir d’enregistrements, de synthèse, de transformations et de relations entre geste, espace et écoute.</p>
-          <div class="fr-actions">
-            <a class="acs-btn acs-btn--primary" href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="course_hero">Réserver une séance</a>
-            <a class="acs-btn acs-btn--secondary" href="index.html#formats" data-track="click_secondary_cta" data-offer="none" data-cta-position="course_hero">Comparer les formats</a>
-          </div>
-        </div>
-        <figure class="fr-page-hero__media">
-          <img src="../images/fr/electroacoustic-hero.webp" alt="Patch Max/MSP reliant captation gestuelle, synthèse et réverbération" width="1200" height="880" loading="eager" decoding="async" fetchpriority="high">
-        </figure>
-      </div>
-    </section>
-
-    <section class="fr-section">
-      <div class="fr-shell fr-detail-grid">
-        <div><p class="fr-eyebrow">Projets</p></div>
-        <div class="fr-reading">
-          <h2>Écouter avant de choisir un traitement.</h2>
+          <p class="links">
+            <a href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="course_hero" class="arrow">Réserver une séance</a>
+            <a href="index.html#formats" data-track="click_secondary_cta" data-offer="none" data-cta-position="course_hero" class="arrow">Comparer les formats</a>
+          </p>
+        
+        
+      
+    </div></section><section class="block"><p class="label h">Écouter avant de choisir un traitement.<small>Projets</small></p><div class="body">
+      
+        
+        
+          
           <p>Le travail peut accompagner une pièce électroacoustique, une musique mixte, une installation, une musique à l’image, une performance ou une recherche sonore. Le point de départ peut être un enregistrement, un son synthétique, une session DAW, un patch ou une intuition d’écoute.</p>
           <h3>Matériaux enregistrés</h3>
           <p>Voix, objets, prises instrumentales, field recording ou archives personnelles.</p>
@@ -84,35 +81,31 @@
           <p>Choisir un geste de transformation en fonction des propriétés du matériau, plutôt qu’empiler des effets.</p>
           <h3>Montage, forme et espace</h3>
           <p>Organiser les matières dans le temps et penser leur profondeur, leur mouvement et leur mode de diffusion.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="fr-section fr-section--paper">
-      <div class="fr-shell fr-detail-grid">
-        <div><p class="fr-eyebrow">Méthode</p></div>
-        <div>
-          <h2>Technologie et IA : une chaîne de décisions musicales.</h2>
-          <div class="fr-process" aria-label="Méthode en cinq étapes">
-            <article class="fr-process__step"><h3>Analyse</h3><p>Écouter, décrire et identifier les propriétés du matériau.</p></article>
-            <article class="fr-process__step"><h3>Contraintes</h3><p>Définir une durée, une densité, une tessiture, une règle ou une trajectoire.</p></article>
-            <article class="fr-process__step"><h3>Génération</h3><p>Produire plusieurs variantes avec un algorithme, un système ou un outil d’IA.</p></article>
-            <article class="fr-process__step"><h3>Sélection</h3><p>Comparer les résultats et décider ce qui possède une valeur musicale.</p></article>
-            <article class="fr-process__step"><h3>Réécriture</h3><p>Modifier, recomposer, orchestrer et intégrer le matériau dans une forme.</p></article>
-          </div>
-          <details class="fr-tool-details">
+        
+      
+    </div></section><section class="block"><p class="label h">Technologie et IA : une chaîne de décisions musicales.<small>Méthode</small></p><div class="body">
+      
+        
+        
+          
+          
+            <h3>Analyse</h3><p>Écouter, décrire et identifier les propriétés du matériau.</p>
+            <h3>Contraintes</h3><p>Définir une durée, une densité, une tessiture, une règle ou une trajectoire.</p>
+            <h3>Génération</h3><p>Produire plusieurs variantes avec un algorithme, un système ou un outil d’IA.</p>
+            <h3>Sélection</h3><p>Comparer les résultats et décider ce qui possède une valeur musicale.</p>
+            <h3>Réécriture</h3><p>Modifier, recomposer, orchestrer et intégrer le matériau dans une forme.</p>
+          
+          <details>
             <summary>Outils possibles</summary>
             <p>Max/MSP, enregistrements, DAW, synthèse, capteurs, Python et outils d’IA peuvent être mobilisés selon le projet. Le choix de l’outil vient après l’identification du problème musical.</p>
           </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="fr-section">
-      <div class="fr-shell fr-detail-grid">
-        <div><p class="fr-eyebrow">Documents</p></div>
-        <div class="fr-reading">
-          <h2>Ce que vous pouvez envoyer.</h2>
+        
+      
+    </div></section><section class="block"><p class="label h">Ce que vous pouvez envoyer.<small>Documents</small></p><div class="body">
+      
+        
+        
+          
           <ul>
             <li>fichiers audio ou lien d’écoute ;</li>
             <li>session DAW, patch Max/MSP ou captures d’écran ;</li>
@@ -120,45 +113,36 @@
             <li>question sur le timbre, le montage, la synthèse, l’espace ou le traitement.</li>
           </ul>
           <p>Les éléments peuvent être envoyés avant la séance afin de réserver le temps en direct aux décisions et aux essais utiles.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="fr-section fr-section--paper">
-      <div class="fr-shell fr-detail-grid">
-        <div><p class="fr-eyebrow">Format</p></div>
-        <div class="fr-reading">
-          <h2>Une séance de projet, pas une démonstration de logiciel.</h2>
+        
+      
+    </div></section><section class="block"><p class="label h">Une séance de projet, pas une démonstration de logiciel.<small>Format</small></p><div class="body">
+      
+        
+        
+          
           <p>La séance se déroule en ligne, en français, avec vos sons, vos exports ou votre patch. Les outils sont expliqués au moment où ils permettent de résoudre une question de composition.</p>
-          <div class="fr-price-bar">
+          
             <strong>70€ / 60 min</strong>
-            <a class="acs-btn acs-btn--primary" href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="course_final">Réserver une séance</a>
-          </div>
-        </div>
-      </div>
-    </section>
-  <section class="acs-consultation" id="consultation" aria-labelledby="consultation-title">
-  <div class="acs-consultation__inner"><div class="acs-consultation__row">
-    <p class="acs-consultation__meta">Échange gratuit · 30 min</p>
-    <div class="acs-consultation__copy"><h2 id="consultation-title">La prochaine étape de votre musique.</h2><p>Partons de vos envies et de vos questions pour envisager le travail ensemble.</p></div>
-    <a class="acs-consultation__booking" href="booking.html" data-track="final_consultation">Prendre rendez-vous<span aria-hidden="true">↗</span></a>
-  </div><div class="acs-consultation__links"><a href="mailto:info@sachiekobayashi.com">Contact</a><a href="confidentialite/">Confidentialité</a></div></div>
-</section>
+            <a href="booking.html?offer=individual-session#reservation" data-track="begin_booking" data-offer="individual_session_70" data-cta-position="course_final" class="arrow">Réserver une séance</a>
+          
+        
+      
+    </div></section><section class="call" id="consultation"><p class="label">Échange gratuit · 30 min</p><div class="body">
+  
+    
+    <h2 id="consultation-title">La prochaine étape de votre musique.</h2><p>Partons de vos envies et de vos questions pour envisager le travail ensemble.</p>
+    <a href="booking.html" data-track="final_consultation" class="arrow">Prendre rendez-vous<span aria-hidden="true">↗</span></a>
+  <p class="links"><a href="mailto:info@sachiekobayashi.com">Contact</a><a href="confidentialite/">Confidentialité</a></p>
+</div></section>
 </main>
-
-  <footer class="fr-footer">
-    <div class="fr-shell fr-footer__inner">
-      <div><p class="fr-footer__brand">Atelier Composition Son</p><p class="fr-footer__meta">Électroacoustique et technologies musicales</p></div>
-      <nav class="fr-footer__links" aria-label="Liens de pied de page">
-        <a href="index.html">Accueil</a><a href="index.html#formats">Formats</a><a href="booking.html">Réservation et contact</a><a href="confidentialite/">Confidentialité</a>
-      </nav>
-    </div>
+  <footer class="site">
+    <div class="cols3" style="margin-top:0"><p>Atelier<span>Composition Son</span></p><p>Cours en ligne<span>Composition · MAO</span></p><p>ateliercompositionson<span>.com/fr</span></p></div>
+    <div class="small"><span>© Atelier Composition Son</span><span><a href="../docs/atelier-composition-son-lesson-terms-policies-bilingual.pdf">Conditions</a><a href="https://ateliercompositionson.com/fr/confidentialite/">Confidentialité</a><a href="../ja/">日本語</a></span></div>
   </footer>
-
-  <script defer src="../assets/js/fr-tracking.js"></script>
-  <script defer src="../assets/js/acs-header.js?v=lang-20261020"></script>
-  <script defer src="../assets/js/acs-ui.js"></script>
-  <script defer src="../assets/js/fr-site.js"></script>
-<script defer src="../assets/js/acs-quiet-lake.js?v=quiet-20261004"></script>
+</div>
+<script defer src="../assets/js/fr-tracking.js"></script>
+<script defer src="../assets/js/fr-site.js"></script>
+<script src="../assets/js/acs-embeds.js?v=site-20261030"></script>
+<script defer src="../assets/js/acs-field.js?v=site-20261030"></script>
 </body>
 </html>

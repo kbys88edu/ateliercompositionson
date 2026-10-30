@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>作曲オンラインレッスン｜初心者から受験・作品制作まで｜Atelier Composition Son</title>
-
   <meta name="description" content="作曲オンラインレッスン。初心者の作曲基礎、コード、三部形式、モチーフ展開から、受験対応、現代音楽、電子音響、作品制作まで個別指導。無料相談受付中。" />
   <meta name="keywords" content="作曲オンラインレッスン, 作曲 レッスン, 作曲 個人レッスン, 音楽理論, 現代音楽, DTM, 受験 作曲, オンライン音楽レッスン" />
-
   <link rel="canonical" href="https://ateliercompositionson.com/ja/composition-lesson.html" />
-
   <meta property="og:title" content="作曲オンラインレッスン｜Atelier Composition Son" />
   <meta property="og:description" content="初心者から受験・作品制作まで。音楽理論、形式、和声、DTM、電子音響を横断して学ぶ作曲オンラインレッスン。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ateliercompositionson.com/ja/composition-lesson.html" />
   <meta property="og:site_name" content="Atelier Composition Son" />
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
@@ -25,7 +20,6 @@
     gtag("js", new Date());
     gtag("config", "G-Y1792EBWTT");
   </script>
-
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -42,706 +36,41 @@
     "url": "https://ateliercompositionson.com/ja/composition-lesson.html"
   }
   </script>
-
-  <style>
-    :root {
-      --bg: #f8f6f1;
-      --paper: #fffefa;
-      --ink: #101010;
-      --muted: #67625a;
-      --line: #1c1c1c;
-      --fine-line: rgba(16, 16, 16, 0.18);
-      --soft: #ece7dc;
-      --accent: #c83d2e;
-      --max: 1180px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background:
-        linear-gradient(90deg, rgba(16,16,16,0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
-        var(--bg);
-      color: var(--ink);
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Helvetica Neue",
-        "Hiragino Sans",
-        "Hiragino Kaku Gothic ProN",
-        "Yu Gothic",
-        YuGothic,
-        Meiryo,
-        sans-serif;
-      letter-spacing: 0;
-      line-height: 1.8;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(248, 246, 241, 0.92);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--ink);
-    }
-
-    .nav {
-      max-width: none;
-      margin: 0 auto;
-      padding: 16px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      font-weight: 650;
-      letter-spacing: 0.12em;
-      font-size: 14px;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .nav-links a:hover {
-      color: var(--ink);
-    }
-
-    .nav-cta {
-      border: 1px solid var(--ink);
-      padding: 7px 13px;
-      color: var(--ink);
-    }
-
-    .hero {
-      max-width: none;
-      margin: 0;
-      padding: 94px 28px 70px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
-      gap: 36px;
-      align-items: end;
-      border-bottom: 1px solid var(--ink);
-    }
-
-    .lesson-header-image {
-      margin: 0;
-      border-bottom: 1px solid var(--ink);
-      background: var(--bg);
-    }
-
-    .lesson-header-image img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .eyebrow {
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 28px;
-    }
-
-    h1 {
-      max-width: 980px;
-      font-size: clamp(48px, 9.8vw, 150px);
-      line-height: 0.96;
-      letter-spacing: 0;
-      margin: 0 0 34px;
-      font-weight: 500;
-    }
-
-    .lead {
-      font-size: clamp(16px, 2vw, 20px);
-      color: #303030;
-      max-width: 720px;
-      margin: 0 0 32px;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-      margin-top: 34px;
-      border-top: 1px solid var(--ink);
-      border-left: 1px solid var(--ink);
-      width: fit-content;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      padding: 13px 20px;
-      font-size: 14px;
-      line-height: 1;
-      border: 1px solid var(--ink);
-      border-top: 0;
-      border-left: 0;
-      transition: 0.2s ease;
-    }
-
-    .button.primary {
-      background: var(--ink);
-      color: #fff;
-    }
-
-    .button.secondary {
-      background: transparent;
-      color: var(--ink);
-    }
-
-    .button:hover {
-      background: var(--accent);
-      color: #fff;
-      opacity: 1;
-    }
-
-    .hero-card {
-      background: transparent;
-      border: 1px solid var(--ink);
-      padding: 26px;
-    }
-
-    .hero-card h2 {
-      margin: 0 0 24px;
-      font-size: clamp(24px, 3vw, 38px);
-      line-height: 1.08;
-      font-weight: 500;
-      letter-spacing: 0;
-    }
-
-    .hero-card ul {
-      margin: 0;
-      padding: 0;
-      color: #333;
-      font-size: 15px;
-      list-style: none;
-    }
-
-    .hero-card li {
-      border-top: 1px solid var(--fine-line);
-      padding: 13px 0;
-    }
-
-    section {
-      max-width: none;
-      margin: 0 auto;
-      padding: 76px 28px;
-      border-bottom: 1px solid var(--ink);
-    }
-
-    .section-title {
-      display: grid;
-      grid-template-columns: minmax(170px, 0.28fr) 1fr;
-      gap: 42px;
-      align-items: start;
-      margin-bottom: 44px;
-    }
-
-    .section-label {
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding-top: 8px;
-    }
-
-    h2 {
-      font-size: clamp(34px, 5.6vw, 82px);
-      line-height: 1.02;
-      letter-spacing: 0;
-      margin: 0;
-      font-weight: 500;
-    }
-
-    h3 {
-      margin: 0 0 12px;
-      font-size: 22px;
-      letter-spacing: 0;
-      line-height: 1.35;
-      font-weight: 500;
-    }
-
-    p {
-      margin: 0 0 18px;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-      border-top: 1px solid var(--ink);
-      border-left: 1px solid var(--ink);
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0;
-      border-top: 1px solid var(--ink);
-      border-left: 1px solid var(--ink);
-    }
-
-    .card {
-      background: transparent;
-      border-right: 1px solid var(--ink);
-      border-bottom: 1px solid var(--ink);
-      padding: 30px;
-      min-height: 100%;
-    }
-
-    .card .number {
-      font-size: 12px;
-      color: var(--accent);
-      letter-spacing: 0.16em;
-      margin-bottom: 52px;
-    }
-
-    .list {
-      margin: 16px 0 0;
-      padding-left: 1.2em;
-      color: #333;
-    }
-
-    .list li {
-      margin-bottom: 8px;
-    }
-
-    .plugin-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 28px;
-    }
-
-    .plugin-grid span {
-      display: inline-flex;
-      border: 1px solid var(--ink);
-      background: transparent;
-      padding: 7px 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.2;
-    }
-
-    .note {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .band {
-      max-width: none;
-      background: var(--ink);
-      color: #fff;
-      margin-top: 0;
-      padding: 82px 28px;
-      border-bottom: 1px solid var(--ink);
-    }
-
-    .band-inner {
-      max-width: var(--max);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 48px;
-      align-items: start;
-    }
-
-    .band .muted {
-      color: rgba(255,255,255,0.68);
-    }
-
-    .band .card {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.26);
-      color: #fff;
-    }
-
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0;
-      border-top: 1px solid var(--ink);
-      border-left: 1px solid var(--ink);
-    }
-
-    .video-card {
-      background: transparent;
-      border-right: 1px solid var(--ink);
-      border-bottom: 1px solid var(--ink);
-      padding: 18px;
-    }
-
-    .video-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      background: #000;
-      margin-bottom: 18px;
-    }
-
-    .video-wrap iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-
-    .audio-wrap {
-      overflow: hidden;
-      border: 1px solid var(--ink);
-      background: #000;
-      margin-bottom: 18px;
-    }
-
-    .audio-wrap iframe {
-      display: block;
-      width: 100%;
-      border: 0;
-    }
-
-    .video-card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .video-card p {
-      margin-bottom: 0;
-    }
-
-    .price-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      align-items: stretch;
-      border-top: 1px solid var(--ink);
-      border-left: 1px solid var(--ink);
-    }
-
-    .price {
-      background: transparent;
-      border-right: 1px solid var(--ink);
-      border-bottom: 1px solid var(--ink);
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 22px;
-    }
-
-    .price.recommended {
-      background: var(--ink);
-      color: #fff;
-      position: relative;
-    }
-
-    .price.recommended .muted,
-    .price.recommended .small {
-      color: rgba(255,255,255,0.66);
-    }
-
-    .price.recommended .badge {
-      border-color: rgba(255,255,255,0.7);
-    }
-
-    .price.recommended .button.primary {
-      background: #fff;
-      color: var(--ink);
-      border-color: #fff;
-    }
-
-    .badge {
-      display: inline-flex;
-      width: fit-content;
-      border: 1px solid var(--ink);
-      padding: 5px 10px;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .amount {
-      font-size: 40px;
-      line-height: 1;
-      letter-spacing: 0;
-      margin: 12px 0 10px;
-    }
-
-    .small {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .flow {
-      counter-reset: step;
-      display: grid;
-      border-top: 1px solid var(--ink);
-    }
-
-    .flow-item {
-      background: transparent;
-      border-bottom: 1px solid var(--ink);
-      padding: 26px 0;
-      display: grid;
-      grid-template-columns: minmax(90px, 0.2fr) 1fr;
-      gap: 32px;
-      align-items: start;
-    }
-
-    .flow-item::before {
-      counter-increment: step;
-      content: counter(step, decimal-leading-zero);
-      color: var(--accent);
-      font-size: 14px;
-      letter-spacing: 0.12em;
-      padding-top: 2px;
-    }
-
-    .faq {
-      display: grid;
-      border-top: 1px solid var(--ink);
-    }
-
-    details {
-      background: transparent;
-      border-bottom: 1px solid var(--ink);
-      padding: 22px 0;
-    }
-
-    summary {
-      cursor: pointer;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-
-    details p {
-      margin-top: 14px;
-      color: #444;
-    }
-
-    .cta {
-      background: var(--accent);
-      color: #fff;
-      border: 1px solid var(--ink);
-      padding: 46px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 28px;
-      align-items: center;
-    }
-
-    .cta h2 {
-      font-size: clamp(30px, 4vw, 56px);
-    }
-
-    .cta .muted {
-      color: rgba(255,255,255,0.76);
-    }
-
-    .cta .button.primary {
-      border-color: #fff;
-      background: #fff;
-      color: var(--ink);
-    }
-
-    footer {
-      max-width: none;
-      margin: 0;
-      padding: 42px 24px 70px;
-      color: var(--muted);
-      font-size: 13px;
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      border-top: 1px solid var(--ink);
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 1100px) {
-      .price-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 900px) {
-      .hero,
-      .band-inner,
-      .section-title,
-      .cta {
-        grid-template-columns: 1fr;
-      }
-
-      .grid-3,
-      .grid-2,
-      .video-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding-top: 64px;
-      }
-
-      .nav {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .nav-links {
-        flex-wrap: wrap;
-      }
-
-      .cta {
-        padding: 32px;
-      }
-
-      footer {
-        flex-direction: column;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .price-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero,
-      section,
-      .band {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
-
-      .nav {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
-
-      .hero-actions {
-        width: 100%;
-      }
-
-      .button {
-        flex: 1 1 100%;
-      }
-    }
-
-  /* Global white background and frameless images */
-  :root {
-    --bg: #ffffff !important;
-    --paper: #ffffff !important;
-    --card: #ffffff !important;
-    --white: #ffffff !important;
-  }
-
-  html,
-  body {
-    background: #ffffff !important;
-  }
-
-  figure,
-  img,
-  .lesson-image,
-  .lesson-header-image,
-  .teacher-photo,
-  .inline-work-image,
-  .mobile-studio-image,
-  .hero-image,
-  .image-frame,
-  .visual-card {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-
-  figure img,
-  .lesson-image img,
-  .lesson-header-image img,
-  .teacher-photo img,
-  .inline-work-image img,
-  .hero-image img,
-  .image-frame img,
-  .visual-card img {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-</style>
-  <link rel="stylesheet" href="../assets/css/acs-core.css">
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
-<link rel="stylesheet" href="../assets/css/acs-editorial.css?v=works-grid-gray-20261001">
-<link rel="stylesheet" href="../assets/css/acs-quiet.css?v=nounderline-20261020">
-<link rel="stylesheet" href="../assets/css/acs-quiet-pages.css?v=quiet-20261004">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/css/acs-posts.css?v=site-20261030">
 </head>
-
-<body class="lesson-detail-page acs-editorial">
-  <header class="acs-site-header" data-shared-header></header>
-
-  <main>
-    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
-      <div class="lesson-detail-hero__copy">
-        <div class="eyebrow">Online Composition Lesson</div>
-        <h1 id="lesson-title">作曲を、感覚だけで終わらせない。</h1>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="./">Atelier Composition Son</a>
+    <nav aria-label="メインメニュー"><a href="./">トップ</a><a href="composition-lesson.html" aria-current="page">作曲</a><a href="dtm-lesson.html">DTM</a><a href="music-theory-lesson_with_pdf-link.html">音楽理論</a><a href="solfege.html">ソルフェージュ</a><a href="electroacoustic-lesson.html">電子音響</a><a href="sound-technology-ai-lesson.html">AI音楽</a><a href="profile.html">講師</a><a href="faq.html">質問</a><a href="booking.html">無料相談</a><span class="lang"><strong>JA</strong> / <a href="../fr/">FR</a></span></nav>
+  </header>
+<main>
+<div class="field band" id="field"><img class="still" src="../images/site/ecouter.jpg" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas></div><section class="page-head"><p class="label">Online Composition Lesson</p><div><h1>作曲を、感覚だけで終わらせない。</h1>
+      
+        
+        
         <p class="lead">
           メロディ、コード、形式、音色、構成。作曲に必要な要素を整理しながら、
           あなた自身の音楽を作品として完成させるためのオンライン個人レッスンです。
         </p>
-        <p class="muted">
+        <p>
           初心者の方には、音楽理論と小さな作曲課題から。経験者・受験生には、
           和声、対位法、楽曲分析、現代音楽、DTM、電子音響を組み合わせて、
           作品制作やポートフォリオ制作まで対応します。
         </p>
 
-        <div class="hero-actions">
-          <a class="button primary" href="/ja/booking.html">無料相談を予約する</a>
-          <a class="button secondary" href="#content">レッスン内容を見る</a>
-        </div>
-      </div>
+        <p class="links">
+          <a href="/ja/booking.html" class="arrow">無料相談を予約する</a>
+          <a href="#content" class="arrow">レッスン内容を見る</a>
+        </p>
+      
 
-      <figure class="lesson-detail-hero__media lesson-detail-hero__media--composition" aria-label="Composition online private lessons">
-        <img src="../images/ja-composition-header.png" alt="Composition / music theory / electroacoustic / AI and music">
-      </figure>
+      
 
-      <aside class="lesson-detail-hero__summary" aria-label="Lesson summary">
-        <h2>このレッスンで扱うこと</h2>
+      
+    </div></section><section class="block"><p class="label h">このレッスンで扱うこと</p><div class="body">
+        
         <ul>
           <li>メロディ、コード、モチーフ、形式の基礎</li>
           <li>三部形式、ロンド形式、ソナタ形式などの構成</li>
@@ -749,55 +78,44 @@
           <li>DTM、音色設計、電子音響、AIと音楽制作を含む作品制作</li>
           <li>受験・ポートフォリオ・公募作品の相談</li>
         </ul>
-      </aside>
-    </section>
+      </div></section><section class="block" id="content"><p class="label h">こんな方に向いています<small>For whom</small></p><div class="body">
+      
 
-    <section id="content">
-      <div class="section-title">
-        <div class="section-label">For whom</div>
-        <h2>こんな方に向いています</h2>
-      </div>
-
-      <div class="grid-3">
-        <div class="card">
+      <div class="grid">
+        <div class="item">
 
           <h3>作曲を始めたい方</h3>
-          <p class="muted">
+          <p>
             楽譜や理論に不安があっても、短い旋律やコード進行から始められます。
             感覚的なアイデアを、少しずつ音楽の形にしていきます。
           </p>
         </div>
 
-        <div class="card">
+        <div class="item">
 
           <h3>曲が途中で止まる方</h3>
-          <p class="muted">
+          <p>
             8小節、16小節で止まってしまう原因を分析し、
             展開、対比、再現、クライマックスの作り方を学びます。
           </p>
         </div>
 
-        <div class="card">
+        <div class="item">
 
           <h3>受験・作品提出が必要な方</h3>
-          <p class="muted">
+          <p>
             作曲科受験、作品ポートフォリオ、コンクール、公募作品など、
             目的に合わせて課題設定と添削を行います。
           </p>
         </div>
       </div>
-    </section>
+    </div></section><section class="block"><p class="label h">感覚・理論・制作を分けずに学びます<small>Method</small></p><div class="body">
+      
 
-    <section>
-      <div class="section-title">
-        <div class="section-label">Method</div>
-        <h2>感覚・理論・制作を分けずに学びます</h2>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
+      <div class="grid">
+        <div class="item">
           <h3>初心者・基礎レベル</h3>
-          <p class="muted">
+          <p>
             まずは、短いモチーフ、コード進行、リズム、形式を使って、
             「曲として聴こえる構造」を作るところから始めます。
           </p>
@@ -810,9 +128,9 @@
           </ul>
         </div>
 
-        <div class="card">
+        <div class="item">
           <h3>中上級・専門レベル</h3>
-          <p class="muted">
+          <p>
             既に作曲経験がある方には、作品の構造、素材の扱い、
             音色、時間設計、記譜、提出用スコアの精度まで見ます。
           </p>
@@ -825,315 +143,220 @@
           </ul>
         </div>
       </div>
-    </section>
+    </div></section><section class="block"><p class="label h">作曲家としての実践から指導します<small>About the teacher</small></p><div class="body">
+      
+        
 
-    <section class="band">
-      <div class="band-inner">
-        <div>
-          <div class="section-label">About the teacher</div>
-          <h2>作曲家としての実践から指導します</h2>
-        </div>
-
-        <div>
-          <p class="muted">
+        
+          <p>
             講師は、ヨーロッパと日本を中心に活動する作曲家 Sachie Kobayashi。
             クラシックの作曲技法、現代音楽、電子音響、VR/AR、サウンドデザインを横断しながら、
             実際の作品制作に接続できるレッスンを行います。
           </p>
 
-          <div class="grid-2">
-            <div class="card">
+          <div class="grid">
+            <div class="item">
               <h3>クラシックから現代音楽まで</h3>
-              <p class="muted">
+              <p>
                 和声、対位法、形式、楽曲分析を基盤にしながら、
                 現代的な音色、構造、時間感覚へ発展させます。
               </p>
             </div>
 
-            <div class="card">
+            <div class="item">
               <h3>DAW・電子音響にも対応</h3>
-              <p class="muted">
+              <p>
                 Ableton Live、Reaper、Logic、Max/MSP、Python、Codex などを使った制作相談にも対応します。
               </p>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        
+      
+    </div></section><section class="block" id="plugins"><p class="label h">対応プラグイン・音源<small>Plugins &amp; Sound Tools</small></p><div class="body">
+      
 
-    <section id="plugins">
-      <div class="section-title">
-        <div class="section-label">Plugins &amp; Sound Tools</div>
-        <h2>対応プラグイン・音源</h2>
-      </div>
-
-      <div>
-        <p class="muted">
+      
+        <p>
           レッスンでは、作曲・DTM・ミキシング・マスタリング・音響制作に関わる各種プラグインや音源についても扱えます。
           お持ちの環境に合わせて、音作り、音色選び、エフェクト処理、ミックスの整理、制作ワークフローを一緒に確認します。
         </p>
 
-        <p class="muted">
+        <p>
           Ableton Live、Logic Pro、REAPERなどのDAW上で、内蔵プラグインだけでなく、外部プラグインを使った制作方法も相談可能です。
         </p>
 
-        <p class="muted">
+        <p>
           講師が所有していないプラグインや音源でも問題ありません。
           受講者の画面共有、マニュアル、公式チュートリアルなどを確認しながら、
           使用方法を適宜学習しつつ、制作目的に合わせた使い方を一緒に整理します。
         </p>
 
-        <div class="plugin-grid">
-          <span>Acid V</span>
-          <span>Alan Vista</span>
-          <span>Denise Audio</span>
-          <span>Devious Machines</span>
-          <span>Digital Suburban</span>
-          <span>EastWest</span>
-          <span>Excite Audio</span>
-          <span>IK Multimedia</span>
-          <span>INA-GRM / GRM Tools</span>
-          <span>IRCAM</span>
-          <span>iZotope</span>
-          <span>MeldaProduction</span>
-          <span>Modartt</span>
-          <span>Scaler Music</span>
-          <span>Slate Digital</span>
-          <span>Supertone</span>
-          <span>u-he</span>
-          <span>Vital Audio</span>
-          <span>Waves</span>
-          <span>XLN Audio</span>
-          <span>Zynaptiq</span>
-          <span>Splice</span>
-        </div>
+        <p class="tags"><span class="tag">Acid V</span><span class="tag">Alan Vista</span><span class="tag">Denise Audio</span><span class="tag">Devious Machines</span><span class="tag">Digital Suburban</span><span class="tag">EastWest</span><span class="tag">Excite Audio</span><span class="tag">IK Multimedia</span><span class="tag">INA-GRM / GRM Tools</span><span class="tag">IRCAM</span><span class="tag">iZotope</span><span class="tag">MeldaProduction</span><span class="tag">Modartt</span><span class="tag">Scaler Music</span><span class="tag">Slate Digital</span><span class="tag">Supertone</span><span class="tag">u-he</span><span class="tag">Vital Audio</span><span class="tag">Waves</span><span class="tag">XLN Audio</span><span class="tag">Zynaptiq</span><span class="tag">Splice</span></p>
 
-        <p class="note" style="margin-top: 18px;">
+        <p>
           ※ すべての製品を網羅的に解説するものではなく、受講者の制作目的に応じて必要なツールを選びながら扱います。
         </p>
-      </div>
-    </section>
+      
+    </div></section><section class="block" id="works"><p class="label h">講師の作品・映像<small>Works / Videos</small></p><div class="body">
+      
 
-    <section id="works">
-      <div class="section-title">
-        <div class="section-label">Works / Videos</div>
-        <h2>講師の作品・映像</h2>
-      </div>
-
-      <p class="muted" style="max-width: 760px; margin-bottom: 32px;">
+      <p>
         作曲、サウンドデザイン、電子音響、映像作品との協働など、
         講師 Sachie Kobayashi の実際の作品・映像をご覧いただけます。AIと音楽制作、プログラミング、電子音響に関心がある方にも、作品の考え方から整理します。
         レッスンでは、こうした制作経験をもとに、アイデアを作品として完成させるための考え方を扱います。
       </p>
 
-      <div class="video-grid">
-        <div class="video-card video-card--audio">
-          <div class="audio-wrap">
-            <iframe
-              height="166"
-              title="Émergences Résurgences pour orchestre"
-              scrolling="no"
-              allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Femergences-resurgences-pour-orchestre&color=%23111111&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
-            </iframe>
-          </div>
+      <div class="grid">
+        <div class="item">
+          
+            <div class="embed sc"><iframe title="Émergences Résurgences pour orchestre" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Femergences-resurgences-pour-orchestre&amp;color=%23111111&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=false"></iframe></div>
+          
           <h3>Émergences Résurgences pour orchestre</h3>
         </div>
 
-        <div class="video-card">
-          <div class="video-wrap">
-            <iframe
-              src="https://www.youtube.com/embed/SgYGcZS1Mp4"
-              title="Digi Ugi"
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
+        <div class="item">
+          
+            <div class="embed"><iframe src="https://www.youtube.com/embed/SgYGcZS1Mp4" title="Digi Ugi" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          
           <h3>Digi Ugi</h3>
         </div>
 
-        <div class="video-card">
-          <div class="video-wrap">
-            <iframe
-              src="https://player.vimeo.com/video/1038238939"
-              title="The Cosmic Microwaves Background / Le Fresnoy"
-              loading="lazy"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
-          </div>
+        <div class="item">
+          
+            <div class="embed"><iframe src="https://player.vimeo.com/video/1038238939" title="The Cosmic Microwaves Background / Le Fresnoy" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+          
           <h3>The Cosmic Microwaves Background / Le Fresnoy</h3>
         </div>
 
-        <div class="video-card">
-          <div class="video-wrap">
-            <iframe
-              src="https://www.youtube.com/embed/4x8w6YhQD4s"
-              title="Sachie Kobayashi Work 1"
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
+        <div class="item">
+          
+            <div class="embed"><iframe src="https://www.youtube.com/embed/4x8w6YhQD4s" title="Sachie Kobayashi Work 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          
         </div>
 
-        <div class="video-card">
-          <div class="video-wrap">
-            <iframe
-              src="https://www.youtube.com/embed/BPuq3Up4hzU"
-              title="Sachie Kobayashi Work 2"
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
+        <div class="item">
+          
+            <div class="embed"><iframe src="https://www.youtube.com/embed/BPuq3Up4hzU" title="Sachie Kobayashi Work 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          
           <h3>講師のインタビュー動画</h3>
         </div>
 
-        <div class="video-card">
-          <div class="video-wrap">
-            <iframe
-              src="https://www.youtube.com/embed/XfBIiXmU4Rc"
-              title="i.p.s.e.i.t.y."
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
+        <div class="item">
+          
+            <div class="embed"><iframe src="https://www.youtube.com/embed/XfBIiXmU4Rc" title="i.p.s.e.i.t.y." loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          
           <h3>i.p.s.e.i.t.y.</h3>
         </div>
 
-        <div class="video-card">
-          <div class="video-wrap">
-            <iframe
-              src="https://www.youtube.com/embed/atHQ7RAiGXg"
-              title="Sachie Kobayashi Work 4"
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
+        <div class="item">
+          
+            <div class="embed"><iframe src="https://www.youtube.com/embed/atHQ7RAiGXg" title="Sachie Kobayashi Work 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+          
         </div>
       </div>
-    </section>
+    </div></section><section class="block" id="lesson-style"><p class="label h">レッスンの進め方<small>Style</small></p><div class="body">
+      
 
-    <section id="lesson-style">
-      <div class="section-title">
-        <div class="section-label">Style</div>
-        <h2>レッスンの進め方</h2>
-      </div>
-
-      <div class="flow">
-        <div class="flow-item">
-          <div>
+      <div class="grid flow">
+        <div class="item">
+          
             <h3>現在のレベルと目的を確認</h3>
-            <p class="muted">
+            <p>
               趣味、受験、作品制作、DTM、現代音楽など、目的に合わせて内容を調整します。
             </p>
-          </div>
+          
         </div>
 
-        <div class="flow-item">
-          <div>
+        <div class="item">
+          
             <h3>小さな課題または制作中の作品を扱う</h3>
-            <p class="muted">
+            <p>
               白紙から作る場合も、既にある曲を改善する場合も対応できます。
               楽譜、MIDI、音源、DAWプロジェクトなどを使えます。
             </p>
-          </div>
+          
         </div>
 
-        <div class="flow-item">
-          <div>
+        <div class="item">
+          
             <h3>具体的な改善点を整理</h3>
-            <p class="muted">
+            <p>
               メロディ、和声、形式、音色、展開、バランスなどを分析し、
               次に何を直すべきかを明確にします。
             </p>
-          </div>
+          
         </div>
 
-        <div class="flow-item">
-          <div>
+        <div class="item">
+          
             <h3>宿題・制作課題へ接続</h3>
-            <p class="muted">
+            <p>
               レッスン後に取り組む課題を設定し、継続的に作品を完成へ近づけます。
             </p>
-          </div>
+          
         </div>
       </div>
-    </section>
+    </div></section><section class="block" id="price"><p class="label h">料金<small>Price</small></p><div class="body">
+      
 
-    <section id="price">
-      <div class="section-title">
-        <div class="section-label">Price</div>
-        <h2>料金</h2>
-      </div>
-
-      <div class="price-grid">
-        <div class="price">
-          <div>
+      <div class="grid">
+        <div class="item">
+          
             <h3>無料相談（30分）</h3>
-            <p class="amount">無料</p>
-            <p class="muted">
+            <p class="price">無料</p>
+            <p>
               現在の状況、目標、レッスン内容の相性を確認します。
             </p>
-          </div>
-          <a class="button secondary" href="/ja/booking.html">相談する</a>
+          
+          <a href="/ja/booking.html" class="arrow">相談する</a>
         </div>
 
-        <div class="price">
-          <div>
+        <div class="item">
+          
             <h3>Beginner</h3>
-            <p class="amount">4800円</p>
-            <p class="small">60分 / オンライン</p>
-            <p class="muted">
+            <p class="price">4800円</p>
+            <p>60分 / オンライン</p>
+            <p>
               作曲基礎、音楽理論、コード、形式、短い作品制作に対応します。
             </p>
-          </div>
-          <a class="button secondary" href="/ja/booking.html">無料相談へ</a>
+          
+          <a href="/ja/booking.html" class="arrow">無料相談へ</a>
         </div>
 
-        <div class="price">
-          <div>
+        <div class="item">
+          
             <h3>Advanced 単発</h3>
-            <p class="amount">7500円</p>
-            <p class="small">70分 / オンライン</p>
-            <p class="muted">
+            <p class="price">7500円</p>
+            <p>70分 / オンライン</p>
+            <p>
               オリジナル教材を使った専門的なレッスンで、受験、ポートフォリオ、作品添削、専門的な作曲技法に対応します。<strong>+7日以内のメールでの質問に対する簡潔なフィードバック</strong>
             </p>
-          </div>
-          <a class="button secondary" href="/ja/booking.html">相談する</a>
+          
+          <a href="/ja/booking.html" class="arrow">相談する</a>
         </div>
 
-        <div class="price recommended">
-          <div>
-            <span class="badge">Recommended</span>
+        <div class="item">
+          
+            <span>Recommended</span>
             <h3>Advanced 月謝</h3>
-            <p class="amount">料金応相談</p>
-            <p class="small">月2回から / ご希望に合わせて</p>
-            <p class="muted">
+            <p class="price">料金応相談</p>
+            <p>月2回から / ご希望に合わせて</p>
+            <p>
               継続的に作品制作を進めたい方、受験・ポートフォリオ・公募作品を計画的に準備したい方におすすめです。
             </p>
-          </div>
-          <a class="button primary" href="/ja/booking.html">無料相談へ</a>
+          
+          <a href="/ja/booking.html" class="arrow">無料相談へ</a>
         </div>
       </div>
 
-      <p class="small" style="margin-top: 18px;">
+      <p>
         支払いは Stripe カード決済、または銀行振込をご相談いただけます。月謝制は月初払いです。
         月内でのスケジュール調整は可能ですが、返金および翌月への振替はありません。
       </p>
-    </section>
+    </div></section><section class="block"><p class="label h">よくある質問<small>FAQ</small></p><div class="body">
+      
 
-    <section>
-      <div class="section-title">
-        <div class="section-label">FAQ</div>
-        <h2>よくある質問</h2>
-      </div>
-
-      <div class="faq">
+      
         <details>
           <summary>楽譜が読めなくても受講できますか？</summary>
           <p>
@@ -1173,31 +396,22 @@
             文章でフィードバックする形式です。
           </p>
         </details>
-      </div>
-    </section>
-
-    <section class="acs-consultation" id="consultation" aria-labelledby="consultation-title">
-  <div class="acs-consultation__inner"><div class="acs-consultation__row">
-    <p class="acs-consultation__meta">無料相談 · 30分</p>
-    <div class="acs-consultation__copy"><h2 id="consultation-title">レッスンについてのご相談</h2><p>学びたいことや、今困っていることをお聞かせください。<br>相談の際に、レッスンの内容や進め方をご説明します。</p></div>
-    <a class="acs-consultation__booking" href="booking.html" data-track="final_consultation">無料相談を予約する</a>
-  </div><div class="acs-consultation__links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></div></div>
-</section>
+      
+    </div></section><section class="call" id="consultation"><p class="label">無料相談 · 30分</p><div class="body">
+  
+    
+    <h2 id="consultation-title">レッスンについてのご相談</h2><p>学びたいことや、今困っていることをお聞かせください。<br>相談の際に、レッスンの内容や進め方をご説明します。</p>
+    <a href="booking.html" data-track="final_consultation" class="arrow">無料相談を予約する</a>
+  <p class="links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></p>
+</div></section>
 </main>
-
-  <footer>
-    <div>
-      © Sachie Kobayashi / Atelier Composition Son
-    </div>
-    <div class="footer-links">
-      <a href="/ja/">日本語トップ</a>
-      <a href="/fr/">Français</a>
-      <a href="https://www.sachiekobayashi.com/">Portfolio</a>
-    </div>
+  <footer class="site">
+    <div class="cols3" style="margin-top:0"><p>Atelier<span>Composition Son</span></p><p>オンラインレッスン<span>作曲・理論・電子音楽</span></p><p>ateliercompositionson<span>.com/ja</span></p></div>
+    <div class="small"><span>© Atelier Composition Son</span><span><a href="terms.html" data-track="click_terms_page">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click">お問い合わせ</a><a href="../fr/">Français</a></span></div>
   </footer>
-  <script defer src="../assets/js/acs-tracking.js"></script>
-  <script defer src="../assets/js/acs-header.js?v=lang-20261020"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
-<script defer src="../assets/js/acs-quiet-lake.js?v=quiet-20261004"></script>
+</div>
+<script defer src="../assets/js/acs-tracking.js"></script>
+<script src="../assets/js/acs-embeds.js?v=site-20261030"></script>
+<script defer src="../assets/js/acs-field.js?v=site-20261030"></script>
 </body>
 </html>

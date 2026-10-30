@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>DTM・音作りオンラインレッスン｜Ableton Live・Reaper・Logic対応｜Sachie Kobayashi</title>
-
   <meta name="description" content="DTM・音作りオンラインレッスン。Ableton Live、Reaper、Logicなどを使い、作曲、アレンジ、音色設計、ミックス基礎、電子音響、AI音源の整理まで個別指導。無料相談受付中。" />
   <meta name="keywords" content="DTMオンラインレッスン, DTM レッスン, 音作り レッスン, Ableton Live レッスン, Reaper レッスン, Logic レッスン, ミックス レッスン, 作曲 DTM, オンライン音楽レッスン" />
-
   <link rel="canonical" href="https://ateliercompositionson.com/ja/dtm-lesson.html" />
-
   <meta property="og:title" content="DTM・音作りオンラインレッスン｜Sachie Kobayashi" />
   <meta property="og:description" content="Ableton Live、Reaper、Logicなどを使い、作曲、音色設計、アレンジ、ミックス基礎、電子音響まで学ぶオンライン個人レッスン。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ateliercompositionson.com/ja/dtm-lesson.html" />
   <meta property="og:site_name" content="Atelier Composition Son" />
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
@@ -25,7 +20,6 @@
     gtag("js", new Date());
     gtag("config", "G-Y1792EBWTT");
   </script>
-
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -42,643 +36,21 @@
     "url": "https://ateliercompositionson.com/ja/dtm-lesson.html"
   }
   </script>
-
-  <style>
-    :root {
-      --bg: #f8f6f1;
-      --paper: #fffefa;
-      --ink: #111111;
-      --muted: #67625a;
-      --line: #111111;
-      --soft: #ece7dc;
-      --radius: 0;
-      --max: none;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      background:
-        linear-gradient(90deg, rgba(16,16,16,0.035) 1px, transparent 1px) 0 0 / 25vw 100%,
-        var(--bg);
-      color: var(--ink);
-      font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", sans-serif;
-      line-height: 1.85;
-      letter-spacing: 0.03em;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a { color: inherit; text-decoration: none; }
-    p { margin: 0; }
-    p + p { margin-top: 1.2em; }
-    ul { margin: 0; padding-left: 1.2em; }
-    li + li { margin-top: 0.45em; }
-    .muted { color: var(--muted); }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 1px solid var(--line);
-      background: rgba(248, 246, 241, 0.92);
-      backdrop-filter: blur(14px);
-    }
-
-    .nav {
-      max-width: none;
-      margin: 0 auto;
-      padding: 16px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 32px;
-    }
-
-    .brand {
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      font-weight: 650;
-      white-space: nowrap;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .nav-links a:hover { color: var(--ink); }
-
-    .nav-cta {
-      border: 1px solid var(--ink);
-      border-radius: 0;
-      padding: 7px 13px;
-      color: var(--ink);
-    }
-
-    .hero {
-      max-width: none;
-      margin: 0;
-      padding: 94px 28px 70px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
-      gap: 36px;
-      align-items: end;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .lesson-header-image {
-      margin: 0;
-      border-bottom: 1px solid var(--line);
-      background: #f8f6f1;
-    }
-
-    .lesson-header-image img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .eyebrow,
-    .section-kicker {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow { margin-bottom: 28px; }
-
-    h1 {
-      margin: 0 0 30px;
-      font-size: clamp(48px, 9vw, 132px);
-      line-height: 0.98;
-      letter-spacing: 0;
-      font-weight: 500;
-    }
-
-    .lead {
-      max-width: 760px;
-      font-size: clamp(17px, 2vw, 22px);
-      line-height: 1.95;
-      margin: 0 0 32px;
-    }
-
-    .hero-panel {
-      border: 1px solid var(--line);
-      background: var(--paper);
-      padding: 34px;
-      border-radius: 0;
-    }
-
-    .hero-panel h2 {
-      margin: 0 0 18px;
-      font-size: 20px;
-      line-height: 1.35;
-      font-weight: 400;
-      letter-spacing: -0.03em;
-    }
-
-    .hero-panel li {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.75;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 32px;
-      border-top: 1px solid var(--ink);
-      border-left: 1px solid var(--ink);
-      width: fit-content;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--ink);
-      border-top: 0;
-      border-left: 0;
-      border-radius: 0;
-      min-height: 46px;
-      padding: 13px 20px;
-      font-size: 14px;
-      line-height: 1;
-      transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
-    }
-
-    .btn.primary {
-      background: var(--ink);
-      color: var(--bg);
-    }
-
-    .btn:hover {
-      opacity: 0.72;
-      transform: none;
-    }
-
-    section {
-      max-width: none;
-      margin: 0 auto;
-      padding: 76px 28px;
-      border-top: 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-grid {
-      display: grid;
-      grid-template-columns: 0.34fr 1fr;
-      gap: 56px;
-      align-items: start;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: clamp(30px, 4.4vw, 56px);
-      line-height: 1.08;
-      font-weight: 500;
-      letter-spacing: 0;
-    }
-
-    .text-block {
-      max-width: 840px;
-      font-size: 17px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0;
-      margin-top: 42px;
-      border-top: 1px solid var(--line);
-      border-left: 1px solid var(--line);
-    }
-
-    .card {
-      border: 1px solid var(--line);
-      border-top: 0;
-      border-left: 0;
-      border-radius: 0;
-      background: transparent;
-      padding: 28px;
-      min-height: 250px;
-    }
-
-    .card .num {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-    }
-
-    .card h3 {
-      margin: 0 0 18px;
-      font-size: 22px;
-      line-height: 1.35;
-      font-weight: 400;
-      letter-spacing: -0.03em;
-    }
-
-    .card p,
-    .card li {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .video-grid {
-      display: grid;
-      gap: 24px;
-      margin-top: 24px;
-    }
-
-    .video-card {
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: transparent;
-      padding: 22px;
-    }
-
-    .video-wrap {
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: 16 / 9;
-      background: #000;
-    }
-
-    .video-wrap iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    .video-meta {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .video-card h3 {
-      margin: 10px 0 12px;
-      font-size: 22px;
-      line-height: 1.35;
-      font-weight: 400;
-    }
-
-    .video-card p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .soundcloud-card {
-      margin-top: 24px;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: transparent;
-      padding: 22px;
-    }
-
-    .soundcloud-wrap {
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: #000;
-    }
-
-    .soundcloud-wrap iframe {
-      display: block;
-      width: 100%;
-      border: 0;
-    }
-
-    .soundcloud-meta {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .soundcloud-card h3 {
-      margin: 10px 0 12px;
-      font-size: 22px;
-      line-height: 1.35;
-      font-weight: 400;
-      letter-spacing: -0.03em;
-    }
-
-    .soundcloud-card p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-
-    .band {
-      max-width: none;
-      background: var(--ink);
-      color: var(--bg);
-      padding: 78px 24px;
-    }
-
-    .band-inner {
-      max-width: var(--max);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 0.34fr 1fr;
-      gap: 56px;
-    }
-
-    .band .muted { color: rgba(245, 242, 234, 0.68); }
-
-    .band .card {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.16);
-      color: var(--bg);
-    }
-
-    .band .card p,
-    .band .card li { color: rgba(245, 242, 234, 0.68); }
-
-    .tools-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 32px;
-    }
-
-    .tools-list span {
-      display: inline-flex;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: transparent;
-      padding: 7px 12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .price-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0;
-      margin-top: 42px;
-      align-items: stretch;
-      border-top: 1px solid var(--line);
-      border-left: 1px solid var(--line);
-    }
-
-    .price-card {
-      border: 1px solid var(--line);
-      border-top: 0;
-      border-left: 0;
-      border-radius: 0;
-      background: transparent;
-      padding: 34px;
-    }
-
-    .price-card.recommended {
-      border: 1.5px solid rgba(17, 17, 17, 0.36);
-    }
-
-    .recommended-outline {
-      display: inline-flex;
-      width: fit-content;
-      margin-bottom: 18px;
-      padding: 5px 10px;
-      border: 1px solid rgba(17, 17, 17, 0.24);
-      border-radius: 0;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .price-card h3 {
-      margin: 0 0 8px;
-      font-size: 25px;
-      line-height: 1.35;
-      font-weight: 400;
-      letter-spacing: -0.035em;
-    }
-
-    .price-subtitle {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .price-main { margin: 22px 0 16px; }
-
-    .price-amount {
-      font-size: 40px;
-      line-height: 1.1;
-      letter-spacing: -0.05em;
-    }
-
-    .price-unit {
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .price-description,
-    .price-card li,
-    .price-card p {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.9;
-    }
-
-    .price-list { margin-top: 20px; }
-
-    .included-box {
-      display: inline-flex;
-      width: fit-content;
-      margin: 8px 0 18px;
-      padding: 7px 11px;
-      border: 1px solid rgba(17, 17, 17, 0.16);
-      border-radius: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .faq {
-      border-top: 1px solid var(--line);
-      margin-top: 42px;
-    }
-
-    details {
-      border-bottom: 1px solid var(--line);
-      padding: 24px 0;
-    }
-
-    summary {
-      cursor: pointer;
-      list-style: none;
-      font-size: 18px;
-      letter-spacing: -0.02em;
-    }
-
-    summary::-webkit-details-marker { display: none; }
-    summary::before { content: "+ "; }
-    details[open] summary::before { content: "– "; }
-
-    details p {
-      margin-top: 16px;
-      max-width: 820px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.85;
-    }
-
-    .contact-box {
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: transparent;
-      padding: 40px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 24px;
-      align-items: center;
-    }
-
-    footer {
-      max-width: none;
-      margin: 0 auto;
-      padding: 50px 24px 70px;
-      border-top: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 900px) {
-      .nav {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 14px;
-      }
-
-      .nav-links { display: none; }
-
-      .hero,
-      .section-grid,
-      .band-inner,
-      .contact-box {
-        grid-template-columns: 1fr;
-      }
-
-      .cards,
-      .price-grid {
-        grid-template-columns: 1fr;
-      }
-
-      footer { flex-direction: column; }
-    }
-
-    @media (max-width: 640px) {
-      .hero { padding-top: 70px; }
-      section { padding: 68px 24px; }
-      h1 { font-size: clamp(42px, 14vw, 76px); }
-
-      .button-row {
-        width: 100%;
-      }
-
-      .btn {
-        flex: 1 1 100%;
-      }
-
-      .price-card,
-      .card,
-      .hero-panel,
-      .contact-box {
-        padding: 26px;
-      }
-    }
-
-  /* Global white background and frameless images */
-  :root {
-    --bg: #ffffff !important;
-    --paper: #ffffff !important;
-    --card: #ffffff !important;
-    --white: #ffffff !important;
-  }
-
-  html,
-  body {
-    background: #ffffff !important;
-  }
-
-  figure,
-  img,
-  .lesson-image,
-  .lesson-header-image,
-  .teacher-photo,
-  .inline-work-image,
-  .mobile-studio-image,
-  .hero-image,
-  .image-frame,
-  .visual-card {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-
-  figure img,
-  .lesson-image img,
-  .lesson-header-image img,
-  .teacher-photo img,
-  .inline-work-image img,
-  .hero-image img,
-  .image-frame img,
-  .visual-card img {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-</style>
-  <link rel="stylesheet" href="../assets/css/acs-core.css">
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
-<link rel="stylesheet" href="../assets/css/acs-editorial.css?v=works-grid-gray-20261001">
-<link rel="stylesheet" href="../assets/css/acs-quiet.css?v=nounderline-20261020">
-<link rel="stylesheet" href="../assets/css/acs-quiet-pages.css?v=quiet-20261004">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/css/acs-posts.css?v=site-20261030">
 </head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="./">Atelier Composition Son</a>
+    <nav aria-label="メインメニュー"><a href="./">トップ</a><a href="composition-lesson.html">作曲</a><a href="dtm-lesson.html" aria-current="page">DTM</a><a href="music-theory-lesson_with_pdf-link.html">音楽理論</a><a href="solfege.html">ソルフェージュ</a><a href="electroacoustic-lesson.html">電子音響</a><a href="sound-technology-ai-lesson.html">AI音楽</a><a href="profile.html">講師</a><a href="faq.html">質問</a><a href="booking.html">無料相談</a><span class="lang"><strong>JA</strong> / <a href="../fr/">FR</a></span></nav>
+  </header>
+<main>
+<div class="field band" id="field"><img class="still" src="../images/site/ecouter.jpg" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas></div><section class="page-head"><p class="label">Online DTM / Sound Production Lesson</p><div><h1>DTMを、操作ではなく 音の設計として学ぶ。</h1>
+      
+        
 
-<body class="lesson-detail-page acs-editorial">
-  <header class="acs-site-header" data-shared-header></header>
-
-  <main>
-    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
-      <div class="lesson-detail-hero__copy">
-        <div class="eyebrow">Online DTM / Sound Production Lesson</div>
-
-        <h1 id="lesson-title">
-          DTMを、操作ではなく<br>
-          音の設計として学ぶ。
-        </h1>
+        
 
         <p class="lead">
           Ableton Live、Reaper、Logicなどを使いながら、
@@ -686,19 +58,18 @@
           作品制作のプロセスとして学ぶオンライン個人レッスンです。
         </p>
 
-        <div class="button-row">
-          <a class="btn primary" href="/ja/booking.html">無料相談を予約する</a>
-          <a class="btn" href="#video">デモを見る</a>
-          <a class="btn" href="#price">料金を見る</a>
-        </div>
-      </div>
+        <p class="links">
+          <a href="/ja/booking.html" class="arrow">無料相談を予約する</a>
+          <a href="#video">デモを見る</a>
+          <a href="#price">料金を見る</a>
+        </p>
+      
 
-      <figure class="lesson-detail-hero__media lesson-detail-hero__media--dtm" aria-label="DTM online private lessons">
-        <img src="../images/ja-dtm-header.png" alt="DTM / sound design / mixing / creative production">
-      </figure>
+      
 
-      <aside class="lesson-detail-hero__summary">
-        <h2>扱う内容</h2>
+      
+    </div></section><section class="block"><p class="label h">扱う内容</p><div class="body">
+        
         <ul>
           <li>DAWの基本操作と制作ワークフロー</li>
           <li>シンセサイザー、サンプラー、MIDI編集</li>
@@ -707,308 +78,233 @@
           <li>ミックス基礎、音が細い時の改善</li>
           <li>電子音響、サウンドアート、AIと音楽制作、AI生成音源の整理</li>
         </ul>
-      </aside>
-    </section>
+      </div></section><section class="block" id="content"><p class="label h">こんな方に向いています<small>For whom</small></p><div class="body">
+      
+        
 
-    <section id="content">
-      <div class="section-grid">
-        <div>
-          <div class="section-kicker">For whom</div>
-          <h2>こんな方に向いています</h2>
-        </div>
-
-        <div class="text-block">
+        
           <p>
             このレッスンは、単なるDAW操作説明ではなく、
             「音をどう選び、どう配置し、どう作品として成立させるか」を扱います。
             初心者の方には基礎操作から、経験者には音色・構成・ミックス・作品性の整理まで対応します。
           </p>
 
-          <div class="cards">
-            <article class="card">
+          <div class="grid">
+            <div class="item">
 
               <h3>DTMを始めたい方</h3>
               <p>DAWの画面で何から始めればよいか分からない方に、音源、MIDI、録音、編集の基本を整理します。</p>
-            </article>
+            </div>
 
-            <article class="card">
+            <div class="item">
 
               <h3>音が細い・平面的に感じる方</h3>
               <p>レイヤー、音域、倍音、空間処理、コンプレッション、EQの使い方を確認し、音の密度を整えます。</p>
-            </article>
+            </div>
 
-            <article class="card">
+            <div class="item">
 
               <h3>作品として完成させたい方</h3>
               <p>8小節のループで止まってしまう状態から、展開、構成、クライマックス、終わり方まで設計します。</p>
-            </article>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
+        
+      
+    </div></section><section class="block" id="video"><p class="label h">制作デモ<small>Demo Videos</small></p><div class="body">
+      
+        
 
-    <section id="video">
-      <div class="section-grid">
-        <div>
-          <div class="section-kicker">Demo Videos</div>
-          <h2>制作デモ</h2>
-        </div>
-
-        <div class="text-block">
+        
           <p>
             ポップ寄りのDTM制作デモと、ビデオ・インスタレーション作品、ハンドパン＋エレクトロニクス作品の音源抜粋を掲載しています。
           </p>
 
-          <div class="video-grid">
-            <article class="video-card">
-              <div class="video-wrap">
-                <iframe
-                  src="https://www.youtube.com/embed/SgYGcZS1Mp4"
-                  title="Digi Ugi"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-                </iframe>
-              </div>
+          <div class="grid">
+            <div class="item">
+              
+                <div class="embed"><iframe src="https://www.youtube.com/embed/SgYGcZS1Mp4" title="Digi Ugi" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+              
 
-              <div class="video-meta">Techno pop / AI workflow / TouchDesigner</div>
+              Techno pop / AI workflow / TouchDesigner
               <h3>Digi Ugi</h3>
-            </article>
+            </div>
 
-            <article class="video-card">
-              <div class="video-wrap">
-                <iframe
-                  src="https://player.vimeo.com/video/1038238939"
-                  title="The Cosmic Microwaves Background / Le Fresnoy"
-                  loading="lazy"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowfullscreen>
-                </iframe>
-              </div>
+            <div class="item">
+              
+                <div class="embed"><iframe src="https://player.vimeo.com/video/1038238939" title="The Cosmic Microwaves Background / Le Fresnoy" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+              
 
-              <div class="video-meta">Le Fresnoy / audiovisual work</div>
+              Le Fresnoy / audiovisual work
               <h3>The Cosmic Microwaves Background / Le Fresnoy</h3>
-            </article>
-            <article class="video-card">
-              <div class="video-wrap">
-                <iframe
-                  src="https://www.youtube.com/embed/4x8w6YhQD4s"
-                  title="Pop / DTM Production Demo 2"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-                </iframe>
-              </div>
+            </div>
+            <div class="item">
+              
+                <div class="embed"><iframe src="https://www.youtube.com/embed/4x8w6YhQD4s" title="Pop / DTM Production Demo 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+              
 
-              <div class="video-meta">Pop / arrangement / production</div>
+              Pop / arrangement / production
               <h3>ポップ寄りのDTM制作 II</h3>
               <p>
                 楽曲の流れ、音色の選び方、アレンジの組み立て方などを確認できる制作デモです。
               </p>
-            </article>
+            </div>
           </div>
 
-          <article class="soundcloud-card">
-            <div class="soundcloud-wrap">
-              <iframe
-                height="166"
-                scrolling="no"
-                allow="autoplay"
-                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Fpoetry-is-whats-gets-lost-in-translation-extract&color=%23111111&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
-              </iframe>
-            </div>
+          
+            
+              <div class="embed sc"><iframe allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Fpoetry-is-whats-gets-lost-in-translation-extract&amp;color=%23111111&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=false"></iframe></div>
+            
 
-            <div class="soundcloud-meta">Paris / video installation / extract</div>
+            Paris / video installation / extract
             <h3>Poetry is what gets lost in translation</h3>
             <p>
               パリで発表したビデオ・インスタレーション作品の抜粋です。
               DTMレッスンでは、通常の楽曲制作だけでなく、映像、空間、声、テクスチャを含む音響作品の設計も扱います。
             </p>
-          </article>
+          
 
-          <article class="soundcloud-card">
-            <div class="soundcloud-wrap">
-              <iframe
-                height="166"
-                scrolling="no"
-                allow="autoplay"
-                src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Fovni-2021-pour-handpan-et-electronics-extract-mix&color=%23111111&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
-              </iframe>
-            </div>
+          
+            
+              <div class="embed sc"><iframe allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fsachiekbys%2Fovni-2021-pour-handpan-et-electronics-extract-mix&amp;color=%23111111&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=false"></iframe></div>
+            
 
-            <div class="soundcloud-meta">Handpan / electronics / extract</div>
+            Handpan / electronics / extract
             <h3>OVNI 2021</h3>
             <p>
               ハンドパンとエレクトロニクスのための作品抜粋です。
               生楽器と電子音響を組み合わせる制作例として、音色、空間、処理、ミックスの観点から扱えます。
             </p>
-          </article>
-        </div>
-      </div>
-    </section>
+          
+        
+      
+    </div></section><section class="block"><p class="label h">音作りを、作品の構造から考える。<small>Method</small></p><div class="body">
+      
+        
 
-    <section class="band">
-      <div class="band-inner">
-        <div>
-          <div class="section-kicker">Method</div>
-          <h2>音作りを、作品の構造から考える。</h2>
-        </div>
-
-        <div class="text-block">
-          <p class="muted">
+        
+          <p>
             音がよくならない原因は、プラグインやプリセットだけではなく、
             音域、密度、リズム、アレンジ、空間、構成の問題であることが多いです。
             レッスンでは、音色だけを個別に修正するのではなく、
             作品全体の中でその音がどのような役割を持つかを確認します。
           </p>
 
-          <div class="cards">
-            <article class="card">
-              <div class="num">Sound</div>
+          <div class="grid">
+            <div class="item">
+              Sound
               <h3>音色</h3>
               <p>シンセ、サンプル、録音素材、エフェクトの質感を整理します。</p>
-            </article>
+            </div>
 
-            <article class="card">
-              <div class="num">Structure</div>
+            <div class="item">
+              Structure
               <h3>構成</h3>
               <p>ループ、展開、間、密度、クライマックスを作品として設計します。</p>
-            </article>
+            </div>
 
-            <article class="card">
-              <div class="num">Space</div>
+            <div class="item">
+              Space
               <h3>空間</h3>
               <p>リバーブ、ディレイ、定位、奥行き、音像の整理を行います。</p>
-            </article>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
+        
+      
+    </div></section><section class="block" id="tools"><p class="label h">対応ソフト・制作環境<small>DAW / Tools</small></p><div class="body">
+      
+        
 
-    <section id="tools">
-      <div class="section-grid">
-        <div>
-          <div class="section-kicker">DAW / Tools</div>
-          <h2>対応ソフト・制作環境</h2>
-        </div>
-
-        <div class="text-block">
+        
           <p>
             お持ちのDAWやプラグイン環境に合わせて進めます。
             内蔵プラグインだけでも受講できます。必要に応じて、外部プラグイン、SunoなどのAI音源、ChatGPTやCodexを使った制作メモ・整理も扱います。
           </p>
 
-          <div class="tools-list">
-            <span>Ableton Live</span>
-            <span>Reaper</span>
-            <span>Logic Pro</span>
-            <span>Pro Tools</span>
-            <span>Max/MSP</span>
-            <span>iZotope</span>
-            <span>Waves</span>
-            <span>MeldaProduction</span>
-            <span>u-he</span>
-            <span>Vital</span>
-            <span>GRM Tools</span>
-            <span>EastWest</span>
-            <span>Splice</span>
-            <span>Suno</span>
-            <span>ChatGPT</span>
-            <span>Codex</span>
-            <span>ElevenLabs</span>
-            <span>Supertone</span>
-          </div>
-        </div>
-      </div>
-    </section>
+          <p class="tags"><span class="tag">Ableton Live</span><span class="tag">Reaper</span><span class="tag">Logic Pro</span><span class="tag">Pro Tools</span><span class="tag">Max/MSP</span><span class="tag">iZotope</span><span class="tag">Waves</span><span class="tag">MeldaProduction</span><span class="tag">u-he</span><span class="tag">Vital</span><span class="tag">GRM Tools</span><span class="tag">EastWest</span><span class="tag">Splice</span><span class="tag">Suno</span><span class="tag">ChatGPT</span><span class="tag">Codex</span><span class="tag">ElevenLabs</span><span class="tag">Supertone</span></p>
+        
+      
+    </div></section><section class="block"><p class="label h">レッスンの進め方<small>Lesson Flow</small></p><div class="body">
+      
+        
 
-    <section>
-      <div class="section-grid">
-        <div>
-          <div class="section-kicker">Lesson Flow</div>
-          <h2>レッスンの進め方</h2>
-        </div>
-
-        <div class="text-block">
-          <div class="cards">
-            <article class="card">
+        
+          <div class="grid">
+            <div class="item">
 
               <h3>環境と目的を確認</h3>
               <p>使用しているDAW、音源、制作ジャンル、現在困っている点を確認します。</p>
-            </article>
+            </div>
 
-            <article class="card">
+            <div class="item">
 
               <h3>制作中のプロジェクトを扱う</h3>
               <p>MIDI、音源、DAWプロジェクト、書き出した音源をもとに、具体的な改善点を見ます。</p>
-            </article>
+            </div>
 
-            <article class="card">
+            <div class="item">
 
               <h3>次の制作課題へ接続</h3>
               <p>レッスン後に何を直すか、何を作るか、どの順番で進めるかを明確にします。</p>
-            </article>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
+        
+      
+    </div></section><section class="block" id="price"><p class="label h">料金<small>Price</small></p><div class="body">
+      
+      
 
-    <section id="price">
-      <div class="section-kicker">Price</div>
-      <h2>料金</h2>
-
-      <div class="price-grid">
-        <article class="price-card">
+      <div class="grid">
+        <div class="item">
           <h3>無料相談（30分）</h3>
-          <p class="price-subtitle">無料</p>
+          <p>無料</p>
 
-          <div class="price-main">
-            <span class="price-amount">無料</span>
-          </div>
+          <p class="price">
+            <span>無料</span>
+          </p>
 
-          <p class="price-description">現在の制作環境、目標、使用DAW、困っている点を確認し、レッスン内容を提案します。</p>
+          <p>現在の制作環境、目標、使用DAW、困っている点を確認し、レッスン内容を提案します。</p>
 
-          <div class="button-row">
-            <a class="btn primary" href="/ja/booking.html">無料相談へ</a>
-          </div>
-        </article>
+          <p class="links">
+            <a href="/ja/booking.html" class="arrow">無料相談へ</a>
+          </p>
+        </div>
 
-        <article class="price-card">
+        <div class="item">
           <h3>Beginner</h3>
-          <p class="price-subtitle">基礎から学ぶDTMレッスン</p>
+          <p>基礎から学ぶDTMレッスン</p>
 
-          <div class="price-main">
-            <span class="price-amount">4800円</span>
-            <span class="price-unit">/ 60分</span>
-          </div>
+          <p class="price">
+            <span>4800円</span>
+            <small>/ 60分</small>
+          </p>
 
-          <p class="price-description">DAWの基本、MIDI、音源、簡単なアレンジ、ミックス前の整理まで扱います。</p>
+          <p>DAWの基本、MIDI、音源、簡単なアレンジ、ミックス前の整理まで扱います。</p>
 
-          <ul class="price-list">
+          <ul>
             <li>DAWの基本操作</li>
             <li>MIDI入力・編集</li>
             <li>音源・サンプルの使い方</li>
             <li>簡単なアレンジ</li>
             <li>ミックス基礎</li>
           </ul>
-        </article>
+        </div>
 
-        <article class="price-card recommended">
-          <div class="recommended-outline">Recommended</div>
+        <div class="item">
+          <p class="note">Recommended</p>
 
           <h3>Advanced 月謝</h3>
-          <p class="price-subtitle">継続型の制作レッスン</p>
+          <p>継続型の制作レッスン</p>
 
-          <div class="price-main">
-            <span class="price-amount">料金応相談</span>
-            <span class="price-unit">/ 月2回から</span>
-          </div>
+          <p class="price">
+            <span>料金応相談</span>
+            <small>/ 月2回から</small>
+          </p>
 
-          <div class="included-box">月2回から、ご希望に合わせて</div>
+          <p>月2回から、ご希望に合わせて</p>
 
-          <p class="price-description">作品制作、音色設計、アレンジ、ミックス、ポートフォリオ、電子音響まで継続的に扱います。</p>
+          <p>作品制作、音色設計、アレンジ、ミックス、ポートフォリオ、電子音響まで継続的に扱います。</p>
 
-          <ul class="price-list">
+          <ul>
             <li>月2回からの継続レッスン</li>
             <li>制作中プロジェクトのレビュー</li>
             <li>音作り・アレンジ・構成の改善</li>
@@ -1016,38 +312,33 @@
             <li>電子音響・サウンドデザイン</li>
             <li>AI生成音源の整理・選定</li>
           </ul>
-        </article>
+        </div>
 
-        <article class="price-card">
+        <div class="item">
           <h3>Advanced 単発</h3>
-          <p class="price-subtitle">単発の制作相談</p>
+          <p>単発の制作相談</p>
 
-          <div class="price-main">
-            <span class="price-amount">7500円</span>
-            <span class="price-unit">/ 70分</span>
-          </div>
+          <p class="price">
+            <span>7500円</span>
+            <small>/ 70分</small>
+          </p>
 
-          <p class="price-description">オリジナル教材を使った専門的なレッスンで、作品講評、ミックス相談、音作り、プラグイン選定、制作方針の確認に対応します。<strong>+7日以内のメールでの質問に対する簡潔なフィードバック</strong></p>
+          <p>オリジナル教材を使った専門的なレッスンで、作品講評、ミックス相談、音作り、プラグイン選定、制作方針の確認に対応します。<strong>+7日以内のメールでの質問に対する簡潔なフィードバック</strong></p>
 
-          <ul class="price-list">
+          <ul>
             <li>制作中の曲のレビュー</li>
             <li>音が細い・まとまらない原因の確認</li>
             <li>アレンジ・構成の相談</li>
             <li>AI音源・サンプル素材・制作補助ツールの使い方相談</li>
           </ul>
-        </article>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-grid">
-        <div>
-          <div class="section-kicker">FAQ</div>
-          <h2>よくある質問</h2>
         </div>
+      </div>
+    </div></section><section class="block"><p class="label h">よくある質問<small>FAQ</small></p><div class="body">
+      
+        
 
-        <div class="text-block">
-          <div class="faq">
+        
+          
             <details>
               <summary>完全初心者でも受講できますか？</summary>
               <p>可能です。DAWの基本操作、MIDI入力、音源の立ち上げ、簡単な曲作りから始められます。</p>
@@ -1072,31 +363,24 @@
               <summary>AIで作った音源の相談もできますか？</summary>
               <p>可能です。SunoやElevenLabsなどで作成した音源の選定、編集、作品化、方向性整理に対応します。ChatGPTやCodexは、制作メモ、構成案、作業手順を整理する補助ツールとして扱えます。</p>
             </details>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="acs-consultation" id="contact" aria-labelledby="consultation-title">
-  <div class="acs-consultation__inner"><div class="acs-consultation__row">
-    <p class="acs-consultation__meta">無料相談 · 30分</p>
-    <div class="acs-consultation__copy"><h2 id="consultation-title">レッスンについてのご相談</h2><p>学びたいことや、今困っていることをお聞かせください。<br>相談の際に、レッスンの内容や進め方をご説明します。</p></div>
-    <a class="acs-consultation__booking" href="booking.html" data-track="final_consultation">無料相談を予約する</a>
-  </div><div class="acs-consultation__links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></div></div>
-</section>
+          
+        
+      
+    </div></section><section class="call" id="contact"><p class="label">無料相談 · 30分</p><div class="body">
+  
+    
+    <h2 id="consultation-title">レッスンについてのご相談</h2><p>学びたいことや、今困っていることをお聞かせください。<br>相談の際に、レッスンの内容や進め方をご説明します。</p>
+    <a href="booking.html" data-track="final_consultation" class="arrow">無料相談を予約する</a>
+  <p class="links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></p>
+</div></section>
 </main>
-
-  <footer>
-    <div>© Sachie Kobayashi / Atelier Composition Son</div>
-    <div class="footer-links">
-      <a href="/ja/">日本語トップ</a>
-      <a href="/fr/">Français</a>
-      <a href="https://www.sachiekobayashi.com/">Portfolio</a>
-    </div>
+  <footer class="site">
+    <div class="cols3" style="margin-top:0"><p>Atelier<span>Composition Son</span></p><p>オンラインレッスン<span>作曲・理論・電子音楽</span></p><p>ateliercompositionson<span>.com/ja</span></p></div>
+    <div class="small"><span>© Atelier Composition Son</span><span><a href="terms.html" data-track="click_terms_page">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click">お問い合わせ</a><a href="../fr/">Français</a></span></div>
   </footer>
-  <script defer src="../assets/js/acs-tracking.js"></script>
-  <script defer src="../assets/js/acs-header.js?v=lang-20261020"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
-<script defer src="../assets/js/acs-quiet-lake.js?v=quiet-20261004"></script>
+</div>
+<script defer src="../assets/js/acs-tracking.js"></script>
+<script src="../assets/js/acs-embeds.js?v=site-20261030"></script>
+<script defer src="../assets/js/acs-field.js?v=site-20261030"></script>
 </body>
 </html>

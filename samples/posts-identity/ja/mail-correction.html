@@ -72,7 +72,7 @@
           共有URLを貼ってください。
         </p>
 
-        <form action="https://formspree.io/f/mbdbpqrj" method="POST">
+        <form action="https://formspree.io/f/mbdbpqrj" method="POST" class="correction-form">
           <input type="hidden" name="_subject" value="メール添削レッスンの依頼">
 
           
@@ -166,10 +166,10 @@
           </label>
 
           <p class="links">
-            <button type="submit">
+            <button type="submit" data-track="submit_mail_correction">
               メール添削を依頼する
             </button>
-            <a href="../ja/" class="arrow">日本語トップへ戻る</a>
+            <a href="../ja/" data-track="back_to_ja_home" class="arrow">日本語トップへ戻る</a>
           </p>
 
           <p>
@@ -180,7 +180,7 @@
     </div></section>
   <footer class="site">
     <div class="cols3" style="margin-top:0"><p>Atelier<span>Composition Son</span></p><p>オンラインレッスン<span>作曲・理論・電子音楽</span></p><p>ateliercompositionson<span>.com/ja</span></p></div>
-    <div class="small"><span>© Atelier Composition Son</span><span><a href="terms.html">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="../fr/index.html">Français</a></span></div>
+    <div class="small"><span>© Atelier Composition Son</span><span><a href="terms.html" data-track="click_terms_page">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click">お問い合わせ</a><a href="../fr/index.html">Français</a></span></div>
   </footer>
 </div>
 <script src="../assets/acs-embeds.js"></script>

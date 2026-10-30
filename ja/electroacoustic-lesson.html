@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+<meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>電子音響・シンセサイザーオンラインレッスン｜Atelier Composition Son</title>
   <meta name="description" content="電子音響・シンセサイザーのオンライン個人レッスン。録音素材、声、環境音、ミュージック・コンクレート、モンタージュ技法、シンセサイザーの違い、音の合成方法、Pythonによる音響分析、ReaperやPro Toolsを用いた編集・加工を個別に学びます。" />
   <link rel="canonical" href="https://ateliercompositionson.com/ja/electroacoustic-lesson.html" />
@@ -12,7 +11,6 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ateliercompositionson.com/ja/electroacoustic-lesson.html" />
   <meta property="og:site_name" content="Atelier Composition Son" />
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
@@ -21,250 +19,36 @@
     gtag("js", new Date());
     gtag("config", "G-Y1792EBWTT");
   </script>
-
-  <style>
-    :root {
-      --bg: #f8f6f1;
-      --paper: #fffefa;
-      --ink: #101010;
-      --muted: #67625a;
-      --line: #1c1c1c;
-      --fine-line: rgba(16, 16, 16, 0.18);
-      --max: 1180px;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: linear-gradient(90deg, rgba(16,16,16,0.035) 1px, transparent 1px) 0 0 / 25vw 100%, var(--bg);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", YuGothic, Meiryo, sans-serif;
-      line-height: 1.85;
-      letter-spacing: 0;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
-    p { margin: 0; }
-    p + p { margin-top: 1.1em; }
-    ul { margin: 0; padding-left: 1.2em; }
-    li + li { margin-top: 0.45em; }
-    .muted { color: var(--muted); }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 1px solid var(--line);
-      background: rgba(248, 246, 241, 0.92);
-      backdrop-filter: blur(14px);
-    }
-
-    .nav {
-      padding: 16px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 28px;
-    }
-
-    .brand {
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      font-weight: 650;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .nav-cta { border: 1px solid var(--ink); padding: 7px 13px; color: var(--ink); }
-
-    .lesson-header-image {
-      margin: 0;
-      border-bottom: 1px solid var(--line);
-      background: var(--bg);
-    }
-
-    .lesson-header-image img {
-      width: 100%;
-      max-height: 520px;
-      object-fit: cover;
-      filter: none;
-    }
-
-    .hero {
-      padding: 94px 28px 70px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
-      gap: 36px;
-      align-items: end;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .eyebrow, .section-label {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow { margin-bottom: 28px; }
-
-    h1 {
-      margin: 0 0 30px;
-      font-size: clamp(46px, 8.6vw, 128px);
-      line-height: 0.98;
-      font-weight: 500;
-      letter-spacing: -0.04em;
-    }
-
-    h2 {
-      margin: 0 0 24px;
-      font-size: clamp(30px, 4vw, 58px);
-      line-height: 1.08;
-      font-weight: 400;
-      letter-spacing: -0.04em;
-    }
-
-    h3 { margin: 0 0 12px; font-size: 22px; line-height: 1.35; font-weight: 400; }
-    .lead { max-width: 760px; font-size: clamp(17px, 2vw, 22px); line-height: 1.95; }
-
-    .hero-panel, .card {
-      border: 1px solid var(--line);
-      background: var(--paper);
-      padding: 32px;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 32px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      border: 1px solid var(--line);
-      padding: 13px 20px;
-      font-size: 14px;
-    }
-
-    .btn.primary { background: var(--ink); color: var(--bg); }
-
-    section {
-      padding: 82px 28px;
-      display: grid;
-      grid-template-columns: 0.38fr 1fr;
-      gap: 48px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .content { max-width: var(--max); }
-    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-    .card { border-top: 0; border-left: 0; }
-    .list { color: var(--muted); }
-
-    footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 34px 28px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 900px) {
-      .nav-links { display: none; }
-      .hero, section, .grid-2 { grid-template-columns: 1fr; }
-      .hero, section { padding-left: 18px; padding-right: 18px; }
-      .btn { width: 100%; min-height: 48px; }
-      footer { flex-direction: column; }
-    }
-
-  /* Global white background and frameless images */
-  :root {
-    --bg: #ffffff !important;
-    --paper: #ffffff !important;
-    --card: #ffffff !important;
-    --white: #ffffff !important;
-  }
-
-  html,
-  body {
-    background: #ffffff !important;
-  }
-
-  figure,
-  img,
-  .lesson-image,
-  .lesson-header-image,
-  .teacher-photo,
-  .inline-work-image,
-  .mobile-studio-image,
-  .hero-image,
-  .image-frame,
-  .visual-card {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-
-  figure img,
-  .lesson-image img,
-  .lesson-header-image img,
-  .teacher-photo img,
-  .inline-work-image img,
-  .hero-image img,
-  .image-frame img,
-  .visual-card img {
-    border: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-</style>
-  <link rel="stylesheet" href="../assets/css/acs-core.css">
-  <link rel="stylesheet" href="../assets/css/lesson-detail-final.css">
-<link rel="stylesheet" href="../assets/css/acs-editorial.css?v=editorial-20260930">
-<link rel="stylesheet" href="../assets/css/acs-quiet.css?v=nounderline-20261020">
-<link rel="stylesheet" href="../assets/css/acs-quiet-pages.css?v=quiet-20261004">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/css/acs-posts.css?v=site-20261030">
 </head>
-
-<body class="lesson-detail-page acs-editorial">
-  <header class="acs-site-header" data-shared-header></header>
-
-  <main>
-    <section class="lesson-detail-hero" aria-labelledby="lesson-title">
-      <div class="lesson-detail-hero__copy">
-        <div class="eyebrow">Module 04 / Electroacoustic</div>
-        <h1 id="lesson-title">音を素材として、作品をつくる。</h1>
-        <p class="lead muted">
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="./">Atelier Composition Son</a>
+    <nav aria-label="メインメニュー"><a href="./">トップ</a><a href="composition-lesson.html">作曲</a><a href="dtm-lesson.html">DTM</a><a href="music-theory-lesson_with_pdf-link.html">音楽理論</a><a href="solfege.html">ソルフェージュ</a><a href="electroacoustic-lesson.html" aria-current="page">電子音響</a><a href="sound-technology-ai-lesson.html">AI音楽</a><a href="profile.html">講師</a><a href="faq.html">質問</a><a href="booking.html">無料相談</a><span class="lang"><strong>JA</strong> / <a href="../fr/">FR</a></span></nav>
+  </header>
+<main>
+<div class="field band" id="field"><img class="still" src="../images/site/ecouter.jpg" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas></div><section class="page-head"><p class="label">Module 04 / Electroacoustic</p><div><h1>音を素材として、作品をつくる。</h1>
+      
+        
+        
+        <p class="lead">
           録音素材、声、環境音、シンセサイザー、ノイズ、空間、編集、加工を使いながら、
           電子音響作品やサウンドアートのための聴き方と構成を学びます。
           シンセサイザーの種類による違いや、音の合成方法、PythonやDeep Learningを含む現代的な音響分析の入口も作品制作に結びつけて扱います。
         </p>
-        <div class="button-row">
-          <a class="btn primary" href="/ja/booking.html">無料相談を予約する</a>
-          <a class="btn" href="/ja/#study">レッスン科目へ戻る</a>
-        </div>
-      </div>
+        <p class="links">
+          <a href="/ja/booking.html" class="arrow">無料相談を予約する</a>
+          <a href="/ja/#study">レッスン科目へ戻る</a>
+        </p>
+      
 
-      <figure class="lesson-detail-hero__media lesson-detail-hero__media--electroacoustic">
-        <img src="../images/max-screen.png" width="1488" height="1090" alt="身体動作の入力と音響合成を接続したMax/MSPパッチ" loading="lazy" decoding="async">
-      </figure>
+      
 
-      <aside class="lesson-detail-hero__summary">
-        <h2>扱うこと</h2>
+      
+    </div></section><section class="block"><p class="label h">扱うこと</p><div class="body">
+        
         <ul class="list">
           <li>録音素材、声、環境音の扱い</li>
           <li>ミュージック・コンクレートとモンタージュ技法</li>
@@ -273,89 +57,82 @@
           <li>Reaper、Pro Tools、Pythonなどを使った編集・加工・分析</li>
           <li>空間化、質感、密度、聴取の設計</li>
         </ul>
-      </aside>
-    </section>
-
-    <section>
-      <div class="section-label">レッスン内容</div>
-      <div class="content">
-        <h2>電子音響のための聴き方と構成</h2>
-        <p class="muted">
+      </div></section><section class="block"><p class="label h">電子音響のための聴き方と構成<small>レッスン内容</small></p><div class="body">
+      
+      
+        
+        <p>
           ただ音を加工するだけでなく、素材がどのように時間の中で変化し、どのような空間や質感を作るのかを丁寧に聴きます。
           DAWや録音素材を使いながら、音響作品として成立する構成、編集、モンタージュの考え方を一緒に考えます。
         </p>
 
-        <div class="grid-2" style="margin-top: 32px;">
-          <article class="card">
+        <div class="grid">
+          <div class="item">
             <h3>素材を聴く</h3>
-            <p class="muted">音の立ち上がり、粒、倍音、ノイズ、余韻、密度を分析します。録音された音を、楽音以外の素材として扱う聴き方も確認します。</p>
-          </article>
-          <article class="card">
+            <p>音の立ち上がり、粒、倍音、ノイズ、余韻、密度を分析します。録音された音を、楽音以外の素材として扱う聴き方も確認します。</p>
+          </div>
+          <div class="item">
             <h3>変化を作る</h3>
-            <p class="muted">編集、フィルター、ピッチ、時間伸縮、レイヤーで音の変化を設計します。</p>
-          </article>
-          <article class="card">
+            <p>編集、フィルター、ピッチ、時間伸縮、レイヤーで音の変化を設計します。</p>
+          </div>
+          <div class="item">
             <h3>シンセサイザーを理解する</h3>
-            <p class="muted">アナログ、デジタル、ソフトウェア音源などの違いを確認し、減算合成、FM、グラニュラーなどの基本的な合成方法を作品に使える形で学びます。</p>
-          </article>
-          <article class="card">
+            <p>アナログ、デジタル、ソフトウェア音源などの違いを確認し、減算合成、FM、グラニュラーなどの基本的な合成方法を作品に使える形で学びます。</p>
+          </div>
+          <div class="item">
             <h3>モンタージュする</h3>
-            <p class="muted">切断、接続、反復、重ね合わせ、コントラストを使い、素材同士の関係と時間の流れを組み立てます。</p>
-          </article>
-          <article class="card">
+            <p>切断、接続、反復、重ね合わせ、コントラストを使い、素材同士の関係と時間の流れを組み立てます。</p>
+          </div>
+          <div class="item">
             <h3>DAWで編集する</h3>
-            <p class="muted">Reaper、Pro Toolsなどを使い、波形編集、フェード、リージョン整理、書き出しまで制作に必要な操作を扱います。必要に応じてPythonによる簡単な分析も扱えます。</p>
-          </article>
-          <article class="card">
+            <p>Reaper、Pro Toolsなどを使い、波形編集、フェード、リージョン整理、書き出しまで制作に必要な操作を扱います。必要に応じてPythonによる簡単な分析も扱えます。</p>
+          </div>
+          <div class="item">
             <h3>空間を考える</h3>
-            <p class="muted">定位、奥行き、残響、移動、距離感を作品の要素として扱います。</p>
-          </article>
-          <article class="card">
+            <p>定位、奥行き、残響、移動、距離感を作品の要素として扱います。</p>
+          </div>
+          <div class="item">
             <h3>作品化する</h3>
-            <p class="muted">短いスケッチから、構成を持った音響作品へ発展させます。</p>
-          </article>
+            <p>短いスケッチから、構成を持った音響作品へ発展させます。</p>
+          </div>
         </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-label">Listening / History</div>
-      <div class="content">
-        <h2>聴くことから、音響作品を考える</h2>
-        <p class="muted">
+      
+    </div></section><section class="block"><p class="label h">聴くことから、音響作品を考える<small>Listening / History</small></p><div class="body">
+      
+      
+        
+        <p>
           ピエール・シェフェールのミュージック・コンクレートや、R. Murray Schafer のサウンドスケープの考え方を手がかりに、
           録音された音、環境音、声、ノイズをどのように聴き、選び、作品の素材として扱うかを学びます。
         </p>
-        <p class="muted">
+        <p>
           歴史的な用語を暗記するためではなく、自分の制作に必要な聴取の視点として扱います。
           音の出どころ、質感、距離、反復、断片、記憶、場所との関係を確認しながら、短いスケッチから作品の構成へ進めます。
         </p>
 
-        <div class="grid-2" style="margin-top: 32px;">
-          <article class="card">
+        <div class="grid">
+          <div class="item">
             <h3>ミュージック・コンクレート</h3>
-            <p class="muted">録音素材を出発点に、切り貼り、変形、反復、再配置によって音響的な構成を作ります。</p>
-          </article>
-          <article class="card">
+            <p>録音素材を出発点に、切り貼り、変形、反復、再配置によって音響的な構成を作ります。</p>
+          </div>
+          <div class="item">
             <h3>サウンドスケープ</h3>
-            <p class="muted">環境音や場所の記憶を、背景音ではなく作品の中心的な素材として聴き直します。</p>
-          </article>
-          <article class="card">
+            <p>環境音や場所の記憶を、背景音ではなく作品の中心的な素材として聴き直します。</p>
+          </div>
+          <div class="item">
             <h3>モンタージュ技法</h3>
-            <p class="muted">断片の順序、密度、切断点、沈黙、異なる素材の衝突を使い、音の時間構成を作ります。</p>
-          </article>
-          <article class="card">
+            <p>断片の順序、密度、切断点、沈黙、異なる素材の衝突を使い、音の時間構成を作ります。</p>
+          </div>
+          <div class="item">
             <h3>実作への接続</h3>
-            <p class="muted">録音、編集、加工、配置、書き出しまでを、作品の目的に合わせて具体的に進めます。</p>
-          </article>
+            <p>録音、編集、加工、配置、書き出しまでを、作品の目的に合わせて具体的に進めます。</p>
+          </div>
         </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-label">Format</div>
-      <div class="content">
-        <h2>レッスン形式</h2>
+      
+    </div></section><section class="block"><p class="label h">レッスン形式<small>Format</small></p><div class="body">
+      
+      
+        
         <ul class="list">
           <li>オンライン個人レッスン</li>
           <li>60分 / 単発または継続</li>
@@ -363,27 +140,25 @@
           <li>Reaper、Pro Tools、Ableton Live、Logic、Max/MSP、Pythonなどにも対応</li>
           <li>短い録音スケッチ、ミュージック・コンクレートの習作、サウンドスケープ作品の相談にも対応</li>
         </ul>
-        <div class="button-row">
-          <a class="btn primary" href="/ja/booking.html">無料相談を予約する</a>
-        </div>
-      </div>
-    </section>
-  <section class="acs-consultation" id="consultation" aria-labelledby="consultation-title">
-  <div class="acs-consultation__inner"><div class="acs-consultation__row">
-    <p class="acs-consultation__meta">無料相談 · 30分</p>
-    <div class="acs-consultation__copy"><h2 id="consultation-title">レッスンについてのご相談</h2><p>学びたいことや、今困っていることをお聞かせください。<br>相談の際に、レッスンの内容や進め方をご説明します。</p></div>
-    <a class="acs-consultation__booking" href="booking.html" data-track="final_consultation">無料相談を予約する</a>
-  </div><div class="acs-consultation__links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></div></div>
-</section>
+        <p class="links">
+          <a href="/ja/booking.html" class="arrow">無料相談を予約する</a>
+        </p>
+      
+    </div></section><section class="call" id="consultation"><p class="label">無料相談 · 30分</p><div class="body">
+  
+    
+    <h2 id="consultation-title">レッスンについてのご相談</h2><p>学びたいことや、今困っていることをお聞かせください。<br>相談の際に、レッスンの内容や進め方をご説明します。</p>
+    <a href="booking.html" data-track="final_consultation" class="arrow">無料相談を予約する</a>
+  <p class="links"><a href="mail-correction.html?request=mail-correction#form">メール添削</a><a href="mailto:info@sachiekobayashi.com">お問い合わせ</a><a href="terms.html">規約</a></p>
+</div></section>
 </main>
-
-  <footer>
-    <div>© Atelier Composition Son</div>
-    <a href="/ja/">日本語トップへ戻る</a>
+  <footer class="site">
+    <div class="cols3" style="margin-top:0"><p>Atelier<span>Composition Son</span></p><p>オンラインレッスン<span>作曲・理論・電子音楽</span></p><p>ateliercompositionson<span>.com/ja</span></p></div>
+    <div class="small"><span>© Atelier Composition Son</span><span><a href="terms.html" data-track="click_terms_page">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click">お問い合わせ</a><a href="../fr/">Français</a></span></div>
   </footer>
-  <script defer src="../assets/js/acs-tracking.js"></script>
-  <script defer src="../assets/js/acs-header.js?v=lang-20261020"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
-<script defer src="../assets/js/acs-quiet-lake.js?v=quiet-20261004"></script>
+</div>
+<script defer src="../assets/js/acs-tracking.js"></script>
+<script src="../assets/js/acs-embeds.js?v=site-20261030"></script>
+<script defer src="../assets/js/acs-field.js?v=site-20261030"></script>
 </body>
 </html>

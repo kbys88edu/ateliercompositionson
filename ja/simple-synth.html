@@ -1,13 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8">
+<head>
+<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>簡易シンセサイザー｜Atelier Composition Son</title>
     <meta name="description" content="ブラウザ上で波形、フィルター、エンベロープ、LFOなどを試しながら、音の合成について学べる簡易シンセサイザーです。">
     <link rel="stylesheet" href="simple-synth.css?v=1">
-    <link rel="stylesheet" href="../assets/css/acs-core.css">
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y1792EBWTT"></script>
   <script>
@@ -16,13 +14,17 @@
     gtag("js", new Date());
     gtag("config", "G-Y1792EBWTT");
   </script>
-<link rel="stylesheet" href="../assets/css/acs-editorial.css?v=editorial-20260930">
-<link rel="stylesheet" href="../assets/css/acs-quiet.css?v=nounderline-20261020">
-<link rel="stylesheet" href="../assets/css/acs-quiet-pages.css?v=quiet-20261004">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/css/acs-posts.css?v=site-20261030">
 </head>
-  <body class="acs-editorial">
-    <header class="acs-site-header" data-shared-header></header>
-    <main class="app-shell">
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="./">Atelier Composition Son</a>
+    <nav aria-label="メインメニュー"><a href="./">トップ</a><a href="composition-lesson.html">作曲</a><a href="dtm-lesson.html">DTM</a><a href="music-theory-lesson_with_pdf-link.html">音楽理論</a><a href="solfege.html">ソルフェージュ</a><a href="electroacoustic-lesson.html">電子音響</a><a href="sound-technology-ai-lesson.html">AI音楽</a><a href="profile.html">講師</a><a href="faq.html">質問</a><a href="booking.html">無料相談</a><span class="lang"><strong>JA</strong> / <a href="../fr/">FR</a></span></nav>
+  </header>
+<main>
+<div class="field band" id="field"><img class="still" src="../images/site/ecouter.jpg" alt="" aria-hidden="true"><canvas id="lake" aria-hidden="true"></canvas></div><section class="page-head"><p class="label">学習ツール</p><div><h1>簡易シンセサイザー</h1><p>波形、フィルター、エンベロープ、LFO を触りながら、音作りの基本を確かめるための小さなシンセサイザーです。</p></div></section><div class="synth-wrap"><main class="app-shell">
       <a class="site-back-link" href="./">← Atelier Composition Son</a>
       <header class="topbar">
         <div>
@@ -236,12 +238,16 @@
           </div>
         </section>
       </section>
-    </main>
-
-    <script src="simple-synth-app.js?v=1"></script>
-    <script defer src="../assets/js/acs-header.js?v=lang-20261020"></script>
-<script defer src="../assets/js/acs-ui.js"></script>
-    <script defer src="../assets/js/acs-tracking.js"></script>
-<script defer src="../assets/js/acs-quiet-lake.js?v=quiet-20261004"></script>
+    </main></div>
+</main>
+  <footer class="site">
+    <div class="cols3" style="margin-top:0"><p>Atelier<span>Composition Son</span></p><p>オンラインレッスン<span>作曲・理論・電子音楽</span></p><p>ateliercompositionson<span>.com/ja</span></p></div>
+    <div class="small"><span>© Atelier Composition Son</span><span><a href="terms.html" data-track="click_terms_page">レッスン規約</a><a href="mail-correction.html">メール添削</a><a href="mailto:info@sachiekobayashi.com" data-track="email_contact_click">お問い合わせ</a><a href="../fr/">Français</a></span></div>
+  </footer>
+</div>
+<script src="simple-synth-app.js?v=1"></script>
+<script defer src="../assets/js/acs-tracking.js"></script>
+<script src="../assets/js/acs-embeds.js?v=site-20261030"></script>
+<script defer src="../assets/js/acs-field.js?v=site-20261030"></script>
 </body>
 </html>
