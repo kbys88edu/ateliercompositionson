@@ -62,6 +62,7 @@ def chrome(lang, title, current, body, extra_head="", depth=1):
     <div class="small">{SMALL[lang]}</div>
   </footer>
 </div>
+<script src="{pre}assets/acs-embeds.js"></script>
 <script src="{pre}assets/posts.js"></script>
 </body>
 </html>
