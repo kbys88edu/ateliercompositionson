@@ -1,21 +1,21 @@
 :root {
-  --bg: #f4f1ea;
-  --text: #181818;
-  --muted: #666666;
+  --bg: #f1f5ee;
+  --text: #22392c;
+  --muted: #5f6b63;
   --line: rgba(0, 0, 0, 0.14);
   --card: rgba(255, 255, 255, 0.72);
-  --ok: #1f7a3f;
-  --warn: #9a6a00;
-  --error: #b3261e;
-  --selected: #1d4ed8;
-  --playhead: #e11d48;
+  --ok: #2f7a4f;
+  --warn: #c98a1e;
+  --error: #b5541c;
+  --selected: #e07b2a;
+  --playhead: #2f7a4f;
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  font-family: "IBM Plex Sans JP", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.7;
@@ -172,19 +172,19 @@ h2 {
 }
 
 .level-badge.beginner {
-  color: #1f7a3f;
-  border-color: rgba(31, 122, 63, 0.32);
-  background: rgba(31, 122, 63, 0.08);
+  color: #2f7a4f;
+  border-color: rgba(47, 122, 79, 0.32);
+  background: rgba(47, 122, 79, 0.08);
 }
 
 .level-badge.intermediate {
-  color: #9a6a00;
+  color: #c98a1e;
   border-color: rgba(154, 106, 0, 0.32);
   background: rgba(154, 106, 0, 0.08);
 }
 
 .level-badge.advanced {
-  color: #7c2d12;
+  color: #8a4a1c;
   border-color: rgba(124, 45, 18, 0.32);
   background: rgba(124, 45, 18, 0.08);
 }
@@ -250,10 +250,10 @@ h2 {
   outline-offset: 4px;
 }
 
-.staff-line { stroke: #181818; stroke-width: 1.2; }
+.staff-line { stroke: #22392c; stroke-width: 1.2; }
 .measure-line { stroke: rgba(0, 0, 0, 0.26); stroke-width: 1.15; }
 .subdivision-line { stroke: rgba(0, 0, 0, 0.11); stroke-width: 0.8; }
-.ledger-line { stroke: #181818; stroke-width: 1.1; }
+.ledger-line { stroke: #22392c; stroke-width: 1.1; }
 .slot-marker { fill: rgba(0, 0, 0, 0.12); }
 .downbeat-marker { fill: rgba(0, 0, 0, 0.24); }
 .voice-label { font-size: 13px; fill: rgba(0, 0, 0, 0.62); font-weight: 600; }
@@ -268,8 +268,8 @@ h2 {
 .note-label.playing { fill: var(--playhead); font-weight: 700; }
 
 .note-head {
-  fill: #181818;
-  stroke: #181818;
+  fill: #22392c;
+  stroke: #22392c;
   stroke-width: 1;
 }
 
@@ -281,12 +281,12 @@ h2 {
 .note-head.selected { fill: var(--selected); stroke: var(--selected); }
 .note-head.playing { fill: var(--playhead); stroke: var(--playhead); }
 
-.note-stem { stroke: #181818; stroke-width: 1.4; }
+.note-stem { stroke: #22392c; stroke-width: 1.4; }
 .note-stem.cantus { stroke: rgba(0, 0, 0, 0.35); }
 .note-stem.selected { stroke: var(--selected); }
 .note-stem.playing { stroke: var(--playhead); }
 
-.flag { stroke: #181818; stroke-width: 1.3; fill: none; }
+.flag { stroke: #22392c; stroke-width: 1.3; fill: none; }
 .flag.selected { stroke: var(--selected); }
 .flag.playing { stroke: var(--playhead); }
 
@@ -306,7 +306,7 @@ h2 {
 
 .accidental {
   font-size: 20px;
-  fill: #181818;
+  fill: #22392c;
   font-family: "Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", serif;
   dominant-baseline: middle;
   pointer-events: none;
@@ -464,7 +464,7 @@ h2 {
 /* Explicit note values for Module 2 / Module 4 */
 .note-head.open {
   fill: #ffffff !important;
-  stroke: #181818;
+  stroke: #22392c;
   stroke-width: 1.8;
 }
 
@@ -513,53 +513,53 @@ h2 {
 
 /* Error highlighting */
 .note-head.error {
-  fill: #b3261e !important;
-  stroke: #b3261e !important;
+  fill: #b5541c !important;
+  stroke: #b5541c !important;
   stroke-width: 2.2 !important;
 }
 
 .note-head.open.error {
   fill: #ffffff !important;
-  stroke: #b3261e !important;
+  stroke: #b5541c !important;
   stroke-width: 2.4 !important;
 }
 
 .note-stem.error {
-  stroke: #b3261e !important;
+  stroke: #b5541c !important;
   stroke-width: 2.2 !important;
 }
 
 .note-label.error,
 .accidental.error {
-  fill: #b3261e !important;
+  fill: #b5541c !important;
   font-weight: 700;
 }
 
 .issue-ring {
   fill: none;
-  stroke: #b3261e;
+  stroke: #b5541c;
   stroke-width: 2;
   opacity: 0.95;
   pointer-events: none;
 }
 
 .issue-ring.warn {
-  stroke: #c47a00;
+  stroke: #c98a1e;
 }
 
 .note-head.warn {
-  stroke: #c47a00 !important;
+  stroke: #c98a1e !important;
   stroke-width: 2.1 !important;
 }
 
 .note-stem.warn {
-  stroke: #c47a00 !important;
+  stroke: #c98a1e !important;
   stroke-width: 2 !important;
 }
 
 .note-label.warn,
 .accidental.warn {
-  fill: #c47a00 !important;
+  fill: #c98a1e !important;
   font-weight: 700;
 }
 
@@ -592,16 +592,16 @@ button[onclick="stopPlayback(true)"] {
 }
 
 .png-notehead.selected {
-  filter: invert(32%) sepia(62%) saturate(1169%) hue-rotate(192deg) brightness(84%) contrast(93%);
+  filter: invert(55%) sepia(70%) saturate(1200%) hue-rotate(345deg) brightness(84%) contrast(93%);
 }
 
 .png-notehead.playing {
-  filter: invert(19%) sepia(86%) saturate(2042%) hue-rotate(344deg) brightness(92%) contrast(95%);
+  filter: invert(36%) sepia(40%) saturate(700%) hue-rotate(100deg) brightness(92%) contrast(95%);
 }
 
 .png-notehead.error,
 .png-accidental.error {
-  filter: invert(16%) sepia(90%) saturate(2900%) hue-rotate(345deg) brightness(90%) contrast(96%);
+  filter: invert(36%) sepia(40%) saturate(700%) hue-rotate(100deg) brightness(90%) contrast(96%);
 }
 
 .png-notehead.warn,
@@ -616,7 +616,7 @@ button[onclick="stopPlayback(true)"] {
 
 /* Module 4 pitch alignment and barlines. */
 .measure-barline {
-  stroke: rgba(23, 23, 23, 0.42);
+  stroke: rgba(34, 57, 44, 0.42);
   stroke-width: 1.25;
   vector-effect: non-scaling-stroke;
   pointer-events: none;
@@ -631,7 +631,7 @@ button[onclick="stopPlayback(true)"] {
 }
 
 .note-stem {
-  stroke: #171717;
+  stroke: #22392c;
   stroke-width: 1.65;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;

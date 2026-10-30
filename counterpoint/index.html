@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
   <title>Counterpoint Modules｜Atelier Composition Son</title>
   <style>
     * { box-sizing: border-box; }
     :root {
-      --bg: #f4f1eb;
+      --bg: #f1f5ee;
       --paper: rgba(255,255,255,0.84);
-      --ink: #171717;
-      --muted: rgba(23,23,23,0.62);
-      --line: rgba(23,23,23,0.14);
-      --test-bg: rgba(23,23,23,0.045);
-      --test-ink: rgba(23,23,23,0.46);
-      --test-line: rgba(23,23,23,0.10);
+      --ink: #22392c;
+      --muted: rgba(34, 57, 44,0.62);
+      --line: rgba(34, 57, 44,0.14);
+      --test-bg: rgba(34, 57, 44,0.045);
+      --test-ink: rgba(34, 57, 44,0.46);
+      --test-line: rgba(34, 57, 44,0.10);
     }
     body {
       margin: 0;
-      font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      font-family: "IBM Plex Sans JP", "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
       color: var(--ink);
       background: radial-gradient(circle at 12% 0%, #fff, transparent 34%), var(--bg);
     }
@@ -113,7 +113,7 @@
     .card:hover {
       transform: translateY(-3px);
       box-shadow: 0 24px 58px rgba(0,0,0,0.1);
-      border-color: rgba(23,23,23,0.32);
+      border-color: rgba(34, 57, 44,0.32);
     }
     .card.is-test {
       background: var(--test-bg);
@@ -125,7 +125,7 @@
     .card.is-test:hover {
       transform: none;
       box-shadow: none;
-      border-color: rgba(23,23,23,0.18);
+      border-color: rgba(34, 57, 44,0.18);
     }
     .card.is-disabled {
       pointer-events: none;
@@ -149,7 +149,7 @@
       width: fit-content;
       margin: 0 0 12px;
       padding: 5px 9px;
-      border: 1px solid rgba(23,23,23,0.16);
+      border: 1px solid rgba(34, 57, 44,0.16);
       border-radius: 999px;
       color: var(--test-ink);
       font-size: 0.7rem;
@@ -297,9 +297,9 @@
   transform: none;
 }
 .status-badge.ready {
-  border-color: rgba(31, 122, 63, 0.32);
-  color: #1f7a3f;
-  background: rgba(31, 122, 63, 0.08);
+  border-color: rgba(47, 122, 79, 0.32);
+  color: #2f7a4f;
+  background: rgba(47, 122, 79, 0.08);
 }
 .status-badge.pending {
   border-color: rgba(0, 0, 0, 0.18);
@@ -309,15 +309,15 @@
 
   /* Global white background and frameless images */
   :root {
-    --bg: #ffffff !important;
-    --paper: #ffffff !important;
-    --card: #ffffff !important;
+    --bg: #f1f5ee !important;
+    --paper: #fbfcf8 !important;
+    --card: #fbfcf8 !important;
     --white: #ffffff !important;
   }
 
   html,
   body {
-    background: #ffffff !important;
+    background: #f1f5ee !important;
   }
 
   figure,

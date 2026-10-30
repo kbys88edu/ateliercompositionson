@@ -10,9 +10,9 @@
   gap: 8px;
   min-height: 36px;
   padding: 0 12px 0 14px;
-  border: 1px solid var(--study-log-ink, #171717);
+  border: 1px solid var(--study-log-ink, #22392c);
   border-radius: 999px;
-  background: var(--study-log-ink, #171717);
+  background: var(--study-log-ink, #22392c);
   color: var(--study-log-paper, #ffffff);
   font-size: 0.8rem;
   font-weight: 700;
@@ -29,18 +29,18 @@
   padding: 0 6px;
   border-radius: 999px;
   background: var(--study-log-paper, #ffffff);
-  color: var(--study-log-ink, #171717);
+  color: var(--study-log-ink, #22392c);
   font-size: 0.74rem;
   line-height: 1;
 }
 
 .study-log-fab:hover {
   background: var(--study-log-paper, #ffffff);
-  color: var(--study-log-ink, #171717);
+  color: var(--study-log-ink, #22392c);
 }
 
 .study-log-fab:hover b {
-  background: var(--study-log-ink, #171717);
+  background: var(--study-log-ink, #22392c);
   color: var(--study-log-paper, #ffffff);
 }
 
@@ -111,7 +111,7 @@
   justify-content: space-between;
   gap: 8px 16px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #171717;
+  border-bottom: 2px solid #22392c;
   margin-bottom: 16px;
 }
 
@@ -188,7 +188,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  border-bottom: 1px solid #171717;
+  border-bottom: 1px solid #22392c;
   white-space: nowrap;
 }
 
@@ -199,18 +199,18 @@
 }
 
 .study-log-entries tr.is-ok td:last-child {
-  color: #15803d;
+  color: #2f7a4f;
   font-weight: 700;
 }
 
 .study-log-entries tr.is-ng td:last-child,
 .study-log-entries tr.is-error td:last-child {
-  color: #b91c1c;
+  color: #b5541c;
   font-weight: 700;
 }
 
 .study-log-entries tr.is-warn td:last-child {
-  color: #b45309;
+  color: #c98a1e;
   font-weight: 700;
 }
 
@@ -265,9 +265,9 @@
   padding: 0 16px;
   display: inline-flex;
   align-items: center;
-  border: 1px solid #171717;
+  border: 1px solid #22392c;
   border-radius: 999px;
-  background: #171717;
+  background: #22392c;
   color: #fff;
   text-decoration: none;
   cursor: pointer;
@@ -280,8 +280,8 @@
 
 .study-log-actions .study-log-danger {
   background: transparent;
-  color: #b91c1c;
-  border-color: #b91c1c;
+  color: #b5541c;
+  border-color: #b5541c;
 }
 
 .study-log-hint,
