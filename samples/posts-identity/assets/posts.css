@@ -68,10 +68,10 @@ html[lang="fr"] .page-head h1 { font-weight: 700; letter-spacing: -.015em; line-
 .page-head p + p { margin-top: 1em; }
 .page-head p:first-of-type { font-size: clamp(17px, 1.8vw, 21px); line-height: 1.75; font-weight: 500; max-width: 30em; }
 
-/* 無料相談：手を振る切り抜きが、帯の下端にかかる */
-.page-head.with-wave { grid-template-columns: minmax(0, 3fr) minmax(0, 7fr) minmax(0, 2fr); }
-.wave { margin: -40% 0 0; position: relative; z-index: 1; justify-self: end; width: 100%; max-width: 230px; }
-.wave img { width: 100%; height: auto; }
+/* 無料相談：手を振る切り抜きを、光の網目の帯の中に乗算で置く（色が肌と髪に透ける） */
+.field.band.greet { aspect-ratio: 16 / 7; max-height: 420px; }
+.field.band.greet .wave { position: absolute; right: 5%; bottom: 0; height: 92%; width: auto; margin: 0; z-index: 1; mix-blend-mode: multiply; }
+.field.band.greet .wave img { height: 100%; width: auto; }
 /* セクション：左に見出し、右に本文 */
 section.block { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 16px 24px;
   border-top: 1px solid var(--ink); padding-block: 22px 72px; }
@@ -240,8 +240,8 @@ footer.site .small a { margin-right: 14px; }
   .field.band { aspect-ratio: 16 / 7; }
   .field .photo { left: 40%; top: 44%; width: 60%; height: 56%; }
   .page-head, section.block, .call { grid-template-columns: minmax(0, 1fr); padding-bottom: 56px; }
-  .page-head.with-wave { grid-template-columns: minmax(0, 1fr); }
-  .wave { grid-row: 1; margin: -40% 0 -8px; width: 46%; max-width: 200px; }
+  .field.band.greet { aspect-ratio: 4 / 3; }
+  .field.band.greet .wave { right: 4%; height: 86%; }
   .label.h { font-size: 15px; font-weight: 500; }
   .prof { grid-template-columns: minmax(0, 1fr); }
   .pphoto { grid-column: 1; grid-row: 1; width: 72%; }
